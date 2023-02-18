@@ -18,7 +18,8 @@ from django.urls import path, include
 from master_app import views as view_master
 
 urlpatterns = [
-    path('', include('wingoapp.urls')),
+    # path('', include('wingoapp.urls')),
+    path('', view_master.index, name='index'),
     path('accounting_app/', include('accounting_app.urls')),
     path('hrd_app/', include('hrd_app.urls')),
     path('ga_app/', include('ga_app.urls')),
