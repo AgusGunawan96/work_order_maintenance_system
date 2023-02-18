@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'warehouse_app',
     'engineering_app',
     'it_app',
+    'wingoapp',
+    'sass_processor'
 ]
 
 MIDDLEWARE = [
@@ -144,10 +146,11 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL ='/web_seiwa/wingoapp/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static' ,
+    BASE_DIR / 'wingoapp/static/' ,
 ]
+SASS_PROCESSOR_ROOT = BASE_DIR / 'static'
 
 #MEDIA
 MEDIA_ROOT = BASE_DIR / 'media'
