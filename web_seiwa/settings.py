@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'warehouse_app',
     'engineering_app',
     'it_app',
+    'master_app',
     'wingoapp',
     'sass_processor'
 ]
@@ -151,6 +152,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'wingoapp/static/' ,
 ]
 SASS_PROCESSOR_ROOT = BASE_DIR / 'static'
+
+# LOGIN
+LOGIN_REDIRECT_URL = '/'
 
 #MEDIA
 MEDIA_ROOT = BASE_DIR / 'media'

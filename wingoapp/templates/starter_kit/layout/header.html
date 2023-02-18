@@ -8,7 +8,7 @@
     </div>
     <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center" id="sidebar-toggle"></i>
     </div>
-    <div class="left-menu-header col">
+    {% comment %} <div class="left-menu-header col">
       <ul>
         <li>
           <form class="form-inline search-form">
@@ -17,7 +17,7 @@
           </form><span class="d-sm-none mobile-search search-bg"><i class="fa fa-search"></i></span>
         </li>
       </ul>
-    </div>
+    </div> {% endcomment %}
     <div class="nav-right col pull-right right-menu">
       <ul class="nav-menus">
 
@@ -33,10 +33,10 @@
               src="{% static 'assets/images/avtar/emoji/9.png' %}" alt=""></div>
           <ul class="profile-dropdown onhover-show-div">
             <li><i data-feather="user"></i><span>Account </span></li>
-            <li><i data-feather="mail"></i><span>Inbox</span></li>
+            {% comment %} <li><i data-feather="mail"></i><span>Inbox</span></li>
             <li><i data-feather="file-text"></i><span>Taskboard</span></li>
-            <li><i data-feather="settings"></i><span>Settings</span></li>
-            <li><a class="btn btn-light w-100" href="/login_simple"><i data-feather="log-in"></i>Log out</a>
+            <li><i data-feather="settings"></i><span>Settings</span></li> {% endcomment %}
+            <li><a class="btn btn-light w-100" href="{% url 'logout' %}?next={{ request.path }}"><i data-feather="log-in"></i>Log out</a>
             </li>
           </ul>
         </li>

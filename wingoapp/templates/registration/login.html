@@ -1,0 +1,18 @@
+{% extends 'starter_kit/other-base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+{% include 'registration/components/login.html' %}
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+{% comment %} <script>
+    document.getElementById('id_username').value = 'test'
+    document.getElementById('id_password').value = 'testing@123'
+</script> {% endcomment %}
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}
