@@ -38,13 +38,14 @@
               ><i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
             </div>
           </li>
-
+          {% if perms.master_app %}
           <li class="dropdown">
             <a class="nav-link menu-title link-nav" href=""
               ><i data-feather="home"> </i><span>Dashboard </span></a
             >
           </li>
-
+          {% endif %}
+          {% if perms.it_app %}
           <li class="dropdown">
             <a class="nav-link menu-title" href="javascript:void(0)"
               ><i data-feather="home"></i><span>IT</span></a
@@ -53,7 +54,8 @@
               <li><a href="">New Request & Problem</a></li>
             </ul>
           </li>
-
+          {% endif %}
+          {% if perms.accounting_app %}
           <li class="dropdown">
             <a class="nav-link menu-title" href="javascript:void(0)"
               ><i data-feather="home"></i><span>Accounting</span></a
@@ -62,7 +64,8 @@
               <li><a href="">New Request & Problem</a></li>
             </ul>
           </li>
-
+          {% endif %}
+          {% if perms.costcontrol_app %}
           <li class="dropdown">
             <a class="nav-link menu-title" href="javascript:void(0)"
               ><i data-feather="home"></i><span>CostControl</span></a
@@ -71,7 +74,8 @@
               <li><a href="">New Request & Problem</a></li>
             </ul>
           </li>
-
+          {% endif %}
+          {% if perms.engineering_app %}
           <li class="dropdown">
             <a class="nav-link menu-title" href="javascript:void(0)"
               ><i data-feather="home"></i><span>Engineering</span></a
@@ -80,7 +84,8 @@
               <li><a href="">New Request & Problem</a></li>
             </ul>
           </li>
-
+          {% endif %}
+          {% if perms.ga_app %}
           <li class="dropdown">
             <a class="nav-link menu-title" href="javascript:void(0)"
               ><i data-feather="home"></i><span>GA</span></a
@@ -89,7 +94,8 @@
               <li><a href="">New Request & Problem</a></li>
             </ul>
           </li>
-          
+          {% endif %}
+          {% if perms.hrd_app %}
           <li class="dropdown">
             <a class="nav-link menu-title" href="javascript:void(0)"
               ><i data-feather="home"></i><span>HRD</span></a
@@ -98,6 +104,7 @@
               <li><a href="">New Request & Problem</a></li>
             </ul>
           </li>
+          {% endif %}
           
         </ul>
       </div>
