@@ -5,4 +5,5 @@ app_name ='master_app'
 
 urlpatterns = [
     path('', views.index, name = 'index'),
+    path('userdata/', views.userdata, name='userdata')
 ]

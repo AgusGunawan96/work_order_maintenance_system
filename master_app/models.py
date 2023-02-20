@@ -17,7 +17,7 @@ class Division(models.Model):
 
 class Section(models.Model):
     division = models.ForeignKey(Division,on_delete=models.CASCADE)
-    section_name = models.CharField(max_length=64, unique=False)
+    section_name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.section_name
