@@ -13,8 +13,9 @@ from master_app.models import UserProfileInfo
 @login_required
 # @permission_required('polls.add_choice')
 def index(request):
-    context={"breadcrumb":{"parent":"Color Version","child":"Layout Light"}}
-    return render(request,'master_app/index.html',context)
+    # context={"breadcrumb":{"parent":"Color Version","child":"Layout Light"}}
+    
+    return render(request,'master_app/index.html')
 
 
 def CreateUserdata(request):

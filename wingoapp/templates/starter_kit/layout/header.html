@@ -29,10 +29,11 @@
         <li><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a>
         </li>
         <li class="onhover-dropdown">
-          <div class="media profile-media"><img class="rounded-circle"
-              src="{% static 'assets/images/avtar/emoji/9.png' %}" alt=""></div>
+          {% comment %} <div class="media profile-media"><img class="rounded-circle"
+              src="{% static 'assets/images/avtar/emoji/9.png' %}" alt=""></div> {% endcomment %}
+              <div class="media profile-media">{{ request.user.first_name }} {{ request.user.last_name }} | {{ request.user.userprofileinfo.position }}</div>
           <ul class="profile-dropdown onhover-show-div">
-            <li><i data-feather="user"></i><span>Account </span></li>
+            {% comment %} <li><i data-feather="user"></i><span>Account </span></li> {% endcomment %}
             {% comment %} <li><i data-feather="mail"></i><span>Inbox</span></li>
             <li><i data-feather="file-text"></i><span>Taskboard</span></li>
             <li><i data-feather="settings"></i><span>Settings</span></li> {% endcomment %}
