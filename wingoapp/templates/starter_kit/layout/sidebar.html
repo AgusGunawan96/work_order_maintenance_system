@@ -38,13 +38,6 @@
               ><i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
             </div>
           </li>
-          {% if perms.master_app %}
-          <li class="dropdown">
-            <a class="nav-link menu-title link-nav" href=""
-              ><i data-feather="home"> </i><span>Dashboard </span></a
-            >
-          </li>
-          {% endif %}
           {% if perms.it_app %}
           <li class="dropdown">
             <a class="nav-link menu-title link-nav" href=""
@@ -52,7 +45,7 @@
             >
           </li>
           <li class="dropdown">
-            <a class="nav-link menu-title link-nav" href=""
+            <a class="nav-link menu-title link-nav" href="/it_app/ticket/"
               ><i data-feather="home"> </i><span>IT Service</span></a
             >
           </li>

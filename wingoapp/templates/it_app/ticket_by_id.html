@@ -1,0 +1,60 @@
+{% extends 'starter_kit/base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <div class="row starter-main">
+      <div class="col-sm-12">
+        <div class="card">
+            <div class="ticket">
+                <table class="styled-table">
+                <h2> Ticket #{{ticket.id}}</h2>
+                <tbody>
+                 <tr>
+                  <td>Title</td>
+                  <td>{{ticket.title}}</td>
+                 </tr>
+                 <tr>
+                  <td>Status</td>
+                  <td>{{ticket.status}}</td>
+                 </tr>
+                 <tr>
+                  <td>Assignee</td>
+                  <td>{{ticket.assignee}}</td>
+                 </tr>
+                 <tr>
+                  <td>Description</td>
+                  <td>{{ticket.description}}</td>
+                 </tr>
+                 <tr>
+                  <td>Created At</td>
+                  <td>{{ticket.created_at}}</td>
+                 </tr>
+                 <tr>
+                  <td>Updated At</td>
+                  <td>{{ticket.updated_at}}</td>
+                 </tr>
+                </tbody>
+                </table>
+               </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}
