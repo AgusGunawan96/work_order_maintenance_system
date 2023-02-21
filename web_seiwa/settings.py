@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',  # Required for determining domain url for use in emails
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',  # Required for elapsed time formatting
