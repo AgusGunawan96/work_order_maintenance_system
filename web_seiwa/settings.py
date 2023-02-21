@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = BASE_DIR / 'templates'
 
@@ -35,8 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',  # Required for determining domain url for use in emails
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',  # Required for elapsed time formatting
     'accounting_app',
     'hrd_app',
     'ga_app',
@@ -50,7 +52,9 @@ INSTALLED_APPS = [
     'it_app',
     'master_app',
     'wingoapp',
-    'sass_processor'
+    'sass_processor',
+
+
 ]
 
 MIDDLEWARE = [
@@ -92,7 +96,7 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-        'default': {
+    'default': {
         'ENGINE': 'mssql',
         'NAME': 'web_seiwa',
         'USER': 'sa',
@@ -121,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS':{'min_length':6}
+        'OPTIONS': {'min_length': 6}
     },
     # {
     #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -147,16 +151,16 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL ='/web_seiwa/wingoapp/static/'
+STATIC_URL = '/web_seiwa/wingoapp/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'wingoapp/static/' ,
+    BASE_DIR / 'wingoapp/static/',
 ]
 SASS_PROCESSOR_ROOT = BASE_DIR / 'static'
 
 # LOGIN
 LOGIN_REDIRECT_URL = '/'
 
-#MEDIA
+# MEDIA
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = 'media/'
 

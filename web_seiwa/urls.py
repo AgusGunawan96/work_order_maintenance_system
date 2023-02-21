@@ -32,5 +32,6 @@ urlpatterns = [
     path('warehouse_app/', include('warehouse_app.urls')),
     path('engineering_app/', include('engineering_app.urls')),
     path('it_app/', include('it_app.urls')),
+    path('master_app/', include('master_app.urls')),
     path('admin/', admin.site.urls),
 ]
