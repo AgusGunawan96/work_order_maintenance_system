@@ -35,7 +35,7 @@ def index(request):
         return render(request,'it_app/dashboard.html')
     else:
         if request.user in master_app:
-            return render(request, 'master_app/index.html')
+            return render(request, 'master_app/dashboard.html')
         else:
             if request.user in accounting_app:
                 return render(request, 'accounting_app/dashboard.html')
@@ -67,7 +67,7 @@ def index(request):
                                                 if request.user in warehouse_app:
                                                     return render(request, 'warehouse_app/dashboard.html')
                                                 else:
-                                                    return render (request, 'master_app/index.html')
+                                                    return render (request, 'master_app/dashboard.html')
 
 
     # return render(request,'it_app/index.html')
