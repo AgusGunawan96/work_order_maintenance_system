@@ -6,18 +6,75 @@ from django.urls import path, reverse_lazy
 # LIBRARY FOR IMPORT DATA
 from django.http import JsonResponse
 from csv import reader
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from master_app.models import UserProfileInfo
+from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
-@login_required
+
+
+
 # @permission_required('polls.add_choice')
+@login_required
 def index(request):
     # context={"breadcrumb":{"parent":"Color Version","child":"Layout Light"}}
-    
-    return render(request,'master_app/index.html')
+    master_app = Group.objects.get(name="master_app").user_set.all()
+    accounting_app = Group.objects.get(name="accounting_app").user_set.all()
+    costcontrol_app = Group.objects.get(name="costcontrol_app").user_set.all()
+    engineering_app = Group.objects.get(name="engineering_app").user_set.all()
+    ga_app = Group.objects.get(name="ga_app").user_set.all()
+    hrd_app = Group.objects.get(name="hrd_app").user_set.all()
+    ie_app = Group.objects.get(name="ie_app").user_set.all()
+    it_app = Group.objects.get(name="it_app").user_set.all()
+    ppc_app = Group.objects.get(name="ppc_app").user_set.all()
+    qc_app = Group.objects.get(name="qc_app").user_set.all()
+    sales_app = Group.objects.get(name="sales_app").user_set.all()
+    warehouse_app = Group.objects.get(name="warehouse_app").user_set.all()
+
+    if request.user in it_app:
+        return render(request,'it_app/dashboard.html')
+    else:
+        if request.user in master_app:
+            return render(request, 'master_app/index.html')
+        else:
+            if request.user in accounting_app:
+                return render(request, 'accounting_app/dashboard.html')
+            else:
+                if request.user in costcontrol_app:
+                    return render(request, 'costcontrol_app/dashboard.html')
+                else:
+                    if request.user in engineering_app:
+                        return render(request, 'engineering_app/dashboard.html')
+                    else:
+                        if request.user in ga_app:
+                            return render(request, 'ga_app/dashboard.html')
+                        else:
+                            if request.user in hrd_app:
+                                return render(request, 'hrd_app/dashboard.html')
+                            else:
+                                if request.user in ie_app:
+                                    return render(request, 'ie_app/dashboard.html')
+                                else:
+                                    if request.user in ppc_app:
+                                        return render(request, 'ppc_app/dashboard.html')
+                                    else:
+                                        if request.user in qc_app:
+                                            return render(request,'qc_app/dashboard.html')
+                                        else:
+                                            if request.user in sales_app:
+                                                return render(request, 'sales_app/dashboard.html')
+                                            else:
+                                                if request.user in warehouse_app:
+                                                    return render(request, 'warehouse_app/dashboard.html')
+                                                else:
+                                                    return render (request, 'master_app/index.html')
 
 
+    # return render(request,'it_app/index.html')
+
+
+
+@login_required
 def CreateUserdata(request):
     with open('templates/csv/list_user.csv', 'r') as csv_file:
         csvf = reader(csv_file)
@@ -29,6 +86,7 @@ def CreateUserdata(request):
         User.objects.bulk_create(data)
     return JsonResponse('user csv is now working', safe=False)
 
+@login_required
 def CreateUserInfoData(request):
     with open('templates/csv/list_user_info.csv', 'r') as csv_file:
         csvf = reader(csv_file)
@@ -40,3 +98,4 @@ def CreateUserInfoData(request):
             data.append(user)
         UserProfileInfo.objects.bulk_create(data)
     return JsonResponse('user Info csv is now working', safe=False)
+

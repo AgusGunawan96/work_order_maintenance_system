@@ -2,7 +2,7 @@
 <!-- page sidebar starts -->
 <header class="main-nav">
   <div class="logo-wrapper">
-    <a href="/"
+    <a href="#"
       ><img
         class="img-fluid"
         src="{% static 'assets/images/logo/logo.png' %}"
@@ -10,7 +10,7 @@
     /></a>
   </div>
   <div class="logo-icon-wrapper">
-    <a href="/"
+    <a href="#"
       ><img
         class="img-fluid"
         src="{% static 'assets/images/logo/logo-icon.png' %}"
@@ -18,7 +18,7 @@
     /></a>
   </div>
   <div class="morden-logo">
-    <a href="/"
+    <a href="#"
       ><img
         class="img-fluid"
         src="{% static 'assets/images/logo/morden-logo.png' %}"
@@ -40,8 +40,10 @@
           </li>
           {% comment %} {{ request.user.username }}  {% endcomment %}
           {% if perms.it_app %}
-          <li class="dropdown"><a class="nav-link menu-title link-nav" href="/it_app/profile/"><i data-feather="user">
-          </i><span>Profile</span></a></li>
+          <li class="dropdown"><a class="nav-link menu-title link-nav" href="/it_app/dashboard/"><i data-feather="user">
+          </i><span>Dashboard</span></a></li>
+          {% comment %} <li class="dropdown"><a class="nav-link menu-title link-nav" href="/it_app/profile/"><i data-feather="user">
+          </i><span>Profile</span></a></li> {% endcomment %}
           <li class="dropdown"><a class="nav-link menu-title link-nav" href="/it_app/ticket/"><i data-feather="settings">
           </i><span>IT Service</span></a></li>
           {% endif %}
