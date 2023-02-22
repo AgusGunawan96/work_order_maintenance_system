@@ -32,6 +32,7 @@ class TicketHadware(models.TextChoices):
     UPS = 'UPS'
     KEYBOARD = 'Keyboard'
     MOUSE = 'Mouse'
+    TONER = 'Toner'
     OTHER = 'Other'
 
 class Ticket(models.Model):
@@ -39,14 +40,14 @@ class Ticket(models.Model):
     assignee = models.ForeignKey(User, null=True, blank = True, on_delete=models.CASCADE)
     type = models.CharField(max_length=25, choices=TicketType.choices, default=TicketType.OTHER)
     description = models.TextField()
-    hardware = models.CharField(max_length=25, choices=TicketHadware.choices, default=TicketHadware.OTHER, blank=True, null=True)
-    quantity = models.PositiveIntegerField(blank=True, default=0)
-    ticket_photo = models.ImageField(upload_to='ticket_pics', blank=True)
+    ticket_pic = models.ImageField(upload_to='ticket_pics', blank=True)
     created_at = models.DateTimeField('created at', auto_now_add=True)
     updated_at = models.DateTimeField('updated at', auto_now=True)
 
     def __str__(self):
         return self.title
+
+
 
 class TicketApprovalSupervisor(models.Model):
     ticket = models.OneToOneField(Ticket, on_delete=models.CASCADE, null=True, blank=True)
@@ -83,6 +84,8 @@ class TicketProgressIT(models.Model):
     ticket_pic = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=25, choices=TicketStatus.choices, default=TicketStatus.IN_APPROVAL_IT)
     priority = models.CharField(max_length=25, choices=TicketPriority.choices, default=TicketPriority.LOW)
+    hardware = models.CharField(max_length=25, choices=TicketHadware.choices, blank=True, null=True)
+    quantity = models.PositiveIntegerField(blank=True, default=0)
     review_description = models.TextField()
 
     def __str__(self):

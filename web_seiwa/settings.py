@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',  # Required for elapsed time formatting
+    'widget_tweaks',
+    'sweetify',
     'accounting_app',
     'hrd_app',
     'ga_app',
