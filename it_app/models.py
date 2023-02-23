@@ -47,7 +47,7 @@ class TicketApprovalSupervisor(models.Model):
     supervisor = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     is_approve_supervisor = models.BooleanField(default=False, blank=True, null=True )
     is_rejected_supervisor = models.BooleanField(default=False, blank=True, null=True )
-    reject_reason_supervisor = models.TextField()
+    reject_reason_supervisor = models.TextField( blank=True, null=True)
 
     def __str__(self):
         return self.ticket.title
@@ -57,7 +57,7 @@ class TicketApprovalManager(models.Model):
     manager = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     is_approve_manager = models.BooleanField(default=False, blank=True, null=True )
     is_rejected_manager = models.BooleanField(default=False, blank=True, null=True )
-    reject_reason_manager = models.TextField()
+    reject_reason_manager = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.ticket_approval_supervisor.ticket.title
@@ -66,7 +66,7 @@ class TicketApprovalIT(models.Model):
     ticket_approval_manager = models.OneToOneField(TicketApprovalManager, on_delete=models.CASCADE, null=True, blank=True)
     is_approve_it = models.BooleanField(default=False, blank=True, null=True )
     is_rejected_it = models.BooleanField(default=False, blank=True, null=True)
-    reject_reason_it = models.TextField()
+    reject_reason_it = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.ticket_approval_manager.ticket_approval_supervisor.ticket.title
@@ -75,9 +75,10 @@ class TicketApprovalIT(models.Model):
 class TicketProgressIT(models.Model):
     ticket_approval_it = models.OneToOneField(TicketApprovalIT, on_delete=models.CASCADE, null=True, blank=True)
     ticket_pic = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    ticket_no =models.CharField(max_length=64)
     status = models.CharField(max_length=25, choices=TicketStatus.choices, default=TicketStatus.IN_APPROVAL_IT)
     priority = models.CharField(max_length=25, choices=TicketPriority.choices, default=TicketPriority.LOW)
-    review_description = models.TextField()
+    review_description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.title

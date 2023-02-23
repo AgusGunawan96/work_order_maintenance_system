@@ -47,24 +47,26 @@
                       <table class="display" id="basic-1">
                         <thead>
                           <tr>
-                            <th>Ticket</th>
-                            <th>Summary</th>
-                            <th>Status</th>
-                            <th>Assignee</th>
                             <th>Created</th>
-                            <th>Last Updated</th>
+                            <th>Summary</th>
+                            <th>Assignee</th>
+                            {% if request.user.userprofileinfo.is_supervisor == True %}
+                            <th>Action</th>
+                            {% endif %}
                           </tr>
                         </thead>
                         <tbody>
-                            {% for ticket in tickets %}
+                            {% for supervisor in supervisors %}
+                            {% if supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_supervisor == True and request.user.userprofileinfo.division_id == supervisor.ticket.assignee.userprofileinfo.division_id %}
                             <tr>
-                             <td><a href="ticket/{{ticket.id}}">{{ticket.id}}</td>
-                             <td>{{ticket.title}}</td>
-                             <td>{{ticket.status}}</td>
-                             <td>{{ticket.assignee.first_name}}</td>
-                             <td>{{ticket.created_at}}</td>
-                             <td>{{ticket.updated_at}}</td>
+                              <td><a href="ticket_detail/{{supervisor.ticket.id}}">{{supervisor.ticket.created_at}}</td>
+                             <td>{{supervisor.ticket.title}}</td>
+                             <td>{{supervisor.ticket.assignee.first_name}} {{supervisor.ticket.assignee.last_name}}</td>
+                             {% if request.user.userprofileinfo.is_supervisor == True %}
+                             <td>Approve</td>
+                             {% endif %}
                             </tr>
+                            {% endif %}
                             {% endfor %}
                         </tbody>
                       </table>

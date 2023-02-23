@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from it_app.models import Ticket
+from it_app.models import Ticket, TicketApprovalSupervisor
 from django.contrib.auth.decorators import login_required
-from it_app.forms import ticketForms
+from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms
 from django.contrib import messages
 
 # Create your views here.
@@ -17,29 +17,35 @@ def profile(request):
 @login_required
 def ticket_index(request):
     tickets = Ticket.objects.order_by('-created_at')
-    return render(request,'it_app/ticket_index.html', {'tickets': tickets})
+    supervisors = TicketApprovalSupervisor.objects.order_by('-ticket_id')
+    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors})
 
 @login_required
 def ticket_add(request):
     if request.method =="POST":
         ticket_form = ticketForms(data=request.POST)
-        
-        if ticket_form.is_valid():
+        approval_supervisor_form = approvalSupervisorForms(data=request.POST)
+        if ticket_form.is_valid() and approval_supervisor_form.is_valid():
             ticket = ticket_form.save(commit=False)
             if 'ticket_pic' in request.FILES:
                 ticket.ticket_pic = request.FILES['ticket_pic']
-            ticket.save()
             ticket.assignee = request.user
+            ticket.save()
+            supervisor = approval_supervisor_form.save(commit=False)
+            supervisor.ticket = ticket
+            supervisor.save()
             messages.success(request, 'Success Add Services', 'success')
             return redirect('it_app:ticket_index')
         else:
             print(ticket_form.errors)
-        ticket.save()
+        # ticket.save()
     else:
         ticket_form = ticketForms()
+        approval_supervisor_form = approvalSupervisorForms()
     
     context = {
     'form': ticketForms,
+    'supervisor_form': approvalSupervisorForms,
 }
 
     return render(request, 'it_app/ticket_add.html', context)
@@ -47,14 +53,4 @@ def ticket_add(request):
 @login_required
 def ticket_detail(request, ticket_id):
     ticket = Ticket.objects.get(pk=ticket_id)
-    return render(request, 'it_app/ticket_by_id.html', {'ticket':ticket})
-
-@login_required
-def ticket_edit(request, ticket_id):
-    ticket = Ticket.objects.get(pk=ticket_id)
-    return render(request, 'it_app/ticket_by_id.html', {'ticket':ticket})
-
-@login_required
-def ticket_delete(request, ticket_id):
-    ticket = Ticket.objects.get(pk=ticket_id)
-    return render(request, 'it_app/ticket_by_id.html', {'ticket':ticket})
+    return render(request, 'it_app/ticket_detail.html', {'ticket':ticket})
