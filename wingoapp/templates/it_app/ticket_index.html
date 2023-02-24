@@ -57,13 +57,13 @@
                         </thead>
                         <tbody>
                             {% for supervisor in supervisors %}
-                            {% if supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_supervisor == True and request.user.userprofileinfo.division_id == supervisor.ticket.assignee.userprofileinfo.division_id %}
+                            {% if supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_supervisor == True and request.user.userprofileinfo.division_id == supervisor.ticket.assignee.userprofileinfo.division_id and supervisor.supervisor.id is null%}
                             <tr>
                               <td><a href="ticket_detail/{{supervisor.ticket.id}}">{{supervisor.ticket.created_at}}</td>
                              <td>{{supervisor.ticket.title}}</td>
                              <td>{{supervisor.ticket.assignee.first_name}} {{supervisor.ticket.assignee.last_name}}</td>
                              {% if request.user.userprofileinfo.is_supervisor == True %}
-                             <td>Approve</td>
+                             <td><a href="javascript:void(0)" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a> <a href="javascript:void(0)" class="btn btn-danger btn-sm"><span class="icon-close"></span> Reject</a></td>
                              {% endif %}
                             </tr>
                             {% endif %}

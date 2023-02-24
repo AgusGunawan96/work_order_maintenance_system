@@ -13,37 +13,49 @@
     <div class="row starter-main">
       <div class="col-sm-12">
         <div class="card">
-            <div class="ticket">
-                <table class="styled-table">
-                <h2> Ticket #{{ticket.id}}</h2>
-                <tbody>
-                 <tr>
-                  <td>Title</td>
-                  <td>{{ticket.title}}</td>
-                 </tr>
-                 <tr>
-                  <td>Status</td>
-                  <td>{{ticket.status}}</td>
-                 </tr>
-                 <tr>
-                  <td>Assignee</td>
-                  <td>{{ticket.assignee}}</td>
-                 </tr>
-                 <tr>
-                  <td>Description</td>
-                  <td>{{ticket.description}}</td>
-                 </tr>
-                 <tr>
-                  <td>Created At</td>
-                  <td>{{ticket.created_at}}</td>
-                 </tr>
-                 <tr>
-                  <td>Updated At</td>
-                  <td>{{ticket.updated_at}}</td>
-                 </tr>
-                </tbody>
-                </table>
-               </div>
+          <div class="card-header pb-0">
+            <h5>IT SERVICE | {{request.user.first_name}} {{request.user.last_name}}</h5>
+          </div>
+          <div class="card-body">
+            <form class="theme-form mega-form">
+              <h6>Ticket Detail</h6>
+              <div class="mb-3">  
+                <label class="col-form-label">Tile</label>
+                <input class="form-control" type="text" value="{{ ticket.title }}" readonly>
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label">Email Address</label>
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" ></textarea >
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label">Contact Number</label>
+                <input class="form-control" type="Number" placeholder="Enter contact number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="10">
+              </div>
+              <hr class="mt-4 mb-4">
+              <h6>Company Information</h6>
+              <div class="mb-3">
+                <label class="col-form-label">Company Name</label>
+                <input class="form-control" type="text" placeholder="Company Name">
+              </div>
+              <div class="mb-3">
+                <label class="col-form-label">Website</label>
+                <input class="form-control" type="text" placeholder="Website">
+              </div>
+            </form>
+            <hr class="mt-4 mb-4">
+            <h6 class="pb-3 mb-0">Billing Information</h6>
+            <form class="form-space theme-form row">
+              <div class="col-auto mb-2">
+                <input class="form-control" type="text" placeholder="Name On Card">
+              </div>
+              <div class="col-auto mb-2">
+                <input class="form-control" type="text" name="inputPassword" placeholder="Card Number">
+              </div>
+              <div class="col-auto">
+                <input class="form-control" type="text" name="inputPassword" placeholder="Zip Code">
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
