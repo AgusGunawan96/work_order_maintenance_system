@@ -21,7 +21,7 @@ def ticket_index(request):
     supervisors = TicketApprovalSupervisor.objects.order_by('-id')
     managers = TicketApprovalManager.objects.order_by('-id')
     its = TicketApprovalIT.objects.order_by('-id')
-    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'its': its, 'managers': managers, 'form_supervisor': approvalSupervisorForms, 'form_manager': approvalManagerForms, 'form_it': approvalITForms})
+    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'its': its, 'managers': managers, 'form_supervisor': approvalSupervisorForms, 'form_manager': approvalManagerForms, 'form_it': approvalITForms, 'form_progress' : progressITForms})
 
 @login_required
 def ticket_add(request):

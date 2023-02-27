@@ -26,6 +26,15 @@ class Hardware(models.Model):
 
     def __str__(self):
         return self.name
+    
+class HardwareInfo(models.Model):
+    Hardware = models.ForeignKey(Hardware, null=True, blank=True, on_delete=models.CASCADE)
+    nomor_po = models.CharField(max_length=64, null=True, blank=True)
+    quantity = models.PositiveIntegerField(null=True, blank=True)
+    kode_barang = models.CharField(max_length=64, null=True, blank=True)
+
+    def __str__(self):
+        return self.nomor_po
 
 class Ticket(models.Model):
     title = models.CharField(max_length=100)
