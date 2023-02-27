@@ -11,6 +11,7 @@ from master_app.models import UserProfileInfo
 from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
+from datetime import datetime
 
 
 
@@ -79,8 +80,10 @@ def CreateUserdata(request):
     with open('templates/csv/list_user.csv', 'r') as csv_file:
         csvf = reader(csv_file)
         data = []
-        for id,username, password, first_name, last_name, *__ in csvf:
-            user = User(id=id, username=username, first_name=first_name, last_name = last_name, is_staff = True )
+        for id,first_name, last_name, username,  password, date_joined, *__ in csvf:
+            user = User(id=id, username=username, first_name=first_name, last_name = last_name, is_staff = True, date_joined = date_joined ,is_active = True )
+            d = datetime.strptime(user.date_joined, "%m/%d/%Y")
+            user.date_joined = d.strftime("%Y-%m-%d-%H:%M:%S")
             user.set_password(password)
             data.append(user)
         User.objects.bulk_create(data)
@@ -91,10 +94,10 @@ def CreateUserInfoData(request):
     with open('templates/csv/list_user_info.csv', 'r') as csv_file:
         csvf = reader(csv_file)
         data = []
-        for user_id, department_id, division_id, section_id, employee_ext, is_supervisor, is_manager, is_bod, profile_pic, position, *__ in csvf:
+        for user_id, department_id, division_id, section_id, position, is_supervisor, is_manager, is_bod, *__ in csvf:
             user = UserProfileInfo(user_id=user_id, department_id=department_id, division_id = division_id, section_id = section_id
-            , employee_ext = employee_ext, is_supervisor = is_supervisor, is_manager = is_manager, is_bod = is_bod
-            , profile_pic = profile_pic, position = position )
+            ,  position = position, is_supervisor = is_supervisor, is_manager = is_manager, is_bod = is_bod
+             )
             data.append(user)
         UserProfileInfo.objects.bulk_create(data)
     return JsonResponse('user Info csv is now working', safe=False)
