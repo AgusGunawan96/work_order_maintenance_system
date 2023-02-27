@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus
 from django.contrib.auth.decorators import login_required
 from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms
 from django.contrib import messages
@@ -19,7 +19,8 @@ def ticket_index(request):
     tickets = Ticket.objects.order_by('-created_at')
     supervisors = TicketApprovalSupervisor.objects.order_by('-id')
     managers = TicketApprovalManager.objects.order_by('-id')
-    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'managers': managers, 'form_supervisor': approvalSupervisorForms, 'form_manager': approvalManagerForms})
+    its = TicketApprovalIT.objects.order_by('-id')
+    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'its': its, 'managers': managers, 'form_supervisor': approvalSupervisorForms, 'form_manager': approvalManagerForms, 'form_it': approvalITForms})
 
 @login_required
 def ticket_add(request):
@@ -131,3 +132,43 @@ def ticket_manager_reject(request,ticket_id):
             reject.save()
             return redirect('it_app:ticket_index')
         return HttpResponse(approval_manager_form)
+
+@login_required
+def ticket_it_approve(request,ticket_id):
+    try:
+        # mengambil data task yang akan dihapus berdasarkan task id
+        it = TicketApprovalIT.objects.get(pk=ticket_id)
+        # mengapprove
+        it.is_approve_it = True
+        it.save()
+        #membuat Ticket Progress
+        approval_it_forms = progressITForms(data=request.POST)
+        it = approval_it_forms.save(commit=False)
+        it.ticket_approval_it = it
+        it.ticket_pic = request.user
+        it.priority = TicketPriority.LOW
+        it.status = TicketStatus.IN_APPROVAL_IT
+        it.save()
+        # mengeset pesan sukses dan redirect ke halaman daftar task
+        messages.success(request, 'Approved Successfully')
+        return redirect('it_app:ticket_index')
+    except TicketApprovalIT.DoesNotExist:
+        # Jika data task tidak ditemukan,
+        # maka akan di redirect ke halaman 404 (Page not found).
+        raise Http404("Ticket tidak bisa di Approved.")
+
+@login_required
+def ticket_it_reject(request,ticket_id):
+    # try:
+        # mengambil data task yang akan dihapus berdasarkan task id
+        it = TicketApprovalIT.objects.get(pk=ticket_id)
+        post = request.POST.copy() 
+        post.update({'is_rejected_it': True})
+        request.POST = post
+        approval_it_form = approvalITForms(request.POST, instance=it)
+        if approval_it_form.is_valid():
+            reject = approval_it_form.save(commit=False)
+            reject.it = request.user
+            reject.save()
+            return redirect('it_app:ticket_index')
+        return HttpResponse(approval_it_form)
