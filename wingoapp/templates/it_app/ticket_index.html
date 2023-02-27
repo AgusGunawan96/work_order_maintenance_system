@@ -297,8 +297,8 @@
                          {% endif %}
                          {% if request.user.userprofileinfo.section_id == 22 and it.is_approve_it == False and it.is_rejected_it == False%}
                          <td>
-                          <a href="{% url 'it_app:ticket_it_approve' it.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
-                          <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalIT{{ it.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
+                          <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ModalITAccept{{ it.id }}" data-whatever="@mdo"><span class="icon-check"></span> Accept</a>
+                          <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalITReject{{ it.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
                           </td>
                           {% else %}
                           {% if request.user.userprofileinfo.section_id != 22 %}
@@ -309,7 +309,66 @@
                         </tr>
                         {% endif %}
                         {% endif %}
-                        <div class="modal fade" id="ModalIT{{ it.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        <div class="modal fade" id="ModalITAccept{{ it.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel2">{{it.ticket_approval_manager.ticket_approval_supervisor.ticket.title}}</h5>
+                              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="{% url 'it_app:ticket_it_approve' it.id %}" method="POST">
+                              {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                  <label class="col-form-label" for="recipient-name">Recipient:</label>
+                                  <input class="form-control" type="text" value="{{it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.last_name}}" readonly>
+                                </div>
+                                {% for hidden in form_progress.hidden_fields %}
+                                {{ hidden }}
+                                 {% endfor %}
+                                <!-- merender semua field form dari objek TaskForm -->
+                                {% if form_progress.non_field_errors %}
+                                  <div class="alert alert-danger" role="alert">
+                                    {% for error in form_progress.non_field_errors %}
+                                      {{ error }}
+                                    {% endfor %}
+                                  </div>
+                                {% endif %}
+                      
+                                {% for field in form_progress.visible_fields %}
+                                  <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {% if form_it.is_bound %}
+                                      {% if field.errors %}
+                                        {% render_field field class="form-control is-invalid" %}
+                                        {% for error in field.errors %}
+                                          <div class="invalid-feedback">
+                                            {{ error }}
+                                          </div>
+                                        {% endfor %}
+                                      {% else %}
+                                        {% render_field field class="form-control is-valid" %}
+                                      {% endif %}
+                                    {% else %}
+                                      {% render_field field class="form-control" %}
+                                    {% endif %}
+                      
+                                    {% if field.help_text %}
+                                      <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                  </div>
+                                {% endfor %}
+                              </div>
+                              <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                              </div>
+                          </form>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal fade" id="ModalITReject{{ it.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
