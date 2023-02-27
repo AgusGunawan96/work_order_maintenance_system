@@ -16,43 +16,33 @@
           <div class="card-header pb-0">
             <h5>IT SERVICE | {{request.user.first_name}} {{request.user.last_name}}</h5>
           </div>
+          <hr class="mt-4 mb-4">
           <div class="card-body">
             <form class="theme-form mega-form">
-              <h6>Ticket Detail</h6>
+              <h6>Ticket Detail | <a href="">{{ticket.assignee.first_name}} {{ticket.assignee.last_name}}</a></h6>
               <div class="mb-3">  
-                <label class="col-form-label">Tile</label>
+                <label class="col-form-label">Title</label>
                 <input class="form-control" type="text" value="{{ ticket.title }}" readonly>
               </div>
               <div class="mb-3">
-                <label class="col-form-label">Email Address</label>
-                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" ></textarea >
+                <label class="col-form-label">Description</label>
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.description}}</textarea >
               </div>
-              <div class="mb-3">
-                <label class="col-form-label">Contact Number</label>
-                <input class="form-control" type="Number" placeholder="Enter contact number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="10">
-              </div>
-              <hr class="mt-4 mb-4">
-              <h6>Company Information</h6>
-              <div class="mb-3">
-                <label class="col-form-label">Company Name</label>
-                <input class="form-control" type="text" placeholder="Company Name">
-              </div>
-              <div class="mb-3">
-                <label class="col-form-label">Website</label>
-                <input class="form-control" type="text" placeholder="Website">
-              </div>
+            {% if ticket.ticketapprovalsupervisor.is_rejected_supervisor == True %}
+            <div class="mb-3">
+              <label class="col-form-label">Reject Reason by {{ ticket.ticketapprovalsupervisor.supervisor.first_name }} {{ ticket.ticketapprovalsupervisor.supervisor.last_name }} (Approval Supervisor)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.reject_reason_supervisor}}</textarea >
+            </div>
+            {% endif %}
             </form>
-            <hr class="mt-4 mb-4">
-            <h6 class="pb-3 mb-0">Billing Information</h6>
             <form class="form-space theme-form row">
+              <h6 class="pb-3 mb-0">Hardware</h6>
               <div class="col-auto mb-2">
-                <input class="form-control" type="text" placeholder="Name On Card">
+                <input class="form-control" type="text" value="{{ ticket.hardware.name }}" readonly>
               </div>
+            <h6 class="pb-3 mb-0">Quantity</h6>
               <div class="col-auto mb-2">
-                <input class="form-control" type="text" name="inputPassword" placeholder="Card Number">
-              </div>
-              <div class="col-auto">
-                <input class="form-control" type="text" name="inputPassword" placeholder="Zip Code">
+                <input class="form-control" type="text" name="inputPassword" value="{{ ticket.quantity }}" placeholder="Card Number" readonly>
               </div>
             </form>
           </div>

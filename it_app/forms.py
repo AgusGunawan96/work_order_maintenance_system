@@ -11,18 +11,20 @@ class ticketForms(forms.ModelForm):
 class approvalSupervisorForms(forms.ModelForm):
     class Meta():
         model = TicketApprovalSupervisor
-        fields = ('reject_reason_supervisor','is_approve_supervisor','is_rejected_supervisor')
-        
+        fields = ('reject_reason_supervisor','is_approve_supervisor','is_rejected_supervisor', 'supervisor')
+        widgets = {'is_approve_supervisor': forms.HiddenInput, 'is_rejected_supervisor': forms.HiddenInput , 'supervisor': forms.HiddenInput}
 
 class approvalManagerForms(forms.ModelForm):
     class Meta():
         model = TicketApprovalManager
-        fields = ('reject_reason_manager', 'is_approve_manager' ,'is_rejected_manager')
+        fields = ('reject_reason_manager', 'is_approve_manager' ,'is_rejected_manager', 'manager')
+        widgets = {'is_approve_manager': forms.HiddenInput, 'is_rejected_manager': forms.HiddenInput , 'manager': forms.HiddenInput}
 
 class approvalITForms(forms.ModelForm):
     class Meta():
         model = TicketApprovalIT
         fields = ('reject_reason_it','is_approve_it' ,'is_rejected_it')
+        widgets = {'is_approve_it': forms.HiddenInput, 'is_rejected_it': forms.HiddenInput }
 
 class progressITForms(forms.ModelForm):
     class Meta():
