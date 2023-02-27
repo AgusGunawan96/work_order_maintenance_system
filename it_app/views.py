@@ -19,7 +19,7 @@ def ticket_index(request):
     tickets = Ticket.objects.order_by('-created_at')
     supervisors = TicketApprovalSupervisor.objects.order_by('-id')
     managers = TicketApprovalManager.objects.order_by('-id')
-    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'managers': managers, 'form': approvalSupervisorForms})
+    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'managers': managers, 'form_supervisor': approvalSupervisorForms, 'form_manager': approvalManagerForms})
 
 @login_required
 def ticket_add(request):
@@ -103,11 +103,11 @@ def ticket_manager_approve(request,ticket_id):
         manager.is_approve_manager = True
         manager.manager = request.user
         manager.save()
-        #membuat approval manager
-        approval_manager_form = approvalManagerForms(data=request.POST)
-        manager = approval_manager_form.save(commit=False)
-        manager.ticket_approval_manager = manager
-        manager.save()
+        #membuat Approval IT
+        approval_it_forms = approvalITForms(data=request.POST)
+        it = approval_it_forms.save(commit=False)
+        it.ticket_approval_manager = manager
+        it.save()
         # mengeset pesan sukses dan redirect ke halaman daftar task
         messages.success(request, 'Approved Successfully')
         return redirect('it_app:ticket_index')
