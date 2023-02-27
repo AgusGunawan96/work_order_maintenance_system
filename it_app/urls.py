@@ -13,4 +13,6 @@ urlpatterns = [
     path('ticket/ticket_supervisor_reject/<int:ticket_id>', views.ticket_supervisor_reject, name='ticket_supervisor_reject'),
     path('ticket/ticket_manager_approve/<int:ticket_id>', views.ticket_manager_approve, name='ticket_manager_approve'),
     path('ticket/ticket_manager_reject/<int:ticket_id>', views.ticket_manager_reject, name='ticket_manager_reject'),
+    path('ticket/ticket_it_approve/<int:ticket_id>', views.ticket_it_approve, name='ticket_it_approve'),
+    path('ticket/ticket_it_reject/<int:ticket_id>', views.ticket_it_reject, name='ticket_it_reject'),
 ]

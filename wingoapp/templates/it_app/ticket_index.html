@@ -100,7 +100,7 @@
                                       <label class="col-form-label" for="recipient-name">Recipient:</label>
                                       <input class="form-control" type="text" value="{{supervisor.ticket.assignee.first_name}} {{supervisor.ticket.assignee.last_name}}" readonly>
                                     </div>
-                                    {% for hidden in form.hidden_fields %}
+                                    {% for hidden in form_supervisor.hidden_fields %}
                                     {{ hidden }}
                                      {% endfor %}
                                     <!-- merender semua field form dari objek TaskForm -->
@@ -202,7 +202,7 @@
                           <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel2">{{manager.ticketapprovalsupervisor.ticket.title}}</h5>
+                                <h5 class="modal-title" id="exampleModalLabel2">{{manager.ticket_approval_supervisor.ticket.title}}</h5>
                                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
                               <form action="{% url 'it_app:ticket_manager_reject' manager.id %}" method="POST">
@@ -212,7 +212,7 @@
                                     <label class="col-form-label" for="recipient-name">Recipient:</label>
                                     <input class="form-control" type="text" value="{{manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{manager.ticket_approval_supervisor.ticket.assignee.last_name}}" readonly>
                                   </div>
-                                  {% for hidden in form.hidden_fields %}
+                                  {% for hidden in form_manager.hidden_fields %}
                                   {{ hidden }}
                                    {% endfor %}
                                   <!-- merender semua field form dari objek TaskForm -->
@@ -277,31 +277,31 @@
                           <th>Summary</th>
                           <th>Assignee</th>
                           <th>Status</th>
-                          {% if request.user.userprofileinfo.is_manager %}
+                          {% if request.user.userprofileinfo.section_id == 22 %}
                           <th>Action</th>
                           {% endif %}
                         </tr>
                       </thead>
                       <tbody>
-                        {% for manager in managers %}
-                        {% if request.user.userprofileinfo.department_id == manager.ticket_approval_supervisor.ticket.assignee.userprofileinfo.department_id and manager.is_approve_manager == False %}
-                        {% if manager.ticket_approval_supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_manager == True %}
+                        {% for it in its %}
+                        {% if it.is_approve_it == False %}
+                        {% if it.ticket_approval_supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.section_id == 22 %}
                         <tr>
-                          <td><a href="{% url 'it_app:ticket_detail' manager.ticket_approval_supervisor.ticket.id %}">{{manager.ticket_approval_supervisor.ticket.created_at}}</td>
-                         <td>{{manager.ticket_approval_supervisor.ticket.title}}</td>
-                         <td>{{manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{manager.ticket_approval_supervisor.ticket.assignee.last_name}}</td>
-                         {% if manager.is_rejected_manager == True %}
-                          <td>Rejected by {{ manager.manager.first_name }} {{ manager.manager.last_name }}</td>
+                          <td><a href="{% url 'it_app:ticket_detail' it.ticket_approval_manager.ticket_approval_supervisor.ticket.id %}">{{it.ticket_approval_manager.ticket_approval_supervisor.ticket.created_at}}</td>
+                         <td>{{it.ticket_approval_manager.ticket_approval_supervisor.ticket.title}}</td>
+                         <td>{{it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.last_name}}</td>
+                         {% if it.is_rejected_it == True %}
+                          <td>Rejected by {{ it.it.first_name }} {{ it.it.last_name }}</td>
                          {% else %}
                           <td>Waiting for Approval IT Team</td>
                          {% endif %}
-                         {% if request.user.userprofileinfo.is_manager == True and manager.is_approve_manager == False and manager.is_rejected_manager == False%}
+                         {% if request.user.userprofileinfo.section_id == 22 and it.is_approve_it == False and it.is_rejected_it == False%}
                          <td>
-                          <a href="{% url 'it_app:ticket_manager_approve' manager.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
-                          <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalManager{{ manager.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
+                          <a href="{% url 'it_app:ticket_it_approve' it.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                          <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalIT{{ it.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
                           </td>
                           {% else %}
-                          {% if request.user.userprofileinfo.is_manager == False %}
+                          {% if request.user.userprofileinfo.section_id != 22 %}
                           {% else %}
                           <td> </td>
                           {% endif %}
@@ -309,37 +309,37 @@
                         </tr>
                         {% endif %}
                         {% endif %}
-                        <div class="modal fade" id="ModalManager{{ manager.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        <div class="modal fade" id="ModalIT{{ it.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel2">{{manager.ticketapprovalsupervisor.ticket.title}}</h5>
+                              <h5 class="modal-title" id="exampleModalLabel2">{{it.ticket_approval_manager.ticket_approval_supervisor.ticket.title}}</h5>
                               <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form action="{% url 'it_app:ticket_manager_reject' manager.id %}" method="POST">
+                            <form action="{% url 'it_app:ticket_it_reject' it.id %}" method="POST">
                               {% csrf_token %}
                             <div class="modal-body">
                                 <div class="mb-3">
                                   <label class="col-form-label" for="recipient-name">Recipient:</label>
-                                  <input class="form-control" type="text" value="{{manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{manager.ticket_approval_supervisor.ticket.assignee.last_name}}" readonly>
+                                  <input class="form-control" type="text" value="{{it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.last_name}}" readonly>
                                 </div>
-                                {% for hidden in form.hidden_fields %}
+                                {% for hidden in form_it.hidden_fields %}
                                 {{ hidden }}
                                  {% endfor %}
                                 <!-- merender semua field form dari objek TaskForm -->
-                                {% if form_manager.non_field_errors %}
+                                {% if form_it.non_field_errors %}
                                   <div class="alert alert-danger" role="alert">
-                                    {% for error in form_manager.non_field_errors %}
+                                    {% for error in form_it.non_field_errors %}
                                       {{ error }}
                                     {% endfor %}
                                   </div>
                                 {% endif %}
                       
-                                {% for field in form_manager.visible_fields %}
+                                {% for field in form_it.visible_fields %}
                                   <div class="form-group">
                                     {{ field.label_tag }}
-                                    {% if form_manager.is_bound %}
+                                    {% if form_it.is_bound %}
                                       {% if field.errors %}
                                         {% render_field field class="form-control is-invalid" %}
                                         {% for error in field.errors %}

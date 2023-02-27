@@ -69,6 +69,7 @@ class TicketApprovalManager(models.Model):
     
 class TicketApprovalIT(models.Model):
     ticket_approval_manager = models.OneToOneField(TicketApprovalManager, on_delete=models.CASCADE, null=True, blank=True)
+    it = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     is_approve_it = models.BooleanField(default=False, blank=True, null=True )
     is_rejected_it = models.BooleanField(default=False, blank=True, null=True)
     reject_reason_it = models.TextField(blank=True, null=True)
@@ -80,7 +81,6 @@ class TicketApprovalIT(models.Model):
 
 class TicketProgressIT(models.Model):
     ticket_approval_it = models.OneToOneField(TicketApprovalIT, on_delete=models.CASCADE, null=True, blank=True)
-    ticket_pic = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     ticket_no =models.CharField(max_length=64, null=True, blank=True)
     status = models.CharField(max_length=25, choices=TicketStatus.choices, default=TicketStatus.IN_APPROVAL_IT)
     priority = models.CharField(max_length=25, choices=TicketPriority.choices, default=TicketPriority.LOW)

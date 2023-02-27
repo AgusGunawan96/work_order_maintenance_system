@@ -23,10 +23,11 @@ class approvalManagerForms(forms.ModelForm):
 class approvalITForms(forms.ModelForm):
     class Meta():
         model = TicketApprovalIT
-        fields = ('reject_reason_it','is_approve_it' ,'is_rejected_it')
-        widgets = {'is_approve_it': forms.HiddenInput, 'is_rejected_it': forms.HiddenInput }
+        fields = ('reject_reason_it','is_approve_it' ,'is_rejected_it', 'it')
+        widgets = {'is_approve_it': forms.HiddenInput, 'is_rejected_it': forms.HiddenInput, 'it': forms.HiddenInput }
 
 class progressITForms(forms.ModelForm):
     class Meta():
         model = TicketProgressIT
-        fields = ('status', 'priority', 'review_description')
+        fields = ('status', 'priority', 'review_description', 'ticket_no', 'ticket_approval_it')
+        widgets = {'ticket_approval_it' : forms.HiddenInput, 'ticket_no' : forms.HiddenInput}

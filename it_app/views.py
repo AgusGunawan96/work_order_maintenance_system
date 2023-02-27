@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
+import datetime
 # Create your views here.
 
 @login_required
@@ -140,14 +141,16 @@ def ticket_it_approve(request,ticket_id):
         it = TicketApprovalIT.objects.get(pk=ticket_id)
         # mengapprove
         it.is_approve_it = True
+        it.it = request.user
         it.save()
         #membuat Ticket Progress
         approval_it_forms = progressITForms(data=request.POST)
+        ticket_no = "TKT" + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + str(it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee)
         it = approval_it_forms.save(commit=False)
         it.ticket_approval_it = it
-        it.ticket_pic = request.user
         it.priority = TicketPriority.LOW
         it.status = TicketStatus.IN_APPROVAL_IT
+        it.ticket_no = ticket_no
         it.save()
         # mengeset pesan sukses dan redirect ke halaman daftar task
         messages.success(request, 'Approved Successfully')
