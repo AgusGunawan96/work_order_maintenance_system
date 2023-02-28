@@ -15,6 +15,7 @@ def dashboard(request):
 def profile(request):
     return render(request, 'it_app/profile.html')
 
+# TICKET START 
 @login_required
 def ticket_index(request):
     tickets = Ticket.objects.order_by('-created_at')
@@ -174,3 +175,4 @@ def ticket_it_reject(request,ticket_id):
             reject.save()
             return redirect('it_app:ticket_index')
         return HttpResponse(approval_it_form)
+#TICKET END

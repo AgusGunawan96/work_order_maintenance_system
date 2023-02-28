@@ -17,6 +17,7 @@ class cashPayment (models.Model):
     rp_detail_4 = models.PositiveBigIntegerField(null=True, blank=True)
     rp_detail_5 = models.PositiveBigIntegerField(null=True, blank=True)
     rp_detail_6 = models.PositiveBigIntegerField(null=True, blank=True)
+    rp_total = models.PositiveBigIntegerField(null=True, blank=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
     attachment = models.FileField()

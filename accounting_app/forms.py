@@ -1,0 +1,32 @@
+from django import forms
+from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
+
+class cashPaymentForms(forms.ModelForm):
+    class Meta():
+        model = cashPayment
+        fields = ('description_1','description_2','description_3','description_4','description_5','description_6', 'rp_detail_1', 'rp_detail_2', 'rp_detail_3', 'rp_detail_4', 'rp_detail_5', 'rp_detail_6', 'attachment', 'assignee')
+        widgets = {'assignee': forms.HiddenInput()}
+
+class cashPaymentApprovalManagerForms(forms.ModelForm):
+    class Meta():
+        model = cashPaymentApprovalManager
+        fields = ('reject_reason_manager','is_approve_manager','is_rejected_manager', 'manager')
+        widgets = {'is_approve_manager': forms.HiddenInput, 'is_rejected_manager': forms.HiddenInput , 'manager': forms.HiddenInput}
+
+class cashPaymentApprovalAccountingManagerForms(forms.ModelForm):
+    class Meta():
+        model = cashPaymentApprovalAccountingManager
+        fields = ('reject_reason_manager_accounting','is_approve_manager_accounting','is_rejected_manager_accounting', 'manager_accounting')
+        widgets = {'is_approve_manager_accounting': forms.HiddenInput, 'is_rejected_manager_accounting': forms.HiddenInput , 'manager_accounting': forms.HiddenInput}
+
+class cashPaymentApprovalPresidentForms(forms.ModelForm):
+    class Meta():
+        fields = ('reject_reason_president','is_approve_president','is_rejected_president', 'president')
+        widgets = {'is_approve_president': forms.HiddenInput, 'is_rejected_president': forms.HiddenInput , 'president': forms.HiddenInput}
+        model = cashPaymentApprovalPresident
+
+class cashPaymentApprovalCashierForms(forms.ModelForm):
+    class Meta():
+        fields = ('reject_reason_cashier','is_approve_cashier','is_rejected_cashier', 'cashier')
+        widgets = {'is_approve_cashier': forms.HiddenInput, 'is_rejected_cashier': forms.HiddenInput , 'cashier': forms.HiddenInput}
+        model = cashPaymentApprovalCashier
