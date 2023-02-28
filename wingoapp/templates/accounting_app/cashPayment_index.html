@@ -1,0 +1,141 @@
+{% extends 'starter_kit/base.html' %}{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <div class="col-sm-12 col-xl-12 xl-100">
+    <div class="card">
+      <div class="card-header pb-0">
+        <h5>Cash Payment Voucher | {{request.user.first_name}} {{request.user.last_name}}</h5><span>Request cash Payment.</span>
+      </div>
+      <div class="card-body btn-showcase">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message | safe }}
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+        <!-- blok untuk menampilkan notifikasi pesan sukses -->
+<div>
+  </div>
+    <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'accounting_app:cashPayment_add' %}">Add Cash Payment</a></button>
+      </div>
+      <div class="card-body">
+        <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
+          <li class="nav-item"><a class="nav-link active" id="top-approval-supervisor-tab" data-bs-toggle="tab" href="#top-approval-supervisor" role="tab" aria-controls="top-approval-supervisor" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Approval Manager</a></li>
+          <li class="nav-item"><a class="nav-link" id="approval-manager-top-tab" data-bs-toggle="tab" href="#top-approval-manager" role="tab" aria-controls="top-approval-manager" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval Accounting Manager</a></li>
+          <li class="nav-item"><a class="nav-link" id="waiting-top-tab" data-bs-toggle="tab" href="#top-waiting" role="tab" aria-controls="top-waiting" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval President</a></li>
+          <li class="nav-item"><a class="nav-link" id="progress-top-tab" data-bs-toggle="tab" href="#top-progress" role="tab" aria-controls="top-progress" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval Cashier</a></li>
+          <li class="nav-item"><a class="nav-link" id="done-top-tab" data-bs-toggle="tab" href="#top-done" role="tab" aria-controls="top-done" aria-selected="false"><i class="icofont icofont-check"></i>Done</a></li>
+        </ul>
+        <div class="tab-content" id="top-tabContent">
+          <div class="tab-pane fade show active" id="top-approval-supervisor" role="tabpanel" aria-labelledby="top-approval-supervisor-tab">
+
+            <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="display" id="basic-1">
+                       
+                      </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+          <div class="tab-pane fade" id="top-approval-manager" role="tabpanel" aria-labelledby="approval-manager-top-tab">
+            <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="display" id="basic-2">
+                       
+                      </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+          <div class="tab-pane fade" id="top-waiting" role="tabpanel" aria-labelledby="waiting-top-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="display" id="basic-3">
+                     
+                    </table>
+                  </div>
+                </div>
+              </div>
+          </div>
+         </div>
+          <div class="tab-pane fade" id="top-progress" role="tabpanel" aria-labelledby="progress-top-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="display" id="basic-4">
+                       
+                    </table>
+                  </div>
+                </div>
+                </div>
+              </div>
+          </div>
+          <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="display" id="basic-5">
+                     
+                    </table>
+                  </div>
+                </div>
+              </div>
+          </div>
+          </div>
+          <div class="tab-pane fade" id="top-done" role="tabpanel" aria-labelledby="done-top-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="display" id="basic-6">
+                     
+                    </table>
+                  </div>
+                </div>
+              </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid starts-->
+  {% comment %} <div class="container-fluid">
+   
+  </div> {% endcomment %}
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

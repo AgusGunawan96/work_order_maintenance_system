@@ -7,8 +7,8 @@ def index(request):
 
 def cashPayment_index(request):
 
-    return render(request, 'accoounting_app/cashPayment_index')
+    return render(request, 'accounting_app/cashPayment_index.html')
 
 def cashPayment_add(request):
 
-    return render(request, 'accounting_app/cashPayment_add')
+    return render(request, 'accounting_app/cashPayment_add.html')
