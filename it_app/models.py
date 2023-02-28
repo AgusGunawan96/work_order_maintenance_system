@@ -88,7 +88,7 @@ class TicketApprovalIT(models.Model):
 
 class TicketProgressIT(models.Model):
     ticket_approval_it = models.OneToOneField(TicketApprovalIT, on_delete=models.CASCADE, null=True, blank=True)
-    ticket_no =models.CharField(max_length=64, null=True, blank=True)
+    ticket_no =models.CharField(max_length=128, null=True, blank=True)
     status = models.CharField(max_length=25, choices=TicketStatus.choices, default=TicketStatus.IN_PROGRESS)
     priority = models.CharField(max_length=25, choices=TicketPriority.choices, default=TicketPriority.LOW)
     review_description = models.TextField(blank=True, null=True)
