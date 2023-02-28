@@ -19,7 +19,7 @@
           <hr class="mt-4 mb-4">
           <div class="card-body">
             <form class="theme-form mega-form">
-              <h6>Ticket Detail | <a href="">{{ticket.assignee.first_name}} {{ticket.assignee.last_name}}</a></h6>
+              <h6>Ticket Detail | <a href="">{{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.ticket_no}}</a></h6>
               <div class="mb-3">  
                 <label class="col-form-label">Title</label>
                 <input class="form-control" type="text" value="{{ ticket.title }}" readonly>
@@ -32,6 +32,12 @@
             <div class="mb-3">
               <label class="col-form-label">Reject Reason by {{ ticket.ticketapprovalsupervisor.supervisor.first_name }} {{ ticket.ticketapprovalsupervisor.supervisor.last_name }} (Approval Supervisor)</label>
               <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.reject_reason_supervisor}}</textarea >
+            </div>
+            {% endif %}
+            {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.review_description %}
+            <div class="mb-3">
+              <label class="col-form-label">Review By by {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.first_name }} {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.last_name }} (Approval IT)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.review_description}}</textarea >
             </div>
             {% endif %}
             </form>

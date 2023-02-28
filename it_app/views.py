@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT
 from django.contrib.auth.decorators import login_required
 from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms
 from django.contrib import messages
@@ -21,7 +21,8 @@ def ticket_index(request):
     supervisors = TicketApprovalSupervisor.objects.order_by('-id')
     managers = TicketApprovalManager.objects.order_by('-id')
     its = TicketApprovalIT.objects.order_by('-id')
-    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'its': its, 'managers': managers, 'form_supervisor': approvalSupervisorForms, 'form_manager': approvalManagerForms, 'form_it': approvalITForms, 'form_progress' : progressITForms})
+    progress = TicketProgressIT.objects.order_by('-id')
+    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'its': its, 'managers': managers, 'progress':progress, 'form_supervisor': approvalSupervisorForms, 'form_manager': approvalManagerForms, 'form_it': approvalITForms, 'form_progress' : progressITForms})
 
 @login_required
 def ticket_add(request):
@@ -138,18 +139,16 @@ def ticket_manager_reject(request,ticket_id):
 def ticket_it_approve(request,ticket_id):
     try:
         # mengambil data task yang akan dihapus berdasarkan task id
-        it = TicketApprovalIT.objects.get(pk=ticket_id)
+        its = TicketApprovalIT.objects.get(pk=ticket_id)
         # mengapprove
-        it.is_approve_it = True
-        it.it = request.user
-        it.save()
+        its.is_approve_it = True
+        its.it = request.user
+        its.save()
         #membuat Ticket Progress
         approval_it_forms = progressITForms(data=request.POST)
-        ticket_no = "TKT" + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + str(it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee)
+        ticket_no = "TKT-" + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + "-" + str(its.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee)
         it = approval_it_forms.save(commit=False)
-        it.ticket_approval_it = it
-        it.priority = TicketPriority.LOW
-        it.status = TicketStatus.IN_APPROVAL_IT
+        it.ticket_approval_it = its
         it.ticket_no = ticket_no
         it.save()
         # mengeset pesan sukses dan redirect ke halaman daftar task

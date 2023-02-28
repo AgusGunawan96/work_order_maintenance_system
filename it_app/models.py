@@ -4,7 +4,6 @@ from django.utils import timezone
 
 # Create your models here.
 class TicketStatus(models.TextChoices):
-    IN_APPROVAL_IT = 'Waiting'
     IN_PROGRESS = 'In Progress'
     IN_REVIEW = 'In Review'
     DONE = 'Done'
@@ -12,7 +11,6 @@ class TicketStatus(models.TextChoices):
 class TicketType(models.TextChoices):
     REQUEST = 'Request'
     PROBLEM = 'Problem'
-    LOAN    = 'Peminjaman'
     OTHER   = 'Other'
 
 class TicketPriority(models.TextChoices):
@@ -91,7 +89,7 @@ class TicketApprovalIT(models.Model):
 class TicketProgressIT(models.Model):
     ticket_approval_it = models.OneToOneField(TicketApprovalIT, on_delete=models.CASCADE, null=True, blank=True)
     ticket_no =models.CharField(max_length=64, null=True, blank=True)
-    status = models.CharField(max_length=25, choices=TicketStatus.choices, default=TicketStatus.IN_APPROVAL_IT)
+    status = models.CharField(max_length=25, choices=TicketStatus.choices, default=TicketStatus.IN_PROGRESS)
     priority = models.CharField(max_length=25, choices=TicketPriority.choices, default=TicketPriority.LOW)
     review_description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

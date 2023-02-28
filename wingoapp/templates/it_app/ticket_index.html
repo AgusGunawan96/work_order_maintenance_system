@@ -441,12 +441,37 @@
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="display" id="basic-4">
-                     
+                        <thead>
+                          <tr>
+                            <th>Ticket No.</th>
+                            <th>Summary</th>
+                            <th>Assignee</th>
+                            <th>priority</th>
+                            <th>Created</th>
+                            <th>Last Updated</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for progress in progress %}
+                          {% if progress.status == 'In Progress' %}
+                          {% if progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.section_id == 22 %}
+                          <tr>
+                          <td><a href="{% url 'it_app:ticket_detail' progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.id %}">{{progress.ticket_no}}</td>
+                           <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.title}}</td>
+                           <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.last_name}}</td>
+                           <td>{{progress.priority}}</td>
+                          <td>{{progress.created_at}}</td>
+                          <td>{{progress.updated_at}}</td>
+                          </tr>
+                          {% endif %}
+                          {% endif %}
+                          {% endfor %}
+                        </tbody>
                     </table>
                   </div>
                 </div>
+                </div>
               </div>
-          </div>
           </div>
           <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
             <div class="col-sm-12">
@@ -454,7 +479,32 @@
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="display" id="basic-5">
-                     
+                      <thead>
+                        <tr>
+                          <th>Ticket No.</th>
+                          <th>Summary</th>
+                          <th>Assignee</th>
+                          <th>priority</th>
+                          <th>Created</th>
+                          <th>Last Updated</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for progress in progress %}
+                        {% if progress.status == 'In Review' %}
+                        {% if progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.section_id == 22 %}
+                        <tr>
+                        <td><a href="{% url 'it_app:ticket_detail' progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.id %}">{{progress.ticket_no}}</td>
+                         <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.title}}</td>
+                         <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.last_name}}</td>
+                         <td>{{progress.priority}}</td>
+                        <td>{{progress.created_at}}</td>
+                        <td>{{progress.updated_at}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -467,7 +517,32 @@
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="display" id="basic-6">
-                    
+                      <thead>
+                        <tr>
+                          <th>Ticket No.</th>
+                          <th>Summary</th>
+                          <th>Assignee</th>
+                          <th>priority</th>
+                          <th>Created</th>
+                          <th>Last Updated</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for progress in progress %}
+                        {% if progress.status == 'Done' %}
+                        {% if progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.section_id == 22 %}
+                        <tr>
+                        <td><a href="{% url 'it_app:ticket_detail' progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.id %}">{{progress.ticket_no}}</td>
+                         <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.title}}</td>
+                         <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.last_name}}</td>
+                         <td>{{progress.priority}}</td>
+                        <td>{{progress.created_at}}</td>
+                        <td>{{progress.updated_at}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                      </tbody>
                     </table>
                   </div>
                 </div>
