@@ -23,7 +23,18 @@ def ticket_index(request):
     managers = TicketApprovalManager.objects.order_by('-id')
     its = TicketApprovalIT.objects.order_by('-id')
     progress = TicketProgressIT.objects.order_by('-id')
-    return render(request,'it_app/ticket_index.html', {'tickets': tickets, 'supervisors': supervisors, 'its': its, 'managers': managers, 'progress':progress, 'form_supervisor': approvalSupervisorForms, 'form_manager': approvalManagerForms, 'form_it': approvalITForms, 'form_progress' : progressITForms})
+    context = {
+        'tickets'           : tickets, 
+        'supervisors'       : supervisors, 
+        'its'               : its, 
+        'managers'          : managers, 
+        'progress'          : progress, 
+        'form_supervisor'   : approvalSupervisorForms, 
+        'form_manager'      : approvalManagerForms, 
+        'form_it'           : approvalITForms, 
+        'form_progress'     : progressITForms,
+        }
+    return render(request,'it_app/ticket_index.html', context)
 
 @login_required
 def ticket_add(request):
@@ -63,7 +74,7 @@ def ticket_detail(request, ticket_id):
 @login_required
 def ticket_supervisor_approve(request,ticket_id):
     try:
-        # mengambil data task yang akan dihapus berdasarkan task id
+        # mengambil data task yang akan diapprove berdasarkan task id
         supervisor = TicketApprovalSupervisor.objects.get(pk=ticket_id)
         # mengapprove
         supervisor.is_approve_supervisor = True
