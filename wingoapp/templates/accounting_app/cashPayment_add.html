@@ -16,111 +16,123 @@
     <div class="row starter-main">
       <div class="col-sm-12">
         <div class="card">
+            <div class="card-header pb-0">
+                <h5>Cash Payment Voucher | User Information</h5>
+            </div>
             <div class="card-body">
-            <form method="POST" enctype="multipart/form-data" class="row g-3 needs-validation">
-                {% csrf_token %}
-                {% for hidden in cashPayment_form.hidden_fields %}
-                {{ hidden }}
-                 {% endfor %}
-                <!-- merender semua field form dari objek TaskForm -->
-                {% if cashPayment_form.non_field_errors %}
-                  <div class="alert alert-danger" role="alert">
-                    {% for error in cashPayment_form.non_field_errors %}
-                      {{ error }}
-                    {% endfor %}
-                  </div>
-                {% endif %}
-                <div class="form-group row">
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">Description</label>
-                        {% render_field cashPayment_form.description_1 class="form-control" placeholder="" type="text" %}
+                <div class="row">
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Name</label>
+                    <input class="form-control" type="text" value="{{request.user.first_name}} {{request.user.last_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Nomor Karyawan</label>
+                    <input class="form-control" type="text" value="{{request.user.username}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Department</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.department.department_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Division</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.division.division_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Section</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.section.section_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Position</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.position}}" readonly>
+                </div>
+            </div>
+            </div>
+         </div>
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>Cash Payment Voucher | Form</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" class="row g-3 needs-validation">
+                    {% csrf_token %}
+                    {% for hidden in cashPayment_form.hidden_fields %}
+                    {{ hidden }}
+                     {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if cashPayment_form.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in cashPayment_form.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                    <div class="form-group row">
+                        <div id="row">
+                            <div class="form-group row">
+                                <div class="col-md-5">
+                                    {% render_field cashPayment_form.description_1 class="form-control" placeholder="Description" type="text" %}
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="input-group"><span class="input-group-text">IDR  </span>
+                                        {% render_field cashPayment_form.rp_detail_1 class="form-control" type="text"  %}
+                                      </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-danger" id="DeleteRow" type="button">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="newinput"></div>
+                    
+                        <div class="col-md-4">                    
+                        <button id="rowAdder" type="button" class="btn btn-dark">
+                            <span class="bi bi-plus-square-dotted">
+                            </span> Add
+                        </button>
                     </div>
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">RP Detail</label>
-                        <div class="input-group mb-3"><span class="input-group-text">IDR  </span>
-                            {% render_field cashPayment_form.rp_detail_1 class="form-control" type="text"  %}
-                          </div>
+                 </div>
+                    <div class="form-group row">
+                        <div class="col-md-12 position-relative">
+                            <label class="form-label" for="validationTooltip01">Upload Attachment</label>
+                            {% render_field cashPayment_form.cashPayment_attachment class="form-control" placeholder="" type="file" %}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">                    
+                            <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">Description</label>
-                        {% render_field cashPayment_form.description_2 class="form-control" placeholder="" type="text" %}
-                    </div>
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">RP Detail</label>
-                        <div class="input-group mb-3"><span class="input-group-text">IDR  </span>
-                            {% render_field cashPayment_form.rp_detail_2 class="form-control" type="text"  %}
-                          </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">Description</label>
-                        {% render_field cashPayment_form.description_3 class="form-control" placeholder="" type="text" %}
-                    </div>
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">RP Detail</label>
-                        <div class="input-group mb-3"><span class="input-group-text">IDR  </span>
-                            {% render_field cashPayment_form.rp_detail_3 class="form-control" type="text"  %}
-                          </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">Description</label>
-                        {% render_field cashPayment_form.description_4 class="form-control" placeholder="" type="text" %}
-                    </div>
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">RP Detail</label>
-                        <div class="input-group mb-3"><span class="input-group-text">IDR  </span>
-                            {% render_field cashPayment_form.rp_detail_4 class="form-control" type="text"  %}
-                          </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">Description</label>
-                        {% render_field cashPayment_form.description_5 class="form-control" placeholder="" type="text" %}
-                    </div>
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">RP Detail</label>
-                        <div class="input-group mb-3"><span class="input-group-text">IDR  </span>
-                            {% render_field cashPayment_form.rp_detail_5 class="form-control" type="text"  %}
-                          </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">Description</label>
-                        {% render_field cashPayment_form.description_6 class="form-control" placeholder="" type="text" %}
-                    </div>
-                    <div class="col-md-6 position-relative">
-                        <label class="form-label" for="validationTooltip01">RP Detail</label>
-                        <div class="input-group mb-3"><span class="input-group-text">IDR  </span>
-                            {% render_field cashPayment_form.rp_detail_6 class="form-control" type="text"  %}
-                          </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-12 position-relative">
-                        <label class="form-label" for="validationTooltip01">Upload Attachment</label>
-                        {% render_field cashPayment_form.cashPayment_attachment class="form-control" placeholder="" type="file" %}
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-
-
-            </form>
-        </div>
+                </form>
+             </div>
         </div>
       </div>
     </div>
   </div>
   <!-- Container-fluid Ends-->
 </div>
+
 {% endblock content %}
 {% block scriptcontent %}
+<script type="text/javascript">
+ test = 1;
+ $("#rowAdder").click(function () {
+     if(test<6){
+        test = test + 1;
+        newRowAdd =
+        '<div id="row"> <div class="form-group row">' +
+        '<div class="col-md-5"> <textarea name = "description_'+test+'" class="form-control" placeholder="Description" type="text"></textarea></div>' +
+        '<div class="col-md-5"> <div class="input-group"><span class="input-group-text">IDR</span><input name="rp_detail_'+test+'" class="form-control" type="text"></div> </div>' +
+        '<div class="col-md-2"> <button class="btn btn-danger" id="DeleteRow" type="button">Delete</button> </div>' +
+        '</div> </div>';
+        $('#newinput').append(newRowAdd);
+    }
+    });
+
+    $("body").on("click", "#DeleteRow", function () {
+        test = test-1;
+    $(this).parents("#row").remove();
+    })
+</script>
 <!-- Plugins JS start-->
 <script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
 <script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>

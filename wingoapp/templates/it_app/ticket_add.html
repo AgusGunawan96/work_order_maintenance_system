@@ -16,6 +16,42 @@
     <div class="row starter-main">
       <div class="col-sm-12">
         <div class="card">
+          <div class="card-header pb-0">
+              <h5>Service Ticket | User Information</h5>
+          </div>
+          <div class="card-body">
+              <div class="row">
+              <div class="mb-3 col-md-6">  
+                  <label class="col-form-label">Name</label>
+                  <input class="form-control" type="text" value="{{request.user.first_name}} {{request.user.last_name}}" readonly>
+              </div>
+              <div class="mb-3 col-md-6">  
+                  <label class="col-form-label">Nomor Karyawan</label>
+                  <input class="form-control" type="text" value="{{request.user.username}}" readonly>
+              </div>
+              <div class="mb-3 col-md-6">  
+                  <label class="col-form-label">Department</label>
+                  <input class="form-control" type="text" value="{{request.user.userprofileinfo.department.department_name}}" readonly>
+              </div>
+              <div class="mb-3 col-md-6">  
+                  <label class="col-form-label">Division</label>
+                  <input class="form-control" type="text" value="{{request.user.userprofileinfo.division.division_name}}" readonly>
+              </div>
+              <div class="mb-3 col-md-6">  
+                  <label class="col-form-label">Section</label>
+                  <input class="form-control" type="text" value="{{request.user.userprofileinfo.section.section_name}}" readonly>
+              </div>
+              <div class="mb-3 col-md-6">  
+                  <label class="col-form-label">Position</label>
+                  <input class="form-control" type="text" value="{{request.user.userprofileinfo.position}}" readonly>
+              </div>
+          </div>
+          </div>
+       </div>
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Service Ticket | Form</h5>
+        </div>
             <div class="card-body">
             <form method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
