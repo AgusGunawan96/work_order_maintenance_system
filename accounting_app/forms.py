@@ -4,7 +4,7 @@ from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashP
 class cashPaymentForms(forms.ModelForm):
     class Meta():
         model = cashPayment
-        fields = ('description_1','description_2','description_3','description_4','description_5','description_6', 'rp_detail_1', 'rp_detail_2', 'rp_detail_3', 'rp_detail_4', 'rp_detail_5', 'rp_detail_6', 'attachment', 'assignee')
+        fields = ('description_1','description_2','description_3','description_4','description_5','description_6', 'rp_detail_1', 'rp_detail_2', 'rp_detail_3', 'rp_detail_4', 'rp_detail_5', 'rp_detail_6', 'cashPayment_attachment', 'assignee')
         widgets = {'assignee': forms.HiddenInput()}
 
 class cashPaymentApprovalManagerForms(forms.ModelForm):

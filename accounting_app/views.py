@@ -33,8 +33,32 @@ def cashPayment_index(request):
 
 @login_required
 def cashPayment_add(request):
+    if request.method == "POST":
+         cashPayment_form = cashPaymentForms (data=request.POST)
+         approval_manager_form = cashPaymentApprovalManagerForms(data=request.POST)
+         if cashPayment_form.is_valid() and approval_manager_form.is_valid():
+            cashPayment = cashPayment_form.save(commit=False)
+            if 'cashPayment_attachment' in request.FILES:
+                cashPayment.cashPayment_attachment = request.FILES['cashPayment_attachment']
+            cashPayment.assignee = request.user
+            cashPayment.save()
+            # Masuk ke manager
+            manager = approval_manager_form.save(commit=False)
+            manager.cashPayment = cashPayment
+            manager.save()
+            messages.success(request, 'Success Add Cash Payment', 'success')
+            return redirect('accounting_app:cashPayment_index')
+         else:
+              print(cashPayment_form.errors)
+    else:
+         cashPayment_form = cashPaymentForms()
+         approval_manager_form = cashPaymentApprovalManagerForms
 
-    return render(request, 'accounting_app/cashPayment_add.html')
+    context = {
+    'cashPayment_form'  : cashPaymentForms,
+    'manager_form'      : cashPaymentApprovalManagerForms,
+    }
+    return render(request, 'accounting_app/cashPayment_add.html', context)
 
 @login_required
 def cashPayment_detail(request, cashPayment_id):
