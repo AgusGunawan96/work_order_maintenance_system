@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 import datetime
@@ -36,26 +36,33 @@ def cashPayment_add(request):
     if request.method == "POST":
          cashPayment_form = cashPaymentForms (data=request.POST)
          approval_manager_form = cashPaymentApprovalManagerForms(data=request.POST)
-         if cashPayment_form.is_valid() and approval_manager_form.is_valid():
+         cashPayment_attachment_form = cashPaymentAttachmentForms(data=request.POST)
+         if cashPayment_form.is_valid() and approval_manager_form.is_valid() and cashPayment_attachment_form.is_valid() :
+            # Simpan data cashPayment
             cashPayment = cashPayment_form.save(commit=False)
-            if 'cashPayment_attachment' in request.FILES:
-                cashPayment.cashPayment_attachment = request.FILES['cashPayment_attachment']
             cashPayment.assignee = request.user
             cashPayment.save()
-            # Masuk ke manager
+            # Simpan data attachment
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                 attachment = cashPaymentAttachment(attachment=f)
+                 attachment.cashPayment = cashPayment
+                 attachment.save()
             manager = approval_manager_form.save(commit=False)
             manager.cashPayment = cashPayment
             manager.save()
             messages.success(request, 'Success Add Cash Payment', 'success')
             return redirect('accounting_app:cashPayment_index')
          else:
-              print(cashPayment_form.errors and approval_manager_form.errors)
+              print(cashPayment_form.errors and approval_manager_form.errors and cashPayment_attachment_form)
     else:
          cashPayment_form = cashPaymentForms()
-         approval_manager_form = cashPaymentApprovalManagerForms
+         cashPayment_attachment_form = cashPaymentAttachmentForms()
+         approval_manager_form = cashPaymentApprovalManagerForms()
 
     context = {
     'cashPayment_form'  : cashPaymentForms,
+    'cashPayment_attachment_form'  : cashPaymentAttachmentForms,
     'manager_form'      : cashPaymentApprovalManagerForms,
     }
     return render(request, 'accounting_app/cashPayment_add.html', context)

@@ -1,30 +1,44 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.core.validators import FileExtensionValidator
 # Create your models here.
 
 class cashPayment (models.Model):
     assignee = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    description_1 = models.TextField(null=True, blank=True)
-    description_2 = models.TextField(null=True, blank=True)
-    description_3 = models.TextField(null=True, blank=True)
-    description_4 = models.TextField(null=True, blank=True)
-    description_5 = models.TextField(null=True, blank=True)
-    description_6 = models.TextField(null=True, blank=True)
-    rp_detail_1 = models.PositiveBigIntegerField(null=True, blank=True)
-    rp_detail_2 = models.PositiveBigIntegerField(null=True, blank=True)
-    rp_detail_3 = models.PositiveBigIntegerField(null=True, blank=True)
-    rp_detail_4 = models.PositiveBigIntegerField(null=True, blank=True)
-    rp_detail_5 = models.PositiveBigIntegerField(null=True, blank=True)
-    rp_detail_6 = models.PositiveBigIntegerField(null=True, blank=True)
-    rp_total = models.PositiveBigIntegerField(null=True, blank=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
-    cashPayment_attachment = models.FileField(upload_to='attachments/', null=True, blank=True)
-
+    rp_total = models.PositiveBigIntegerField(null=True, blank=True)
+    description_1 = models.TextField(blank=True, null=True)
+    rp_detail_1 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_2 = models.TextField(blank=True, null=True)
+    rp_detail_2 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_3 = models.TextField(blank=True, null=True)
+    rp_detail_3 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_4 = models.TextField(blank=True, null=True)
+    rp_detail_4 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_5 = models.TextField(blank=True, null=True)
+    rp_detail_5 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_6 = models.TextField(blank=True, null=True)
+    rp_detail_6 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_7 = models.TextField(blank=True, null=True)
+    rp_detail_7 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_8 = models.TextField(blank=True, null=True)
+    rp_detail_8 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_9 = models.TextField(blank=True, null=True)
+    rp_detail_9 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_10 = models.TextField(blank=True, null=True)
+    rp_detail_10 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_11 = models.TextField(blank=True, null=True)
+    rp_detail_11 = models.PositiveBigIntegerField(null=True, blank=True)
+    description_12 = models.TextField(blank=True, null=True)
+    rp_detail_12 = models.PositiveBigIntegerField(null=True, blank=True)
     def __str__(self):
         return self.assignee
     
+class cashPaymentAttachment(models.Model):
+    cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
+    attachment = models.FileField(upload_to='cashPaymentAttachments/', null=False, blank=True)
+
 class cashPaymentApprovalManager(models.Model):
     cashPayment = models.OneToOneField(cashPayment, on_delete=models.CASCADE, null=True, blank=True)
     manager = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -33,6 +47,7 @@ class cashPaymentApprovalManager(models.Model):
     reject_reason_manager = models.TextField( blank=True, null=True)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
     updated_at = models.DateTimeField('updated_at', auto_now=True)
+
 
 class cashPaymentApprovalAccountingManager(models.Model):
     cashPayment_approval_manager = models.OneToOneField(cashPaymentApprovalManager, on_delete=models.CASCADE, null=True, blank=True)

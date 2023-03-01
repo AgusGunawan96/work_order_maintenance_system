@@ -14,12 +14,45 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h5>IT SERVICE | {{request.user.first_name}} {{request.user.last_name}}</h5>
+            <h5>IT SERVICE | Ticket User Information Detail {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.ticket_no %}| {{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.ticket_no}}{% endif %}</h5>
           </div>
-          <hr class="mt-4 mb-4">
+          <hr class="mt-4 mb-2">
+            <div class="card-body">
+              <div class="row">
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Name</label>
+                    <input class="form-control" type="text" value="{{ ticket.assignee.first_name }} {{ticket.assignee.last_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Nomor Karyawan</label>
+                    <input class="form-control" type="text" value="{{ ticket.assignee.username }}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Department</label>
+                    <input class="form-control" type="text" value="{{ ticket.assignee.userprofileinfo.department.department_name }}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Division</label>
+                    <input class="form-control" type="text" value="{{ ticket.assignee.userprofileinfo.division.division_name }}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Section</label>
+                    <input class="form-control" type="text" value="{{ ticket.assignee.userprofileinfo.section.section_name }}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Position</label>
+                    <input class="form-control" type="text" value="{{ ticket.assignee.userprofileinfo.position }}" readonly>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>IT SERVICE | Ticket Detail</h5>
+          </div>
+          <hr class="mt-4 mb-2">
           <div class="card-body">
             <form class="theme-form mega-form">
-              <h6>Ticket Detail | <a href="">{{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.ticket_no}}</a></h6>
               <div class="mb-3">  
                 <label class="col-form-label">Title</label>
                 <input class="form-control" type="text" value="{{ ticket.title }}" readonly>

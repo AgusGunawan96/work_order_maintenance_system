@@ -1,19 +1,33 @@
 from django import forms
-from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
+from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentAttachment
+from django.forms import ClearableFileInput
 
 class cashPaymentForms(forms.ModelForm):
     class Meta():
         model = cashPayment
-        fields = ('description_1','description_2','description_3','description_4','description_5','description_6', 'rp_detail_1', 'rp_detail_2', 'rp_detail_3', 'rp_detail_4', 'rp_detail_5', 'rp_detail_6', 'cashPayment_attachment', 'assignee')
+        fields = ('description_1','description_2','description_3','description_4','description_5','description_6','description_7','description_8','description_9','description_10','description_11','description_12', 'rp_detail_1', 'rp_detail_2', 'rp_detail_3', 'rp_detail_4', 'rp_detail_5', 'rp_detail_6', 'rp_detail_7', 'rp_detail_8', 'rp_detail_9', 'rp_detail_10', 'rp_detail_11', 'rp_detail_12', 'assignee')
         widgets = {
             'assignee': forms.HiddenInput(),
-            'description_1' : forms.Textarea(attrs={'rows':2, 'cols':15}),
-            'description_2' : forms.Textarea(attrs={'rows':2, 'cols':15}),
-            'description_3' : forms.Textarea(attrs={'rows':2, 'cols':15}),
-            'description_4' : forms.Textarea(attrs={'rows':2, 'cols':15}),
-            'description_5' : forms.Textarea(attrs={'rows':2, 'cols':15}),
-            'description_6' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_1'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_2'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_3'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_4'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_5'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_6'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_7'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_8'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_9'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_10'            : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_11'            : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_12'            : forms.Textarea(attrs={'rows':2, 'cols':15}),
             }
+class cashPaymentAttachmentForms(forms.ModelForm):
+    class Meta():
+        model = cashPaymentAttachment
+        fields = ('attachment',)
+        widgets = {
+            'attachment'    : ClearableFileInput(attrs={'multiple':True}),
+        }
 
 class cashPaymentApprovalManagerForms(forms.ModelForm):
     class Meta():
