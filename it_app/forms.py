@@ -1,12 +1,20 @@
 from django import forms
-
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT
+from django.forms import ClearableFileInput
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, TicketAttachment
 
 class ticketForms(forms.ModelForm):
     class Meta():
         model = Ticket
-        fields = ('type', 'title', 'description',  'ticket_pic', 'hardware', 'quantity', 'assignee')
+        fields = ('type', 'title', 'description',  'hardware', 'quantity', 'assignee')
         widgets = {'assignee': forms.HiddenInput()}
+        
+class ticketAttachmentForms(forms.ModelForm):
+    class Meta():
+        model = TicketAttachment
+        fields = ('attachment',)
+        widgets = {
+            'attachment'    : ClearableFileInput(attrs={'multiple':True}),
+        }
 
 class approvalSupervisorForms(forms.ModelForm):
     class Meta():

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT, TicketAttachment
 from django.contrib.auth.decorators import login_required
-from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms
+from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 import datetime
@@ -40,13 +40,20 @@ def ticket_index(request):
 def ticket_add(request):
     if request.method =="POST":
         ticket_form = ticketForms(data=request.POST)
+        ticket_attachment_form = ticketAttachmentForms(data=request.POST)
         approval_supervisor_form = approvalSupervisorForms(data=request.POST)
-        if ticket_form.is_valid() and approval_supervisor_form.is_valid():
+        if ticket_form.is_valid() and approval_supervisor_form.is_valid() and ticket_attachment_form.is_valid():
+            # Save IT Ticket
             ticket = ticket_form.save(commit=False)
-            if 'ticket_pic' in request.FILES:
-                ticket.ticket_pic = request.FILES['ticket_pic']
             ticket.assignee = request.user
             ticket.save()
+            # Save attachment
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                 attachment = TicketAttachment(attachment=f)
+                 attachment.Ticket = ticket
+                 attachment.save()
+            # Membuat Approval Supervisor
             supervisor = approval_supervisor_form.save(commit=False)
             supervisor.ticket = ticket
             supervisor.save()
@@ -57,11 +64,14 @@ def ticket_add(request):
         # ticket.save()
     else:
         ticket_form = ticketForms()
+        ticket_attachment_form = ticketAttachmentForms()
         approval_supervisor_form = approvalSupervisorForms()
-    
+        
+
     context = {
     'form': ticketForms,
     'supervisor_form': approvalSupervisorForms,
+    'ticket_attachment_form': ticketAttachmentForms,
 }
 
     return render(request, 'it_app/ticket_add.html', context)

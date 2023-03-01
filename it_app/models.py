@@ -41,14 +41,15 @@ class Ticket(models.Model):
     description = models.TextField()
     hardware = models.ForeignKey(Hardware, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.PositiveIntegerField(blank=True, default=0)
-    ticket_pic = models.ImageField(upload_to='ticket_pics', blank=True)
     created_at = models.DateTimeField('created at', auto_now_add=True)
     updated_at = models.DateTimeField('updated at', auto_now=True)
 
     def __str__(self):
         return self.title
 
-
+class TicketAttachment(models.Model):
+    Ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, blank=True, null=True)
+    attachment = models.FileField(upload_to='TicketAttachments/', null=False, blank=True)
 
 class TicketApprovalSupervisor(models.Model):
     ticket = models.OneToOneField(Ticket, on_delete=models.CASCADE, null=True, blank=True)

@@ -48,6 +48,7 @@ def cashPayment_add(request):
                  attachment = cashPaymentAttachment(attachment=f)
                  attachment.cashPayment = cashPayment
                  attachment.save()
+            # membuat data Approval Manager
             manager = approval_manager_form.save(commit=False)
             manager.cashPayment = cashPayment
             manager.save()
