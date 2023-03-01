@@ -5,7 +5,15 @@ class cashPaymentForms(forms.ModelForm):
     class Meta():
         model = cashPayment
         fields = ('description_1','description_2','description_3','description_4','description_5','description_6', 'rp_detail_1', 'rp_detail_2', 'rp_detail_3', 'rp_detail_4', 'rp_detail_5', 'rp_detail_6', 'cashPayment_attachment', 'assignee')
-        widgets = {'assignee': forms.HiddenInput()}
+        widgets = {
+            'assignee': forms.HiddenInput(),
+            'description_1' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_2' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_3' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_4' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_5' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'description_6' : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
 
 class cashPaymentApprovalManagerForms(forms.ModelForm):
     class Meta():

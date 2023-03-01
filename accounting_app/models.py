@@ -20,7 +20,7 @@ class cashPayment (models.Model):
     rp_total = models.PositiveBigIntegerField(null=True, blank=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
-    cashPayment_attachment = models.FileField()
+    cashPayment_attachment = models.FileField(upload_to='attachments/')
 
     def __str__(self):
         return self.assignee

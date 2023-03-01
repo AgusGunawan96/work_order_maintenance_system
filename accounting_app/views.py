@@ -49,7 +49,7 @@ def cashPayment_add(request):
             messages.success(request, 'Success Add Cash Payment', 'success')
             return redirect('accounting_app:cashPayment_index')
          else:
-              print(cashPayment_form.errors)
+              print(cashPayment_form.errors and approval_manager_form.errors)
     else:
          cashPayment_form = cashPaymentForms()
          approval_manager_form = cashPaymentApprovalManagerForms
