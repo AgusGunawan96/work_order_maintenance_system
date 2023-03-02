@@ -70,11 +70,11 @@
                         <div id="row">
                             <div class="form-group row">
                                 <div class="col-md-5">
-                                 {% render_field cashPayment_form.description_1 class="form-control" placeholder="Description" type="text" %}
+                                    <textarea name = "description_1" class="form-control" placeholder="Description" type="text" required></textarea>
                                 </div>
                                 <div class="col-md-5">
                                     <div class="input-group"><span class="input-group-text">IDR  </span>
-                                    {% render_field cashPayment_form.rp_detail_1 class="form-control" type="text"  %}
+                                        <input name="rp_detail_1" class="form-control" type="text" required>
                                       </div>
                                 </div>
                                 <div class="col-md-2">
@@ -87,14 +87,14 @@
                         <div class="col-md-4">                    
                         <button id="rowAdder" type="button" class="btn btn-dark">
                             <span class="bi bi-plus-square-dotted">
-                            </span> Add
+                            </span> More Description
                         </button>
                     </div>
                  </div>
                     <div class="form-group row">
                         <div class="col-md-12 position-relative">
                             <label class="form-label" for="validationTooltip01">Upload Attachment</label>
-                            {% render_field cashPayment_attachment_form.attachment class="form-control" placeholder="" type="file" accept="application/pdf,application/vnd.ms-excel,image/png, image/jpeg" %}
+                            {% render_field cashPayment_attachment_form.attachment class="form-control" placeholder="" type="file" required="" accept="application/pdf,application/vnd.ms-excel,image/png, image/jpeg" %}
                         </div>
                     </div>
                     <div class="form-group row">
@@ -120,8 +120,8 @@
         test = test + 1;
         newRowAdd =
         '<div id="row"> <div class="form-group row">' +
-        '<div class="col-md-5"> <textarea name = "description_'+test+'" class="form-control" placeholder="Description" type="text"></textarea></div>' +
-        '<div class="col-md-5"> <div class="input-group"><span class="input-group-text">IDR</span><input name="rp_detail_'+test+'" class="form-control" type="text"></div> </div>' +
+        '<div class="col-md-5"> <textarea name = "description_'+test+'" class="form-control" placeholder="Description" type="text" required></textarea></div>' +
+        '<div class="col-md-5"> <div class="input-group"><span class="input-group-text">IDR</span><input name="rp_detail_'+test+'" class="form-control" type="text" required></div> </div>' +
         '<div class="col-md-2"> <button class="btn btn-danger" id="DeleteRow" type="button">Delete</button> </div>' +
         '</div> </div>';
         $('#newinput').append(newRowAdd);

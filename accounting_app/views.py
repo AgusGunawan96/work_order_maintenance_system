@@ -42,6 +42,34 @@ def cashPayment_add(request):
             cashPayment = cashPayment_form.save(commit=False)
             cashPayment.assignee = request.user
             cashPayment.save()
+            # Simpan data RP total di cashPayment
+            rp_total = 0
+            if(cashPayment.rp_detail_1 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_1
+            if(cashPayment.rp_detail_2 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_2
+            if(cashPayment.rp_detail_3 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_3
+            if(cashPayment.rp_detail_4 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_4
+            if(cashPayment.rp_detail_5 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_5
+            if(cashPayment.rp_detail_6 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_6
+            if(cashPayment.rp_detail_7 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_7
+            if(cashPayment.rp_detail_8 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_8
+            if(cashPayment.rp_detail_9 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_9
+            if(cashPayment.rp_detail_10 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_10
+            if(cashPayment.rp_detail_11 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_11
+            if(cashPayment.rp_detail_12 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_12
+            cashPayment.rp_total = rp_total
+            cashPayment.save()
             # Simpan data attachment
             files = request.FILES.getlist('attachment')
             for f in files:
@@ -70,8 +98,13 @@ def cashPayment_add(request):
 
 @login_required
 def cashPayment_detail(request, cashPayment_id):
-    cashPayment = cashPayment.objects.get(pk=cashPayment_id)
-    return render(request, 'accounting_app/detail.html', {'cashPayment':cashPayment})
+    cashPayment_detail = cashPayment.objects.get(pk=cashPayment_id)
+    attachment = cashPaymentAttachment.objects.filter(cashPayment = cashPayment_detail).values('attachment',)
+    context = {
+         'cashPayment'  : cashPayment_detail,
+         'attachment'   : attachment,
+    }
+    return render(request, 'accounting_app/cashPayment_detail.html', context)
 
 @login_required
 def cashPayment_manager_approve(request, cashPayment_id):

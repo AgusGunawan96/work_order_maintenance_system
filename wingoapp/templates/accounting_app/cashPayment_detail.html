@@ -1,0 +1,117 @@
+{% extends 'starter_kit/base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <div class="row starter-main">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Cash Payment Voucher | User Information Detail {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.ticket_no %}| {{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.ticket_no}}{% endif %}</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+            <div class="card-body">
+              <div class="row">
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Name</label>
+                    <input class="form-control" type="text" value="{{ cashPayment.assignee.first_name }} {{cashPayment.assignee.last_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Nomor Karyawan</label>
+                    <input class="form-control" type="text" value="{{ cashPayment.assignee.username }}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Department</label>
+                    <input class="form-control" type="text" value="{{ cashPayment.assignee.userprofileinfo.department.department_name }}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Division</label>
+                    <input class="form-control" type="text" value="{{ cashPayment.assignee.userprofileinfo.division.division_name }}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Section</label>
+                    <input class="form-control" type="text" value="{{ cashPayment.assignee.userprofileinfo.section.section_name }}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Position</label>
+                    <input class="form-control" type="text" value="{{ cashPayment.assignee.userprofileinfo.position }}" readonly>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Cash Payment Voucher | Voucher Detail</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            <form class="theme-form mega-form">
+              <div class="mb-3">
+                <label class="col-form-label">Description</label>
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.description}}</textarea >
+              </div>
+            {% if ticket.ticketapprovalsupervisor.is_rejected_supervisor == True %}
+            <div class="mb-3">
+              <label class="col-form-label">Reject Reason by {{ ticket.ticketapprovalsupervisor.supervisor.first_name }} {{ ticket.ticketapprovalsupervisor.supervisor.last_name }} (Approval Supervisor)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.reject_reason_supervisor}}</textarea >
+            </div>
+            {% endif %}
+            {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.review_description %}
+            <div class="mb-3">
+              <label class="col-form-label">Review By by {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.first_name }} {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.last_name }} (Approval IT)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.review_description}}</textarea >
+            </div>
+            {% endif %}
+            </form>
+            <form class="form-space theme-form row">
+              <h6 class="pb-3 mb-0">Hardware</h6>
+              <div class="col-auto mb-2">
+                <input class="form-control" type="text" value="{{ ticket.hardware.name }}" readonly>
+              </div>
+            <h6 class="pb-3 mb-0">Quantity</h6>
+              <div class="col-auto mb-2">
+                <input class="form-control" type="text" name="inputPassword" value="{{ ticket.quantity }}" placeholder="Card Number" readonly>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Cash Payment Voucher | Attachment</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            <form class="theme-form mega-form">
+              <div class="mb-3">  
+                <label class="col-form-label">List Attachment</label>
+                <ul>
+                    <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                      {% for attachment in attachment %}
+                  <li><a href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                  {% endfor %}
+                    </div>
+                  </ul>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

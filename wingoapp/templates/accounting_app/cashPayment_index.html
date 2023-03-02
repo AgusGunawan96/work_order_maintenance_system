@@ -31,21 +31,48 @@
       </div>
       <div class="card-body">
         <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
-          <li class="nav-item"><a class="nav-link active" id="top-approval-supervisor-tab" data-bs-toggle="tab" href="#top-approval-supervisor" role="tab" aria-controls="top-approval-supervisor" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Approval Manager</a></li>
-          <li class="nav-item"><a class="nav-link" id="approval-manager-top-tab" data-bs-toggle="tab" href="#top-approval-manager" role="tab" aria-controls="top-approval-manager" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval Accounting Manager</a></li>
-          <li class="nav-item"><a class="nav-link" id="waiting-top-tab" data-bs-toggle="tab" href="#top-waiting" role="tab" aria-controls="top-waiting" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval President</a></li>
-          <li class="nav-item"><a class="nav-link" id="progress-top-tab" data-bs-toggle="tab" href="#top-progress" role="tab" aria-controls="top-progress" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval Cashier</a></li>
+          <li class="nav-item"><a class="nav-link active" id="top-approval-manager-tab" data-bs-toggle="tab" href="#top-approval-manager" role="tab" aria-controls="top-approval-manager" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Approval Manager</a></li>
+          <li class="nav-item"><a class="nav-link" id="approval-manager-accounting-top-tab" data-bs-toggle="tab" href="#top-approval-manager-accounting" role="tab" aria-controls="top-approval-manager-accounting" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval Accounting Manager</a></li>
+          <li class="nav-item"><a class="nav-link" id="approval-president-top-tab" data-bs-toggle="tab" href="#top-approval-president" role="tab" aria-controls="top-approval-president" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval President</a></li>
+          <li class="nav-item"><a class="nav-link" id="approval-cashier" data-bs-toggle="tab" href="#top-approval-cashier" role="tab" aria-controls="top-approval-cashier" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval Cashier</a></li>
           <li class="nav-item"><a class="nav-link" id="done-top-tab" data-bs-toggle="tab" href="#top-done" role="tab" aria-controls="top-done" aria-selected="false"><i class="icofont icofont-check"></i>Done</a></li>
         </ul>
         <div class="tab-content" id="top-tabContent">
-          <div class="tab-pane fade show active" id="top-approval-supervisor" role="tabpanel" aria-labelledby="top-approval-supervisor-tab">
+          <div class="tab-pane fade show active" id="top-approval-manager" role="tabpanel" aria-labelledby="top-approval-manager-tab">
 
             <div class="col-sm-12">
                 <div class="card">
                   <div class="card-body">
                     <div class="table-responsive">
                       <table class="display" id="basic-1">
-                       
+                       <thead>
+                        <tr>
+                          <th>Created</th>
+                          <th>Assignee</th>
+                          <th>Total(RP.)</th>
+                          <th>Status</th>
+                          {% if request.user.userprofileinfo.is_manager  %}
+                          <th>Action</th>
+                          {% endif %}
+                        </tr>
+                       </thead>
+                       <tbody>
+                        {% for manager in managers %}
+                        <tr>
+                          <td><a href="{% url 'accounting_app:cashPayment_detail' manager.cashPayment.id %}">{{manager.created_at}}</td>
+                          <td>{{manager.cashPayment.assignee.first_name}} {{manager.cashPayment.assignee.last_name}}</td>
+                          <td>{{manager.cashPayment.rp_total}}</td>
+                          <td>Waiting for Approval Manager</td>
+                          {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == manager.cashPayment.assignee.userprofileinfo.department_id %}
+                          <td>Action</td>
+                          {% else %}
+                          {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id != manager.cashPayment.assignee.userprofileinfo.department_id %}
+                          <td>Cannot Approved</td>
+                          {% endif %}
+                          {% endif %}
+                        </tr>
+                        {% endfor %}
+                       </tbody>
                       </table>
                     </div>
                   </div>
@@ -53,7 +80,7 @@
             </div>
 
           </div>
-          <div class="tab-pane fade" id="top-approval-manager" role="tabpanel" aria-labelledby="approval-manager-top-tab">
+          <div class="tab-pane fade" id="top-approval-manager-accounting" role="tabpanel" aria-labelledby="approval-manager-accounting-top-tab">
             <div class="col-sm-12">
                 <div class="card">
                   <div class="card-body">
@@ -67,7 +94,7 @@
             </div>
 
           </div>
-          <div class="tab-pane fade" id="top-waiting" role="tabpanel" aria-labelledby="waiting-top-tab">
+          <div class="tab-pane fade" id="top-approval-president" role="tabpanel" aria-labelledby="approval-president-top-tab">
             <div class="col-sm-12">
               <div class="card">
                 <div class="card-body">
@@ -80,7 +107,7 @@
               </div>
           </div>
          </div>
-          <div class="tab-pane fade" id="top-progress" role="tabpanel" aria-labelledby="progress-top-tab">
+          <div class="tab-pane fade" id="top-approval-cashier" role="tabpanel" aria-labelledby="approval-cashier">
             <div class="col-sm-12">
               <div class="card">
                 <div class="card-body">
