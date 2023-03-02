@@ -1,5 +1,7 @@
 from django.urls import path
 from it_app import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 app_name ='it_app'
 
@@ -15,4 +17,4 @@ urlpatterns = [
     path('ticket/ticket_manager_reject/<int:ticket_id>', views.ticket_manager_reject, name='ticket_manager_reject'),
     path('ticket/ticket_it_approve/<int:ticket_id>', views.ticket_it_approve, name='ticket_it_approve'),
     path('ticket/ticket_it_reject/<int:ticket_id>', views.ticket_it_reject, name='ticket_it_reject'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

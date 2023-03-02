@@ -86,6 +86,26 @@
             </form>
           </div>
         </div>
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>IT SERVICE | Ticket Attachment</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            <form class="theme-form mega-form">
+              <div class="mb-3">  
+                <label class="col-form-label">List Attachment</label>
+                <ul>
+                    <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                      {% for attachment in attachment %}
+                  <li><a href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                  {% endfor %}
+                    </div>
+                  </ul>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>

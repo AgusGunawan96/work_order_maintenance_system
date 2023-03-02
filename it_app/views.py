@@ -79,7 +79,12 @@ def ticket_add(request):
 @login_required
 def ticket_detail(request, ticket_id):
     ticket = Ticket.objects.get(pk=ticket_id)
-    return render(request, 'it_app/ticket_detail.html', {'ticket':ticket})
+    attachment = TicketAttachment.objects.filter(Ticket_id = ticket_id).values('attachment',)
+    context = {
+         'ticket'       : ticket,
+         'attachment'   : attachment,
+    }
+    return render(request, 'it_app/ticket_detail.html', context)
 
 @login_required
 def ticket_supervisor_approve(request,ticket_id):
