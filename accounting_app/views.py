@@ -139,7 +139,7 @@ def cashPayment_manager_reject(request,cashPayment_id):
             reject = approval_manager_form.save(commit=False)
             reject.manager = request.user
             reject.save()
-            return redirect('accounting_app:ticket_index')
+            return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_manager_form)
     
 @login_required
@@ -172,7 +172,7 @@ def cashPayment_accounting_manager_reject(request,cashPayment_id):
             reject = approval_accounting_manager_form.save(commit=False)
             reject.manager_accounting = request.user
             reject.save()
-            return redirect('accounting_app:ticket_index')
+            return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_accounting_manager_form)    
     
 @login_required
@@ -185,8 +185,10 @@ def cashPayment_president_approval(request, cashPayment_id):
         president.save()
         # membuat approval cashier
         approval_cashier_form = cashPaymentApprovalCashierForms(data=request.POST)
+        ticket_no = "TKT-" + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + "-" + str(president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee)
         cashier = approval_cashier_form.save(commit=False)
         cashier.cashPayment_approval_president = president
+        cashier.ticket_no = ticket_no
         cashier.save()
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalPresident.DoesNotExist:
@@ -205,12 +207,17 @@ def cashPayment_president_reject(request,cashPayment_id):
             reject = approval_president_form.save(commit=False)
             reject.president = request.user
             reject.save()
-            return redirect('accounting_app:ticket_index')
+            return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_president_form)   
 
 @login_required
 def cashPayment_cashier_approval(request, cashPayment_id):
     try:
+        cashier = cashPaymentApprovalCashier.objects.get(pk=cashPayment_id)
+        # Mengapprove
+        cashier.is_approve_cashier = True
+        cashier.cashier = request.user
+        cashier.save()
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalCashier.DoesNotExist:
         raise Http404("Cash Payment Error!")
@@ -228,7 +235,7 @@ def cashPayment_cashier_reject(request,cashPayment_id):
             reject = approval_cashier_form.save(commit=False)
             reject.cashier = request.user
             reject.save()
-            return redirect('accounting_app:ticket_index')
+            return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_cashier_form)   
 
 

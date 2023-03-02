@@ -58,19 +58,93 @@
                        </thead>
                        <tbody>
                         {% for manager in managers %}
+                        {% if manager.is_approve_manager == False and request.user.userprofileinfo.department_id == manager.ticket.assignee.userprofileinfo.department_id%}
+                        {% if manager.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_manager == True %}
                         <tr>
                           <td><a href="{% url 'accounting_app:cashPayment_detail' manager.cashPayment.id %}">{{manager.created_at}}</td>
                           <td>{{manager.cashPayment.assignee.first_name}} {{manager.cashPayment.assignee.last_name}}</td>
                           <td>{{manager.cashPayment.rp_total}}</td>
+                          {% if manager.is_rejected_manager == True %}
+                          <td>Rejected by {{ manager.manager.first_name }} {{ manager.manager.last_name }}</td>
+                         {% else %}
                           <td>Waiting for Approval Manager</td>
-                          {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == manager.cashPayment.assignee.userprofileinfo.department_id %}
-                          <td>Action</td>
+                         {% endif %}
+                          {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == manager.cashPayment.assignee.userprofileinfo.department_id and  manager.is_rejected_manager == False %}
+                          <td>
+                            <a href="{% url 'accounting_app:cashPayment_manager_approve' manager.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                            <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalManager{{ manager.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
+                          </td>
                           {% else %}
                           {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id != manager.cashPayment.assignee.userprofileinfo.department_id %}
                           <td>Cannot Approved</td>
                           {% endif %}
+                          {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == manager.cashPayment.assignee.userprofileinfo.department_id %}
+                          <td>-</td>
+                          {% endif %}
                           {% endif %}
                         </tr>
+                        {% endif %}
+                        {% endif %}
+
+                        <div class="modal fade" id="ModalManager{{ manager.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel2">{{manager.cashPayment.created_at}}</h5>
+                                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{% url 'accounting_app:cashPayment_manager_reject' manager.id %}" method="POST">
+                                  {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                      <label class="col-form-label" for="recipient-name">Recipient:</label>
+                                      <input class="form-control" type="text" value="{{manager.cashPayment.assignee.first_name}} {{manager.cashPayment.assignee.last_name}}" readonly>
+                                    </div>
+                                    {% for hidden in form_manager.hidden_fields %}
+                                    {{ hidden }}
+                                     {% endfor %}
+                                    <!-- merender semua field form dari objek TaskForm -->
+                                    {% if form_manager.non_field_errors %}
+                                      <div class="alert alert-danger" role="alert">
+                                        {% for error in form_manager.non_field_errors %}
+                                          {{ error }}
+                                        {% endfor %}
+                                      </div>
+                                    {% endif %}
+                          
+                                    {% for field in form_manager.visible_fields %}
+                                      <div class="form-group">
+                                        {{ field.label_tag }}
+                                        {% if form_manager.is_bound %}
+                                          {% if field.errors %}
+                                            {% render_field field class="form-control is-invalid" %}
+                                            {% for error in field.errors %}
+                                              <div class="invalid-feedback">
+                                                {{ error }}
+                                              </div>
+                                            {% endfor %}
+                                          {% else %}
+                                            {% render_field field class="form-control is-valid" %}
+                                          {% endif %}
+                                        {% else %}
+                                          {% render_field field class="form-control" %}
+                                        {% endif %}
+                          
+                                        {% if field.help_text %}
+                                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                      </div>
+                                    {% endfor %}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                  </div>
+                              </form>
+                              </div>
+                            </div>
+                          </div>
                         {% endfor %}
                        </tbody>
                       </table>
@@ -86,7 +160,108 @@
                   <div class="card-body">
                     <div class="table-responsive">
                       <table class="display" id="basic-2">
-                       
+                        <thead>
+                          <tr>
+                            <th>Created</th>
+                            <th>Assignee</th>
+                            <th>Total(RP.)</th>
+                            <th>Status</th>
+                            {% if request.user.userprofileinfo.is_manager  %}
+                            <th>Action</th>
+                            {% endif %}
+                          </tr>
+                         </thead>
+                         <tbody>
+                          {% for managerAccounting in managersAccountings %}
+                          {% if managerAccounting.is_approve_manager_accounting == False and request.user.userprofileinfo.department_id == 7 %}
+                          {% if managerAccounting.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_manager == True %}
+                          <tr>
+                            <td><a href="{% url 'accounting_app:cashPayment_detail' managerAccounting.cashPayment_approval_manager.cashPayment.id %}">{{managerAccounting.created_at}}</td>
+                            <td>{{managerAccounting.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{managerAccounting.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
+                            <td>{{managerAccounting.cashPayment_approval_manager.cashPayment.rp_total}}</td>
+                            {% if managerAccounting.is_rejected_manager_accounting == True %}
+                            <td>Rejected by {{ managerAccounting.manager_accounting.first_name }} {{ managerAccounting.manager_accounting.last_name }}</td>
+                           {% else %}
+                            <td>Waiting for Approval Accounting Manager</td>
+                           {% endif %}
+                            {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == 7 and  managerAccounting.is_rejected_manager_accounting == False %}
+                            <td>
+                              <a href="{% url 'accounting_app:cashPayment_accounting_manager_approve' managerAccounting.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                              <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalManagerAccounting{{ managerAccounting.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
+                            </td>
+                            {% else %}
+                            {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id != 7 %}
+                            <td>Cannot Approved</td>
+                            {% endif %}
+                            {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == 7 %}
+                            <td>-</td>
+                            {% endif %}
+                            {% endif %}
+                          </tr>
+                          {% endif %}
+                          {% endif %}
+  
+                          <div class="modal fade" id="ModalManagerAccounting{{ managerAccounting.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                              aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel2">{{managerAccounting.cashPayment_approval_manager.cashPayment.created_at}}</h5>
+                                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <form action="{% url 'accounting_app:cashPayment_accounting_manager_reject' managerAccounting.id %}" method="POST">
+                                    {% csrf_token %}
+                                  <div class="modal-body">
+                                      <div class="mb-3">
+                                        <label class="col-form-label" for="recipient-name">Recipient:</label>
+                                        <input class="form-control" type="text" value="{{managerAccounting.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{managerAccounting.cashPayment_approval_manager.cashPayment.assignee.last_name}}" readonly>
+                                      </div>
+                                      {% for hidden in form_manager_accounting.hidden_fields %}
+                                      {{ hidden }}
+                                       {% endfor %}
+                                      <!-- merender semua field form dari objek TaskForm -->
+                                      {% if form_manager_accounting.non_field_errors %}
+                                        <div class="alert alert-danger" role="alert">
+                                          {% for error in form_manager_accounting.non_field_errors %}
+                                            {{ error }}
+                                          {% endfor %}
+                                        </div>
+                                      {% endif %}
+                            
+                                      {% for field in form_manager_accounting.visible_fields %}
+                                        <div class="form-group">
+                                          {{ field.label_tag }}
+                                          {% if form_manager_accounting.is_bound %}
+                                            {% if field.errors %}
+                                              {% render_field field class="form-control is-invalid" %}
+                                              {% for error in field.errors %}
+                                                <div class="invalid-feedback">
+                                                  {{ error }}
+                                                </div>
+                                              {% endfor %}
+                                            {% else %}
+                                              {% render_field field class="form-control is-valid" %}
+                                            {% endif %}
+                                          {% else %}
+                                            {% render_field field class="form-control" %}
+                                          {% endif %}
+                            
+                                          {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                          {% endif %}
+                                        </div>
+                                      {% endfor %}
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                      <button class="btn btn-primary" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                         </tbody>
                       </table>
                     </div>
                   </div>
@@ -100,7 +275,108 @@
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="display" id="basic-3">
-                     
+                      <thead>
+                        <tr>
+                          <th>Created</th>
+                          <th>Assignee</th>
+                          <th>Total(RP.)</th>
+                          <th>Status</th>
+                          {% if request.user.userprofileinfo.is_bod  %}
+                          <th>Action</th>
+                          {% endif %}
+                        </tr>
+                       </thead>
+                       <tbody>
+                        {% for president in presidents %}
+                        {% if president.is_approve_president == False and request.user.userprofileinfo.id == 6 %}
+                        {% if president.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_bod == True %}
+                        <tr>
+                          <td><a href="{% url 'accounting_app:cashPayment_detail' president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{president.created_at}}</td>
+                          <td>{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
+                          <td>{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.rp_total}}</td>
+                          {% if president.is_rejected_president == True %}
+                          <td>Rejected by {{ president.president.first_name }} {{ president.president.last_name }}</td>
+                         {% else %}
+                          <td>Waiting for Approval President</td>
+                         {% endif %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 6 and  president.is_rejected_president == False %}
+                          <td>
+                            <a href="{% url 'accounting_app:cashPayment_president_approve' president.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                            <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalPresident{{ president.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
+                          </td>
+                          {% else %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id != 6 %}
+                          <td>Cannot Approved</td>
+                          {% endif %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 6 %}
+                          <td>-</td>
+                          {% endif %}
+                          {% endif %}
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+
+                        <div class="modal fade" id="ModalPresident{{ president.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel2">{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.created_at}}</h5>
+                                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{% url 'accounting_app:cashPayment_president_reject' president.id %}" method="POST">
+                                  {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                      <label class="col-form-label" for="recipient-name">Recipient:</label>
+                                      <input class="form-control" type="text" value="{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}" readonly>
+                                    </div>
+                                    {% for hidden in form_president.hidden_fields %}
+                                    {{ hidden }}
+                                     {% endfor %}
+                                    <!-- merender semua field form dari objek TaskForm -->
+                                    {% if form_president.non_field_errors %}
+                                      <div class="alert alert-danger" role="alert">
+                                        {% for error in form_president.non_field_errors %}
+                                          {{ error }}
+                                        {% endfor %}
+                                      </div>
+                                    {% endif %}
+                          
+                                    {% for field in form_president.visible_fields %}
+                                      <div class="form-group">
+                                        {{ field.label_tag }}
+                                        {% if form_president.is_bound %}
+                                          {% if field.errors %}
+                                            {% render_field field class="form-control is-invalid" %}
+                                            {% for error in field.errors %}
+                                              <div class="invalid-feedback">
+                                                {{ error }}
+                                              </div>
+                                            {% endfor %}
+                                          {% else %}
+                                            {% render_field field class="form-control is-valid" %}
+                                          {% endif %}
+                                        {% else %}
+                                          {% render_field field class="form-control" %}
+                                        {% endif %}
+                          
+                                        {% if field.help_text %}
+                                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                      </div>
+                                    {% endfor %}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                  </div>
+                              </form>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                       </tbody>
                     </table>
                   </div>
                 </div>
@@ -113,22 +389,111 @@
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="display" id="basic-4">
-                       
+                      <thead>
+                        <tr>
+                          <th>Created</th>
+                          <th>Assignee</th>
+                          <th>Total(RP.)</th>
+                          <th>Status</th>
+                          {% if request.user.userprofileinfo.is_bod  %}
+                          <th>Action</th>
+                          {% endif %}
+                        </tr>
+                       </thead>
+                       <tbody>
+                        {% for cashier in cashiers %}
+                        {% if president.is_approve_president == False and request.user.userprofileinfo.id == 6 %}
+                        {% if president.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_bod == True %}
+                        <tr>
+                          <td><a href="{% url 'accounting_app:cashPayment_detail' president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{president.created_at}}</td>
+                          <td>{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
+                          <td>{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.rp_total}}</td>
+                          {% if president.is_rejected_president == True %}
+                          <td>Rejected by {{ president.president.first_name }} {{ president.president.last_name }}</td>
+                         {% else %}
+                          <td>Waiting for Approval President</td>
+                         {% endif %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 6 and  president.is_rejected_president == False %}
+                          <td>
+                            <a href="{% url 'accounting_app:cashPayment_president_approve' president.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                            <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalPresident{{ president.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
+                          </td>
+                          {% else %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id != 6 %}
+                          <td>Cannot Approved</td>
+                          {% endif %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 6 %}
+                          <td>-</td>
+                          {% endif %}
+                          {% endif %}
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+
+                        <div class="modal fade" id="ModalPresident{{ president.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel2">{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.created_at}}</h5>
+                                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{% url 'accounting_app:cashPayment_president_reject' president.id %}" method="POST">
+                                  {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                      <label class="col-form-label" for="recipient-name">Recipient:</label>
+                                      <input class="form-control" type="text" value="{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}" readonly>
+                                    </div>
+                                    {% for hidden in form_president.hidden_fields %}
+                                    {{ hidden }}
+                                     {% endfor %}
+                                    <!-- merender semua field form dari objek TaskForm -->
+                                    {% if form_president.non_field_errors %}
+                                      <div class="alert alert-danger" role="alert">
+                                        {% for error in form_president.non_field_errors %}
+                                          {{ error }}
+                                        {% endfor %}
+                                      </div>
+                                    {% endif %}
+                          
+                                    {% for field in form_president.visible_fields %}
+                                      <div class="form-group">
+                                        {{ field.label_tag }}
+                                        {% if form_president.is_bound %}
+                                          {% if field.errors %}
+                                            {% render_field field class="form-control is-invalid" %}
+                                            {% for error in field.errors %}
+                                              <div class="invalid-feedback">
+                                                {{ error }}
+                                              </div>
+                                            {% endfor %}
+                                          {% else %}
+                                            {% render_field field class="form-control is-valid" %}
+                                          {% endif %}
+                                        {% else %}
+                                          {% render_field field class="form-control" %}
+                                        {% endif %}
+                          
+                                        {% if field.help_text %}
+                                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                      </div>
+                                    {% endfor %}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                  </div>
+                              </form>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                       </tbody>
                     </table>
                   </div>
                 </div>
-                </div>
-              </div>
-          </div>
-          <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
-            <div class="col-sm-12">
-              <div class="card">
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="display" id="basic-5">
-                     
-                    </table>
-                  </div>
                 </div>
               </div>
           </div>
@@ -138,8 +503,8 @@
               <div class="card">
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="display" id="basic-6">
-                     
+                    <table class="display" id="basic-5">
+                     <thead></thead>
                     </table>
                   </div>
                 </div>
