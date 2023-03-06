@@ -32,23 +32,23 @@ class cashPaymentAttachmentForms(forms.ModelForm):
 class cashPaymentApprovalManagerForms(forms.ModelForm):
     class Meta():
         model = cashPaymentApprovalManager
-        fields = ('reject_reason_manager','is_approve_manager','is_rejected_manager', 'manager')
-        widgets = {'is_approve_manager': forms.HiddenInput, 'is_rejected_manager': forms.HiddenInput , 'manager': forms.HiddenInput}
+        fields = ('reject_reason_manager','is_approve_manager','is_rejected_manager', 'manager', 'is_checked_manager')
+        widgets = {'is_approve_manager': forms.HiddenInput, 'is_rejected_manager': forms.HiddenInput, 'is_checked_manager': forms.HiddenInput , 'manager': forms.HiddenInput}
 
 class cashPaymentApprovalAccountingManagerForms(forms.ModelForm):
     class Meta():
         model = cashPaymentApprovalAccountingManager
-        fields = ('reject_reason_manager_accounting','is_approve_manager_accounting','is_rejected_manager_accounting', 'manager_accounting')
-        widgets = {'is_approve_manager_accounting': forms.HiddenInput, 'is_rejected_manager_accounting': forms.HiddenInput , 'manager_accounting': forms.HiddenInput}
+        fields = ('reject_reason_manager_accounting','is_approve_manager_accounting','is_rejected_manager_accounting','is_checked_manager_accounting' , 'manager_accounting')
+        widgets = {'is_approve_manager_accounting': forms.HiddenInput, 'is_rejected_manager_accounting': forms.HiddenInput , 'is_checked_manager_accounting': forms.HiddenInput, 'manager_accounting': forms.HiddenInput}
 
 class cashPaymentApprovalPresidentForms(forms.ModelForm):
     class Meta():
-        fields = ('reject_reason_president','is_approve_president','is_rejected_president', 'president')
-        widgets = {'is_approve_president': forms.HiddenInput, 'is_rejected_president': forms.HiddenInput , 'president': forms.HiddenInput}
+        fields = ('reject_reason_president','is_approve_president','is_rejected_president','is_checked_president' , 'president')
+        widgets = {'is_approve_president': forms.HiddenInput, 'is_rejected_president': forms.HiddenInput, 'is_checked_president': forms.HiddenInput , 'president': forms.HiddenInput}
         model = cashPaymentApprovalPresident
 
 class cashPaymentApprovalCashierForms(forms.ModelForm):
     class Meta():
-        fields = ('reject_reason_cashier','is_approve_cashier','is_rejected_cashier', 'cashier')
-        widgets = {'is_approve_cashier': forms.HiddenInput, 'is_rejected_cashier': forms.HiddenInput , 'cashier': forms.HiddenInput}
+        fields = ('reject_reason_cashier','is_approve_cashier','is_rejected_cashier','is_checked_cashier', 'cashier')
+        widgets = {'is_approve_cashier': forms.HiddenInput, 'is_rejected_cashier': forms.HiddenInput , 'is_checked_cashier': forms.HiddenInput, 'cashier': forms.HiddenInput}
         model = cashPaymentApprovalCashier

@@ -217,7 +217,7 @@
                 <ul>
                     <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
                       {% for attachment in attachment %}
-                  <li><a href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                  <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
                   {% endfor %}
                     </div>
                   </ul>

@@ -18,12 +18,14 @@ def cashPayment_index(request):
     managersAccountings = cashPaymentApprovalAccountingManager.objects.order_by('-id')
     presidents = cashPaymentApprovalPresident.objects.order_by('-id')
     cashiers = cashPaymentApprovalCashier.objects.order_by('-id')
+    attachments = cashPaymentAttachment.objects.order_by('-id')
     context = {
          'cashpayments'             : cashPayments,
          'managers'                 : managers,
          'managersAccountings'      : managersAccountings,
          'presidents'               : presidents,
          'cashiers'                 : cashiers,
+         'attachments'              : attachments,
          'form_manager'             : cashPaymentApprovalManagerForms,
          'form_manager_accounting'  : cashPaymentApprovalAccountingManagerForms,
          'form_president'           : cashPaymentApprovalPresidentForms,
@@ -107,6 +109,19 @@ def cashPayment_detail(request, cashPayment_id):
     return render(request, 'accounting_app/cashPayment_detail.html', context)
 
 @login_required
+def cashPayment_manager_check(request, cashPayment_id):
+    try:
+        # Mengambil data manager yang akan di check berdasarkan cashPayment id
+        manager = cashPaymentApprovalManager.objects.get(pk=cashPayment_id)
+        # Approve Check
+        manager.is_checked_manager = True
+        manager.save()
+        messages.success(request, 'Checked Succcesfully')
+        return redirect('accounting_app:cashPayment_index')
+    except cashPaymentApprovalManager.DoesNotExist:
+         raise Http404("Cash Payment Error!")
+
+@login_required
 def cashPayment_manager_approve(request, cashPayment_id):
     try:
         # mengambil data task yang akan di approve berdasarkan cashPayment id
@@ -139,9 +154,24 @@ def cashPayment_manager_reject(request,cashPayment_id):
             reject = approval_manager_form.save(commit=False)
             reject.manager = request.user
             reject.save()
+            messages.success(request, 'Reject Succcesfully')
             return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_manager_form)
-    
+
+@login_required
+def cashPayment_accounting_manager_check(request, cashPayment_id):
+    try:
+        # Mengambil data manager accounting yang akan di check berdasarkan cashPayment id
+        manager_accounting = cashPaymentApprovalAccountingManager.objects.get(pk=cashPayment_id)
+        # Approve Check
+        manager_accounting.is_checked_manager_accounting = True
+        manager_accounting.save()
+        messages.success(request, 'Checked Succcesfully')
+        return redirect('accounting_app:cashPayment_index')
+    except cashPaymentApprovalAccountingManager.DoesNotExist:
+         raise Http404("Cash Payment Error!")
+
+
 @login_required
 def cashPayment_accounting_manager_approve(request, cashPayment_id):
     try:
@@ -155,6 +185,7 @@ def cashPayment_accounting_manager_approve(request, cashPayment_id):
         president = approval_president_form.save(commit=False)
         president.cashPayment_approval_accounting_manager = manager_accounting
         president.save()
+        messages.success(request, 'Approve Succcesfully')
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalAccountingManager.DoesNotExist:
         raise Http404("Cash Payment Error!")
@@ -172,9 +203,23 @@ def cashPayment_accounting_manager_reject(request,cashPayment_id):
             reject = approval_accounting_manager_form.save(commit=False)
             reject.manager_accounting = request.user
             reject.save()
+            messages.success(request, 'Reject Succcesfully')
             return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_accounting_manager_form)    
-    
+
+@login_required
+def cashPayment_president_check(request, cashPayment_id):
+    try:
+        # Mengambil data manager accounting yang akan di check berdasarkan cashPayment id
+        president = cashPaymentApprovalPresident.objects.get(pk=cashPayment_id)
+        # Approve Check
+        president.is_checked_president = True
+        president.save()
+        messages.success(request, 'Checked Succcesfully')
+        return redirect('accounting_app:cashPayment_index')
+    except cashPaymentApprovalPresident.DoesNotExist:
+         raise Http404("Cash Payment Error!")
+        
 @login_required
 def cashPayment_president_approval(request, cashPayment_id):
     try:
@@ -191,6 +236,7 @@ def cashPayment_president_approval(request, cashPayment_id):
         cashier.cashPayment_approval_president = president
         cashier.ticket_no = ticket_no
         cashier.save()
+        messages.success(request, 'Approval Succcesfully')
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalPresident.DoesNotExist:
         raise Http404("Cash Payment Error!")
@@ -208,9 +254,23 @@ def cashPayment_president_reject(request,cashPayment_id):
             reject = approval_president_form.save(commit=False)
             reject.president = request.user
             reject.save()
+            messages.success(request, 'Reject Succcesfully')
             return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_president_form)   
 
+@login_required
+def cashPayment_cashier_check(request, cashPayment_id):
+    try:
+        # Mengambil data manager accounting yang akan di check berdasarkan cashPayment id
+        cashier = cashPaymentApprovalCashier.objects.get(pk=cashPayment_id)
+        # Approve Check
+        cashier.is_checked_cashier = True
+        cashier.save()
+        messages.success(request, 'Checked Succcesfully')
+        return redirect('accounting_app:cashPayment_index')
+    except cashPaymentApprovalCashier.DoesNotExist:
+         raise Http404("Cash Payment Error!")
+    
 @login_required
 def cashPayment_cashier_approval(request, cashPayment_id):
     try:
@@ -219,6 +279,7 @@ def cashPayment_cashier_approval(request, cashPayment_id):
         cashier.is_approve_cashier = True
         cashier.cashier = request.user
         cashier.save()
+        messages.success(request, 'Approve Succcesfully')
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalCashier.DoesNotExist:
         raise Http404("Cash Payment Error!")
@@ -236,6 +297,7 @@ def cashPayment_cashier_reject(request,cashPayment_id):
             reject = approval_cashier_form.save(commit=False)
             reject.cashier = request.user
             reject.save()
+            messages.success(request, 'Reject Succcesfully')
             return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_cashier_form)   
 
