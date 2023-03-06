@@ -74,7 +74,8 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div class="input-group"><span class="input-group-text">IDR  </span>
-                                        <input name="rp_detail_1" class="form-control" type="text" required>
+                                        <input name="rp_detail_1" class="form-control" id="number-separator1" type="text" hidden>
+                                        <input  class="form-control" id="number-mask1" type="text" required>
                                       </div>
                                 </div>
                                 <div class="col-md-2">
@@ -113,6 +114,8 @@
 
 {% endblock content %}
 {% block scriptcontent %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/1.8.2/autoNumeric.js"></script>
 <script type="text/javascript">
  test = 1;
  $("#rowAdder").click(function () {
@@ -121,10 +124,70 @@
         newRowAdd =
         '<div id="row"> <div class="form-group row">' +
         '<div class="col-md-5"> <textarea name = "description_'+test+'" class="form-control" placeholder="Description" type="text" required></textarea></div>' +
-        '<div class="col-md-5"> <div class="input-group"><span class="input-group-text">IDR</span><input name="rp_detail_'+test+'" class="form-control" type="text" required></div> </div>' +
+        '<div class="col-md-5"> <div class="input-group"><span class="input-group-text">IDR</span><input name="rp_detail_'+test+'" class="form-control"  id="number-separator'+test+'" type="text" hidden><input  class="form-control" id="number-mask'+test+'" type="text" required></div> </div>' +
         '<div class="col-md-2"> <button class="btn btn-danger" id="DeleteRow" type="button">Delete</button> </div>' +
         '</div> </div>';
         $('#newinput').append(newRowAdd);
+        easyNumberSeparator({
+            selector: '#number-mask1',
+            separator: '.',
+            resultInput: '#number-separator1',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask2',
+            separator: '.',
+            resultInput: '#number-separator2',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask3',
+            separator: '.',
+            resultInput: '#number-separator3',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask4',
+            separator: '.',
+            resultInput: '#number-separator4',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask5',
+            separator: '.',
+            resultInput: '#number-separator5',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask6',
+            separator: '.',
+            resultInput: '#number-separator6',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask7',
+            separator: '.',
+            resultInput: '#number-separator7',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask8',
+            separator: '.',
+            resultInput: '#number-separator8',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask9',
+            separator: '.',
+            resultInput: '#number-separator9',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask10',
+            separator: '.',
+            resultInput: '#number-separator10',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask11',
+            separator: '.',
+            resultInput: '#number-separator11',
+        })
+        easyNumberSeparator({
+            selector: '#number-mask12',
+            separator: '.',
+            resultInput: '#number-separator12',
+        })
     }
     });
 
@@ -134,6 +197,15 @@
     })
 </script>
 <!-- Plugins JS start-->
+
+<script>
+    easyNumberSeparator({
+        selector: '#number-mask1',
+        separator: '.',
+        resultInput: '#number-separator1',
+    })
+</script>
+
 <script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
 <script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
 <script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>

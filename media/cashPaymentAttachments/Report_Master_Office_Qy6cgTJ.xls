@@ -1,0 +1,43 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<table><tr><td colspan=6><font  face="Trebuchet MS" color='blue'><h2><b>PT SEIWA INDONESIA</b></h2></font></td></tr><tr><td colspan=6><b>Administration Division</B></td></tr><tr><td colspan=6><b>Information Technology Departement</b></font></td></tr></table><br>
+<h3>Report Microsoft Office</h3>
+<table border="1">
+			<tr bgcolor="#CCCCCC">
+    <td>OFFICE ID</td>
+    <td>OFFICE NAME</td>
+    <td>OFFICE SERIAL NO</td>
+    <td>OFFICE STATUS</td>
+  </tr>
+  
+  
+   <tr>
+    <td>MO001</td>
+    <td>Office 2007 Standard</td>
+    <td>-</td>
+    <td>Active  <tr>
+    <td>MO002</td>
+    <td>MS Office 2010 Profesional</td>
+    <td>-</td>
+    <td>Active  <tr>
+    <td>MO003</td>
+    <td>Others</td>
+    <td>-</td>
+    <td>Active  <tr>
+    <td>MO004</td>
+    <td>Office 2010 Standard</td>
+    <td>-</td>
+    <td>Active  <tr>
+    <td>MO005</td>
+    <td>Office 2016 Standard</td>
+    <td>-</td>
+    <td>Active</td>
+  </tr>
+</table>
+</body>
+</html>
