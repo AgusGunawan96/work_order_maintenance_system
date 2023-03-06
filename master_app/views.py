@@ -102,3 +102,6 @@ def CreateUserInfoData(request):
         UserProfileInfo.objects.bulk_create(data)
     return JsonResponse('user Info csv is now working', safe=False)
 
+@login_required
+def place_value(number): 
+    return ("{:,}".format(number)) 

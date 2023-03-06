@@ -185,7 +185,8 @@ def cashPayment_president_approval(request, cashPayment_id):
         president.save()
         # membuat approval cashier
         approval_cashier_form = cashPaymentApprovalCashierForms(data=request.POST)
-        ticket_no = "TKT-" + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + "-" + str(president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee)
+        ticket_maks = cashPaymentApprovalCashier.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
+        ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))
         cashier = approval_cashier_form.save(commit=False)
         cashier.cashPayment_approval_president = president
         cashier.ticket_no = ticket_no
