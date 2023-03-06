@@ -57,8 +57,8 @@
                         </thead>
                         <tbody>
                          {% for manager in managers %}
-                         {% if manager.is_approve_manager == False and request.user.userprofileinfo.department_id == manager.ticket.assignee.userprofileinfo.department_id%}
-                         {% if manager.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_manager == True %}
+                         {% if manager.is_approve_manager == False and request.user.userprofileinfo.department_id == manager.cashPayment.assignee.userprofileinfo.department_id%}
+                         {% if manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.is_manager == True %}
                          <tr>
                            <td><a href="{% url 'accounting_app:cashPayment_detail' manager.cashPayment.id %}">{{manager.created_at}}</td>
                            <td>{{manager.cashPayment.assignee.first_name}} {{manager.cashPayment.assignee.last_name}}</td>
@@ -173,7 +173,7 @@
                          <tbody>
                           {% for managerAccounting in managersAccountings %}
                           {% if managerAccounting.is_approve_manager_accounting == False %}
-                          {% if managerAccounting.ticket.assignee.id == request.user.id or request.user.userprofileinfo.department_id == 7 %}
+                          {% if managerAccounting.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.department_id == 7 %}
                           <tr>
                             <td><a href="{% url 'accounting_app:cashPayment_detail' managerAccounting.cashPayment_approval_manager.cashPayment.id %}">{{managerAccounting.created_at}}</td>
                             <td>{{managerAccounting.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{managerAccounting.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
@@ -288,7 +288,7 @@
                        <tbody>
                         {% for president in presidents %}
                         {% if president.is_approve_president == False %}
-                        {% if president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.assignee.id == request.user.id or  request.user.userprofileinfo.id == 6 %}
+                        {% if president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or  request.user.userprofileinfo.id == 6 %}
                         <tr>
                           <td><a href="{% url 'accounting_app:cashPayment_detail' president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{president.created_at}}</td>
                           <td>{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
@@ -304,9 +304,9 @@
                             <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalPresident{{ president.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
                           </td>
                           {% else %}
-                          {% if request.user.userprofileinfo.bod == False and request.user.userprofileinfo.id != 6 %}
+                          {% if request.user.userprofileinfo.is_bod == False and request.user.userprofileinfo.id != 6 %}
                           {% else %}
-                          <td> </td>
+                          <td> </td> 
                           {% endif %}
                           {% endif %}
                         </tr>

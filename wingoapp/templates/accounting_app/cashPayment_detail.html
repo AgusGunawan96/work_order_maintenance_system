@@ -14,7 +14,7 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Cash Payment Voucher | User Information Detail {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.ticket_no %}| {{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.ticket_no}}{% endif %}</h5>
+            <h5>Cash Payment Voucher | User Information Detail {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.ticket_no %}| {{cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.ticket_no}}{% endif %}</h5>
           </div>
           <hr class="mt-4 mb-2">
             <div class="card-body">
@@ -53,32 +53,155 @@
           <hr class="mt-4 mb-2">
           <div class="card-body">
             <form class="theme-form mega-form">
-              <div class="mb-3">
-                <label class="col-form-label">Description</label>
-                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.description}}</textarea >
+              <div class="col-md-12 col-lg-12 row">
+
+               <div class="mb-3 col-md-6 col-lg-6">
+                 <label class="col-form-label">Description</label>
+                 <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_1}}</textarea >
+               </div>
+               <div class="mb-3 col-md-6 col-lg-6">
+                 <label class="col-form-label">Harga</label>
+                 <div class="input-group"><span class="input-group-text">IDR  </span>
+                   <input name="rp_detail_1" class="form-control" type="text" value="{{ cashPayment.rp_detail_1 }}" readonly>
+                 </div>
+               </div>
+              
+               {% if cashPayment.description_2 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_2}}</textarea >
               </div>
-            {% if ticket.ticketapprovalsupervisor.is_rejected_supervisor == True %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_2" class="form-control" type="text" value="{{ cashPayment.rp_detail_2 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+
+              {% if cashPayment.description_3 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_3}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_3" class="form-control" type="text" value="{{ cashPayment.rp_detail_3 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_4 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_4}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_4" class="form-control" type="text" value="{{ cashPayment.rp_detail_4 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_5 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_5}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_5" class="form-control" type="text" value="{{ cashPayment.rp_detail_5 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_6 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_6}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_6" class="form-control" type="text" value="{{ cashPayment.rp_detail_6 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_7 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_7}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_7" class="form-control" type="text" value="{{ cashPayment.rp_detail_7 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_8 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_8}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_8" class="form-control" type="text" value="{{ cashPayment.rp_detail_8 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_9 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_9}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_9" class="form-control" type="text" value="{{ cashPayment.rp_detail_9 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_10 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_10}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_10" class="form-control" type="text" value="{{ cashPayment.rp_detail_10 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_11 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_11}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_11" class="form-control" type="text" value="{{ cashPayment.rp_detail_11 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              {% if cashPayment.description_12 %}
+              <div class="mb-3 col-md-6 col-lg-6">
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_12}}</textarea >
+              </div>
+              <div class="mb-3 col-md-6 col-lg-6">
+                <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment.rp_detail_12 }}" readonly>
+                </div>
+              </div>
+              {% endif %}
+              <div class="mb-3 col-md-12 col-lg-12">
+                 <label class="col-form-label">Cash Total</label>
+                 <div class="input-group"><span class="input-group-text">IDR  </span>
+                  <input name="rp_detail_1" class="form-control" type="text" value="{{ cashPayment.rp_total }}" readonly>
+                </div>
+              </div>
+               </div>
+            {% if cashPayment.cashpaymentapprovalmanager.is_rejected_manager == True %}
             <div class="mb-3">
-              <label class="col-form-label">Reject Reason by {{ ticket.ticketapprovalsupervisor.supervisor.first_name }} {{ ticket.ticketapprovalsupervisor.supervisor.last_name }} (Approval Supervisor)</label>
-              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.reject_reason_supervisor}}</textarea >
+              <label class="col-form-label">Reject Reason by {{ cashPayment.ticketapprovalmanager.manager.first_name }} {{ ticket.ticketapprovalmanager.manager.last_name }} (Approval Manager)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.ticketapprovalmanager.reject_reason_manager}}</textarea >
             </div>
             {% endif %}
-            {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.review_description %}
+            {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.reject_reason_manager_accounting %}
             <div class="mb-3">
-              <label class="col-form-label">Review By by {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.first_name }} {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.last_name }} (Approval IT)</label>
-              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.review_description}}</textarea >
+              <label class="col-form-label">Reject Reason by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.manager_accounting.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.manager_accounting.last_name }} (Approval IT)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.reject_reason_manager_accounting}}</textarea >
             </div>
             {% endif %}
-            </form>
-            <form class="form-space theme-form row">
-              <h6 class="pb-3 mb-0">Hardware</h6>
-              <div class="col-auto mb-2">
-                <input class="form-control" type="text" value="{{ ticket.hardware.name }}" readonly>
-              </div>
-            <h6 class="pb-3 mb-0">Quantity</h6>
-              <div class="col-auto mb-2">
-                <input class="form-control" type="text" name="inputPassword" value="{{ ticket.quantity }}" placeholder="Card Number" readonly>
-              </div>
+            {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.reject_reason_president %}
+            <div class="mb-3">
+              <label class="col-form-label">Reject Reason by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.president.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.president.last_name }} (Approval IT)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.reject_reason_president}}</textarea >
+            </div>
+            {% endif %}
             </form>
           </div>
         </div>
