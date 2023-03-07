@@ -21,6 +21,8 @@ class TicketPriority(models.TextChoices):
 class Hardware(models.Model):
     name = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField(blank=True, default=0)
+    created_at = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField('updated at', auto_now=True)
 
     def __str__(self):
         return self.name
@@ -30,6 +32,8 @@ class HardwareInfo(models.Model):
     nomor_po = models.CharField(max_length=64, null=True, blank=True)
     quantity = models.PositiveIntegerField(null=True, blank=True)
     kode_barang = models.CharField(max_length=64, null=True, blank=True)
+    created_at = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField('updated at', auto_now=True)
 
     def __str__(self):
         return self.nomor_po
