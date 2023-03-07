@@ -28,6 +28,7 @@
 <div>
   </div>
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'accounting_app:cashPayment_add' %}">Add Cash Payment</a></button>
+        <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalAddDebit" data-whatever="@mdo">Add Debit</a></button>
       </div>
       <div class="card-body">
         <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
@@ -674,6 +675,34 @@
           </div>
           </div>
          {% comment %} CASHIER END {% endcomment %}
+         {% comment %} MODAL CHECKED START {% endcomment %}
+         <div class="modal fade" id="ModalAddDebit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel2">Add Debit Cash Payment Voucher</h5>
+               <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+             </div>
+             <form action="" method="POST">
+               {% csrf_token %}
+             <div class="modal-body">
+               {% comment %} START ISI {% endcomment %}
+                 <div class="mb-3">
+                   <label class="col-form-label" for="recipient-name">Recipient:</label>
+                   <input class="form-control" type="text" value="" readonly>
+                 </div>
+                 {% comment %} END ISI {% endcomment %}
+               </div>
+               <div class="modal-footer">
+                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                 <button class="btn btn-primary" type="submit">Add</button>
+               </div>
+           </form>
+           </div>
+         </div>
+       </div>
+      {% comment %} MODAL CHECKED END {% endcomment %}
         </div>
       </div>
     </div>
