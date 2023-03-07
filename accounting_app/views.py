@@ -5,6 +5,8 @@ from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, c
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 import datetime
+import csv
+from django.contrib.auth.models import User
 
 # Create your views here.
 @login_required
@@ -301,4 +303,16 @@ def cashPayment_cashier_reject(request,cashPayment_id):
             return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_cashier_form)   
 
+@login_required
+def export_users_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="users.csv"'
 
+    writer = csv.writer(response)
+    writer.writerow(['Username', 'First name', 'Last name', 'Email address'])
+
+    users = User.objects.all().values_list('username', 'first_name', 'last_name', 'email')
+    for user in users:
+        writer.writerow(user)
+
+    return response

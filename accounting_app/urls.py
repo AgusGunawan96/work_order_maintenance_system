@@ -24,4 +24,5 @@ urlpatterns = [
     path('cashPayment/cashPayment_cashier_checked/<int:cashPayment_id>', views.cashPayment_cashier_check, name='cashPayment_cashier_check'),
     path('cashPayment/cashPayment_cashier_approve/<int:cashPayment_id>', views.cashPayment_cashier_approval, name='cashPayment_cashier_approve'),
     path('cashPayment/cashPayment_cashier_reject/<int:cashPayment_id>', views.cashPayment_cashier_reject, name='cashPayment_cashier_reject'),
+    path('cashPayment/export_users_csv', views.export_users_csv, name = 'export_users_csv'),
 ]
