@@ -236,8 +236,13 @@ def cashPayment_president_approval(request, cashPayment_id):
         ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))
         cashier = approval_cashier_form.save(commit=False)
         cashier.cashPayment_approval_president = president
-        cashier.ticket_no = ticket_no
         cashier.save()
+        # Create Ticket number dan credit menjadi True buat cashPayment
+        cashpayment = cashPayment.objects.get(pk=president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment)
+        cashpayment.is_credit = True
+        cashpayment.ticket_no = ticket_no
+        cashpayment.save()
+       
         messages.success(request, 'Approval Succcesfully')
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalPresident.DoesNotExist:

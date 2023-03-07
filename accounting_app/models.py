@@ -6,6 +6,10 @@ class cashPayment (models.Model):
     assignee = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
+    is_debit = models.BooleanField(default=False, blank=True, null=True )
+    is_credit = models.BooleanField(default=False, blank=True, null=True )
+    remark =models.CharField(max_length=200, null=True, blank=True)
+    ticket_no =models.CharField(max_length=128, null=True, blank=True)
     rp_total = models.PositiveBigIntegerField(null=True, blank=True)
     description_1 = models.TextField(blank=True, null=True)
     rp_detail_1 = models.PositiveBigIntegerField(null=True, blank=True)
@@ -72,7 +76,6 @@ class cashPaymentApprovalPresident(models.Model):
 class cashPaymentApprovalCashier(models.Model):
     cashPayment_approval_president = models.OneToOneField(cashPaymentApprovalPresident, on_delete=models.CASCADE ,blank=True, null=True)
     cashier = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    ticket_no =models.CharField(max_length=128, null=True, blank=True)
     is_approve_cashier = models.BooleanField(default=False, blank=True, null=True )
     is_rejected_cashier = models.BooleanField(default=False, blank=True, null=True )
     is_checked_cashier = models.BooleanField(default=False, blank=True, null=True )
