@@ -36,7 +36,13 @@ class cashPaymentDebitForms(forms.ModelForm):
         widgets = {
             'ticket_no': forms.HiddenInput(),
         }
-        
+class cashPaymentSettleForms(forms.ModelForm):
+    class Meta():
+        model = cashPayment
+        fields = ('settle', 'is_credit', 'is_debit', 'is_settle' )
+        widgets = {
+            'is_settle': forms.HiddenInput(),
+        }
 class cashPaymentAttachmentForms(forms.ModelForm):
     class Meta():
         model = cashPaymentAttachment
