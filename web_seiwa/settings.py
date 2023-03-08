@@ -107,6 +107,14 @@ DATABASES = {
         'PORT': '',
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
     }
+    #     'default': {
+    #     'ENGINE': 'sql',
+    #     'NAME': 'web_seiwa',
+    #     'USER': 'root',
+    #     'PASSWORD': False,
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',
+    # }
 }
 
 
