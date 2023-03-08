@@ -46,54 +46,24 @@
           </i><span>Profile</span></a></li> {% endcomment %}
           {% endif %}
           {% if perms.accounting_app %}
-          <li class="dropdown">
-            <a class="nav-link menu-title" href="javascript:void(0)"
-              ><i data-feather="home"></i><span>Accounting</span></a
-            >
-            <ul class="nav-submenu menu-content">
-              <li><a href="">New Request & Problem</a></li>
-            </ul>
-          </li>
+          <li class="dropdown"><a class="nav-link menu-title link-nav" href="/accounting_app/dashboard/"><i data-feather="home">
+          </i><span>Dashboard</span></a></li>
           {% endif %}
           {% if perms.costcontrol_app %}
-          <li class="dropdown">
-            <a class="nav-link menu-title" href="javascript:void(0)"
-              ><i data-feather="home"></i><span>CostControl</span></a
-            >
-            <ul class="nav-submenu menu-content">
-              <li><a href="">New Request & Problem</a></li>
-            </ul>
-          </li>
+          <li class="dropdown"><a class="nav-link menu-title link-nav" href="/costcontrol_app/dashboard/"><i data-feather="home">
+          </i><span>Dashboard</span></a></li>
           {% endif %}
           {% if perms.engineering_app %}
-          <li class="dropdown">
-            <a class="nav-link menu-title" href="javascript:void(0)"
-              ><i data-feather="home"></i><span>Engineering</span></a
-            >
-            <ul class="nav-submenu menu-content">
-              <li><a href="">New Request & Problem</a></li>
-            </ul>
-          </li>
+          <li class="dropdown"><a class="nav-link menu-title link-nav" href="/engineering_app/dashboard/"><i data-feather="home">
+          </i><span>Dashboard</span></a></li>
           {% endif %}
           {% if perms.ga_app %}
-          <li class="dropdown">
-            <a class="nav-link menu-title" href="javascript:void(0)"
-              ><i data-feather="home"></i><span>GA</span></a
-            >
-            <ul class="nav-submenu menu-content">
-              <li><a href="">New Request & Problem</a></li>
-            </ul>
-          </li>
+          <li class="dropdown"><a class="nav-link menu-title link-nav" href="/ga_app/dashboard/"><i data-feather="home">
+          </i><span>Dashboard</span></a></li>
           {% endif %}
           {% if perms.hrd_app %}
-          <li class="dropdown">
-            <a class="nav-link menu-title" href="javascript:void(0)"
-              ><i data-feather="home"></i><span>HRD</span></a
-            >
-            <ul class="nav-submenu menu-content">
-              <li><a href="">New Request & Problem</a></li>
-            </ul>
-          </li>
+          <li class="dropdown"><a class="nav-link menu-title link-nav" href="/hrd_app/dashboard/"><i data-feather="home">
+          </i><span>Dashboard</span></a></li>
           {% endif %}
           <li class="dropdown"><a class="nav-link menu-title link-nav" href="{% url 'it_app:ticket_index' %}"><i data-feather="settings">
           </i><span>IT Service</span></a></li>
