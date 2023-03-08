@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 import datetime
@@ -32,6 +32,7 @@ def cashPayment_index(request):
          'form_manager_accounting'  : cashPaymentApprovalAccountingManagerForms,
          'form_president'           : cashPaymentApprovalPresidentForms,
          'form_cashier'             : cashPaymentApprovalCashierForms,
+         'form_debit'               : cashPaymentDebitForms,
     }
     return render(request, 'accounting_app/cashPayment_index.html', context)
 

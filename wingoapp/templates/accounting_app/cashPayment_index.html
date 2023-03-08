@@ -675,7 +675,7 @@
           </div>
           </div>
          {% comment %} CASHIER END {% endcomment %}
-        {% comment %} MODAL CHECKED START {% endcomment %}
+        {% comment %} MODAL ADD DEBIT START {% endcomment %}
          <div class="modal fade" id="ModalAddDebit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
          <div class="modal-dialog" role="document">
@@ -688,10 +688,43 @@
                {% csrf_token %}
              <div class="modal-body">
                {% comment %} START ISI {% endcomment %}
-                 <div class="mb-3">
-                   <label class="col-form-label" for="recipient-name">Recipient:</label>
-                   <input class="form-control" type="text" value="" readonly>
-                 </div>
+                 {% csrf_token %}
+                 {% for hidden in form.hidden_fields %}
+                 {{ hidden }}
+                  {% endfor %}
+                 <!-- merender semua field form dari objek TaskForm -->
+                 {% if form.non_field_errors %}
+                   <div class="alert alert-danger" role="alert">
+                     {% for error in form.non_field_errors %}
+                       {{ error }}
+                     {% endfor %}
+                   </div>
+                 {% endif %}
+       
+                 {% for field in form_debit.visible_fields %}
+                   <div class="form-group">
+                     {{ field.label_tag }}
+       
+                     {% if form_debit.is_bound %}
+                       {% if field.errors %}
+                         {% render_field field class="form-control is-invalid" %}
+                         {% for error in field.errors %}
+                           <div class="invalid-feedback">
+                             {{ error }}
+                           </div>
+                         {% endfor %}
+                       {% else %}
+                         {% render_field field class="form-control is-valid" %}
+                       {% endif %}
+                     {% else %}
+                       {% render_field field class="form-control" %}
+                     {% endif %}
+       
+                     {% if field.help_text %}
+                       <small class="form-text text-muted">{{ field.help_text }}</small>
+                     {% endif %}
+                   </div>
+                 {% endfor %}
                  {% comment %} END ISI {% endcomment %}
                </div>
                <div class="modal-footer">
@@ -702,7 +735,7 @@
            </div>
          </div>
        </div>
-      {% comment %} MODAL CHECKED END {% endcomment %}
+      {% comment %} MODAL ADD DEBIT END {% endcomment %}
         </div>
       </div>
     </div>
