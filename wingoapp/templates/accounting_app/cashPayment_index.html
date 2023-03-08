@@ -28,14 +28,16 @@
 <div>
   </div>
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'accounting_app:cashPayment_add' %}">Add Cash Payment</a></button>
+        {% if request.user.username == '007059' %}
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalAddDebit" data-whatever="@mdo">Add Debit</a></button>
+        {% endif %}
       </div>
       <div class="card-body">
         <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
           <li class="nav-item"><a class="nav-link active" id="top-approval-manager-tab" data-bs-toggle="tab" href="#top-approval-manager" role="tab" aria-controls="top-approval-manager" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Approval Manager</a></li>
           <li class="nav-item"><a class="nav-link" id="approval-manager-accounting-top-tab" data-bs-toggle="tab" href="#top-approval-manager-accounting" role="tab" aria-controls="top-approval-manager-accounting" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval Accounting Manager</a></li>
           <li class="nav-item"><a class="nav-link" id="approval-president-top-tab" data-bs-toggle="tab" href="#top-approval-president" role="tab" aria-controls="top-approval-president" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>Approval President</a></li>
-          <li class="nav-item"><a class="nav-link" id="approval-cashier-top-tab" data-bs-toggle="tab" href="#top-approval-cashier" role="tab" aria-controls="top-approval-cashier" aria-selected="false"><i class="icofont icofont-bill"></i>Waiting</a></li>
+          <li class="nav-item"><a class="nav-link" id="approval-cashier-top-tab" data-bs-toggle="tab" href="#top-approval-cashier" role="tab" aria-controls="top-approval-cashier" aria-selected="false"><i class="icofont icofont-bill"></i>Cashier</a></li>
           <li class="nav-item"><a class="nav-link" id="done-top-tab" data-bs-toggle="tab" href="#top-done" role="tab" aria-controls="top-done" aria-selected="false"><i class="icofont icofont-tick-mark"></i>Done</a></li>
         </ul>
         <div class="tab-content" id="top-tabContent">
@@ -560,7 +562,7 @@
                           {% if cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.id == 521 %}
                           <tr>
                             <td><a href="{% url 'accounting_app:cashPayment_detail' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{cashier.created_at}}</td>
-                            <td>{{ cashier.ticket_no }}</td>
+                            <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.ticket_no }}</td>
                             <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
                             <td>Waiting cash From Cashier</td>
                             <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.rp_total}}</td>
@@ -569,7 +571,7 @@
 
                           {% if request.user.userprofileinfo.id == 521  %}
                           <td>
-                            <a href="{% url 'accounting_app:cashPayment_cashier_approve' cashier.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                            <a data-bs-toggle="modal" data-bs-target="#ModalCashierApprove{{ cashier.id }}" data-whatever="@mdo" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
                           </td>
                           {% else %}
                           {% if request.user.userprofileinfo.id != 521 %}
@@ -592,7 +594,7 @@
                           </tr>
                           {% endif %}
                           {% endif %}
-                            {% comment %} MODAL CHECKED START {% endcomment %}
+                          {% comment %} MODAL CHECKED START {% endcomment %}
                             <div class="modal fade" id="ModalCashierCheck{{ cashier.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                             aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -628,6 +630,67 @@
                             </div>
                           </div>
                          {% comment %} MODAL CHECKED END {% endcomment %}
+            {% comment %} MODAL ADD DEBIT START {% endcomment %}
+            <div class="modal fade" id="ModalCashierApprove{{ cashier.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel2">Add Remark Cash Payment Voucher</h5>
+                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'accounting_app:cashPayment_cashier_approve' cashier.id  %}" method="POST">
+                  {% csrf_token %}
+                <div class="modal-body">
+                  {% comment %} START ISI {% endcomment %}
+                    {% csrf_token %}
+                    {% for hidden in form_credit.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if form_credit.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in form_credit.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+          
+                    {% for field in form_credit.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+          
+                        {% if form_credit.is_bound %}
+                          {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
+          
+                        {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                    {% comment %} END ISI {% endcomment %}
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Add</button>
+              </div>
+          </form>
+          </div>
+        </div>
+      </div>
+     {% comment %} MODAL ADD DEBIT END {% endcomment %}
                           {% endfor %}
                         </tbody>
                     </table>
@@ -658,7 +721,7 @@
                         {% if cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.id == 521 %}
                         <tr>
                           <td><a href="{% url 'accounting_app:cashPayment_detail' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{cashier.updated_at}}</td>
-                          <td>{{ cashier.ticket_no }}</td>
+                          <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.ticket_no}}</td>
                           <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
                           <td>Waiting cash From Cashier</td>
                           <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.rp_total}}</td>
@@ -684,18 +747,18 @@
                <h5 class="modal-title" id="exampleModalLabel2">Add Debit Cash Payment Voucher</h5>
                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
-             <form action="" method="POST">
+             <form action="{% url 'accounting_app:cashPayment_debit_add'  %}" method="POST">
                {% csrf_token %}
              <div class="modal-body">
                {% comment %} START ISI {% endcomment %}
                  {% csrf_token %}
-                 {% for hidden in form.hidden_fields %}
+                 {% for hidden in form_debit.hidden_fields %}
                  {{ hidden }}
                   {% endfor %}
                  <!-- merender semua field form dari objek TaskForm -->
-                 {% if form.non_field_errors %}
+                 {% if form_debit.non_field_errors %}
                    <div class="alert alert-danger" role="alert">
-                     {% for error in form.non_field_errors %}
+                     {% for error in form_debit.non_field_errors %}
                        {{ error }}
                      {% endfor %}
                    </div>

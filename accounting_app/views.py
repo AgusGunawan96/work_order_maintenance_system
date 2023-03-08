@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 import datetime
@@ -33,8 +33,24 @@ def cashPayment_index(request):
          'form_president'           : cashPaymentApprovalPresidentForms,
          'form_cashier'             : cashPaymentApprovalCashierForms,
          'form_debit'               : cashPaymentDebitForms,
+         'form_credit'              : cashPaymentCreditForms,
     }
     return render(request, 'accounting_app/cashPayment_index.html', context)
+
+@login_required
+def cashPayment_debit_add(request):
+     if request.method == "POST":
+        cashPayment_debit_form = cashPaymentDebitForms (data=request.POST)
+        if cashPayment_debit_form.is_valid():
+            #  simpan data cashPayment
+            cashPayment_debit = cashPayment_debit_form.save(commit=False)
+            ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
+            ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))        
+            cashPayment_debit.ticket_no = ticket_no
+            cashPayment_debit.is_debit = True
+            cashPayment_debit.save()
+            messages.success(request, 'Success Add Debit Cash Payment', 'success')
+            return redirect('accounting_app:cashPayment_index')
 
 @login_required
 def cashPayment_add(request):
@@ -233,13 +249,14 @@ def cashPayment_president_approval(request, cashPayment_id):
         president.save()
         # membuat approval cashier
         approval_cashier_form = cashPaymentApprovalCashierForms(data=request.POST)
-        ticket_maks = cashPaymentApprovalCashier.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
+        ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
         ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))
         cashier = approval_cashier_form.save(commit=False)
         cashier.cashPayment_approval_president = president
         cashier.save()
         # Create Ticket number dan credit menjadi True buat cashPayment
-        cashpayment = cashPayment.objects.get(pk=president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment)
+        cashPayment_id = president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id
+        cashpayment = cashPayment.objects.get(pk=cashPayment_id)
         cashpayment.is_credit = True
         cashpayment.ticket_no = ticket_no
         cashpayment.save()
@@ -282,12 +299,21 @@ def cashPayment_cashier_check(request, cashPayment_id):
 @login_required
 def cashPayment_cashier_approval(request, cashPayment_id):
     try:
+     if request.method == "POST":
+        cashPayment_credit_form = cashPaymentCreditForms (data=request.POST)
         cashier = cashPaymentApprovalCashier.objects.get(pk=cashPayment_id)
-        # Mengapprove
-        cashier.is_approve_cashier = True
-        cashier.cashier = request.user
-        cashier.save()
-        messages.success(request, 'Approve Succcesfully')
+        if cashPayment_credit_form.is_valid():
+            # Mengapprove
+            cashier.is_approve_cashier = True
+            cashier.cashier = request.user
+            # Menambahkan remark pada cashPayment
+            cashPayment_form = cashPayment_credit_form.save(commit=False)
+            cashPayment_id = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id
+            cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
+            cashPayment_credit.remark = cashPayment_form.remark
+            cashPayment_credit.save()
+            cashier.save()
+            messages.success(request, 'Approve Succcesfully')
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalCashier.DoesNotExist:
         raise Http404("Cash Payment Error!")

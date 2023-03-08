@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.dashboard, name = 'dashboard'),
     path('cashPayment', views.cashPayment_index, name = 'cashPayment_index'),
     path('cashPayment/add/', views.cashPayment_add, name='cashPayment_add'),
+    path('cashPayment/add_debit/', views.cashPayment_debit_add, name='cashPayment_debit_add'),
     path('cashPayment/cashPayment_detail/<int:cashPayment_id>', views.cashPayment_detail, name='cashPayment_detail'),
 
     path('cashPayment/cashPayment_manager_checked/<int:cashPayment_id>', views.cashPayment_manager_check, name='cashPayment_manager_check'),

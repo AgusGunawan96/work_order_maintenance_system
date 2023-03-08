@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
+class masterAccounting (models.Model):
+    balance_cashPayment = models.BigIntegerField(null=True, blank=True)
+    exchange_rate       = models.PositiveBigIntegerField(null=True, blank=True)
+
 class cashPayment (models.Model):
     assignee = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField('created at', auto_now_add = True)

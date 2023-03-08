@@ -24,6 +24,11 @@ class cashPaymentForms(forms.ModelForm):
             'description_11'            : forms.Textarea(attrs={'rows':2, 'cols':15}),
             'description_12'            : forms.Textarea(attrs={'rows':2, 'cols':15}),
             }
+class cashPaymentCreditForms(forms.ModelForm):
+    class Meta():
+        model = cashPayment
+        fields = ('remark',)
+
 class cashPaymentDebitForms(forms.ModelForm):
     class Meta():
         model = cashPayment
@@ -31,6 +36,7 @@ class cashPaymentDebitForms(forms.ModelForm):
         widgets = {
             'ticket_no': forms.HiddenInput(),
         }
+        
 class cashPaymentAttachmentForms(forms.ModelForm):
     class Meta():
         model = cashPaymentAttachment
