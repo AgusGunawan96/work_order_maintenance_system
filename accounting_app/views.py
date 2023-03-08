@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, masterAccounting
 from django.contrib.auth.decorators import login_required
 from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms
 from django.contrib import messages
@@ -43,11 +43,16 @@ def cashPayment_debit_add(request):
         cashPayment_debit_form = cashPaymentDebitForms (data=request.POST)
         if cashPayment_debit_form.is_valid():
             #  simpan data cashPayment
+            cashPayment_balance = masterAccounting.objects.get(pk=1)
+            # Menambahkan CashPayment Debit
             cashPayment_debit = cashPayment_debit_form.save(commit=False)
             ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
             ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))        
             cashPayment_debit.ticket_no = ticket_no
             cashPayment_debit.is_debit = True
+            # Edit Penambahan balance pada Accounting
+            cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment + cashPayment_debit.rp_total
+            cashPayment_balance.save()
             cashPayment_debit.save()
             messages.success(request, 'Success Add Debit Cash Payment', 'success')
             return redirect('accounting_app:cashPayment_index')
@@ -302,6 +307,7 @@ def cashPayment_cashier_approval(request, cashPayment_id):
      if request.method == "POST":
         cashPayment_credit_form = cashPaymentCreditForms (data=request.POST)
         cashier = cashPaymentApprovalCashier.objects.get(pk=cashPayment_id)
+        cashPayment_balance = masterAccounting.objects.get(pk=1)
         if cashPayment_credit_form.is_valid():
             # Mengapprove
             cashier.is_approve_cashier = True
@@ -311,6 +317,9 @@ def cashPayment_cashier_approval(request, cashPayment_id):
             cashPayment_id = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id
             cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
             cashPayment_credit.remark = cashPayment_form.remark
+            # Mengurangi Balance pada Master Balance
+            cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
+            cashPayment_balance.save()
             cashPayment_credit.save()
             cashier.save()
             messages.success(request, 'Approve Succcesfully')
