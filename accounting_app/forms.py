@@ -5,9 +5,12 @@ from django.forms import ClearableFileInput
 class cashPaymentForms(forms.ModelForm):
     class Meta():
         model = cashPayment
-        fields = ('description_1','description_2','description_3','description_4','description_5','description_6','description_7','description_8','description_9','description_10','description_11','description_12', 'rp_detail_1', 'rp_detail_2', 'rp_detail_3', 'rp_detail_4', 'rp_detail_5', 'rp_detail_6', 'rp_detail_7', 'rp_detail_8', 'rp_detail_9', 'rp_detail_10', 'rp_detail_11', 'rp_detail_12', 'assignee')
+        fields = ('description_1','description_2','description_3','description_4','description_5','description_6','description_7','description_8','description_9','description_10','description_11','description_12', 'rp_detail_1', 'rp_detail_2', 'rp_detail_3', 'rp_detail_4', 'rp_detail_5', 'rp_detail_6', 'rp_detail_7', 'rp_detail_8', 'rp_detail_9', 'rp_detail_10', 'rp_detail_11', 'rp_detail_12', 'assignee', 'remark','rp_total','ticket_no',)
         widgets = {
-            'assignee': forms.HiddenInput(),
+            'assignee'                  : forms.HiddenInput(),
+            'remark'                    : forms.HiddenInput(),
+            'rp_total'                  : forms.HiddenInput(),
+            'ticket_no'                 : forms.HiddenInput(),
             'description_1'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
             'description_2'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
             'description_3'             : forms.Textarea(attrs={'rows':2, 'cols':15}),
