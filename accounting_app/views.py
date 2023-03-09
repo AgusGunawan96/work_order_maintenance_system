@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, masterAccounting
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 import datetime
@@ -34,8 +34,24 @@ def cashPayment_index(request):
          'form_cashier'             : cashPaymentApprovalCashierForms,
          'form_debit'               : cashPaymentDebitForms,
          'form_credit'              : cashPaymentCreditForms,
+         'form_settle'              : cashPaymentSettleForms,
     }
     return render(request, 'accounting_app/cashPayment_index.html', context)
+
+@login_required
+def cashPayment_settle_add(request):
+     if request.method == "POST":
+        cashPayment_settle_form = cashPaymentSettleForms(data=request.POST)
+        if cashPayment_settle_form.is_valid():
+            #  simpan data cashPayment
+            cashPayment_settle = cashPayment_settle_form.save(commit=False)
+            ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y$m')).count() + 1
+            ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))        
+            cashPayment_settle.ticket_no = ticket_no
+            cashPayment_settle.is_settle = True
+            cashPayment_settle.save()
+            messages.success(request, 'Success Add Settle Cash Payment', 'success')
+            return redirect('accounting_app:cashPayment_index')
 
 @login_required
 def cashPayment_debit_add(request):
@@ -43,7 +59,9 @@ def cashPayment_debit_add(request):
         cashPayment_debit_form = cashPaymentDebitForms (data=request.POST)
         if cashPayment_debit_form.is_valid():
             #  simpan data cashPayment
-            cashPayment_balance = masterAccounting.objects.get(pk=1)
+
+            # cashPayment_balance = masterAccounting.objects.get(pk=1)
+
             # Menambahkan CashPayment Debit
             cashPayment_debit = cashPayment_debit_form.save(commit=False)
             ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
@@ -51,9 +69,10 @@ def cashPayment_debit_add(request):
             cashPayment_debit.ticket_no = ticket_no
             cashPayment_debit.is_debit = True
             # Edit Penambahan balance pada Accounting
-            cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment + cashPayment_debit.rp_total
-            cashPayment_balance.save()
-            cashPayment_debit.save()
+            # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment + cashPayment_debit.rp_total
+            # cashPayment_balance.save()
+            # cashPayment_debit.save()
+
             messages.success(request, 'Success Add Debit Cash Payment', 'success')
             return redirect('accounting_app:cashPayment_index')
 
@@ -307,7 +326,7 @@ def cashPayment_cashier_approval(request, cashPayment_id):
      if request.method == "POST":
         cashPayment_credit_form = cashPaymentCreditForms (data=request.POST)
         cashier = cashPaymentApprovalCashier.objects.get(pk=cashPayment_id)
-        cashPayment_balance = masterAccounting.objects.get(pk=1)
+        # cashPayment_balance = masterAccounting.objects.get(pk=1)
         if cashPayment_credit_form.is_valid():
             # Mengapprove
             cashier.is_approve_cashier = True
@@ -318,8 +337,8 @@ def cashPayment_cashier_approval(request, cashPayment_id):
             cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
             cashPayment_credit.remark = cashPayment_form.remark
             # Mengurangi Balance pada Master Balance
-            cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
-            cashPayment_balance.save()
+            # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
+            # cashPayment_balance.save()
             cashPayment_credit.save()
             cashier.save()
             messages.success(request, 'Approve Succcesfully')
