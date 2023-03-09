@@ -39,7 +39,7 @@ class cashPaymentDebitForms(forms.ModelForm):
 class cashPaymentSettleForms(forms.ModelForm):
     class Meta():
         model = cashPayment
-        fields = ('settle', 'is_credit', 'is_debit', 'is_settle' )
+        fields = ('settle', 'is_credit', 'is_debit', 'is_settle', 'rp_total' )
         widgets = {
             'is_settle': forms.HiddenInput(),
         }
