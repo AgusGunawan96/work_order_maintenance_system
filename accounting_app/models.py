@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 
 
 class cashPaymentBalance (models.Model):
-    balance_cashPayment_in = models.BigIntegerField(null=True, blank=True)
-    balance_cashPayment_out = models.BigIntegerField(null=True, blank=True)
-    exchange_rate       = models.PositiveBigIntegerField(null=True, blank=True)
+    balance_cashPayment_open = models.BigIntegerField(null=True, blank=True)
+    balance_cashPayment_close = models.BigIntegerField(null=True, blank=True)
+    exchange_rate_open       = models.PositiveBigIntegerField(null=True, blank=True)
+    exchange_rate_close       = models.PositiveBigIntegerField(null=True, blank=True)
     cashPayment_balance_no = models.CharField(max_length=128, null=True, blank=True)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
     updated_at = models.DateTimeField('updated_at', auto_now=True)
