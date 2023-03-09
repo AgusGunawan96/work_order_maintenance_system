@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 import datetime
 import csv
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -42,6 +43,10 @@ def cashPayment_index(request):
 def cashPayment_settle_add(request):
      if request.method == "POST":
         cashPayment_settle_form = cashPaymentSettleForms(data=request.POST)
+        cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
+        balance_month = datetime.datetime.now().strftime('%Y%m')
+        balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+        balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
         if cashPayment_settle_form.is_valid():
             #  simpan data cashPayment
             cashPayment_settle = cashPayment_settle_form.save(commit=False)
@@ -49,6 +54,44 @@ def cashPayment_settle_add(request):
             ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))        
             cashPayment_settle.ticket_no = ticket_no
             cashPayment_settle.is_settle = True
+            if(cashPayment_settle.is_debit):
+                if(cashPayment_balance is None):
+                    balance = cashPaymentBalanceForms().save(commit=False)
+                    if(balance_previous is not None):
+                        balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                        balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                        balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open + cashPayment_settle.rp_total
+                        balance.exchange_rate_open = balance_previous.exchange_rate_open
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance_previous.save()
+                        balance.save()
+                    else:
+                        balance.balance_cashPayment_open = cashPayment_settle.rp_total
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance.save()
+                else:
+                    cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open + cashPayment_settle.rp_total
+                    cashPayment_balance.save()
+                    cashPayment_settle.save()
+            if(cashPayment_settle.is_credit):
+                if(cashPayment_balance is None):
+                    balance = cashPaymentBalanceForms().save(commit=False)
+                    if(balance_previous is not None):
+                        balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                        balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                        balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open - cashPayment_settle.rp_total
+                        balance.exchange_rate_open = balance_previous.exchange_rate_open
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance_previous.save()
+                        balance.save()
+                    else:
+                        balance.balance_cashPayment_open = cashPayment_settle.rp_total
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance.save()
+                else:
+                    cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open - cashPayment_settle.rp_total
+                    cashPayment_balance.save()
+                    cashPayment_settle.save()
             cashPayment_settle.save()
             messages.success(request, 'Success Add Settle Cash Payment', 'success')
             return redirect('accounting_app:cashPayment_index')
@@ -61,7 +104,10 @@ def cashPayment_debit_add(request):
             #  simpan data cashPayment
 
             # cashPayment_balance = masterAccounting.objects.get(pk=1)
-
+            cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
+            balance_month = datetime.datetime.now().strftime('%Y%m')
+            balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+            balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
             # Menambahkan CashPayment Debit
             cashPayment_debit = cashPayment_debit_form.save(commit=False)
             ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
@@ -70,8 +116,25 @@ def cashPayment_debit_add(request):
             cashPayment_debit.is_debit = True
             # Edit Penambahan balance pada Accounting
             # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment + cashPayment_debit.rp_total
-            # cashPayment_balance.save()
-            # cashPayment_debit.save()
+            # Menambahkan Master balance
+            if(cashPayment_balance is None):
+                balance = cashPaymentBalanceForms().save(commit=False)
+                if(balance_previous is not None):
+                    balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                    balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                    balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open + cashPayment_debit.rp_total
+                    balance.exchange_rate_open = balance_previous.exchange_rate_open
+                    balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                    balance_previous.save()
+                    balance.save()
+                else:
+                    balance.balance_cashPayment_open = cashPayment_debit.rp_total
+                    balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                    balance.save()
+            else:
+                cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open + cashPayment_debit.rp_total
+                cashPayment_balance.save()
+                cashPayment_debit.save()
 
             messages.success(request, 'Success Add Debit Cash Payment', 'success')
             return redirect('accounting_app:cashPayment_index')
@@ -327,6 +390,10 @@ def cashPayment_cashier_approval(request, cashPayment_id):
         cashPayment_credit_form = cashPaymentCreditForms (data=request.POST)
         cashier = cashPaymentApprovalCashier.objects.get(pk=cashPayment_id)
         # cashPayment_balance = masterAccounting.objects.get(pk=1)
+        cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
+        balance_month = datetime.datetime.now().strftime('%Y%m')
+        balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+        balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
         if cashPayment_credit_form.is_valid():
             # Mengapprove
             cashier.is_approve_cashier = True
@@ -339,6 +406,24 @@ def cashPayment_cashier_approval(request, cashPayment_id):
             # Mengurangi Balance pada Master Balance
             # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
             # cashPayment_balance.save()
+            # Edit untuk cashPayment
+            if(cashPayment_balance is None):
+                balance = cashPaymentBalanceForms().save(commit=False)
+                if(balance_previous is not None):
+                    balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                    balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                    balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open - cashPayment_credit.rp_total
+                    balance.exchange_rate_open = balance_previous.exchange_rate_open
+                    balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                    balance_previous.save()
+                    balance.save()
+                else:
+                    balance.balance_cashPayment_open = balance.balance_cashPayment_open - cashPayment_credit.rp_total
+                    balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                    balance.save()
+            else:
+                cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open - cashPayment_credit.rp_total
+                cashPayment_balance.save()
             cashPayment_credit.save()
             cashier.save()
             messages.success(request, 'Approve Succcesfully')

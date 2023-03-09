@@ -1,5 +1,5 @@
 from django import forms
-from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentAttachment
+from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentAttachment, cashPaymentBalance
 from django.forms import ClearableFileInput
 
 class cashPaymentForms(forms.ModelForm):
@@ -36,6 +36,7 @@ class cashPaymentDebitForms(forms.ModelForm):
         widgets = {
             'ticket_no': forms.HiddenInput(),
         }
+        
 class cashPaymentSettleForms(forms.ModelForm):
     class Meta():
         model = cashPayment
@@ -43,6 +44,7 @@ class cashPaymentSettleForms(forms.ModelForm):
         widgets = {
             'is_settle': forms.HiddenInput(),
         }
+
 class cashPaymentAttachmentForms(forms.ModelForm):
     class Meta():
         model = cashPaymentAttachment
@@ -50,6 +52,11 @@ class cashPaymentAttachmentForms(forms.ModelForm):
         widgets = {
             'attachment'    : ClearableFileInput(attrs={'multiple':True}),
         }
+
+class cashPaymentBalanceForms(forms.ModelForm):
+    class Meta():
+        model = cashPaymentBalance
+        fields = ('balance_cashPayment_open','balance_cashPayment_close','exchange_rate_open','exchange_rate_close','cashPayment_balance_no',)
 
 class cashPaymentApprovalManagerForms(forms.ModelForm):
     class Meta():
