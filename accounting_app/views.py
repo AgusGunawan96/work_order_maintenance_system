@@ -51,7 +51,7 @@ def cashPayment_settle_add(request):
         if cashPayment_settle_form.is_valid():
             #  simpan data cashPayment
             cashPayment_settle = cashPayment_settle_form.save(commit=False)
-            ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y$m')).count() + 1
+            ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
             ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))        
             cashPayment_settle.ticket_no = ticket_no
             cashPayment_settle.is_settle = True
@@ -473,6 +473,7 @@ def export_cashPayment_csv(request):
     balance_month = datetime.datetime.now().strftime('%Y%m')
     balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
     cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+    cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
     cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('created_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
     # cashpayments = cashPayment.objects.all().values_list(datetime.datetime.strptime('updated_at', '%b'), datetime.datetime.strptime('updated_at', '%D'), 'rp_total', cashPayment_balance_previous.exchange_rate_close, 'rp_total' / cashPayment_balance_previous.exchange_rate_close, 'ticket_no', 'remark',  'remark',  'remark',  'remark')
     # cashpayments = cashPayment.objects.raw(''' SELECT DATENAME(MONTH, accounting_app_cashpayment.updated_at) AS Month, DAY(accounting_app_cashpayment.updated_at) AS Date,
@@ -481,22 +482,39 @@ def export_cashPayment_csv(request):
 	# 	                                    accounting_app_cashpayment.remark, IIF(accounting_app_cashpayment.is_debit = 1, rp_total, 0) AS Debit, IIF(accounting_app_cashpayment.is_credit = 1, rp_total, 0) AS Credit
     #                                         FROM accounting_app_cashpayment, accounting_app_cashpaymentbalance
     #                                          '''
+    balance_temp = cashPayment_balance_previous.balance_cashPayment_close
+    balance_temp_us = balance_temp / cashPayment_balance_previous.exchange_rate_close
+    writer.writerow(['', '', '','', '' , '', 'Balance brought forward from '+ datetime.datetime.strftime(balance_month_previous, '%B - %Y'), '', '', balance_temp, balance_temp_us])
+    writer.writerow(['', '', '','', '' , '', '', '', '', balance_temp, balance_temp_us])
+    writer.writerow(['', '', '','', '' , '', '', '', '', balance_temp, balance_temp_us])
+    writer.writerow(['', '', '','', cashPayment_balance_filter.exchange_rate_open - cashPayment_balance_previous.exchange_rate_close, '', 'Exchange gain/loss frm '+ str(cashPayment_balance_previous.exchange_rate_close) + ' ,- to ' + str(cashPayment_balance_filter.exchange_rate_open), '', '', balance_temp, balance_temp_us])
     for cashpayment in cashpayments:
-
         if(cashpayment[4]):
             rp_debit = cashpayment[1]
+            balance_temp = balance_temp + cashpayment[1]
         else:
             rp_debit = 0
         if(cashpayment[5]):
             rp_credit = cashpayment[1]
+            balance_temp = balance_temp - cashpayment[1]
         else:
             rp_credit = 0
         if(cashpayment[6]):
             remark = cashpayment[7]
         else:
             remark = cashpayment[3]
+        if(cashpayment[1]):
+            balance_temp_us_kiri = cashpayment[1] / cashPayment_balance_filter.exchange_rate_open
+        else:
+            balance_temp_us_kiri = 0
+        if(cashpayment[1]):
+            balance_temp_idr_kiri = cashpayment[1]
+        else:
+            balance_temp_idr_kiri = 0
         
-        writer.writerow([datetime.datetime.strftime(cashpayment[0], '%b'), datetime.datetime.strftime(cashpayment[0], '%d'), cashpayment[1],cashPayment_balance_previous.exchange_rate_close, cashpayment[1] , cashpayment[2], remark, rp_debit, rp_credit])
+
+        balance_temp_us = balance_temp / cashPayment_balance_filter.exchange_rate_open
+        writer.writerow([datetime.datetime.strftime(cashpayment[0], '%b'), datetime.datetime.strftime(cashpayment[0], '%d'), balance_temp_idr_kiri,cashPayment_balance_filter.exchange_rate_open, balance_temp_us_kiri , cashpayment[2], remark, rp_debit, rp_credit, balance_temp, balance_temp_us])
     
     return response
         # return HttpResponse(cashpayment)
