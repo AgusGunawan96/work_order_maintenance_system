@@ -8,6 +8,7 @@ import datetime
 import csv
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
+from django.db.models.functions import ExtractMonth, ExtractDay
 
 # Create your views here.
 @login_required
@@ -134,7 +135,7 @@ def cashPayment_debit_add(request):
             else:
                 cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open + cashPayment_debit.rp_total
                 cashPayment_balance.save()
-                cashPayment_debit.save()
+            cashPayment_debit.save()
 
             messages.success(request, 'Success Add Debit Cash Payment', 'success')
             return redirect('accounting_app:cashPayment_index')
@@ -459,5 +460,44 @@ def export_users_csv(request):
     users = User.objects.all().values_list('username', 'first_name', 'last_name', 'email')
     for user in users:
         writer.writerow(user)
-
+    # cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
     return response
+
+@login_required
+def export_cashPayment_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="cashpayment.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Month', 'Date', 'Rpr', 'Rph', 'US$', 'ticket_no', 'remark', 'Debit', 'Credit', 'Balance Rp', 'Balance USD'])
+    balance_month = datetime.datetime.now().strftime('%Y%m')
+    balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+    cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('created_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
+    # cashpayments = cashPayment.objects.all().values_list(datetime.datetime.strptime('updated_at', '%b'), datetime.datetime.strptime('updated_at', '%D'), 'rp_total', cashPayment_balance_previous.exchange_rate_close, 'rp_total' / cashPayment_balance_previous.exchange_rate_close, 'ticket_no', 'remark',  'remark',  'remark',  'remark')
+    # cashpayments = cashPayment.objects.raw(''' SELECT DATENAME(MONTH, accounting_app_cashpayment.updated_at) AS Month, DAY(accounting_app_cashpayment.updated_at) AS Date,
+	# 	                                    accounting_app_cashpayment.rp_total AS Rpr, accounting_app_cashpaymentbalance.exchange_rate_close AS Rph, 
+	# 	                                    accounting_app_cashpayment.rp_total / accounting_app_cashpaymentbalance.exchange_rate_close AS 'US$', accounting_app_cashpayment.ticket_no, 
+	# 	                                    accounting_app_cashpayment.remark, IIF(accounting_app_cashpayment.is_debit = 1, rp_total, 0) AS Debit, IIF(accounting_app_cashpayment.is_credit = 1, rp_total, 0) AS Credit
+    #                                         FROM accounting_app_cashpayment, accounting_app_cashpaymentbalance
+    #                                          '''
+    for cashpayment in cashpayments:
+
+        if(cashpayment[4]):
+            rp_debit = cashpayment[1]
+        else:
+            rp_debit = 0
+        if(cashpayment[5]):
+            rp_credit = cashpayment[1]
+        else:
+            rp_credit = 0
+        if(cashpayment[6]):
+            remark = cashpayment[7]
+        else:
+            remark = cashpayment[3]
+        
+        writer.writerow([datetime.datetime.strftime(cashpayment[0], '%b'), datetime.datetime.strftime(cashpayment[0], '%d'), cashpayment[1],cashPayment_balance_previous.exchange_rate_close, cashpayment[1] , cashpayment[2], remark, rp_debit, rp_credit])
+    
+    return response
+        # return HttpResponse(cashpayment)
+    

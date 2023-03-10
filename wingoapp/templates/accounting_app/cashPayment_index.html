@@ -28,9 +28,10 @@
 <div>
   </div>
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'accounting_app:cashPayment_add' %}">Add Cash Payment</a></button>
-        {% if request.user.username == '007059' %}
+        {% if request.user.username == '007059' %}  
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalAddDebit" data-whatever="@mdo">Add Debit</a></button>
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalAddSettle" data-whatever="@mdo">Add Settle</a></button>
+        <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalDownloadCSV" data-whatever="@mdo">Download CSV</a></button>
         {% endif %}
       </div>
       <div class="card-body">
