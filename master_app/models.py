@@ -36,9 +36,6 @@ class UserProfileInfo(models.Model):
     position = models.CharField(max_length=128, unique=False, default=False, blank=True, null=True)
     profile_pic = models.ImageField(upload_to='profile_pics',blank=True, null=True)
     
-    def __str__(self):
-        return self.user.first_name
-    
 
 
 
