@@ -28,5 +28,5 @@ urlpatterns = [
     path('cashPayment/cashPayment_cashier_reject/<int:cashPayment_id>', views.cashPayment_cashier_reject, name='cashPayment_cashier_reject'),
     path('cashPayment/cashPayment_download_csv', views.export_cashPayment_csv, name = 'cashPayment_download_csv'),
     path('cashPayment/export_cashPayment_csv', views.export_cashPayment_csv, name = 'export_cashPayment_csv'),
-    path('cashPayment/export_users_csv', views.export_users_csv, name = 'export_users_csv'),
+    path('cashPayment/export_cashPayment_xls', views.export_cashPayment_xls, name = 'export_cashPayment_xls'),
 ]

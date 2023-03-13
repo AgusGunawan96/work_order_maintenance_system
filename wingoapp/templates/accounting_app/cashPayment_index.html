@@ -876,7 +876,7 @@ aria-hidden="true">
     <div class="modal-body">
       {% comment %} START ISI {% endcomment %}
       {% for csv in csv_list  %}
-      <form action="{% url 'accounting_app:cashPayment_download_csv'  %}" method="POST">
+      <form action="{% url 'accounting_app:export_cashPayment_xls'  %}" method="POST">
         {% csrf_token %}
               <div class="form-group row">
                 <div id="row">
