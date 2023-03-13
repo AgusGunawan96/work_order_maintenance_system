@@ -9,6 +9,7 @@ import csv
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
 from django.db.models.functions import ExtractMonth, ExtractDay
+import xlwt
 
 # Create your views here.
 @login_required
@@ -470,7 +471,8 @@ def export_users_csv(request):
     return response
 
 @login_required
-def export_cashPayment_csv(request):
+# def export_cashPayment_csv(request):
+def export_users_xls(request):
     post = request.POST.copy()
     # return HttpResponse(post['date_filter'])
     response = HttpResponse(content_type='text/csv')
@@ -528,3 +530,81 @@ def export_cashPayment_csv(request):
     return response
         # return HttpResponse(cashpayment)
     
+def export_cashPayment_csv(request):
+# def export_users_xls(request):
+    post = request.POST.copy()
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="'+post['date_filter']+'.xls"'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet(datetime.datetime.strptime(post['date_filter'], '%Y%m').strftime('%B - %Y')) # this will make a sheet named Users Data
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Month', 'Date', 'Rpr', 'Rph', 'US$', 'ticket_no', 'remark', 'Debit', 'Credit', 'Balance Rp', 'Balance USD', ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column 
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    # rows = User.objects.all().values_list('username', 'first_name', 'last_name', 'email')
+    # for row in rows:
+    #     row_num += 1
+    #     for col_num in range(len(row)):
+    #         ws.write(row_num, col_num, row[col_num], font_style)
+
+    # balance_month = datetime.datetime.now().strftime('%Y%m')
+    balance_month = post['date_filter']
+    balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+    cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+    cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
+    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('created_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
+    # cashpayments = cashPayment.objects.all().values_list(datetime.datetime.strptime('updated_at', '%b'), datetime.datetime.strptime('updated_at', '%D'), 'rp_total', cashPayment_balance_previous.exchange_rate_close, 'rp_total' / cashPayment_balance_previous.exchange_rate_close, 'ticket_no', 'remark',  'remark',  'remark',  'remark')
+    # cashpayments = cashPayment.objects.raw(''' SELECT DATENAME(MONTH, accounting_app_cashpayment.updated_at) AS Month, DAY(accounting_app_cashpayment.updated_at) AS Date,
+	# 	                                    accounting_app_cashpayment.rp_total AS Rpr, accounting_app_cashpaymentbalance.exchange_rate_close AS Rph, 
+	# 	                                    accounting_app_cashpayment.rp_total / accounting_app_cashpaymentbalance.exchange_rate_close AS 'US$', accounting_app_cashpayment.ticket_no, 
+	# 	                                    accounting_app_cashpayment.remark, IIF(accounting_app_cashpayment.is_debit = 1, rp_total, 0) AS Debit, IIF(accounting_app_cashpayment.is_credit = 1, rp_total, 0) AS Credit
+    #                                         FROM accounting_app_cashpayment, accounting_app_cashpaymentbalance
+    #                                          '''
+    balance_temp = cashPayment_balance_previous.balance_cashPayment_close
+    balance_temp_us = balance_temp / cashPayment_balance_previous.exchange_rate_close
+    # ws.write(['', '', '','', '' , '', 'Balance brought forward from '+ datetime.datetime.strftime(balance_month_previous, '%B - %Y'), '', '', balance_temp, balance_temp_us])
+    # ws.write(['', '', '','', '' , '', '', '', '', balance_temp, balance_temp_us])
+    # ws.write(['', '', '','', '' , '', '', '', '', balance_temp, balance_temp_us])
+    # ws.write(['', '', '','', cashPayment_balance_filter.exchange_rate_open - cashPayment_balance_previous.exchange_rate_close, '', 'Exchange gain/loss frm '+ str(cashPayment_balance_previous.exchange_rate_close) + ' ,- to ' + str(cashPayment_balance_filter.exchange_rate_open), '', '', balance_temp, balance_temp_us])
+    for cashpayment in cashpayments:
+        if(cashpayment[4]):
+            rp_debit = cashpayment[1]
+            balance_temp = balance_temp + cashpayment[1]
+        else:
+            rp_debit = 0
+        if(cashpayment[5]):
+            rp_credit = cashpayment[1]
+            balance_temp = balance_temp - cashpayment[1]
+        else:
+            rp_credit = 0
+        if(cashpayment[6]):
+            remark = cashpayment[7]
+        else:
+            remark = cashpayment[3]
+        if(cashpayment[1]):
+            balance_temp_us_kiri = cashpayment[1] / cashPayment_balance_filter.exchange_rate_open
+        else:
+            balance_temp_us_kiri = 0
+        if(cashpayment[1]):
+            balance_temp_idr_kiri = cashpayment[1]
+        else:
+            balance_temp_idr_kiri = 0
+        row_num += 1
+        balance_temp_us = balance_temp / cashPayment_balance_filter.exchange_rate_open
+        row = [datetime.datetime.strftime(cashpayment[0], '%b'), datetime.datetime.strftime(cashpayment[0], '%d'), balance_temp_idr_kiri,cashPayment_balance_filter.exchange_rate_open, balance_temp_us_kiri , cashpayment[2], remark, rp_debit, rp_credit, balance_temp, balance_temp_us]
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+    wb.save(response)
+
+    return response
