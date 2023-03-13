@@ -23,6 +23,11 @@ def cashPayment_index(request):
     presidents = cashPaymentApprovalPresident.objects.order_by('-id')
     cashiers = cashPaymentApprovalCashier.objects.order_by('-id')
     attachments = cashPaymentAttachment.objects.order_by('-id')
+    downloadcsv = cashPaymentBalance.objects.all()
+    downloadcsv = list(downloadcsv)
+    del downloadcsv[0]
+    # return HttpResponse(downloadcsv)
+        
     context = {
          'cashpayments'             : cashPayments,
          'managers'                 : managers,
@@ -30,6 +35,7 @@ def cashPayment_index(request):
          'presidents'               : presidents,
          'cashiers'                 : cashiers,
          'attachments'              : attachments,
+         'csv_list'                 : downloadcsv,
          'form_manager'             : cashPaymentApprovalManagerForms,
          'form_manager_accounting'  : cashPaymentApprovalAccountingManagerForms,
          'form_president'           : cashPaymentApprovalPresidentForms,
@@ -465,12 +471,15 @@ def export_users_csv(request):
 
 @login_required
 def export_cashPayment_csv(request):
+    post = request.POST.copy()
+    # return HttpResponse(post['date_filter'])
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="cashpayment.csv"'
-
+    response['Content-Disposition'] = 'attachment; filename="'+post['date_filter']+'.csv"'
     writer = csv.writer(response)
+    writer.writerow([datetime.datetime.strptime(post['date_filter'], '%Y%m').strftime('%B - %Y'), '', '','', '' , '', '', '', '', '', ''])
     writer.writerow(['Month', 'Date', 'Rpr', 'Rph', 'US$', 'ticket_no', 'remark', 'Debit', 'Credit', 'Balance Rp', 'Balance USD'])
-    balance_month = datetime.datetime.now().strftime('%Y%m')
+    # balance_month = datetime.datetime.now().strftime('%Y%m')
+    balance_month = post['date_filter']
     balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
     cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
     cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()

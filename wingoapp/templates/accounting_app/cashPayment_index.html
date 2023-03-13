@@ -31,6 +31,8 @@
         {% if request.user.username == '007059' %}  
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalAddDebit" data-whatever="@mdo">Add Debit</a></button>
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalAddSettle" data-whatever="@mdo">Add Settle</a></button>
+        {% endif %}
+        {% if request.user.userprofileinfo.department_id == 7 %}
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalDownloadCSV" data-whatever="@mdo">Download CSV</a></button>
         {% endif %}
       </div>
@@ -862,6 +864,44 @@
        </div>
      </div>
     {% comment %} MODAL ADD SETTLE END {% endcomment %}
+{% comment %} MODAL DOWNLOAD CSV START {% endcomment %}
+<div class="modal fade" id="ModalDownloadCSV" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel2">Download CSV</h5>
+      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      {% comment %} START ISI {% endcomment %}
+      {% for csv in csv_list  %}
+      <form action="{% url 'accounting_app:cashPayment_download_csv'  %}" method="POST">
+        {% csrf_token %}
+              <div class="form-group row">
+                <div id="row">
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                          <h6 class="modal-title" id="exampleModalLabel2">{{ csv.created_at|date:"M Y" }}</h6>
+                          <input name="date_filter" class="form-control" id="date_filter" value = "{{ csv.cashPayment_balance_no }}" type="text" hidden>
+                        </div>
+                        <div class="col-md-8">
+                          <button class="btn btn-primary" type="submit">Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </form>
+        {% endfor %}
+        {% comment %} END ISI {% endcomment %}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+      </div>
+  </div>
+</div>
+</div>
+{% comment %} MODAL DOWNLOAD CSV END {% endcomment %}
         </div>
       </div>
     </div>
