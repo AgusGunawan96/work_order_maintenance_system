@@ -672,6 +672,11 @@ def export_cashPayment_xls(request):
                 ws.write(row_num, col_num, row[col_num], currency_idr)
             if col_num == 4:
                 ws.write(row_num, col_num, row[col_num], currency_us)
+            if col_num == 6:
+                if cashpayment[6]:
+                    ws.write(row_num, col_num, row[col_num], font_bold)
+                else:
+                    ws.write(row_num, col_num, row[col_num], font_style)
             if col_num == 7:
                 ws.write(row_num, col_num, row[col_num], currency_idr)
             if col_num == 8:
