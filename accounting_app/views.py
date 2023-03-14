@@ -547,7 +547,7 @@ def export_cashPayment_xls(request):
     row_num = 1
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
-    columns = ['Month', 'Date', 'Rpr', 'Rph', 'US$', 'ticket_no', 'remark', 'Debit', 'Credit', 'Balance Rp', 'Balance USD', ]
+    columns = ['Month', 'Date', 'Rpr', 'Rph', 'US$', 'No. Voucher', 'Remarks', 'Debit', 'Credit', 'Balance Rp', 'Balance USD', ]
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column 
 
