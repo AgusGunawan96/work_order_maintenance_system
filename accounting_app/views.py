@@ -15,7 +15,7 @@ import xlwt
 @login_required
 def dashboard(request):
     return render(request, 'accounting_app/dashboard.html')
-
+# CASHPAYMENT START
 @login_required
 def cashPayment_index(request):
     cashPayments = cashPayment.objects.order_by('-created_at')
@@ -24,7 +24,7 @@ def cashPayment_index(request):
     presidents = cashPaymentApprovalPresident.objects.order_by('-id')
     cashiers = cashPaymentApprovalCashier.objects.order_by('-id')
     attachments = cashPaymentAttachment.objects.order_by('-id')
-    downloadcsv = cashPaymentBalance.objects.all()
+    downloadcsv = cashPaymentBalance.objects.order_by('cashPayment_balance_no')
     downloadcsv = list(downloadcsv)
     del downloadcsv[0]
     # return HttpResponse(downloadcsv)
@@ -559,6 +559,14 @@ def export_cashPayment_xls(request):
     #Format Currency
     currency_idr = xlwt.XFStyle()
     currency_idr.num_format_str = '#,##0.00'
+    #Format currency IDR Bold
+    currency_idr_bold = xlwt.XFStyle()
+    currency_idr_bold.num_format_str = '#,##0.00'
+    currency_idr_bold.font.bold = True
+    #Format currency US Bold
+    currency_us_bold = xlwt.XFStyle()
+    currency_us_bold.num_format_str = '$#,##0.00'
+    currency_us_bold.font.bold = True
     #Font Bold
     font_bold = xlwt.XFStyle()
     font_bold.font.bold = True
@@ -603,9 +611,11 @@ def export_cashPayment_xls(request):
             
     row_num = 5
     font_style = xlwt.XFStyle()
-    columns = ['', '', '','', cashPayment_balance_filter.exchange_rate_open - cashPayment_balance_previous.exchange_rate_close, '', 'Exchange gain/loss frm '+ str(cashPayment_balance_previous.exchange_rate_close) + ' ,- to ' + str(cashPayment_balance_filter.exchange_rate_open), '', '', balance_temp, balance_temp_us]
+    columns = ['', '', '','', (balance_temp / cashPayment_balance_previous.exchange_rate_close) - (balance_temp / cashPayment_balance_filter.exchange_rate_open), '', 'Exchange gain/loss frm '+ "{:,}".format(cashPayment_balance_previous.exchange_rate_close) + ' ,- to ' + "{:,}".format(cashPayment_balance_filter.exchange_rate_open), '', '', balance_temp, balance_temp_us]
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)  
+        if col_num == 4:
+            ws.write(row_num, col_num, columns[col_num], font_bold)
         if col_num == 7:
             ws.write(row_num, col_num, columns[col_num], currency_idr)
         if col_num == 8:
@@ -615,15 +625,19 @@ def export_cashPayment_xls(request):
         if col_num == 10:
             ws.write(row_num, col_num, columns[col_num], currency_us)
 
+    balance_total_debit_temp = 0
+    balance_total_credit_temp = 0
     for cashpayment in cashpayments:
         if(cashpayment[4]):
             rp_debit = cashpayment[1]
             balance_temp = balance_temp + cashpayment[1]
+            balance_total_debit_temp += cashpayment[1]
         else:
             rp_debit = 0
         if(cashpayment[5]):
             rp_credit = cashpayment[1]
             balance_temp = balance_temp - cashpayment[1]
+            balance_total_credit_temp += cashpayment[1]
         else:
             rp_credit = 0
         if(cashpayment[6]):
@@ -666,7 +680,29 @@ def export_cashPayment_xls(request):
                 ws.write(row_num, col_num, row[col_num], currency_idr)
             if col_num == 10:
                 ws.write(row_num, col_num, row[col_num], currency_us)
-                
+    row_num += 1 
+    row = ['',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        balance_total_debit_temp,
+        balance_total_credit_temp,
+        balance_temp,
+        balance_temp_us]
+    for col_num in range(len(row)):
+        ws.write(row_num, col_num, row[col_num], font_style)
+        if col_num == 7:
+            ws.write(row_num, col_num, row[col_num], currency_idr_bold)
+        if col_num == 8:
+            ws.write(row_num, col_num, row[col_num], currency_idr_bold)
+        if col_num == 9:
+            ws.write(row_num, col_num, row[col_num], currency_idr_bold)
+        if col_num == 10:
+            ws.write(row_num, col_num, row[col_num], currency_us_bold)           
     wb.save(response)
 
     return response
+# CASHPAYMENT END
