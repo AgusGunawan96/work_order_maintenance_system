@@ -484,7 +484,7 @@ def export_cashPayment_csv(request):
     balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
     cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
     cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
-    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('created_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
+    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('updated_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
     # cashpayments = cashPayment.objects.all().values_list(datetime.datetime.strptime('updated_at', '%b'), datetime.datetime.strptime('updated_at', '%D'), 'rp_total', cashPayment_balance_previous.exchange_rate_close, 'rp_total' / cashPayment_balance_previous.exchange_rate_close, 'ticket_no', 'remark',  'remark',  'remark',  'remark')
     # cashpayments = cashPayment.objects.raw(''' SELECT DATENAME(MONTH, accounting_app_cashpayment.updated_at) AS Month, DAY(accounting_app_cashpayment.updated_at) AS Date,
 	# 	                                    accounting_app_cashpayment.rp_total AS Rpr, accounting_app_cashpaymentbalance.exchange_rate_close AS Rph, 
@@ -576,7 +576,7 @@ def export_cashPayment_xls(request):
     balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
     cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
     cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
-    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('created_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
+    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('updated_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
     balance_temp = cashPayment_balance_previous.balance_cashPayment_close
     balance_temp_us = balance_temp / cashPayment_balance_previous.exchange_rate_close
     
