@@ -3,13 +3,13 @@ from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymen
 from django.contrib.auth.decorators import login_required
 from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms
 from django.contrib import messages
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse,JsonResponse
 import datetime
 import csv
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
-from django.db.models.functions import ExtractMonth, ExtractDay
 import xlwt
+from csv import reader
 
 # Create your views here.
 @login_required
@@ -705,4 +705,16 @@ def export_cashPayment_xls(request):
     wb.save(response)
 
     return response
+@login_required
+def CreateCashPayment(request):
+    with open('templates/csv/list_cashPayment.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for ticket_no, remark, settle, rp_total, is_credit, is_debit, is_settle, *__ in csvf:
+            cashpayment = cashPayment(ticket_no=ticket_no, remark=remark, settle = settle, rp_total = rp_total
+            ,  is_credit = is_credit, is_debit = is_debit, is_settle = is_settle
+             )
+            data.append(cashpayment)
+        cashPayment.objects.bulk_create(data)
+    return JsonResponse('Cash Payment csv is now working', safe=False)
 # CASHPAYMENT END

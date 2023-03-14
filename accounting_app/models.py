@@ -48,8 +48,7 @@ class cashPayment (models.Model):
     rp_detail_11    = models.PositiveBigIntegerField(null=True, blank=True)
     description_12  = models.TextField(blank=True, null=True)
     rp_detail_12    = models.PositiveBigIntegerField(null=True, blank=True)
-    def __str__(self):
-        return self.assignee
+
     
 class cashPaymentAttachment(models.Model):
     cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)

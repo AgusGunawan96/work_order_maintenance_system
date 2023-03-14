@@ -29,4 +29,6 @@ urlpatterns = [
     path('cashPayment/cashPayment_download_csv', views.export_cashPayment_csv, name = 'cashPayment_download_csv'),
     path('cashPayment/export_cashPayment_csv', views.export_cashPayment_csv, name = 'export_cashPayment_csv'),
     path('cashPayment/export_cashPayment_xls', views.export_cashPayment_xls, name = 'export_cashPayment_xls'),
+    # IMPORT START
+    # path('cashPayment/import_cashPayment', views.CreateCashPayment, name='CreateCashPayment'),
 ]
