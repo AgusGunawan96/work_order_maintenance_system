@@ -643,7 +643,7 @@
                   <h5 class="modal-title" id="exampleModalLabel2">Add Remark Cash Payment Voucher</h5>
                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{% url 'accounting_app:cashPayment_cashier_approve' cashier.id  %}" method="POST">
+                <form action="{% url 'accounting_app:cashPayment_cashier_approve' cashier.id  %}" enctype="multipart/form-data" method="POST">
                   {% csrf_token %}
                 <div class="modal-body">
                   {% comment %} START ISI {% endcomment %}
@@ -684,6 +684,12 @@
                         {% endif %}
                       </div>
                     {% endfor %}
+                    <div class="form-group row">
+                      <div class="col-md-12 position-relative">
+                          <label class="form-label" for="validationTooltip01">Upload Attachment</label>
+                          {% render_field form_cashier_attachment.attachment class="form-control" placeholder="" type="file" required="" accept="application/pdf,application/vnd.ms-excel,image/png, image/jpeg" %}
+                      </div>
+                    </div>
                     {% comment %} END ISI {% endcomment %}
               </div>
               <div class="modal-footer">

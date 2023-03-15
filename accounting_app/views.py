@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse,JsonResponse
 import datetime
@@ -37,6 +37,7 @@ def cashPayment_index(request):
          'cashiers'                 : cashiers,
          'attachments'              : attachments,
          'csv_list'                 : downloadcsv,
+         'form_cashier_attachment'  : cashPaymentCashierAttachmentForms,
          'form_manager'             : cashPaymentApprovalManagerForms,
          'form_manager_accounting'  : cashPaymentApprovalAccountingManagerForms,
          'form_president'           : cashPaymentApprovalPresidentForms,
@@ -432,6 +433,12 @@ def cashPayment_cashier_approval(request, cashPayment_id):
             else:
                 cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open - cashPayment_credit.rp_total
                 cashPayment_balance.save()
+                        # Simpan data attachment
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                 attachment = cashierAttachment(attachment=f)
+                 attachment.cashPayment = cashPayment_credit
+                 attachment.save()
             cashPayment_credit.save()
             cashier.save()
             messages.success(request, 'Approve Succcesfully')

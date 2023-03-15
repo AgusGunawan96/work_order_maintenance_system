@@ -54,6 +54,10 @@ class cashPaymentAttachment(models.Model):
     cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
     attachment = models.FileField(upload_to='cashPaymentAttachments/', null=False, blank=True)
 
+class cashierAttachment(models.Model):
+    cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
+    attachment = models.FileField(upload_to='cashierAttachments/', null=False, blank=True)
+
 class cashPaymentApprovalManager(models.Model):
     cashPayment           = models.OneToOneField(cashPayment, on_delete=models.CASCADE, null=True, blank=True)
     manager               = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
