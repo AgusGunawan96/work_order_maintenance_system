@@ -37,7 +37,7 @@ def ticket_index(request):
     return render(request,'it_app/ticket_index.html', context)
 
 @login_required
-def cashPayment_monitoring(request):
+def ticket_monitoring(request):
     tickets = Ticket.objects.order_by('created_at')
     context = {
          'tickets'             : tickets,
