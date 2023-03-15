@@ -49,6 +49,14 @@ def cashPayment_index(request):
     return render(request, 'accounting_app/cashPayment_index.html', context)
 
 @login_required
+def cashPayment_monitoring(request):
+    cashPayments = cashPayment.objects.order_by('created_at')
+    context = {
+         'cashpayments'             : cashPayments,
+    }
+    return render(request, 'accounting_app/cashPayment_index.html', context)
+
+@login_required
 def cashPayment_settle_add(request):
      if request.method == "POST":
         cashPayment_settle_form = cashPaymentSettleForms(data=request.POST)

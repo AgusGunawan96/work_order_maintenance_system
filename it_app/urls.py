@@ -10,6 +10,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name = 'dashboard'),
     path('ticket/', views.ticket_index, name = 'ticket_index'),
     path('ticket/add/', views.ticket_add, name='ticket_add'),
+    path('ticket/ticket_monitoring/', views.ticket_monitoring, name='ticket_monitoring'),
     path('ticket/ticket_detail/<int:ticket_id>', views.ticket_detail, name='ticket_detail'),
     path('ticket/ticket_supervisor_approve/<int:ticket_id>', views.ticket_supervisor_approve, name='ticket_supervisor_approve'),
     path('ticket/ticket_supervisor_reject/<int:ticket_id>', views.ticket_supervisor_reject, name='ticket_supervisor_reject'),
