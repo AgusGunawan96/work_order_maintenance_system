@@ -61,10 +61,23 @@ def ticket_add(request):
                  attachment = TicketAttachment(attachment=f)
                  attachment.Ticket = ticket
                  attachment.save()
-            # Membuat Approval Supervisor
-            supervisor = approval_supervisor_form.save(commit=False)
-            supervisor.ticket = ticket
-            supervisor.save()
+            # Apabila Manager yang Approve langsung membuat approval manager
+            if request.user.userprofileinfo.is_manager:
+                #  Membuat Approval Supervisor dengan kondisi True
+                supervisor = approval_supervisor_form.save(commit=False)
+                supervisor.ticket = ticket
+                supervisor.is_approve_supervisor = True
+                supervisor.save()
+                #  Membuat Approval Manager
+                manager = approvalManagerForms().save(commit=False)
+                manager.ticket = ticket
+                manager.ticket_approval_supervisor = supervisor
+                manager.save()
+            else:    
+                # Membuat Approval Supervisor
+                supervisor = approval_supervisor_form.save(commit=False)
+                supervisor.ticket = ticket
+                supervisor.save()
             messages.success(request, 'Success Add Services', 'success')
             return redirect('it_app:ticket_index')
         else:
