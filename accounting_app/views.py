@@ -52,9 +52,9 @@ def cashPayment_index(request):
 def cashPayment_monitoring(request):
     cashPayments = cashPayment.objects.order_by('created_at')
     context = {
-         'cashpayments'             : cashPayments,
+         'cashPayments'             : cashPayments,
     }
-    return render(request, 'accounting_app/cashPayment_index.html', context)
+    return render(request, 'accounting_app/cashPayment_monitoring.html', context)
 
 @login_required
 def cashPayment_settle_add(request):

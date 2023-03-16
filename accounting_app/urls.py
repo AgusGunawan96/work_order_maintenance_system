@@ -1,5 +1,7 @@
 from django.urls import path
 from accounting_app import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 app_name ='accounting_app'
 
@@ -32,4 +34,4 @@ urlpatterns = [
     path('cashPayment/export_cashPayment_xls', views.export_cashPayment_xls, name = 'export_cashPayment_xls'),
     # IMPORT START
     # path('cashPayment/import_cashPayment', views.CreateCashPayment, name='CreateCashPayment'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

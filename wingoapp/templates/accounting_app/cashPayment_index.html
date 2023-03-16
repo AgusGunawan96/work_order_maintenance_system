@@ -34,6 +34,7 @@
         {% endif %}
         {% if request.user.userprofileinfo.department_id == 7 %}
         <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalDownloadCSV" data-whatever="@mdo">Download CSV</a></button>
+        <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'accounting_app:cashPayment_monitoring' %}">Monitoring</a></button>
         {% endif %}
       </div>
       <div class="card-body">

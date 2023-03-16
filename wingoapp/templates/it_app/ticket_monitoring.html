@@ -30,7 +30,7 @@
                 </thead>
                     <tbody>
                         {% for ticket in tickets  %}
-                        {% if ticket.TicketApprovalSupervisor.TicketApprovalManager.TicketApprovalIT.TicketProgressIT.status != 'Done' and ticket.TicketApprovalSupervisor.TicketApprovalManager.TicketApprovalIT.TicketProgressIT %}
+                        {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status != 'Done' and ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit %}
                         <tr class="table-success">
                             <td> 
                             <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
@@ -39,7 +39,7 @@
                             <td><p>{{ ticket.assignee.userprofileinfo.department.department_name}}</p></td>
                             <td><p>{{ ticket.created_at }}</p></td>
                             <td><p>{{ ticket.title }}</p></td>
-                            <td><p>{{ ticket.TicketApprovalSupervisor.TicketApprovalManager.TicketApprovalIT.TicketProgressIT.status }}</p></td>
+                            <td><p>{{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status }}</p></td>
                         </tr>
                         {% else %}
                         <tr class="table-info">
