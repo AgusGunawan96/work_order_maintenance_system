@@ -25,6 +25,7 @@
                 <th>Department</th>
                 <th>Date</th>
                 <th>Title</th>
+                <th>Priority</th>
                 <th>Status</th>
               </tr>
                 </thead>
@@ -39,9 +40,11 @@
                             <td><p>{{ ticket.assignee.userprofileinfo.department.department_name}}</p></td>
                             <td><p>{{ ticket.created_at }}</p></td>
                             <td><p>{{ ticket.title }}</p></td>
+                            <td><p>{{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.priority }}</p></td>
                             <td><p>{{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status }}</p></td>
                         </tr>
                         {% else %}
+                        {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status != 'Done' %}
                         <tr class="table-info">
                             <td> 
                             <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
@@ -50,8 +53,10 @@
                             <td><p>{{ ticket.assignee.userprofileinfo.department.department_name}}</p></td>
                             <td><p>{{ ticket.created_at }}</p></td>
                             <td><p>{{ ticket.title }}</p></td>
+                            <td><p>-</p></td>
                             <td><p>Waiting For Approval</p></td>
                         </tr>
+                        {% endif %}
                         {% endif %}
                         {% endfor %}
                     </tbody>
