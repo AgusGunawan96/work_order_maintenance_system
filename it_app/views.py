@@ -39,9 +39,12 @@ def ticket_index(request):
 @login_required
 def ticket_monitoring(request):
     tickets = Ticket.objects.order_by('created_at')
+    current_datetime = datetime.datetime.strftime(datetime.datetime.now(), '%d%m%y')
     context = {
          'tickets'             : tickets,
+         'current_datetime'    : current_datetime,
     }
+    # return HttpResponse(current_datetime)
     return render(request, 'it_app/ticket_monitoring.html', context)
 
 @login_required

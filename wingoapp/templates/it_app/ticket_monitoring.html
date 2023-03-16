@@ -1,0 +1,73 @@
+{% extends 'starter_kit/other-base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<meta http-equiv="Refresh" content="10">
+<div class="card-body">
+<div class="card manage-invoice-sec">
+    <div class="card-header pb-0">
+      <h3 class="text-center">Helpdesk Monitoring</h3>
+      <hr>
+    </div>
+    <div class="card-body">
+      <div class="manage-invoice-table">
+        <div class="item">
+          <div class="table-responsive manage-invoice">
+            <table class="table table-xl table-striped table-border-vertical">
+             <thead>
+              <tr>
+                <th>Name </th>
+                <th>Division</th>
+                <th>Department</th>
+                <th>Date</th>
+                <th>Title</th>
+                <th>Status</th>
+              </tr>
+                </thead>
+                    <tbody>
+                        {% for ticket in tickets  %}
+                        {% if ticket.TicketApprovalSupervisor.TicketApprovalManager.TicketApprovalIT.TicketProgressIT.status != 'Done' and ticket.TicketApprovalSupervisor.TicketApprovalManager.TicketApprovalIT.TicketProgressIT %}
+                        <tr class="table-success">
+                            <td> 
+                            <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
+                            </td>
+                            <td><p>{{ ticket.assignee.userprofileinfo.division.division_name}}</p></td>
+                            <td><p>{{ ticket.assignee.userprofileinfo.department.department_name}}</p></td>
+                            <td><p>{{ ticket.created_at }}</p></td>
+                            <td><p>{{ ticket.title }}</p></td>
+                            <td><p>{{ ticket.TicketApprovalSupervisor.TicketApprovalManager.TicketApprovalIT.TicketProgressIT.status }}</p></td>
+                        </tr>
+                        {% else %}
+                        <tr class="table-info">
+                            <td> 
+                            <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
+                            </td>
+                            <td><p>{{ ticket.assignee.userprofileinfo.division.division_name}}</p></td>
+                            <td><p>{{ ticket.assignee.userprofileinfo.department.department_name}}</p></td>
+                            <td><p>{{ ticket.created_at }}</p></td>
+                            <td><p>{{ ticket.title }}</p></td>
+                            <td><p>Waiting For Approval</p></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+        </div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+{% comment %} <script>
+    document.getElementById('id_username').value = 'test'
+    document.getElementById('id_password').value = 'testing@123'
+</script> {% endcomment %}
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

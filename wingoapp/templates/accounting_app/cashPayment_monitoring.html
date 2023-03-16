@@ -1,0 +1,161 @@
+{% extends 'starter_kit/other-base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<meta http-equiv="Refresh" content="60">
+<div class="card-body">
+<div class="card manage-invoice-sec">
+    <div class="card-header pb-0">
+      <h3 class="text-center">CashPayment Monitoring</h3>
+      <hr>
+      <div class="card-header-right">
+        <ul class="setting-option">
+          <li>
+            <div class="setting-badge"><i class="fa fa-spin fa-cog font-primary"></i></div>
+          </li>
+          <li><i class="view-html fa fa-code font-primary"></i></li>
+          <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
+          <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
+          <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
+          <li><i class="icofont icofont-error close-card font-primary"></i></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="manage-invoice-table">
+        <div class="item">
+          <div class="table-responsive manage-invoice">
+            <table class="table table-bordernone">
+             <thead>
+              <tr>
+                <th>Name </th>
+                <th>Date</th>
+                <th>Project</th>
+                <th>Contact Number</th>
+                <th>Country</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>
+                  <ul class="setting-option">
+                    <li>
+                      <div class="setting-badge"><i class="fa fa-spin fa-cog font-primary"></i></div>
+                    </li>
+                    <li><i class="view-html fa fa-code font-primary"></i></li>
+                    <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
+                    <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
+                    <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
+                    <li><i class="icofont icofont-error close-card font-primary"></i></li>
+                  </ul>
+                </th>
+              </tr>
+                </thead>
+                  <tbody>
+                      <tr>
+                        <td> 
+                          <span>01</span>
+                          <div class="t-title"><img class="img-40 rounded-circle align-top" src="../assets/images/dashboard-3/1_1.png" alt="" data-original-title="" title=""/>
+                            <div class="d-inline-block align-middle"><a href="user-profile.html"><span class="f-w-500">Smith johson Lorn</span></a></div>
+                          </div>
+                        </td>
+                        <td><p>16 August,2019 5:10am</p></td>
+                        <td> <span>Business Logo Create</span></td>
+                        <td> <p>+1(555) 4585 6859</p></td>
+                        <td> <p>United Kingdom</p></td>
+                        <td><p>$8435.00</p></td>
+                        <td><p>Past Due</p></td>
+                        <td><div class="progress-showcase">
+                          <div class="progress sm-progress-bar">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td> 
+                          <span>02</span>
+                          <div class="t-title">
+                            <img class="img-40 rounded-circle align-top" src="../assets/images/dashboard-3/2_2.png" alt="" data-original-title="" title=""/>
+                            <div class="d-inline-block align-middle">
+                              <a href="user-profile.html"><span class="f-w-500">Brown Taylor Jeron</span></a></div>
+                          </div>
+                        </td>
+                        <td> 
+                          <p>26 Mar,2019 2:10pm</p>
+                        </td>
+                        <td> <span>Apply Google Review</span></td>
+                        <td> <p>+880 8759 0013</p></td>
+                        <td> <p>Bangladesh</p></td>
+                        <td> <p>$4542.00</p></td>
+                        <td> <p>Paid</p></td>
+                        <td> <div class="progress-showcase">
+                          <div class="progress sm-progress-bar">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 70%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td> 
+                            <span>03</span>
+                            <div class="t-title">
+                              <img class="img-40 rounded-circle align-top" src="../assets/images/dashboard-3/3_3.png" alt="" data-original-title="" title=""/>
+                            <div class="d-inline-block align-middle">
+                              <a href="user-profile.html"><span class="f-w-500">Admas Lopez Perry</span></a></div>
+                            </div>
+                        </td>
+                        <td> 
+                          <p>06 Aug,2019 3:10am</p>
+                        </td>
+                        <td> <span>Recruitment Refrances</span></td>
+                        <td> <p>+613201 2546</p></td>
+                        <td> <p>Australia</p></td>
+                        <td> <p>$6140.00</p></td>
+                        <td> <p>Past Due</p></td>
+                        <td>
+                          <div class="progress-showcase">
+                            <div class="progress sm-progress-bar">
+                              <div class="progress-bar bg-primary" role="progressbar" style="width: 90%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td> <span>04</span>
+                          <div class="t-title"><img class="img-40 rounded-circle align-top" src="../assets/images/dashboard-3/4_4.png" alt="" data-original-title="" title=""/>
+                            <div class="d-inline-block align-middle"><a href="user-profile.html"><span class="f-w-500">Barker Cartor Ward</span></a></div>
+                          </div>
+                        </td>
+                        <td> <p>22 Sept,2019 2:10pm</p></td>
+                        <td> <span>Project Research</span></td>
+                        <td> <p>+1-684 8759 0013</p></td>
+                        <td> <p>American Samoa</p></td>
+                        <td> <p>$1526.00</p> </td>
+                        <td> <p>Paid</p></td>
+                        <td> 
+                          <div class="progress-showcase"><div class="progress sm-progress-bar">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: 80%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+        </div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+{% comment %} <script>
+    document.getElementById('id_username').value = 'test'
+    document.getElementById('id_password').value = 'testing@123'
+</script> {% endcomment %}
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}
