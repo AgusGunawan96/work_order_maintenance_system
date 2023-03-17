@@ -54,7 +54,13 @@
                             <td><p>{{ ticket.created_at }}</p></td>
                             <td><p>{{ ticket.title }}</p></td>
                             <td><p>-</p></td>
-                            <td><p>Waiting For Approval</p></td>
+                            {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit %}
+                            <td><p>Waiting For Approval IT</p></td>
+                            {% elif ticket.ticketapprovalsupervisor.ticketapprovalmanager %}
+                            <td><p>Waiting For Approval Manager {{ticket.assignee.userprofileinfo.department.department_name}}</p></td>
+                            {% elif ticket.ticketapprovalsupervisor %}
+                            <td><p>Waiting For Approval Supervisor {{ticket.assignee.userprofileinfo.division.division_name}}</p></td>
+                            {% endif %}
                         </tr>
                         {% endif %}
                         {% endif %}

@@ -39,7 +39,13 @@
                             <td><p>{{ cashPayment.assignee.userprofileinfo.department.department_name}}</p></td>
                             <td><p>{{ cashPayment.created_at }}</p></td>
                             <td><p>-</p></td>
-                            <td><p>Waiting For Approval</p></td>
+                            {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident %}
+                            <td><p>Waiting For Approval President </p></td>
+                            {% elif cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager %}
+                            <td><p>Waiting For Approval Manager Accounting</p></td>
+                            {% elif cashPayment.cashpaymentapprovalmanager %}
+                            <td><p>Waiting For Approval Manager {{cashPayment.assignee.userprofileinfo.department.department_name}}</p></td>
+                            {% endif %}
                         </tr>
                         {% else %}
                         {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.is_approve_cashier == False  %}
