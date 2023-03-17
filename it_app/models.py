@@ -15,7 +15,6 @@ class TicketType(models.TextChoices):
     REQUEST_DOCUMENT_DATA   = 'Request Document Data'
     PROBLEM_HARDWARE        = 'Problem Hardware'
     PROBLEM_SOFTWARE        = 'Problem Software'
-    OTHER                   = 'Other'
 
 class TicketPriority(models.TextChoices):
     LOW     = 'Low'
@@ -23,9 +22,10 @@ class TicketPriority(models.TextChoices):
     High    = 'High'
 
 class TicketOrder(models.TextChoices):
-    NEW     = 'New'
+    NEW                     = 'New'
     RENEWAL_OR_MODIFICATION = 'Renewal Or Modification'
-    LOAN    = 'Loan'
+    LENING                  = 'Lening'
+    PROBLEM                 = 'Problem'
     
 class Software(models.Model):
     name        = models.CharField(max_length=100)
@@ -67,9 +67,10 @@ class HardwareInfo(models.Model):
 class Ticket(models.Model):
     assignee    = models.ForeignKey(User, null=True, blank = True, on_delete=models.CASCADE)
     hardware    = models.ForeignKey(Hardware, on_delete=models.CASCADE, blank=True, null=True)
+    software    = models.ForeignKey(Software, on_delete=models.CASCADE, blank=True, null=True)
     title       = models.CharField(max_length=100)
-    type        = models.CharField(max_length=25, choices=TicketType.choices, default=TicketType.OTHER , blank=True, null=True)
-    order       = models.CharField(max_length=25, choices=TicketOrder.choices, blank=True, null=True)
+    type        = models.CharField(max_length=25, choices=TicketType.choices, null=True)
+    order       = models.CharField(max_length=25, choices=TicketOrder.choices, null=True)
     description = models.TextField()
     quantity    = models.PositiveIntegerField(blank=True, default=0)
     created_at  = models.DateTimeField('created at', auto_now_add=True)
