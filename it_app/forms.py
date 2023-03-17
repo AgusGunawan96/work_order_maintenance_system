@@ -5,7 +5,7 @@ from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManage
 class ticketForms(forms.ModelForm):
     class Meta():
         model = Ticket
-        fields = ('type', 'title', 'description',  'hardware', 'quantity', 'assignee')
+        fields = ('type', 'order', 'title', 'description',  'hardware', 'quantity', 'assignee')
         widgets = {'assignee': forms.HiddenInput()}
         
 class ticketAttachmentForms(forms.ModelForm):

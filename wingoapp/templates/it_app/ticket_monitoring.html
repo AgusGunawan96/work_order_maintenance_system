@@ -22,7 +22,7 @@
               <tr>
                 <th>Name </th>
                 <th>Division</th>
-                <th>Department</th>
+                <th>Type</th>
                 <th>Date</th>
                 <th>Title</th>
                 <th>Priority</th>
@@ -37,7 +37,7 @@
                             <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
                             </td>
                             <td><p>{{ ticket.assignee.userprofileinfo.division.division_name}}</p></td>
-                            <td><p>{{ ticket.assignee.userprofileinfo.department.department_name}}</p></td>
+                            <td><p>{{ ticket.type }}</p></td>
                             <td><p>{{ ticket.created_at }}</p></td>
                             <td><p>{{ ticket.title }}</p></td>
                             <td><p>{{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.priority }}</p></td>
@@ -49,8 +49,8 @@
                             <td> 
                             <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
                             </td>
-                            <td><p>{{ ticket.assignee.userprofileinfo.division.division_name}}</p></td>
-                            <td><p>{{ ticket.assignee.userprofileinfo.department.department_name}}</p></td>
+                            <td><p>{{ ticket.assignee.userprofileinfo.division.division_name }}</p></td>
+                            <td><p>{{ ticket.type }}</p></td>
                             <td><p>{{ ticket.created_at }}</p></td>
                             <td><p>{{ ticket.title }}</p></td>
                             <td><p>-</p></td>

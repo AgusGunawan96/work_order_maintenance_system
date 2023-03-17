@@ -20,9 +20,6 @@
     </div> {% endcomment %}
     <div class="nav-right col pull-right right-menu">
       <ul class="nav-menus">
-
-
-
         <li>
           <div class="mode"><i class="fa fa-moon-o"></i></div>
         </li>
@@ -37,8 +34,9 @@
             {% comment %} <li><i data-feather="mail"></i><span>Inbox</span></li>
             <li><i data-feather="file-text"></i><span>Taskboard</span></li>
             <li><i data-feather="settings"></i><span>Settings</span></li> {% endcomment %}
-            <li><a class="btn btn-light w-100" href="{% url 'logout' %}?next={{ request.path }}"><i data-feather="log-in"></i>Log out</a>
-            </li>
+            {% comment %} <li><a class="btn btn-light w-100" href="{% url 'logout' %}?next={{ request.path }}"><i data-feather="log-in"></i>Log out</a></li> {% endcomment %}
+            <li><a class="btn btn-light w-100" href="{% url 'logout' %}?next={{ request.path }}"><i data-feather="log-out"></i>Log out</a></li>
+            <li><a class="btn btn-light w-100" href="/admin"><i data-feather="folder"></i>Admin</a></li>
           </ul>
         </li>
       </ul>
