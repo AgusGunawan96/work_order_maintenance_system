@@ -1,0 +1,256 @@
+{% extends 'starter_kit/base.html' %}{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <div class="col-sm-12 col-xl-12 xl-100">
+    <div class="card">
+      <div class="card-header pb-0">
+        <h5>IP Address | {{request.user.first_name}} {{request.user.last_name}}</h5><span>IP Address List.</span>
+      </div>
+      <div class="card-body btn-showcase">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message | safe }}
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+        <!-- blok untuk menampilkan notifikasi pesan sukses -->
+<div>
+  </div>
+      </div>
+      <div class="card-body">
+        <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
+          <li class="nav-item"><a class="nav-link active" id="top-ipAddress-unregistered-tab" data-bs-toggle="tab" href="#top-ipAddress-unregistered-tab" role="tab" aria-controls="top-ipAddress-unregistered-tab" aria-selected="true"><i class="icofont icofont-wifi-router"></i>Unregistered</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-ipAddress-registered-tab" data-bs-toggle="tab" href="#top-ipAddress-registered-tab" role="tab" aria-controls="top-ipAddress-registered-tab" aria-selected="false"><i class="icofont icofont-wifi-router"></i>Registered</a></li>
+        </ul>
+        <div class="tab-content" id="top-tabContent">
+          <div class="tab-pane fade show active" id="top-ipAddress-unregistered-tab" role="tabpanel" aria-labelledby="top-ipAddress-unregistered-tab">
+            <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="display" id="basic-1">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            {% for ipAddress in ipAddresses %}
+                            <tr>
+                                <td>wew</td>
+                                <td>wew</td>
+                                <td>wew</td>
+                                <td>Register</td>
+                            </tr>
+                            <div class="modal fade" id="ModalSupervisor{{ supervisor.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel2">{{supervisor.ticket.title}}</h5>
+                                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{% url 'it_app:ticket_supervisor_reject' supervisor.id %}" method="POST">
+                                  {% csrf_token %}
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                      <label class="col-form-label" for="recipient-name">Recipient:</label>
+                                      <input class="form-control" type="text" value="{{supervisor.ticket.assignee.first_name}} {{supervisor.ticket.assignee.last_name}}" readonly>
+                                    </div>
+                                    {% for hidden in form_supervisor.hidden_fields %}
+                                    {{ hidden }}
+                                     {% endfor %}
+                                    <!-- merender semua field form dari objek TaskForm -->
+                                    {% if form_supervisor.non_field_errors %}
+                                      <div class="alert alert-danger" role="alert">
+                                        {% for error in form_supervisor.non_field_errors %}
+                                          {{ error }}
+                                        {% endfor %}
+                                      </div>
+                                    {% endif %}
+                          
+                                    {% for field in form_supervisor.visible_fields %}
+                                      <div class="form-group">
+                                        {{ field.label_tag }}
+                                        {% if form_supervisor.is_bound %}
+                                          {% if field.errors %}
+                                            {% render_field field class="form-control is-invalid" %}
+                                            {% for error in field.errors %}
+                                              <div class="invalid-feedback">
+                                                {{ error }}
+                                              </div>
+                                            {% endfor %}
+                                          {% else %}
+                                            {% render_field field class="form-control is-valid" %}
+                                          {% endif %}
+                                        {% else %}
+                                          {% render_field field class="form-control" %}
+                                        {% endif %}
+                          
+                                        {% if field.help_text %}
+                                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                      </div>
+                                    {% endfor %}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                  </div>
+                              </form>
+                              </div>
+                            </div>
+                          </div>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="top-ipAddress-registered-tab" role="tabpanel" aria-labelledby="top-ipAddress-registered-tab">
+            <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="display" id="basic-2">
+                        <thead>
+                          <tr>
+                            <th>Created</th>
+                            <th>Summary</th>
+                            <th>Assignee</th>
+                            <th>Status</th>
+                            {% if request.user.userprofileinfo.is_manager %}
+                            <th>Action</th>
+                            {% endif %}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for manager in managers %}
+                          {% if request.user.userprofileinfo.department_id == manager.ticket_approval_supervisor.ticket.assignee.userprofileinfo.department_id and manager.is_approve_manager == False %}
+                          {% if manager.ticket_approval_supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.is_manager == True %}
+                          <tr>
+                            <td><a href="{% url 'it_app:ticket_detail' manager.ticket_approval_supervisor.ticket.id %}">{{manager.ticket_approval_supervisor.ticket.created_at}}</td>
+                           <td>{{manager.ticket_approval_supervisor.ticket.title}}</td>
+                           <td>{{manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{manager.ticket_approval_supervisor.ticket.assignee.last_name}}</td>
+                           {% if manager.is_rejected_manager == True %}
+                            <td>Rejected by {{ manager.manager.first_name }} {{ manager.manager.last_name }}</td>
+                           {% else %}
+                            <td>Waiting for Approval Manager</td>
+                           {% endif %}
+                           {% if request.user.userprofileinfo.is_manager == True and manager.is_approve_manager == False and manager.is_rejected_manager == False%}
+                           <td>
+                            <a href="{% url 'it_app:ticket_manager_approve' manager.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                            <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalManager{{ manager.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
+                            </td>
+                            {% else %}
+                            {% if request.user.userprofileinfo.is_manager == False %}
+                            {% else %}
+                            <td> </td>
+                            {% endif %}
+                            {% endif %}
+                          </tr>
+                          {% endif %}
+                          {% endif %}
+                          <div class="modal fade" id="ModalManager{{ manager.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                          aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel2">{{manager.ticket_approval_supervisor.ticket.title}}</h5>
+                                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <form action="{% url 'it_app:ticket_manager_reject' manager.id %}" method="POST">
+                                {% csrf_token %}
+                              <div class="modal-body">
+                                  <div class="mb-3">
+                                    <label class="col-form-label" for="recipient-name">Recipient:</label>
+                                    <input class="form-control" type="text" value="{{manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{manager.ticket_approval_supervisor.ticket.assignee.last_name}}" readonly>
+                                  </div>
+                                  {% for hidden in form_manager.hidden_fields %}
+                                  {{ hidden }}
+                                   {% endfor %}
+                                  <!-- merender semua field form dari objek TaskForm -->
+                                  {% if form_manager.non_field_errors %}
+                                    <div class="alert alert-danger" role="alert">
+                                      {% for error in form_manager.non_field_errors %}
+                                        {{ error }}
+                                      {% endfor %}
+                                    </div>
+                                  {% endif %}
+                        
+                                  {% for field in form_manager.visible_fields %}
+                                    <div class="form-group">
+                                      {{ field.label_tag }}
+                                      {% if form_manager.is_bound %}
+                                        {% if field.errors %}
+                                          {% render_field field class="form-control is-invalid" %}
+                                          {% for error in field.errors %}
+                                            <div class="invalid-feedback">
+                                              {{ error }}
+                                            </div>
+                                          {% endfor %}
+                                        {% else %}
+                                          {% render_field field class="form-control is-valid" %}
+                                        {% endif %}
+                                      {% else %}
+                                        {% render_field field class="form-control" %}
+                                      {% endif %}
+                        
+                                      {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                      {% endif %}
+                                    </div>
+                                  {% endfor %}
+                                </div>
+                                <div class="modal-footer">
+                                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                  <button class="btn btn-primary" type="submit">Submit</button>
+                                </div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid starts-->
+  {% comment %} <div class="container-fluid">
+   
+  </div> {% endcomment %}
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

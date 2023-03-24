@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT, TicketAttachment
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT, TicketAttachment, IPAddress, Hardware
 from django.contrib.auth.decorators import login_required
-from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms
+from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms, ipAddressForms, hardwareForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 import datetime
@@ -15,6 +15,43 @@ def dashboard(request):
 def profile(request):
     return render(request, 'it_app/profile.html')
 
+# IP ADDRESS START
+@login_required
+def ipAddress_index(request):
+    ipAddress = IPAddress.objects.order_by('-created_at')
+    context = {
+        'ipAddresses'          : ipAddress, 
+        'form_ipAddress'     : ipAddressForms,
+        }
+    # return HttpResponse('IP Address Index')
+    return render(request, 'it_app/ipAddress_index.html', context)
+
+
+@login_required
+def ipAddress_add(request):
+    # return HttpResponse('IP Address Add')
+    return render(request, 'it_app/ipAddress_index.html')
+
+# IP ADDRESS END
+
+# HARDWARE START
+@login_required
+def hardware_index(request):
+    hardware = Hardware.objects.order_by('-created_at')
+    context = {
+        'hardware'          : hardware, 
+        'form_hardware'     : hardwareForms,
+        }
+    # return HttpResponse('IP Address Index')
+    return render(request, 'it_app/hardware_index.html', context)
+
+
+@login_required
+def hardware_add(request):
+    # return HttpResponse('Hardware Add')
+    return render(request, 'it_app/hardware_index.html')
+
+# HARDWARE END
 # TICKET START 
 @login_required
 def ticket_index(request):

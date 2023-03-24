@@ -27,8 +27,8 @@
         <!-- blok untuk menampilkan notifikasi pesan sukses -->
 <div>
   </div>
-    <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'it_app:ticket_add' %}">Add Service</a></button>
-    <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'it_app:ticket_monitoring' %}">Monitoring</a></button>
+        <a class="btn btn-primary btn-lg" href="{% url 'it_app:ticket_add' %}"> <span class="fa fa-plus"></span>Add Service</a>
+        <a class="btn btn-primary btn-lg" href="{% url 'it_app:ticket_monitoring' %}"> <span class="fa fa-laptop"></span>Monitoring</a>
       </div>
       <div class="card-body">
         <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">

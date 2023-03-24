@@ -2,31 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-# Create your models here.
-class TicketStatus(models.TextChoices):
-    IN_PROGRESS = 'In Progress'
-    IN_REVIEW   = 'In Review'
-    DONE        = 'Done'
-
-class TicketType(models.TextChoices):
-    REQUEST_APPLICATION     = 'Request Application'
-    REQUEST_HARDWARE        = 'Request Hardware'
-    REQUEST_EMERGENCY       = 'Request Emergency'
-    REQUEST_DOCUMENT_DATA   = 'Request Document Data'
-    PROBLEM_HARDWARE        = 'Problem Hardware'
-    PROBLEM_SOFTWARE        = 'Problem Software'
-
-class TicketPriority(models.TextChoices):
-    LOW     = 'Low'
-    Middle  = 'Middle'
-    High    = 'High'
-
-class TicketOrder(models.TextChoices):
-    NEW                     = 'New'
-    RENEWAL_OR_MODIFICATION = 'Renewal Or Modification'
-    LENING                  = 'Lening'
-    PROBLEM                 = 'Problem'
-    
+# SOFTWARE START
 class Software(models.Model):
     name        = models.CharField(max_length=100)
     created_at  = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
@@ -34,7 +10,9 @@ class Software(models.Model):
 
     def __str__(self):
         return self.name
-    
+# SOFTWARE END
+
+# HARDWARE START
 class HardwareType(models.Model):
     name        = models.CharField(max_length=100)
     created_at  = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
@@ -63,6 +41,45 @@ class HardwareInfo(models.Model):
 
     def __str__(self):
         return self.nomor_po
+# HARDWARE END
+
+# IP ADDRESS START
+class IPAddress(models.Model):
+    hardware    = models.ForeignKey(Hardware, null=True, blank=True, on_delete=models.CASCADE)
+    name        = models.CharField(max_length=100)
+    is_used     = models.BooleanField(default=False, blank=True, null=True )
+    created_at  = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
+    updated_at  = models.DateTimeField('updated at', auto_now=True)
+    
+    def __str__(self):
+        return self.name
+# IP ADDRESS END
+
+# TICKET START
+# Create your models here.
+class TicketStatus(models.TextChoices):
+    IN_PROGRESS = 'In Progress'
+    IN_REVIEW   = 'In Review'
+    DONE        = 'Done'
+
+class TicketType(models.TextChoices):
+    REQUEST_APPLICATION     = 'Request Application'
+    REQUEST_HARDWARE        = 'Request Hardware'
+    REQUEST_EMERGENCY       = 'Request Emergency'
+    REQUEST_DOCUMENT_DATA   = 'Request Document Data'
+    PROBLEM_HARDWARE        = 'Problem Hardware'
+    PROBLEM_SOFTWARE        = 'Problem Software'
+
+class TicketPriority(models.TextChoices):
+    LOW     = 'Low'
+    Middle  = 'Middle'
+    High    = 'High'
+
+class TicketOrder(models.TextChoices):
+    NEW                     = 'New'
+    RENEWAL_OR_MODIFICATION = 'Renewal Or Modification'
+    LENING                  = 'Lening'
+    PROBLEM                 = 'Problem'
 
 class Ticket(models.Model):
     assignee    = models.ForeignKey(User, null=True, blank = True, on_delete=models.CASCADE)
@@ -131,5 +148,7 @@ class TicketProgressIT(models.Model):
     
     def __str__(self):
         return self.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.title
+# TICKET END
 
 
+    

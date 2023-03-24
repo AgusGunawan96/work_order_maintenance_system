@@ -1,6 +1,18 @@
 from django import forms
 from django.forms import ClearableFileInput
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, TicketAttachment
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, TicketAttachment, IPAddress, Hardware
+
+class ipAddressForms(forms.ModelForm):
+    class Meta():
+        model = IPAddress
+        fields = ('name', 'hardware', )
+        widgets = {'is_used': forms.HiddenInput()}
+
+class hardwareForms(forms.ModelForm):
+    class Meta():
+        model = Hardware
+        fields = ('name', 'quantity', 'hardware', )
+
 
 class ticketForms(forms.ModelForm):
     class Meta():

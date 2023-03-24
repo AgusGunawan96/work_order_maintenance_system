@@ -105,3 +105,30 @@ def CreateUserInfoData(request):
 @login_required
 def place_value(number): 
     return ("{:,}".format(number)) 
+
+# LANJUTAN
+@login_required
+def CreateIPAddressRegistered(request):
+    with open('templates/csv/list.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for user_id, department_id, division_id, section_id, position, is_supervisor, is_manager, is_bod, *__ in csvf:
+            user = UserProfileInfo(user_id=user_id, department_id=department_id, division_id = division_id, section_id = section_id
+            ,  position = position, is_supervisor = is_supervisor, is_manager = is_manager, is_bod = is_bod
+             )
+            data.append(user)
+        UserProfileInfo.objects.bulk_create(data)
+    return JsonResponse('user Info csv is now working', safe=False)
+
+@login_required
+def CreateIPAddressUnRegistered(request):
+    with open('templates/csv/list.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for user_id, department_id, division_id, section_id, position, is_supervisor, is_manager, is_bod, *__ in csvf:
+            user = UserProfileInfo(user_id=user_id, department_id=department_id, division_id = division_id, section_id = section_id
+            ,  position = position, is_supervisor = is_supervisor, is_manager = is_manager, is_bod = is_bod
+             )
+            data.append(user)
+        UserProfileInfo.objects.bulk_create(data)
+    return JsonResponse('user Info csv is now working', safe=False)

@@ -8,6 +8,8 @@ app_name ='it_app'
 urlpatterns = [
     path('profile/', views.profile, name = 'profile'),
     path('dashboard/', views.dashboard, name = 'dashboard'),
+
+    # TICKET START
     path('ticket/', views.ticket_index, name = 'ticket_index'),
     path('ticket/add/', views.ticket_add, name='ticket_add'),
     path('ticket/ticket_monitoring/', views.ticket_monitoring, name='ticket_monitoring'),
@@ -18,4 +20,16 @@ urlpatterns = [
     path('ticket/ticket_manager_reject/<int:ticket_id>', views.ticket_manager_reject, name='ticket_manager_reject'),
     path('ticket/ticket_it_approve/<int:ticket_id>', views.ticket_it_approve, name='ticket_it_approve'),
     path('ticket/ticket_it_reject/<int:ticket_id>', views.ticket_it_reject, name='ticket_it_reject'),
+    # TICKET END
+
+    # IP ADDRESS START
+    path('ipAddress/', views.ipAddress_index, name = 'ipAddress_index'),
+    path('ipAddress/add/', views.ipAddress_add, name='ipAddress_add'),
+    # IP ADDRESS END
+
+    # HARDWARE START
+    path('hardware/', views.hardware_index, name = 'hardware_index'),
+    path('hardware/add/', views.hardware_add, name='hardware_add'),
+    # HARDWARE END
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
