@@ -75,6 +75,7 @@ def ticket_add(request):
                 manager = approvalManagerForms().save(commit=False)
                 manager.ticket = ticket
                 manager.ticket_approval_supervisor = supervisor
+                manager.is_approve_manager = True
                 manager.save()
             else:    
                 # Membuat Approval Supervisor

@@ -45,6 +45,14 @@ class cashPaymentSettleForms(forms.ModelForm):
             'is_settle': forms.HiddenInput(),
         }
 
+class cashPaymentAdvForms(forms.ModelForm):
+    class Meta():
+        model = cashPayment
+        fields = ('adv', 'is_credit', 'is_debit', 'is_adv', 'rp_total' )
+        widgets = {
+            'is_adv': forms.HiddenInput(),
+        }
+
 class cashPaymentAttachmentForms(forms.ModelForm):
     class Meta():
         model = cashPaymentAttachment
@@ -52,6 +60,7 @@ class cashPaymentAttachmentForms(forms.ModelForm):
         widgets = {
             'attachment'    : ClearableFileInput(attrs={'multiple':True}),
         }
+
 class cashPaymentCashierAttachmentForms(forms.ModelForm):
     class Meta():
         model = cashierAttachment
@@ -59,6 +68,23 @@ class cashPaymentCashierAttachmentForms(forms.ModelForm):
         widgets = {
             'attachment'    : ClearableFileInput(attrs={'multiple':True}),
         }
+
+class cashPaymentSettleAttachmentForms(forms.ModelForm):
+    class Meta():
+        model = cashierAttachment
+        fields = ('attachment',)
+        widgets = {
+            'attachment'    : ClearableFileInput(attrs={'multiple':True}),
+        }
+
+class cashPaymentAdvAttachmentForms(forms.ModelForm):
+    class Meta():
+        model = cashierAttachment
+        fields = ('attachment',)
+        widgets = {
+            'attachment'    : ClearableFileInput(attrs={'multiple':True}),
+        }
+
 class cashPaymentBalanceForms(forms.ModelForm):
     class Meta():
         model = cashPaymentBalance

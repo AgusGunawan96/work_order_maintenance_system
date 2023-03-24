@@ -27,14 +27,15 @@
         <!-- blok untuk menampilkan notifikasi pesan sukses -->
 <div>
   </div>
-        <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'accounting_app:cashPayment_add' %}">Add Cash Payment</a></button>
+        <a class="btn btn-primary btn-lg" href="{% url 'accounting_app:cashPayment_add' %}"> <span class="icon-credit-card"></span> Add Cash Payment</a>
         {% if request.user.username == '007059' %}  
-        <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalAddDebit" data-whatever="@mdo">Add Debit</a></button>
-        <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalAddSettle" data-whatever="@mdo">Add Settle</a></button>
+        <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddDebit"> <span class="icon-credit-card"></span> Add Debit</a>
+        <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddSettle"> <span class="icon-credit-card"></span> Add Settle</a>
+        <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddAdv"> <span class="icon-credit-card"></span> Add Adv</a>
         {% endif %}
         {% if request.user.userprofileinfo.department_id == 7 %}
-        <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a data-bs-toggle="modal" data-bs-target="#ModalDownloadCSV" data-whatever="@mdo">Download CSV</a></button>
-        <button class="btn btn-pill btn-outline-primary btn-lg" type="button"><a href="{% url 'accounting_app:cashPayment_monitoring' %}">Monitoring</a></button>
+        <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalDownloadCSV" data-whatever="@mdo"> <span class="icon-credit-card"></span>Download Excel</a>
+        <a class="btn btn-primary btn-lg" href="{% url 'accounting_app:cashPayment_monitoring' %}" > <span class="icon-credit-card"></span>Monitoring</a>
         {% endif %}
       </div>
       <div class="card-body">
@@ -819,7 +820,7 @@
              <h5 class="modal-title" id="exampleModalLabel2">Add Settle Cash Payment Voucher</h5>
              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
            </div>
-           <form action="{% url 'accounting_app:cashPayment_settle_add'  %}" method="POST">
+           <form action="{% url 'accounting_app:cashPayment_settle_add'  %}" enctype="multipart/form-data" method="POST">
              {% csrf_token %}
            <div class="modal-body">
              {% comment %} START ISI {% endcomment %}
@@ -860,6 +861,12 @@
                    {% endif %}
                  </div>
                {% endfor %}
+               <div class="form-group row">
+                <div class="col-md-12 position-relative">
+                    <label class="form-label" for="validationTooltip01">Upload Attachment</label>
+                    {% render_field form_settle_attachment.attachment class="form-control" placeholder="" type="file" required="" accept="application/pdf,application/vnd.ms-excel,image/png, image/jpeg" %}
+                </div>
+              </div>
                {% comment %} END ISI {% endcomment %}
              </div>
              <div class="modal-footer">
@@ -871,6 +878,73 @@
        </div>
      </div>
     {% comment %} MODAL ADD SETTLE END {% endcomment %}
+    {% comment %} MODAL ADD ADV START {% endcomment %}
+    <div class="modal fade" id="ModalAddAdv" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel2">Add Adv Cash Payment Voucher</h5>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'accounting_app:cashPayment_adv_add'  %}" enctype="multipart/form-data" method="POST">
+          {% csrf_token %}
+        <div class="modal-body">
+          {% comment %} START ISI {% endcomment %}
+            {% csrf_token %}
+            {% for hidden in form_adv.hidden_fields %}
+            {{ hidden }}
+             {% endfor %}
+            <!-- merender semua field form dari objek TaskForm -->
+            {% if form_adv.non_field_errors %}
+              <div class="alert alert-danger" role="alert">
+                {% for error in form_adv.non_field_errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+  
+            {% for field in form_adv.visible_fields %}
+              <div class="form-group">
+                {{ field.label_tag }}
+  
+                {% if form_adv.is_bound %}
+                  {% if field.errors %}
+                    {% render_field field class="form-control is-invalid" %}
+                    {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% render_field field class="form-control is-valid" %}
+                  {% endif %}
+                {% else %}
+                  {% render_field field class="form-control" %}
+                {% endif %}
+  
+                {% if field.help_text %}
+                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+              </div>
+            {% endfor %}
+            <div class="form-group row">
+              <div class="col-md-12 position-relative">
+                  <label class="form-label" for="validationTooltip01">Upload Attachment</label>
+                  {% render_field form_adv_attachment.attachment class="form-control" placeholder="" type="file" required="" accept="application/pdf,application/vnd.ms-excel,image/png, image/jpeg" %}
+              </div>
+            </div>
+            {% comment %} END ISI {% endcomment %}
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary" type="submit">Add</button>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>
+ {% comment %} MODAL ADD ADV END {% endcomment %}
 {% comment %} MODAL DOWNLOAD CSV START {% endcomment %}
 <div class="modal fade" id="ModalDownloadCSV" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 aria-hidden="true">

@@ -1,0 +1,10 @@
+{% extends 'starter_kit/other-base.html' %}{% load static %}
+{% load sass_tags %}
+{% block content %}
+{% include 'starter_kit/components/comingsoon-bg-video.html' %}
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/countdown.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

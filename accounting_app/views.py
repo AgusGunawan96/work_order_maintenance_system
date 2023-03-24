@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment, advAttachment, settleAttachment
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms, cashPaymentSettleAttachmentForms, cashPaymentAdvAttachmentForms, cashPaymentAdvForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse,JsonResponse
 import datetime
@@ -38,6 +38,8 @@ def cashPayment_index(request):
          'attachments'              : attachments,
          'csv_list'                 : downloadcsv,
          'form_cashier_attachment'  : cashPaymentCashierAttachmentForms,
+         'form_settle_attachment'   : cashPaymentSettleAttachmentForms,
+         'form_adv_attachment'      : cashPaymentAdvAttachmentForms,
          'form_manager'             : cashPaymentApprovalManagerForms,
          'form_manager_accounting'  : cashPaymentApprovalAccountingManagerForms,
          'form_president'           : cashPaymentApprovalPresidentForms,
@@ -45,6 +47,7 @@ def cashPayment_index(request):
          'form_debit'               : cashPaymentDebitForms,
          'form_credit'              : cashPaymentCreditForms,
          'form_settle'              : cashPaymentSettleForms,
+         'form_adv'                 : cashPaymentAdvForms,
     }
     return render(request, 'accounting_app/cashPayment_index.html', context)
 
@@ -110,9 +113,78 @@ def cashPayment_settle_add(request):
                     cashPayment_balance.save()
                     cashPayment_settle.save()
             cashPayment_settle.save()
+            # Simpan data attachment
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                 attachment = settleAttachment(attachment=f)
+                 attachment.cashPayment = cashPayment_settle
+                 attachment.save()
             messages.success(request, 'Success Add Settle Cash Payment', 'success')
             return redirect('accounting_app:cashPayment_index')
-
+        
+@login_required
+def cashPayment_adv_add(request):
+     if request.method == "POST":
+        cashPayment_adv_form = cashPaymentAdvForms(data=request.POST)
+        cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
+        balance_month = datetime.datetime.now().strftime('%Y%m')
+        balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+        balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+        if cashPayment_adv_form.is_valid():
+            #  simpan data cashPayment
+            cashPayment_adv = cashPayment_adv_form.save(commit=False)
+            ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
+            ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))        
+            cashPayment_adv.ticket_no = ticket_no
+            cashPayment_adv.is_adv = True
+            if(cashPayment_adv.is_debit):
+                if(cashPayment_balance is None):
+                    balance = cashPaymentBalanceForms().save(commit=False)
+                    if(balance_previous is not None):
+                        balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                        balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                        balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open + cashPayment_adv.rp_total
+                        balance.exchange_rate_open = balance_previous.exchange_rate_open
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance_previous.save()
+                        balance.save()
+                    else:
+                        balance.balance_cashPayment_open = cashPayment_adv.rp_total
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance.save()
+                else:
+                    cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open + cashPayment_adv.rp_total
+                    cashPayment_balance.save()
+                    cashPayment_adv.save()
+            if(cashPayment_adv.is_credit):
+                if(cashPayment_balance is None):
+                    balance = cashPaymentBalanceForms().save(commit=False)
+                    if(balance_previous is not None):
+                        balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                        balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                        balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open - cashPayment_adv.rp_total
+                        balance.exchange_rate_open = balance_previous.exchange_rate_open
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance_previous.save()
+                        balance.save()
+                    else:
+                        balance.balance_cashPayment_open = cashPayment_adv.rp_total
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance.save()
+                else:
+                    cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open - cashPayment_adv.rp_total
+                    cashPayment_balance.save()
+                    cashPayment_adv.save()
+            cashPayment_adv.save()
+            # Simpan data attachment
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                 attachment = advAttachment(attachment=f)
+                 attachment.cashPayment = cashPayment_adv
+                 attachment.save()
+            messages.success(request, 'Success Add Adv Cash Payment', 'success')
+            return redirect('accounting_app:cashPayment_index')
+        
 @login_required
 def cashPayment_debit_add(request):
      if request.method == "POST":
@@ -215,9 +287,9 @@ def cashPayment_add(request):
          approval_manager_form = cashPaymentApprovalManagerForms()
 
     context = {
-    'cashPayment_form'  : cashPaymentForms,
-    'cashPayment_attachment_form'  : cashPaymentAttachmentForms,
-    'manager_form'      : cashPaymentApprovalManagerForms,
+    'cashPayment_form'              : cashPaymentForms,
+    'cashPayment_attachment_form'   : cashPaymentAttachmentForms,
+    'manager_form'                  : cashPaymentApprovalManagerForms,
     }
     return render(request, 'accounting_app/cashPayment_add.html', context)
 
@@ -591,7 +663,7 @@ def export_cashPayment_xls(request):
     balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
     cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
     cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
-    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('updated_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
+    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('updated_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle', 'is_adv', 'adv',)
     balance_temp = cashPayment_balance_previous.balance_cashPayment_close
     balance_temp_us = balance_temp / cashPayment_balance_previous.exchange_rate_close
     
@@ -658,7 +730,10 @@ def export_cashPayment_xls(request):
         if(cashpayment[6]):
             remark = cashpayment[7]
         else:
-            remark = cashpayment[3]
+            if(cashpayment[8]):
+                remark = cashpayment[9]
+            else:
+                remark = cashpayment[3]
         if(cashpayment[1]):
             balance_temp_us_kiri = cashpayment[1] / cashPayment_balance_filter.exchange_rate_open
         else:
@@ -688,7 +763,7 @@ def export_cashPayment_xls(request):
             if col_num == 4:
                 ws.write(row_num, col_num, row[col_num], currency_us)
             if col_num == 6:
-                if cashpayment[6]:
+                if cashpayment[6] or cashpayment[8]:
                     ws.write(row_num, col_num, row[col_num], font_bold)
                 else:
                     ws.write(row_num, col_num, row[col_num], font_style)

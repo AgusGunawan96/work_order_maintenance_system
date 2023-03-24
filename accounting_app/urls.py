@@ -11,6 +11,7 @@ urlpatterns = [
     path('cashPayment/add/', views.cashPayment_add, name='cashPayment_add'),
     path('cashPayment/add_debit/', views.cashPayment_debit_add, name='cashPayment_debit_add'),
     path('cashPayment/add_settle/', views.cashPayment_settle_add, name='cashPayment_settle_add'),
+    path('cashPayment/add_adv/', views.cashPayment_adv_add, name='cashPayment_adv_add'),
     path('cashPayment/cashPayment_detail/<int:cashPayment_id>', views.cashPayment_detail, name='cashPayment_detail'),
     path('cashPayment/cashPayment_monitoring/', views.cashPayment_monitoring, name='cashPayment_monitoring'),
 

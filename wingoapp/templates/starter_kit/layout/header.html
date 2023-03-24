@@ -20,15 +20,44 @@
     </div> {% endcomment %}
     <div class="nav-right col pull-right right-menu">
       <ul class="nav-menus">
-        <li>
+        {% comment %} <li>
           <div class="mode"><i class="fa fa-moon-o"></i></div>
-        </li>
-        <li><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a>
+        </li> {% endcomment %}
+        {% comment %} <li><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a>
+        </li> {% endcomment %}
+        <li class="onhover-dropdown">
+          {% comment %} <div class="notification-box"><i data-feather="bell"></i><span class="badge badge-pill badge-primary">4</span></div> {% endcomment %}
+          <div class="notification-box"><i data-feather="bell"></i></div>
+          <div class="notification-dropdown onhover-show-div">
+            {% comment %} <div class="m-3"><a class="btn btn-dark w-100" href="email_inbox.html">You have 4 notifications</a></div> {% endcomment %}
+            <div class="m-3"><a class="btn btn-dark w-100" href="#">Notification</a></div>
+            <ul class="border-top">
+              <li>
+                <p class="mb-0 ps-4 p-relative"><a href="to-do.html"><i class="fa fa-circle me-3 font-info"> </i>IT Service<span class="pull-right">10 min.</span></a></p>
+              </li>
+              <li>
+                <p class="mb-0 ps-4 p-relative"><a href="to-do.html"><i class="fa fa-circle me-3 font-info"> </i>Cash Payment<span class="pull-right">10 min.</span></a></p>
+              </li>
+              <li>
+                <p class="mb-0 ps-4 p-relative"><a href="to-do.html"><i class="fa fa-circle me-3 font-info"> </i>Cash Payment<span class="pull-right">10 min.</span></a></p>
+              </li>
+              {% comment %} <li>
+                <p class="mb-0 ps-4 p-relative"><a href="to-do.html"><i class="fa fa-circle me-3 font-success"></i>Order Complete<span class="pull-right">1 hr</span></a></p>
+              </li>
+              <li>
+                <p class="mb-0 ps-4 p-relative"><a href="to-do.html"><i class="fa fa-circle me-3 font-info"></i>Tickets Generated<span class="pull-right">3 hr</span></a></p>
+              </li>
+              <li>
+                <p class="mb-0 ps-4 p-relative"><a href="to-do.html"><i class="fa fa-circle me-3 font-warning"></i>Delivery Complete<span class="pull-right">6 hr  </span></a></p>
+              </li> {% endcomment %}
+            </ul>
+            <div class="m-3 mt-1"><a class="btn btn-light w-100" href="email_inbox.html">View all</a></div>
+          </div>
         </li>
         <li class="onhover-dropdown">
           {% comment %} <div class="media profile-media"><img class="rounded-circle"
               src="{% static 'assets/images/avtar/emoji/9.png' %}" alt=""></div> {% endcomment %}
-              <div class="media profile-media">{{ request.user.first_name }} {{ request.user.last_name }} | {{ request.user.userprofileinfo.position }}</div>
+          <div class="notification-box">{{ request.user.first_name }} {{ request.user.last_name }} | {{ request.user.userprofileinfo.position }}</div>
           <ul class="profile-dropdown onhover-show-div">
             {% comment %} <li><i data-feather="user"></i><span>Account </span></li> {% endcomment %}
             {% comment %} <li><i data-feather="mail"></i><span>Inbox</span></li>

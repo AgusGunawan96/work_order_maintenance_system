@@ -20,6 +20,8 @@ class cashPayment (models.Model):
     is_debit        = models.BooleanField(default=False, blank=True, null=True )
     is_credit       = models.BooleanField(default=False, blank=True, null=True )
     is_settle       = models.BooleanField(default=False, blank=True, null=True )
+    is_adv          = models.BooleanField(default=False, blank=True, null=True )
+    adv             = models.CharField(max_length=200, null=True, blank=True)
     settle          = models.CharField(max_length=200, null=True, blank=True)
     remark          = models.CharField(max_length=200, null=True, blank=True)
     ticket_no       = models.CharField(max_length=128, null=True, blank=True)
@@ -49,7 +51,7 @@ class cashPayment (models.Model):
     description_12  = models.TextField(blank=True, null=True)
     rp_detail_12    = models.PositiveBigIntegerField(null=True, blank=True)
 
-    
+# ATTACHMENT START
 class cashPaymentAttachment(models.Model):
     cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
     attachment  = models.FileField(upload_to='cashPaymentAttachments/', null=False, blank=True)
@@ -57,6 +59,15 @@ class cashPaymentAttachment(models.Model):
 class cashierAttachment(models.Model):
     cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
     attachment  = models.FileField(upload_to='cashierAttachments/', null=False, blank=True)
+
+class settleAttachment(models.Model):
+    cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
+    attachment  = models.FileField(upload_to='settleAttachments/', null=False, blank=True)
+
+class advAttachment(models.Model):
+    cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
+    attachment  = models.FileField(upload_to='advAttachments/', null=False, blank=True)
+# ATTACHMENT END
 
 class cashPaymentApprovalManager(models.Model):
     cashPayment           = models.OneToOneField(cashPayment, on_delete=models.CASCADE, null=True, blank=True)
