@@ -67,6 +67,18 @@
               <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.reject_reason_supervisor}}</textarea >
             </div>
             {% endif %}
+            {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.is_rejected_manager == True %}
+            <div class="mb-3">
+              <label class="col-form-label">Reject Reason by {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.manager.first_name }} {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.manager.last_name }} (Approval Manager)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.ticketapprovalmanager.reject_reason_manager}}</textarea >
+            </div>
+            {% endif %}
+            {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.is_rejected_it == True %}
+            <div class="mb-3">
+              <label class="col-form-label">Reject Reason by {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.first_name }} {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.last_name }} (Approval IT)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.reject_reason_it}}</textarea >
+            </div>
+            {% endif %}
             {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.review_description %}
             <div class="mb-3">
               <label class="col-form-label">Review By {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.first_name }} {{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.it.last_name }} (Approval IT)</label>

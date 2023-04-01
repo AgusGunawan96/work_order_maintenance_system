@@ -46,7 +46,8 @@ class HardwareInfo(models.Model):
 # IP ADDRESS START
 class IPAddress(models.Model):
     hardware    = models.ForeignKey(Hardware, null=True, blank=True, on_delete=models.CASCADE)
-    name        = models.CharField(max_length=100)
+    ip          = models.CharField(max_length=100, blank=True, null=True)
+    name        = models.CharField(max_length=100, blank=True, null=True)
     is_used     = models.BooleanField(default=False, blank=True, null=True )
     created_at  = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
     updated_at  = models.DateTimeField('updated at', auto_now=True)

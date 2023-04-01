@@ -31,22 +31,46 @@
                     <tbody>
                         {% for cashPayment in cashPayments  %}
                         {% if cashPayment.ticket_no is null %}
+                        {% comment %}  {% endcomment %}
+                        {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident and cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.is_rejected_president == False and cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.is_approve_president == False %}
                         <tr class="table-info">
-                            <td> 
-                            <div class="d-inline-block align-middle"><a href="{% url 'accounting_app:cashPayment_detail' cashPayment.id %}"><span class="f-w-500">{{ cashPayment.assignee.first_name}} {{ cashPayment.assignee.last_name}}</span></a></div>
-                            </td>
-                            <td><p>{{ cashPayment.assignee.userprofileinfo.division.division_name}}</p></td>
-                            <td><p>{{ cashPayment.assignee.userprofileinfo.department.department_name}}</p></td>
-                            <td><p>{{ cashPayment.created_at }}</p></td>
-                            <td><p>-</p></td>
-                            {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident %}
-                            <td><p>Waiting For Approval President </p></td>
-                            {% elif cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager %}
-                            <td><p>Waiting For Approval Manager Accounting</p></td>
-                            {% elif cashPayment.cashpaymentapprovalmanager %}
-                            <td><p>Waiting For Approval Manager {{cashPayment.assignee.userprofileinfo.department.department_name}}</p></td>
-                            {% endif %}
-                        </tr>
+                          <td> 
+                          <div class="d-inline-block align-middle"><a href="{% url 'accounting_app:cashPayment_detail' cashPayment.id %}"><span class="f-w-500">{{ cashPayment.assignee.first_name}} {{ cashPayment.assignee.last_name}}</span></a></div>
+                          </td>
+                          <td><p>{{ cashPayment.assignee.userprofileinfo.division.division_name}}</p></td>
+                          <td><p>{{ cashPayment.assignee.userprofileinfo.department.department_name}}</p></td>
+                          <td><p>{{ cashPayment.created_at }}</p></td>
+                          <td><p>-</p></td>
+                          <td><p>Waiting For Approval President </p></td>
+                      </tr>
+                      {% else %}
+                      {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager and cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.is_rejected_manager_accounting == False and cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.is_approve_manager_accounting == False %}
+                      <tr class="table-info">
+                        <td> 
+                        <div class="d-inline-block align-middle"><a href="{% url 'accounting_app:cashPayment_detail' cashPayment.id %}"><span class="f-w-500">{{ cashPayment.assignee.first_name}} {{ cashPayment.assignee.last_name}}</span></a></div>
+                        </td>
+                        <td><p>{{ cashPayment.assignee.userprofileinfo.division.division_name}}</p></td>
+                        <td><p>{{ cashPayment.assignee.userprofileinfo.department.department_name}}</p></td>
+                        <td><p>{{ cashPayment.created_at }}</p></td>
+                        <td><p>-</p></td>
+                        <td><p>Waiting For Approval Manager Accounting</p></td>
+                    </tr>
+                    {% else %}
+                    {% if cashPayment.cashpaymentapprovalmanager and cashPayment.cashpaymentapprovalmanager.is_rejected_manager == False and cashPayment.cashpaymentapprovalmanager.is_approve_manager == False%}
+                    <tr class="table-info">
+                      <td> 
+                      <div class="d-inline-block align-middle"><a href="{% url 'accounting_app:cashPayment_detail' cashPayment.id %}"><span class="f-w-500">{{ cashPayment.assignee.first_name}} {{ cashPayment.assignee.last_name}}</span></a></div>
+                      </td>
+                      <td><p>{{ cashPayment.assignee.userprofileinfo.division.division_name}}</p></td>
+                      <td><p>{{ cashPayment.assignee.userprofileinfo.department.department_name}}</p></td>
+                      <td><p>{{ cashPayment.created_at }}</p></td>
+                      <td><p>-</p></td>
+                      <td><p>Waiting For Approval Manager {{cashPayment.assignee.userprofileinfo.department.department_name}}</p></td>
+                  </tr>
+                    {% endif %}
+                      {% endif %}
+                      {% comment %}  {% endcomment %}
+                        {% endif %}
                         {% else %}
                         {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.is_approve_cashier == False  %}
                         <tr class="table-success">

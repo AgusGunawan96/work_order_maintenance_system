@@ -5,7 +5,7 @@ from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManage
 class ipAddressForms(forms.ModelForm):
     class Meta():
         model = IPAddress
-        fields = ('name', 'hardware', )
+        fields = ('name', )
         widgets = {'is_used': forms.HiddenInput()}
 
 class hardwareForms(forms.ModelForm):

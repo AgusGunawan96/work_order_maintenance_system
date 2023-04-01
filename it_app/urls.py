@@ -24,12 +24,13 @@ urlpatterns = [
 
     # IP ADDRESS START
     path('ipAddress/', views.ipAddress_index, name = 'ipAddress_index'),
-    path('ipAddress/add/', views.ipAddress_add, name='ipAddress_add'),
+    path('ipAddress/add/<int:ipAddress_id>', views.ipAddress_add, name='ipAddress_add'),
+    path('ipAddress/unreg/<int:ipAddress_id>', views.ipAddress_unreg, name='ipAddress_unreg'),
     # IP ADDRESS END
 
     # HARDWARE START
     path('hardware/', views.hardware_index, name = 'hardware_index'),
-    path('hardware/add/', views.hardware_add, name='hardware_add'),
+    path('hardware/edit/', views.hardware_edit, name='hardware_edit'),
     # HARDWARE END
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

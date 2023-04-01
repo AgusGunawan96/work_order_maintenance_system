@@ -44,7 +44,20 @@
                             <td><p>{{ ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status }}</p></td>
                         </tr>
                         {% else %}
-                        {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status != 'Done' %}
+                          {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status != 'Done' and  ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit and  ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.is_rejected_it == False and  ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.is_approve_it == False %}
+                          <tr class="table-info">
+                              <td> 
+                              <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
+                              </td>
+                              <td><p>{{ ticket.assignee.userprofileinfo.division.division_name }}</p></td>
+                              <td><p>{{ ticket.type }}</p></td>
+                              <td><p>{{ ticket.created_at }}</p></td>
+                              <td><p>{{ ticket.title }}</p></td>
+                              <td><p>-</p></td>
+                              <td><p>Waiting For Approval IT</p></td>
+                          </tr>
+                          {% else %}
+                        {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status != 'Done' and  ticket.ticketapprovalsupervisor.ticketapprovalmanager and  ticket.ticketapprovalsupervisor.ticketapprovalmanager.is_rejected_manager == False and  ticket.ticketapprovalsupervisor.ticketapprovalmanager.is_approve_manager == False %}
                         <tr class="table-info">
                             <td> 
                             <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
@@ -54,14 +67,23 @@
                             <td><p>{{ ticket.created_at }}</p></td>
                             <td><p>{{ ticket.title }}</p></td>
                             <td><p>-</p></td>
-                            {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit %}
-                            <td><p>Waiting For Approval IT</p></td>
-                            {% elif ticket.ticketapprovalsupervisor.ticketapprovalmanager %}
                             <td><p>Waiting For Approval Manager {{ticket.assignee.userprofileinfo.department.department_name}}</p></td>
-                            {% elif ticket.ticketapprovalsupervisor %}
-                            <td><p>Waiting For Approval Supervisor {{ticket.assignee.userprofileinfo.division.division_name}}</p></td>
-                            {% endif %}
                         </tr>
+                        {% else %}
+                          {% if ticket.ticketapprovalsupervisor.ticketapprovalmanager.ticketapprovalit.ticketprogressit.status != 'Done' and  ticket.ticketapprovalsupervisor and  ticket.ticketapprovalsupervisor.is_rejected_supervisor == False  and  ticket.ticketapprovalsupervisor.is_approve_supervisor == False %}
+                          <tr class="table-info">
+                            <td> 
+                            <div class="d-inline-block align-middle"><a href="{% url 'it_app:ticket_detail' ticket.id %}"><span class="f-w-500">{{ ticket.assignee.first_name}} {{ ticket.assignee.last_name}}</span></a></div>
+                            </td>
+                            <td><p>{{ ticket.assignee.userprofileinfo.division.division_name }}</p></td>
+                            <td><p>{{ ticket.type }}</p></td>
+                            <td><p>{{ ticket.created_at }}</p></td>
+                            <td><p>{{ ticket.title }}</p></td>
+                            <td><p>-</p></td>
+                            <td><p>Waiting For Approval Supervisor {{ticket.assignee.userprofileinfo.division.division_name}}</p></td>
+                          </tr>
+                          {% endif %}
+                        {% endif %}
                         {% endif %}
                         {% endif %}
                         {% endfor %}

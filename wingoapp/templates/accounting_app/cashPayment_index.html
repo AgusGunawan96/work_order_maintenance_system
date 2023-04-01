@@ -29,7 +29,7 @@
   </div>
         <a class="btn btn-primary btn-lg" href="{% url 'accounting_app:cashPayment_add' %}"> <span class="fa fa-plus"></span> Add Cash Payment</a>
         {% if request.user.username == '007059' %}  
-        <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddDebit"> <span class="icon-credit-card"></span> Add Debit</a>
+        <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddDebit"> <span class="icon-credit-card"></span>Cash Received</a>
         <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddSettle"> <span class="icon-credit-card"></span> Add Settle</a>
         <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddAdv"> <span class="icon-credit-card"></span> Add Adv</a>
         {% endif %}

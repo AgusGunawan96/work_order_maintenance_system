@@ -7,4 +7,5 @@ urlpatterns = [
     path('', views.index, name = 'index'),
     # path('CreateUserdata/', views.CreateUserdata, name='CreateUserdata'),
     # path('CreateUserInfoData/', views.CreateUserInfoData, name='CreateUserInfoData'),
+    # path('CreateIPAddressUnRegistered/', views.CreateIPAddressUnRegistered, name='CreateIPAddressUnRegistered'),
 ]

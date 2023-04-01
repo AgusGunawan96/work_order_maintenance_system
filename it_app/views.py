@@ -18,20 +18,41 @@ def profile(request):
 # IP ADDRESS START
 @login_required
 def ipAddress_index(request):
-    ipAddress = IPAddress.objects.order_by('-created_at')
+    ipAddress = IPAddress.objects.order_by('-id')
     context = {
         'ipAddresses'          : ipAddress, 
-        'form_ipAddress'     : ipAddressForms,
+        'form_ipAddress'       : ipAddressForms,
         }
     # return HttpResponse('IP Address Index')
     return render(request, 'it_app/ipAddress_index.html', context)
 
 
 @login_required
-def ipAddress_add(request):
-    # return HttpResponse('IP Address Add')
-    return render(request, 'it_app/ipAddress_index.html')
+def ipAddress_add(request, ipAddress_id):
+    ipAddresses = IPAddress.objects.get(pk=ipAddress_id)
+    if request.method == "POST":
+        ipAddress_form = ipAddressForms(request.POST, instance=ipAddresses)
+        if ipAddress_form.is_valid():
+            ipAddress_register = ipAddress_form.save(commit=False)
+            ipAddress_register.is_used = True
+            ipAddress_register.save()
+    return redirect('it_app:ipAddress_index')
 
+@login_required
+def ipAddress_unreg(request, ipAddress_id):
+    ipAddresses = IPAddress.objects.get(pk=ipAddress_id)
+    post = request.POST.copy() 
+    post.update({'is_used': False})
+    request.POST = post
+    if request.method == "POST":
+        ipAddress_form = ipAddressForms(request.POST, instance=ipAddresses)
+        if ipAddress_form.is_valid():
+            ipAddress_unregister = ipAddress_form.save(commit=False)
+            ipAddress_unregister.name = ""
+            ipAddress_unregister.is_used = False
+            ipAddress_unregister.save()
+    # return HttpResponse(str(ipAddress_id) + " test")
+    return redirect('it_app:ipAddress_index')
 # IP ADDRESS END
 
 # HARDWARE START
@@ -39,15 +60,15 @@ def ipAddress_add(request):
 def hardware_index(request):
     hardware = Hardware.objects.order_by('-created_at')
     context = {
-        'hardware'          : hardware, 
-        'form_hardware'     : hardwareForms,
+        'hardwares'          : hardware, 
+        'form_hardware'      : hardwareForms,
         }
-    # return HttpResponse('IP Address Index')
+    # return HttpResponse(hardware)
     return render(request, 'it_app/hardware_index.html', context)
 
 
 @login_required
-def hardware_add(request):
+def hardware_edit(request):
     # return HttpResponse('Hardware Add')
     return render(request, 'it_app/hardware_index.html')
 

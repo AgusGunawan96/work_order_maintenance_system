@@ -15,7 +15,31 @@ from csv import reader
 @login_required
 def dashboard(request):
     return render(request, 'accounting_app/dashboard.html')
+
 # CASHPAYMENT START
+@login_required
+def cashPayment_settle_index(request, filter_month = False, filter_year = False):
+    settle = cashPayment.objects.filter(is_settle__exact = True)
+    attachment_settle = settleAttachment.objects.order_by('-id')
+    context = {
+        'settles'       : settle,
+        'settle_attachments'    : attachment_settle,
+    }
+    return render(request, 'accounting_app/cashPayment_settle_index.html', context)
+    return HttpResponse(settle)
+
+@login_required
+def cashPayment_adv_index(request, filter_month = False, filter_year = False):
+    adv = cashPayment.objects.filter(is_adv__exact = True)
+    attachment_adv = advAttachment.objects.order_by('-id')
+    context = {
+        'advs'   :   adv,
+        'adv_attachments'    : attachment_adv,
+    }
+    return render(request, 'accounting_app/cashPayment_adv_index.html', context)
+    return HttpResponse(adv)
+    return HttpResponse("Adv Index")    
+
 @login_required
 def cashPayment_index(request):
     cashPayments = cashPayment.objects.order_by('-created_at')
@@ -50,6 +74,7 @@ def cashPayment_index(request):
          'form_adv'                 : cashPaymentAdvForms,
     }
     return render(request, 'accounting_app/cashPayment_index.html', context)
+    return HttpResponse(calculate_cashPayment_balance_open())
 
 @login_required
 def cashPayment_monitoring(request):
@@ -78,38 +103,34 @@ def cashPayment_settle_add(request):
                 if(cashPayment_balance is None):
                     balance = cashPaymentBalanceForms().save(commit=False)
                     if(balance_previous is not None):
-                        balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                        balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
                         balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
-                        balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open + cashPayment_settle.rp_total
+                        balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
                         balance.exchange_rate_open = balance_previous.exchange_rate_open
                         balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                         balance_previous.save()
                         balance.save()
                     else:
-                        balance.balance_cashPayment_open = cashPayment_settle.rp_total
                         balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                         balance.save()
                 else:
-                    cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open + cashPayment_settle.rp_total
                     cashPayment_balance.save()
                     cashPayment_settle.save()
             if(cashPayment_settle.is_credit):
                 if(cashPayment_balance is None):
                     balance = cashPaymentBalanceForms().save(commit=False)
                     if(balance_previous is not None):
-                        balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                        balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
                         balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
-                        balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open - cashPayment_settle.rp_total
+                        balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
                         balance.exchange_rate_open = balance_previous.exchange_rate_open
                         balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                         balance_previous.save()
                         balance.save()
                     else:
-                        balance.balance_cashPayment_open = cashPayment_settle.rp_total
                         balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                         balance.save()
                 else:
-                    cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open - cashPayment_settle.rp_total
                     cashPayment_balance.save()
                     cashPayment_settle.save()
             cashPayment_settle.save()
@@ -141,38 +162,34 @@ def cashPayment_adv_add(request):
                 if(cashPayment_balance is None):
                     balance = cashPaymentBalanceForms().save(commit=False)
                     if(balance_previous is not None):
-                        balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                        balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
                         balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
-                        balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open + cashPayment_adv.rp_total
+                        balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
                         balance.exchange_rate_open = balance_previous.exchange_rate_open
                         balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                         balance_previous.save()
                         balance.save()
                     else:
-                        balance.balance_cashPayment_open = cashPayment_adv.rp_total
                         balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                         balance.save()
                 else:
-                    cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open + cashPayment_adv.rp_total
                     cashPayment_balance.save()
                     cashPayment_adv.save()
             if(cashPayment_adv.is_credit):
                 if(cashPayment_balance is None):
                     balance = cashPaymentBalanceForms().save(commit=False)
                     if(balance_previous is not None):
-                        balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                        balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
                         balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
-                        balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open - cashPayment_adv.rp_total
                         balance.exchange_rate_open = balance_previous.exchange_rate_open
+                        balance.balance_cashPayment_open = calculate_cashPayment_balance_open()
                         balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                         balance_previous.save()
                         balance.save()
                     else:
-                        balance.balance_cashPayment_open = cashPayment_adv.rp_total
                         balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                         balance.save()
                 else:
-                    cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open - cashPayment_adv.rp_total
                     cashPayment_balance.save()
                     cashPayment_adv.save()
             cashPayment_adv.save()
@@ -209,19 +226,17 @@ def cashPayment_debit_add(request):
             if(cashPayment_balance is None):
                 balance = cashPaymentBalanceForms().save(commit=False)
                 if(balance_previous is not None):
-                    balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                    balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
                     balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
-                    balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open + cashPayment_debit.rp_total
+                    balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
                     balance.exchange_rate_open = balance_previous.exchange_rate_open
                     balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                     balance_previous.save()
                     balance.save()
                 else:
-                    balance.balance_cashPayment_open = cashPayment_debit.rp_total
                     balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                     balance.save()
             else:
-                cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open + cashPayment_debit.rp_total
                 cashPayment_balance.save()
             cashPayment_debit.save()
 
@@ -499,19 +514,17 @@ def cashPayment_cashier_approval(request, cashPayment_id):
             if(cashPayment_balance is None):
                 balance = cashPaymentBalanceForms().save(commit=False)
                 if(balance_previous is not None):
-                    balance_previous.balance_cashPayment_close = balance_previous.balance_cashPayment_open
+                    balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
                     balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
-                    balance.balance_cashPayment_open = balance_previous.balance_cashPayment_open - cashPayment_credit.rp_total
+                    balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
                     balance.exchange_rate_open = balance_previous.exchange_rate_open
                     balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                     balance_previous.save()
                     balance.save()
                 else:
-                    balance.balance_cashPayment_open = balance.balance_cashPayment_open - cashPayment_credit.rp_total
                     balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
                     balance.save()
             else:
-                cashPayment_balance.balance_cashPayment_open = cashPayment_balance.balance_cashPayment_open - cashPayment_credit.rp_total
                 cashPayment_balance.save()
                         # Simpan data attachment
             files = request.FILES.getlist('attachment')
@@ -559,63 +572,80 @@ def export_users_csv(request):
 
 @login_required
 def export_cashPayment_csv(request):
-    post = request.POST.copy()
-    # return HttpResponse(post['date_filter'])
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="'+post['date_filter']+'.csv"'
-    writer = csv.writer(response)
-    writer.writerow([datetime.datetime.strptime(post['date_filter'], '%Y%m').strftime('%B - %Y'), '', '','', '' , '', '', '', '', '', ''])
-    writer.writerow(['Month', 'Date', 'Rpr', 'Rph', 'US$', 'ticket_no', 'remark', 'Debit', 'Credit', 'Balance Rp', 'Balance USD'])
-    # balance_month = datetime.datetime.now().strftime('%Y%m')
-    balance_month = post['date_filter']
-    balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
-    cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
-    cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
-    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('updated_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle')
-    # cashpayments = cashPayment.objects.all().values_list(datetime.datetime.strptime('updated_at', '%b'), datetime.datetime.strptime('updated_at', '%D'), 'rp_total', cashPayment_balance_previous.exchange_rate_close, 'rp_total' / cashPayment_balance_previous.exchange_rate_close, 'ticket_no', 'remark',  'remark',  'remark',  'remark')
-    # cashpayments = cashPayment.objects.raw(''' SELECT DATENAME(MONTH, accounting_app_cashpayment.updated_at) AS Month, DAY(accounting_app_cashpayment.updated_at) AS Date,
-	# 	                                    accounting_app_cashpayment.rp_total AS Rpr, accounting_app_cashpaymentbalance.exchange_rate_close AS Rph, 
-	# 	                                    accounting_app_cashpayment.rp_total / accounting_app_cashpaymentbalance.exchange_rate_close AS 'US$', accounting_app_cashpayment.ticket_no, 
-	# 	                                    accounting_app_cashpayment.remark, IIF(accounting_app_cashpayment.is_debit = 1, rp_total, 0) AS Debit, IIF(accounting_app_cashpayment.is_credit = 1, rp_total, 0) AS Credit
-    #                                         FROM accounting_app_cashpayment, accounting_app_cashpaymentbalance
-    #                                          '''
-    balance_temp = cashPayment_balance_previous.balance_cashPayment_close
-    balance_temp_us = balance_temp / cashPayment_balance_previous.exchange_rate_close
-    writer.writerow(['', '', '','', '' , '', 'Balance brought forward from '+ datetime.datetime.strftime(balance_month_previous, '%B - %Y'), '', '', balance_temp, balance_temp_us])
-    writer.writerow(['', '', '','', '' , '', '', '', '', balance_temp, balance_temp_us])
-    writer.writerow(['', '', '','', '' , '', '', '', '', balance_temp, balance_temp_us])
-    writer.writerow(['', '', '','', cashPayment_balance_filter.exchange_rate_open - cashPayment_balance_previous.exchange_rate_close, '', 'Exchange gain/loss frm '+ str(cashPayment_balance_previous.exchange_rate_close) + ' ,- to ' + str(cashPayment_balance_filter.exchange_rate_open), '', '', balance_temp, balance_temp_us])
-    for cashpayment in cashpayments:
-        if(cashpayment[4]):
-            rp_debit = cashpayment[1]
-            balance_temp = balance_temp + cashpayment[1]
-        else:
-            rp_debit = 0
-        if(cashpayment[5]):
-            rp_credit = cashpayment[1]
-            balance_temp = balance_temp - cashpayment[1]
-        else:
-            rp_credit = 0
-        if(cashpayment[6]):
-            remark = cashpayment[7]
-        else:
-            remark = cashpayment[3]
-        if(cashpayment[1]):
-            balance_temp_us_kiri = cashpayment[1] / cashPayment_balance_filter.exchange_rate_open
-        else:
-            balance_temp_us_kiri = 0
-        if(cashpayment[1]):
-            balance_temp_idr_kiri = cashpayment[1]
-        else:
-            balance_temp_idr_kiri = 0
+#     post = request.POST.copy()
+#     # return HttpResponse(post['date_filter'])
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="'+post['date_filter']+'.csv"'
+#     writer = csv.writer(response)
+#     writer.writerow([datetime.datetime.strptime(post['date_filter'], '%Y%m').strftime('%B - %Y'), '', '','', '' , '', '', '', '', '', ''])
+#     writer.writerow(['Month', 'Date', 'Rpr', 'Rph', 'US$', 'ticket_no', 'remark', 'Debit', 'Credit', 'Balance Rp', 'Balance USD'])
+#     # balance_month = datetime.datetime.now().strftime('%Y%m')
+#     balance_month = post['date_filter']
+#     balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+#     cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+#     cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
+#     cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('updated_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle', 'is_adv', 'adv')
+#     # cashpayments = cashPayment.objects.all().values_list(datetime.datetime.strptime('updated_at', '%b'), datetime.datetime.strptime('updated_at', '%D'), 'rp_total', cashPayment_balance_previous.exchange_rate_close, 'rp_total' / cashPayment_balance_previous.exchange_rate_close, 'ticket_no', 'remark',  'remark',  'remark',  'remark')
+#     # cashpayments = cashPayment.objects.raw(''' SELECT DATENAME(MONTH, accounting_app_cashpayment.updated_at) AS Month, DAY(accounting_app_cashpayment.updated_at) AS Date,
+# 	# 	                                    accounting_app_cashpayment.rp_total AS Rpr, accounting_app_cashpaymentbalance.exchange_rate_close AS Rph, 
+# 	# 	                                    accounting_app_cashpayment.rp_total / accounting_app_cashpaymentbalance.exchange_rate_close AS 'US$', accounting_app_cashpayment.ticket_no, 
+# 	# 	                                    accounting_app_cashpayment.remark, IIF(accounting_app_cashpayment.is_debit = 1, rp_total, 0) AS Debit, IIF(accounting_app_cashpayment.is_credit = 1, rp_total, 0) AS Credit
+#     #                                         FROM accounting_app_cashpayment, accounting_app_cashpaymentbalance
+#     #                                          '''
+#     balance_temp = cashPayment_balance_previous.balance_cashPayment_close
+#     balance_temp_us = balance_temp / cashPayment_balance_previous.exchange_rate_close
+#     writer.writerow(['', '', '','', '' , '', 'Balance brought forward from '+ datetime.datetime.strftime(balance_month_previous, '%B - %Y'), '', '', balance_temp, balance_temp_us])
+#     writer.writerow(['', '', '','', '' , '', '', '', '', balance_temp, balance_temp_us])
+#     writer.writerow(['', '', '','', '' , '', '', '', '', balance_temp, balance_temp_us])
+#     writer.writerow(['', '', '','', cashPayment_balance_filter.exchange_rate_open - cashPayment_balance_previous.exchange_rate_close, '', 'Exchange gain/loss frm '+ str(cashPayment_balance_previous.exchange_rate_close) + ' ,- to ' + str(cashPayment_balance_filter.exchange_rate_open), '', '', balance_temp, balance_temp_us])
+#     for cashpayment in cashpayments:
+#         if(cashpayment[4]):
+#             rp_debit = cashpayment[1]
+#             balance_temp = balance_temp + cashpayment[1]
+#         else:
+#             rp_debit = 0
+#         if(cashpayment[5]):
+#             rp_credit = cashpayment[1]
+#             balance_temp = balance_temp - cashpayment[1]
+#         else:
+#             rp_credit = 0
+#         if(cashpayment[6]):
+#             remark = cashpayment[7]
+#         else:
+#             if(cashpayment[8]):
+#                 remark = cashpayment[9]
+#             else:
+#                 remark = cashpayment[3]
+#         if(cashpayment[1]):
+#             balance_temp_us_kiri = cashpayment[1] / cashPayment_balance_filter.exchange_rate_open
+#         else:
+#             balance_temp_us_kiri = 0
+#         if(cashpayment[1]):
+#             balance_temp_idr_kiri = cashpayment[1]
+#         else:
+#             balance_temp_idr_kiri = 0
         
 
-        balance_temp_us = balance_temp / cashPayment_balance_filter.exchange_rate_open
-        writer.writerow([datetime.datetime.strftime(cashpayment[0], '%b'), datetime.datetime.strftime(cashpayment[0], '%d'), balance_temp_idr_kiri,cashPayment_balance_filter.exchange_rate_open, balance_temp_us_kiri , cashpayment[2], remark, rp_debit, rp_credit, balance_temp, balance_temp_us])
+#         balance_temp_us = balance_temp / cashPayment_balance_filter.exchange_rate_open
+#         writer.writerow([datetime.datetime.strftime(cashpayment[0], '%b'), datetime.datetime.strftime(cashpayment[0], '%d'), balance_temp_idr_kiri,cashPayment_balance_filter.exchange_rate_open, balance_temp_us_kiri , cashpayment[2], remark, rp_debit, rp_credit, balance_temp, balance_temp_us])
     
-    return response
-        # return HttpResponse(cashpayment)
-    
+#     return response
+        return HttpResponse("di Uncomment dulu")
+
+def calculate_cashPayment_balance_open():
+    balance_month = datetime.datetime.now().strftime('%Y%m')
+    balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+    balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+    balance_temp = balance_previous.balance_cashPayment_close
+    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month_previous).all().values_list('created_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle', 'is_adv', 'adv',)
+    for cashpayment in cashpayments:
+        if(cashpayment[4]):
+            balance_temp = balance_temp + cashpayment[1]
+        if(cashpayment[5]):
+            balance_temp = balance_temp - cashpayment[1]
+    return balance_temp
+
+
 def export_cashPayment_xls(request):
     post = request.POST.copy()
     response = HttpResponse(content_type='application/ms-excel')
@@ -638,6 +668,14 @@ def export_cashPayment_xls(request):
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column 
 
+    balance_month = post['date_filter']
+    balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+    cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+    cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
+    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('created_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle', 'is_adv', 'adv',)
+    balance_temp = cashPayment_balance_previous.balance_cashPayment_close
+    balance_temp_us = balance_temp / cashPayment_balance_previous.exchange_rate_close
+
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
     #Format Currency
@@ -645,7 +683,10 @@ def export_cashPayment_xls(request):
     currency_us.num_format_str = '$#,##0.00'
     #Format Currency
     currency_idr = xlwt.XFStyle()
-    currency_idr.num_format_str = '#,##0.00'
+    currency_idr.num_format_str = f'#,##0.00'
+    #Format Currency Kredit
+    currency_idr_kredit = xlwt.XFStyle()
+    currency_idr_kredit.num_format_str = f'(#,##0.00)'
     #Format currency IDR Bold
     currency_idr_bold = xlwt.XFStyle()
     currency_idr_bold.num_format_str = '#,##0.00'
@@ -658,15 +699,6 @@ def export_cashPayment_xls(request):
     font_bold = xlwt.XFStyle()
     font_bold.font.bold = True
 
-
-    balance_month = post['date_filter']
-    balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
-    cashPayment_balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
-    cashPayment_balance_filter = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=balance_month).first()
-    cashpayments = cashPayment.objects.filter(ticket_no__contains=balance_month).all().values_list('updated_at', 'rp_total' , 'ticket_no', 'remark', 'is_debit', 'is_credit', 'is_settle', 'settle', 'is_adv', 'adv',)
-    balance_temp = cashPayment_balance_previous.balance_cashPayment_close
-    balance_temp_us = balance_temp / cashPayment_balance_previous.exchange_rate_close
-    
     row_num = 2
     font_style = xlwt.XFStyle()
     columns = ['', '', '','', '' , '', 'Balance brought forward from '+ datetime.datetime.strftime(balance_month_previous, '%B - %Y'), '', '', balance_temp, balance_temp_us]
@@ -712,9 +744,10 @@ def export_cashPayment_xls(request):
         if col_num == 10:
             ws.write(row_num, col_num, columns[col_num], currency_us)
 
+    # BODY DARI Excel laporan yang akan dibuat
     balance_total_debit_temp = 0
     balance_total_credit_temp = 0
-    for cashpayment in cashpayments:
+    for cashpayment in cashpayments:    
         if(cashpayment[4]):
             rp_debit = cashpayment[1]
             balance_temp = balance_temp + cashpayment[1]
@@ -748,7 +781,8 @@ def export_cashPayment_xls(request):
                 datetime.datetime.strftime(cashpayment[0], '%d'),
                 balance_temp_idr_kiri,
                 cashPayment_balance_filter.exchange_rate_open,
-                balance_temp_us_kiri,cashpayment[2],
+                balance_temp_us_kiri,
+                cashpayment[2],
                 remark,
                 rp_debit,
                 rp_credit,
@@ -757,7 +791,10 @@ def export_cashPayment_xls(request):
         for col_num in range(len(row)):
             ws.write(row_num, col_num, row[col_num], font_style)
             if col_num == 2:
-                ws.write(row_num, col_num, row[col_num], currency_idr)
+                if(row[8]):
+                    ws.write(row_num, col_num, row[col_num], currency_idr_kredit)
+                else:
+                    ws.write(row_num, col_num, row[col_num], currency_idr)
             if col_num == 3:
                 ws.write(row_num, col_num, row[col_num], currency_idr)
             if col_num == 4:

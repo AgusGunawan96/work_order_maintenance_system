@@ -6,8 +6,10 @@ from django.conf import settings
 app_name ='accounting_app'
 
 urlpatterns = [
-    path('', views.dashboard, name = 'dashboard'),
+    path('dashboard/', views.dashboard, name = 'accounting_dashboard'),
     path('cashPayment', views.cashPayment_index, name = 'cashPayment_index'),
+    path('settle', views.cashPayment_settle_index, name = "cashPayment_settle_index"),
+    path('adv', views.cashPayment_adv_index, name = "cashPayment_adv_index"),
     path('cashPayment/add/', views.cashPayment_add, name='cashPayment_add'),
     path('cashPayment/add_debit/', views.cashPayment_debit_add, name='cashPayment_debit_add'),
     path('cashPayment/add_settle/', views.cashPayment_settle_add, name='cashPayment_settle_add'),

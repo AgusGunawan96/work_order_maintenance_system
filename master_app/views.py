@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from csv import reader
 from django.contrib.auth.models import User, Group
 from master_app.models import UserProfileInfo
+from it_app.models import IPAddress, Hardware
 from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
@@ -109,26 +110,22 @@ def place_value(number):
 # LANJUTAN
 @login_required
 def CreateIPAddressRegistered(request):
-    with open('templates/csv/list.csv', 'r') as csv_file:
+    with open('templates/csv/list_registered_ip.csv', 'r') as csv_file:
         csvf = reader(csv_file)
         data = []
-        for user_id, department_id, division_id, section_id, position, is_supervisor, is_manager, is_bod, *__ in csvf:
-            user = UserProfileInfo(user_id=user_id, department_id=department_id, division_id = division_id, section_id = section_id
-            ,  position = position, is_supervisor = is_supervisor, is_manager = is_manager, is_bod = is_bod
-             )
-            data.append(user)
-        UserProfileInfo.objects.bulk_create(data)
-    return JsonResponse('user Info csv is now working', safe=False)
+        for hardware_id, ip, name, *__ in csvf:
+            IPAddressRegistered = IPAddress(hardware_id = hardware_id,ip = ip, name = name, is_used  = True)
+            data.append(IPAddressRegistered)
+        IPAddress.objects.bulk_create(data)
+    return JsonResponse('IP Address Registered csv is now working', safe=False)
 
 @login_required
 def CreateIPAddressUnRegistered(request):
-    with open('templates/csv/list.csv', 'r') as csv_file:
+    with open('templates/csv/list_unregistered_ip.csv', 'r') as csv_file:
         csvf = reader(csv_file)
         data = []
-        for user_id, department_id, division_id, section_id, position, is_supervisor, is_manager, is_bod, *__ in csvf:
-            user = UserProfileInfo(user_id=user_id, department_id=department_id, division_id = division_id, section_id = section_id
-            ,  position = position, is_supervisor = is_supervisor, is_manager = is_manager, is_bod = is_bod
-             )
-            data.append(user)
-        UserProfileInfo.objects.bulk_create(data)
-    return JsonResponse('user Info csv is now working', safe=False)
+        for ip, *__ in csvf:
+            IPAddressUNRegistered = IPAddress(ip = ip, is_used  = False)
+            data.append(IPAddressUNRegistered)
+        IPAddress.objects.bulk_create(data)
+    return JsonResponse('IP Address Un Registered csv is now working', safe=False)
