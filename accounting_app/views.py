@@ -922,7 +922,7 @@ def advance_cashier_approval(request, cashPayment_id):
                     cashPayment_form = cashPayment_credit_form.save(commit=False)
                     cashPayment_id = cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.id
                     cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
-                    cashPayment_credit.remark = cashPayment_form.remark
+                    cashPayment_credit.adv = cashPayment_form.remark
                     cashPayment_credit.type   = cashPayment_form.type
                     # Mengurangi Balance pada Master Balance
                     # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
@@ -965,7 +965,7 @@ def advance_cashier_approval(request, cashPayment_id):
                 cashPayment_form = cashPayment_credit_form.save(commit=False)
                 cashPayment_id = cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.id
                 cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
-                cashPayment_credit.remark = cashPayment_form.remark
+                cashPayment_credit.adv = cashPayment_form.remark
                 cashPayment_credit.type   = cashPayment_form.type
                 # Mengurangi Balance pada Master Balance
                 # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
