@@ -14,7 +14,7 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Cash Payment Voucher | User Information Detail {% if cashPayment.ticket_no %}| {{cashPayment.ticket_no}}{% endif %}</h5>
+            <h5>Advance Voucher | User Information Detail {% if cashPayment.ticket_no %}| {{cashPayment.ticket_no}}{% endif %}</h5>
           </div>
           <hr class="mt-4 mb-2">
             <div class="card-body">
@@ -48,7 +48,7 @@
         </div>
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Cash Payment Voucher | Voucher Detail</h5>
+            <h5>Advance Voucher | Voucher Detail</h5>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -184,22 +184,22 @@
                 </div>
               </div>
                </div>
-            {% if cashPayment.cashpaymentapprovalmanager.is_rejected_manager == True %}
+            {% if cashPayment.advanceapprovalmanager.is_rejected_manager == True %}
             <div class="mb-3">
-              <label class="col-form-label">Reject Reason by {{ cashPayment.cashpaymentapprovalmanager.manager.first_name }} {{ cashPayment.cashpaymentapprovalmanager.manager.last_name }} (Approval Manager)</label>
-              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.cashpaymentapprovalmanager.reject_reason_manager}}</textarea >
+              <label class="col-form-label">Reject Reason by {{ cashPayment.advanceapprovalmanager.manager.first_name }} {{ cashPayment.advanceapprovalmanager.manager.last_name }} (Approval Manager)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.advanceapprovalmanager.reject_reason_manager}}</textarea >
             </div>
             {% endif %}
-            {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.reject_reason_manager_accounting %}
+            {% if cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.reject_reason_manager_accounting %}
             <div class="mb-3">
-              <label class="col-form-label">Reject Reason by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.manager_accounting.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.manager_accounting.last_name }} (Approval IT)</label>
-              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.reject_reason_manager_accounting}}</textarea >
+              <label class="col-form-label">Reject Reason by {{ cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.manager_accounting.first_name }} {{ cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.manager_accounting.last_name }} (Approval IT)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.reject_reason_manager_accounting}}</textarea >
             </div>
             {% endif %}
-            {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.reject_reason_president %}
+            {% if cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.advanceapprovalpresident.reject_reason_president %}
             <div class="mb-3">
-              <label class="col-form-label">Reject Reason by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.president.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.president.last_name }} (Approval IT)</label>
-              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.reject_reason_president}}</textarea >
+              <label class="col-form-label">Reject Reason by {{ cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.advanceapprovalpresident.president.first_name }} {{ cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.advanceapprovalpresident.president.last_name }} (Approval IT)</label>
+              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.advanceapprovalpresident.reject_reason_president}}</textarea >
             </div>
             {% endif %}
             </form>
@@ -207,7 +207,7 @@
         </div>
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Cash Payment Voucher | Attachment</h5>
+            <h5>Advance Voucher | Attachment</h5>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">

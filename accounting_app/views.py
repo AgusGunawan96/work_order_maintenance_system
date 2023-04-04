@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment, advAttachment, settleAttachment
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment, advAttachment, settleAttachment, advanceApprovalManager, advanceApprovalAccountingManager, advanceApprovalPresident, advanceApprovalCashier
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms, cashPaymentSettleAttachmentForms, cashPaymentAdvAttachmentForms, cashPaymentAdvForms, cashPaymentCashierForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms, cashPaymentSettleAttachmentForms, cashPaymentAdvAttachmentForms, cashPaymentAdvForms, cashPaymentCashierForms, advanceApprovalManagerForms, advanceApprovalAccountingManagerForms, advanceApprovalPresidentForms, advanceApprovalCashierForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse,JsonResponse
 import datetime
@@ -310,6 +310,7 @@ def cashPayment_add(request):
     }
     return render(request, 'accounting_app/cashPayment_add.html', context)
 
+# CASH PAYMENT START
 @login_required
 def cashPayment_detail(request, cashPayment_id):
     cashPayment_detail = cashPayment.objects.get(pk=cashPayment_id)
@@ -606,7 +607,416 @@ def cashPayment_cashier_reject(request,cashPayment_id):
             messages.success(request, 'Reject Succcesfully')
             return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_cashier_form)   
+# CASH PAYMENT END
 
+# ADVANCE START
+@login_required
+def advance_add(request):
+    if request.method == "POST":
+         cashPayment_form               = cashPaymentForms (data=request.POST)
+         approval_manager_form          = advanceApprovalManagerForms(data=request.POST)
+         cashPayment_attachment_form    = cashPaymentAdvAttachmentForms(data=request.POST)
+         if cashPayment_form.is_valid() and approval_manager_form.is_valid() and cashPayment_attachment_form.is_valid() :
+            # Simpan data cashPayment
+            cashPayment = cashPayment_form.save(commit=False)
+            cashPayment.assignee = request.user
+            cashPayment.save()
+            # Simpan data RP total di cashPayment
+            rp_total = 0
+            if(cashPayment.rp_detail_1 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_1
+            if(cashPayment.rp_detail_2 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_2
+            if(cashPayment.rp_detail_3 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_3
+            if(cashPayment.rp_detail_4 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_4
+            if(cashPayment.rp_detail_5 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_5
+            if(cashPayment.rp_detail_6 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_6
+            if(cashPayment.rp_detail_7 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_7
+            if(cashPayment.rp_detail_8 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_8
+            if(cashPayment.rp_detail_9 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_9
+            if(cashPayment.rp_detail_10 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_10
+            if(cashPayment.rp_detail_11 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_11
+            if(cashPayment.rp_detail_12 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_12
+            cashPayment.rp_total = rp_total
+            cashPayment.is_adv = True
+            cashPayment.save()
+            # Simpan data attachment
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                 attachment = advAttachment(attachment=f)
+                 attachment.cashPayment = cashPayment
+                 attachment.save()
+            # membuat data Approval Manager
+            manager = approval_manager_form.save(commit=False)
+            manager.advance = cashPayment
+            manager.save()
+            messages.success(request, 'Success Add Advance', 'success')
+            return redirect('accounting_app:advance_index')
+         else:
+              print(cashPayment_form.errors and approval_manager_form.errors and cashPayment_attachment_form)
+    else:
+         cashPayment_form = cashPaymentForms()
+         cashPayment_attachment_form = cashPaymentAdvAttachmentForms()
+         approval_manager_form = advanceApprovalManagerForms()
+
+    context = {
+    'cashPayment_form'              : cashPaymentForms,
+    'cashPayment_attachment_form'   : cashPaymentAdvAttachmentForms,
+    'manager_form'                  : advanceApprovalManagerForms,
+    }
+    return render(request, 'accounting_app/advance_add.html', context)
+
+@login_required
+def advance_index(request):
+    cashPayments        = cashPayment.objects.order_by('-created_at')
+    managers            = advanceApprovalManager.objects.order_by('-id')
+    managersAccountings = advanceApprovalAccountingManager.objects.order_by('-id')
+    presidents          = advanceApprovalPresident.objects.order_by('-id')
+    cashiers            = advanceApprovalCashier.objects.order_by('-id')
+    attachments         = advAttachment.objects.order_by('-id')
+    downloadcsv         = cashPaymentBalance.objects.order_by('cashPayment_balance_no')
+    downloadcsv         = list(downloadcsv)
+    del downloadcsv[0]
+    # return HttpResponse(attachments)
+        
+    context = {
+         'cashpayments'             : cashPayments,
+         'managers'                 : managers,
+         'managersAccountings'      : managersAccountings,
+         'presidents'               : presidents,
+         'cashiers'                 : cashiers,
+         'attachments'              : attachments,
+         'csv_list'                 : downloadcsv,
+         'form_cashier_attachment'  : cashPaymentCashierAttachmentForms,
+         'form_settle_attachment'   : cashPaymentSettleAttachmentForms,
+         'form_adv_attachment'      : cashPaymentAdvAttachmentForms,
+         'form_manager'             : advanceApprovalManagerForms,
+         'form_manager_accounting'  : advanceApprovalAccountingManagerForms,
+         'form_president'           : advanceApprovalPresidentForms,
+         'form_cashier'             : advanceApprovalCashierForms,
+         'form_cashier_transfer'    : cashPaymentCashierForms,
+         'form_debit'               : cashPaymentDebitForms,
+         'form_credit'              : cashPaymentCreditForms,
+         'form_settle'              : cashPaymentSettleForms,
+         'form_adv'                 : cashPaymentAdvForms,
+    }
+    return render(request, 'accounting_app/advance_index.html', context)
+
+@login_required
+def advance_monitoring(request):
+    cashPayments = cashPayment.objects.order_by('created_at')
+    context = {
+         'cashPayments'             : cashPayments,
+    }
+    return render(request, 'accounting_app/advance_monitoring.html', context)
+
+@login_required
+def advance_detail(request, cashPayment_id):
+    advance_detail = cashPayment.objects.get(pk=cashPayment_id)
+    attachment = advAttachment.objects.filter(cashPayment = advance_detail).values('attachment',)
+    context = {
+         'cashPayment'  : advance_detail,
+         'attachment'   : attachment,
+    }
+    return render(request, 'accounting_app/advance_detail.html', context)
+
+@login_required
+def advance_manager_check(request, cashPayment_id):
+    try:
+        # Mengambil data manager yang akan di check berdasarkan cashPayment id
+        manager = advanceApprovalManager.objects.get(pk=cashPayment_id)
+        # Approve Check
+        manager.is_checked_manager = True
+        manager.save()
+        messages.success(request, 'Checked Succcesfully')
+        return redirect('accounting_app:advance_index')
+    except advanceApprovalManager.DoesNotExist:
+         raise Http404("Advance Error!")
+    
+@login_required
+def advance_manager_approve(request, cashPayment_id):
+    try:
+        # mengambil data task yang akan di approve berdasarkan cashPayment id
+        manager = advanceApprovalManager.objects.get(pk=cashPayment_id)
+        # mengapprove
+        manager.is_approve_manager = True
+        manager.manager = request.user
+        manager.save()
+        # membuat approval manager accounting
+        approval_manager_accounting_form = advanceApprovalAccountingManagerForms(data=request.POST)
+        manager_accounting = approval_manager_accounting_form.save(commit=False)
+        manager_accounting.advance_approval_manager = manager
+        manager_accounting.save()
+        # set Message sukses dan redirect ke halaman daftar CashPayment
+        messages.success(request, 'Approved Successfully')
+        return redirect('accounting_app:advance_index')
+    except advanceApprovalManager.DoesNotExist:
+        raise Http404("Advance Error!")
+
+@login_required
+def advance_manager_reject(request,cashPayment_id):
+    # try:
+        # mengambil data task yang akan reject berdasarkan task id
+        manager = advanceApprovalManager.objects.get(pk=cashPayment_id)
+        post = request.POST.copy() 
+        post.update({'is_rejected_manager': True})
+        request.POST = post
+        approval_manager_form = advanceApprovalManagerForms(request.POST, instance=manager)
+        if approval_manager_form.is_valid():
+            reject = approval_manager_form.save(commit=False)
+            reject.manager = request.user
+            reject.save()
+            messages.success(request, 'Reject Succcesfully')
+            return redirect('accounting_app:advance_index')
+        return HttpResponse(approval_manager_form)
+
+@login_required
+def advance_accounting_manager_check(request, cashPayment_id):
+    try:
+        # Mengambil data manager accounting yang akan di check berdasarkan cashPayment id
+        manager_accounting = advanceApprovalAccountingManager.objects.get(pk=cashPayment_id)
+        # Approve Check
+        manager_accounting.is_checked_manager_accounting = True
+        manager_accounting.save()
+        messages.success(request, 'Checked Succcesfully')
+        return redirect('accounting_app:advance_index')
+    except advanceApprovalAccountingManager.DoesNotExist:
+         raise Http404("Advance Error!")
+
+@login_required
+def advance_accounting_manager_approve(request, cashPayment_id):
+    try:
+        manager_accounting = advanceApprovalAccountingManager.objects.get(pk=cashPayment_id)
+        # mengapprove
+        manager_accounting.is_approve_manager_accounting = True
+        manager_accounting.manager_accounting = request.user
+        manager_accounting.save()
+        #  membuat approval president
+        approval_president_form = advanceApprovalPresidentForms(data=request.POST)
+        president = approval_president_form.save(commit=False)
+        president.advance_approval_accounting_manager = manager_accounting
+        president.save()
+        messages.success(request, 'Approve Succcesfully')
+        return redirect('accounting_app:advance_index')
+    except advanceApprovalAccountingManager.DoesNotExist:
+        raise Http404("Advance Error!")
+
+@login_required
+def advance_accounting_manager_reject(request,cashPayment_id):
+    # try:
+        # mengambil data task yang akan reject berdasarkan task id
+        accounting_manager = advanceApprovalAccountingManager.objects.get(pk=cashPayment_id)
+        post = request.POST.copy() 
+        post.update({'is_rejected_manager_accounting': True})
+        request.POST = post
+        approval_accounting_manager_form = advanceApprovalAccountingManagerForms(request.POST, instance=accounting_manager)
+        if approval_accounting_manager_form.is_valid():
+            reject = approval_accounting_manager_form.save(commit=False)
+            reject.manager_accounting = request.user
+            reject.save()
+            messages.success(request, 'Reject Succcesfully')
+            return redirect('accounting_app:advance_index')
+        return HttpResponse(approval_accounting_manager_form)   
+
+@login_required
+def advance_president_check(request, cashPayment_id):
+    try:
+        # Mengambil data manager accounting yang akan di check berdasarkan cashPayment id
+        president = advanceApprovalPresident.objects.get(pk=cashPayment_id)
+        # Approve Check
+        president.is_checked_president = True
+        president.save()
+        messages.success(request, 'Checked Succcesfully')
+        return redirect('accounting_app:advance_index')
+    except advanceApprovalPresident.DoesNotExist:
+         raise Http404("Advance Error!")
+
+@login_required
+def advance_president_approval(request, cashPayment_id):
+    try:
+        president = advanceApprovalPresident.objects.get(pk=cashPayment_id)
+        # mengapprove
+        president.is_approve_president = True
+        president.president = request.user
+        president.save()
+        # membuat approval cashier
+        approval_cashier_form = advanceApprovalCashierForms(data=request.POST)
+        ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
+        ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))
+        cashier = approval_cashier_form.save(commit=False)
+        cashier.advance_approval_president = president
+        cashier.save()
+        # Create Ticket number dan credit menjadi True buat cashPayment
+        cashPayment_id = president.advance_approval_accounting_manager.advance_approval_manager.advance.id
+        cashpayment = cashPayment.objects.get(pk=cashPayment_id)
+        cashpayment.is_credit = True
+        cashpayment.ticket_no = ticket_no
+        cashpayment.save()
+       
+        messages.success(request, 'Approval Succcesfully')
+        return redirect('accounting_app:advance_index')
+    except cashPaymentApprovalPresident.DoesNotExist:
+        raise Http404("Advance Error!")
+    
+@login_required
+def advance_president_reject(request,cashPayment_id):
+    # try:
+        # mengambil data task yang akan reject berdasarkan task id
+        president = advanceApprovalPresident.objects.get(pk=cashPayment_id)
+        post = request.POST.copy() 
+        post.update({'is_rejected_president': True})
+        request.POST = post
+        approval_president_form = advanceApprovalPresidentForms(request.POST, instance=president)
+        if approval_president_form.is_valid():
+            reject = approval_president_form.save(commit=False)
+            reject.president = request.user
+            reject.save()
+            messages.success(request, 'Reject Succcesfully')
+            return redirect('accounting_app:advance_index')
+        return HttpResponse(approval_president_form) 
+
+@login_required
+def advance_cashier_check(request, cashPayment_id):
+    try:
+        # Mengambil data manager accounting yang akan di check berdasarkan cashPayment id
+        cashier = advanceApprovalCashier.objects.get(pk=cashPayment_id)
+        # Approve Check
+        cashier.is_checked_cashier = True
+        cashier.save()
+        messages.success(request, 'Checked Succcesfully')
+        return redirect('accounting_app:advance_index')
+    except advanceApprovalCashier.DoesNotExist:
+         raise Http404("Advance Error!")
+
+@login_required
+def advance_cashier_approval(request, cashPayment_id):
+    try:
+     if request.method == "POST":
+        cashPayment_credit_form = cashPaymentCashierForms(data=request.POST)
+        cashier = advanceApprovalCashier.objects.get(pk=cashPayment_id)
+        # cashPayment_balance = masterAccounting.objects.get(pk=1)
+        cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
+        balance_month = datetime.datetime.now().strftime('%Y%m')
+        balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+        balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+        if request.POST['password'] and request.POST['type'] == 'Transfer Cash':
+            identity = cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.assignee
+            user = User.objects.get(username=identity)
+            valid_password = check_password(request.POST['password'], user.password)
+            if valid_password: #apabila password sudah benar
+                if cashPayment_credit_form.is_valid():
+                    # Mengapprove
+                    cashier.is_approve_cashier = True
+                    cashier.cashier = request.user
+                    # Menambahkan remark pada cashPayment
+                    cashPayment_form = cashPayment_credit_form.save(commit=False)
+                    cashPayment_id = cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.id
+                    cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
+                    cashPayment_credit.remark = cashPayment_form.remark
+                    cashPayment_credit.type   = cashPayment_form.type
+                    # Mengurangi Balance pada Master Balance
+                    # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
+                    # cashPayment_balance.save()
+                    # Edit untuk cashPayment
+                    if(cashPayment_balance is None):
+                        balance = cashPaymentBalanceForms().save(commit=False)
+                        if(balance_previous is not None):
+                            balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
+                            balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                            balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
+                            balance.exchange_rate_open = balance_previous.exchange_rate_open
+                            balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                            balance_previous.save()
+                            balance.save()
+                        else:
+                            balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                            balance.save()
+                    else:
+                        cashPayment_balance.save()
+                                # Simpan data attachment
+                    files = request.FILES.getlist('attachment')
+                    for f in files:
+                         attachment = cashierAttachment(attachment=f)
+                         attachment.cashPayment = cashPayment_credit
+                         attachment.save()
+                    cashPayment_credit.save()
+                    cashier.save()
+                    messages.success(request, 'Transfer Succcesfully')
+            else:
+                messages.warning(request, 'Password yang dimasukan salah')
+                return redirect('accounting_app:advance_index')
+            # mari kita buat Validasi password dari Assignee, apakah sudah sesuai apa belum
+        else:
+            if cashPayment_credit_form.is_valid():
+                # Mengapprove
+                cashier.is_approve_cashier = True
+                cashier.cashier = request.user
+                # Menambahkan remark pada cashPayment
+                cashPayment_form = cashPayment_credit_form.save(commit=False)
+                cashPayment_id = cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.id
+                cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
+                cashPayment_credit.remark = cashPayment_form.remark
+                cashPayment_credit.type   = cashPayment_form.type
+                # Mengurangi Balance pada Master Balance
+                # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
+                # cashPayment_balance.save()
+                # Edit untuk cashPayment
+                if(cashPayment_balance is None):
+                    balance = cashPaymentBalanceForms().save(commit=False)
+                    if(balance_previous is not None):
+                        balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
+                        balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                        balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
+                        balance.exchange_rate_open = balance_previous.exchange_rate_open
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance_previous.save()
+                        balance.save()
+                    else:
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance.save()
+                else:
+                    cashPayment_balance.save()
+                            # Simpan data attachment
+                files = request.FILES.getlist('attachment')
+                for f in files:
+                     attachment = cashierAttachment(attachment=f)
+                     attachment.cashPayment = cashPayment_credit
+                     attachment.save()
+                cashPayment_credit.save()
+                cashier.save()
+                messages.success(request, 'Transfer Succcesfully')
+        return redirect('accounting_app:advance_index')
+    except advanceApprovalCashier.DoesNotExist:
+        raise Http404("Advance Error!")
+
+@login_required
+def advance_cashier_reject(request,cashPayment_id):
+    # try:
+        # mengambil data task yang akan reject berdasarkan task id
+        cashier = advanceApprovalCashier.objects.get(pk=cashPayment_id)
+        post = request.POST.copy() 
+        post.update({'is_rejected_cashier': True})
+        request.POST = post
+        approval_cashier_form = advanceApprovalCashierForms(request.POST, instance=cashier)
+        if approval_cashier_form.is_valid():
+            reject = approval_cashier_form.save(commit=False)
+            reject.cashier = request.user
+            reject.save()
+            messages.success(request, 'Reject Succcesfully')
+            return redirect('accounting_app:advance_index')
+        return HttpResponse(approval_cashier_form) 
+
+# ADVANCE END
 @login_required
 def export_users_csv(request):
     response = HttpResponse(content_type='text/csv')

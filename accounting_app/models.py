@@ -74,32 +74,42 @@ class advAttachment(models.Model):
 
 # ADVANCE APPROVAL START
 class advanceApprovalManager(models.Model):
-    advance = models.OneToOneField(cashPayment, on_delete = models.CASCADE, null=True, blank=True)
-    manager = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    is_approve_manager = models.BooleanField(default=False, blank=True, null=True)
-    is_rejected_manager = models.BooleanField(default=False, blank=True, null=True)
-    is_checked_manager = models.BooleanField(default=False, blank=True, null=True)
+    advance               = models.OneToOneField(cashPayment, on_delete = models.CASCADE, null=True, blank=True)
+    manager               = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    is_approve_manager    = models.BooleanField(default=False, blank=True, null=True)
+    is_rejected_manager   = models.BooleanField(default=False, blank=True, null=True)
+    is_checked_manager    = models.BooleanField(default=False, blank=True, null=True)
     reject_reason_manager = models.TextField(blank=True, null=True)
     created_at            = models.DateTimeField('created_at', auto_now_add=True)
     updated_at            = models.DateTimeField('updated_at', auto_now=True)
 
 class advanceApprovalAccountingManager(models.Model):
-    advance_approval_manager = models.OneToOneField(advanceApprovalManager, on_delete = models.CASCADE, null=True, blank=True)
-    manager_accounting = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True)
-    is_approve_manager_accounting = models.BooleanField(default=False, blank=True, null=True)
-    is_rejected_manager_accounting = models.BooleanField(default=False, blank=True, null=True)
-    is_checked_manager_accounting = models.BooleanField(default=False, blank=True, null=True)
-    reject_reason_manager_accounting = models.TextField(blank=True, null=True)
-    created_at            = models.DateTimeField('created_at', auto_now_add=True)
-    updated_at            = models.DateTimeField('updated_at', auto_now=True)
+    advance_approval_manager            = models.OneToOneField(advanceApprovalManager, on_delete = models.CASCADE, null=True, blank=True)
+    manager_accounting                  = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True)
+    is_approve_manager_accounting       = models.BooleanField(default=False, blank=True, null=True)
+    is_rejected_manager_accounting      = models.BooleanField(default=False, blank=True, null=True)
+    is_checked_manager_accounting       = models.BooleanField(default=False, blank=True, null=True)
+    reject_reason_manager_accounting    = models.TextField(blank=True, null=True)
+    created_at                          = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at                          = models.DateTimeField('updated_at', auto_now=True)
 
+class advanceApprovalPresident(models.Model):
+    advance_approval_accounting_manager = models.OneToOneField(advanceApprovalAccountingManager, on_delete=models.CASCADE, null=True, blank=True)
+    president               = models.ForeignKey(User, on_delete = models.CASCADE, blank=True , null=True)
+    is_approve_president    = models.BooleanField(default=False, blank=True, null=True)
+    is_rejected_president   = models.BooleanField(default=False, blank=True, null=True)
+    is_checked_president    = models.BooleanField(default=False, blank=True, null=True)
+    reject_reason_president = models.TextField(blank=True, null=True)
+    created_at              = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at              = models.DateTimeField('updated_at', auto_now=True)
+    
 class advanceApprovalCashier(models.Model):
-    advance_approval_accounting_manager = models.OneToOneField(advanceApprovalAccountingManager, on_delete= models.CASCADE, null=True, blank=True)
-    cashier = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True)
-    is_approve_cashier = models.BooleanField(default=False, blank=True, null=True)
-    is_checked_cashier = models.BooleanField(default=False, blank=True, null=True)
-    created_at            = models.DateTimeField('created_at', auto_now_add=True)
-    updated_at            = models.DateTimeField('updated_at', auto_now=True)
+    advance_approval_president  = models.OneToOneField(advanceApprovalPresident, on_delete= models.CASCADE, null=True, blank=True)
+    cashier                     = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True)
+    is_approve_cashier          = models.BooleanField(default=False, blank=True, null=True)
+    is_checked_cashier          = models.BooleanField(default=False, blank=True, null=True)
+    created_at                  = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at                  = models.DateTimeField('updated_at', auto_now=True)
 # ADVANCE APPROVAL END
 
 # CASHPAYMENT APPROVAL START

@@ -1,5 +1,5 @@
 from django import forms
-from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentAttachment, cashPaymentBalance, cashierAttachment
+from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentAttachment, cashPaymentBalance, cashierAttachment, advanceApprovalManager, advanceApprovalAccountingManager, advanceApprovalPresident, advanceApprovalCashier
 from django.forms import ClearableFileInput
 
 class cashPaymentForms(forms.ModelForm):
@@ -95,6 +95,33 @@ class cashPaymentBalanceForms(forms.ModelForm):
         model = cashPaymentBalance
         fields = ('balance_cashPayment_open','balance_cashPayment_close','exchange_rate_open','exchange_rate_close','cashPayment_balance_no',)
 
+# ADVANCE START
+class advanceApprovalManagerForms(forms.ModelForm):
+    class Meta():
+        model = advanceApprovalManager
+        fields = ('reject_reason_manager','is_approve_manager','is_rejected_manager', 'manager', 'is_checked_manager')
+        widgets = {'is_approve_manager': forms.HiddenInput, 'is_rejected_manager': forms.HiddenInput, 'is_checked_manager': forms.HiddenInput , 'manager': forms.HiddenInput}
+
+class advanceApprovalAccountingManagerForms(forms.ModelForm):
+    class Meta():
+        model = advanceApprovalAccountingManager
+        fields = ('reject_reason_manager_accounting','is_approve_manager_accounting','is_rejected_manager_accounting','is_checked_manager_accounting' , 'manager_accounting')
+        widgets = {'is_approve_manager_accounting': forms.HiddenInput, 'is_rejected_manager_accounting': forms.HiddenInput , 'is_checked_manager_accounting': forms.HiddenInput, 'manager_accounting': forms.HiddenInput}
+
+class advanceApprovalPresidentForms(forms.ModelForm):
+    class Meta():
+        fields = ('reject_reason_president','is_approve_president','is_rejected_president','is_checked_president' , 'president')
+        widgets = {'is_approve_president': forms.HiddenInput, 'is_rejected_president': forms.HiddenInput, 'is_checked_president': forms.HiddenInput , 'president': forms.HiddenInput}
+        model = advanceApprovalPresident
+
+class advanceApprovalCashierForms(forms.ModelForm):
+    class Meta():
+        fields = ('is_approve_cashier','is_checked_cashier', 'cashier')
+        widgets = {'is_approve_cashier': forms.HiddenInput, 'is_checked_cashier': forms.HiddenInput, 'cashier': forms.HiddenInput}
+        model = advanceApprovalCashier
+# ADVANCE END
+
+# CASHPAYMENT START
 class cashPaymentApprovalManagerForms(forms.ModelForm):
     class Meta():
         model = cashPaymentApprovalManager
@@ -118,3 +145,4 @@ class cashPaymentApprovalCashierForms(forms.ModelForm):
         fields = ('reject_reason_cashier','is_approve_cashier','is_rejected_cashier','is_checked_cashier', 'cashier')
         widgets = {'is_approve_cashier': forms.HiddenInput, 'is_rejected_cashier': forms.HiddenInput , 'is_checked_cashier': forms.HiddenInput, 'cashier': forms.HiddenInput}
         model = cashPaymentApprovalCashier
+# CASHPAYMENT END
