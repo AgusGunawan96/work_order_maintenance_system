@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment, advAttachment, settleAttachment
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms, cashPaymentSettleAttachmentForms, cashPaymentAdvAttachmentForms, cashPaymentAdvForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms, cashPaymentSettleAttachmentForms, cashPaymentAdvAttachmentForms, cashPaymentAdvForms, cashPaymentCashierForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse,JsonResponse
 import datetime
 import csv
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
 import xlwt
 from csv import reader
 
@@ -68,6 +69,7 @@ def cashPayment_index(request):
          'form_manager_accounting'  : cashPaymentApprovalAccountingManagerForms,
          'form_president'           : cashPaymentApprovalPresidentForms,
          'form_cashier'             : cashPaymentApprovalCashierForms,
+         'form_cashier_transfer'    : cashPaymentCashierForms,
          'form_debit'               : cashPaymentDebitForms,
          'form_credit'              : cashPaymentCreditForms,
          'form_settle'              : cashPaymentSettleForms,
@@ -491,50 +493,99 @@ def cashPayment_cashier_check(request, cashPayment_id):
 def cashPayment_cashier_approval(request, cashPayment_id):
     try:
      if request.method == "POST":
-        cashPayment_credit_form = cashPaymentCreditForms (data=request.POST)
+        cashPayment_credit_form = cashPaymentCashierForms(data=request.POST)
         cashier = cashPaymentApprovalCashier.objects.get(pk=cashPayment_id)
         # cashPayment_balance = masterAccounting.objects.get(pk=1)
         cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
         balance_month = datetime.datetime.now().strftime('%Y%m')
         balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
         balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
-        if cashPayment_credit_form.is_valid():
-            # Mengapprove
-            cashier.is_approve_cashier = True
-            cashier.cashier = request.user
-            # Menambahkan remark pada cashPayment
-            cashPayment_form = cashPayment_credit_form.save(commit=False)
-            cashPayment_id = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id
-            cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
-            cashPayment_credit.remark = cashPayment_form.remark
-            # Mengurangi Balance pada Master Balance
-            # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
-            # cashPayment_balance.save()
-            # Edit untuk cashPayment
-            if(cashPayment_balance is None):
-                balance = cashPaymentBalanceForms().save(commit=False)
-                if(balance_previous is not None):
-                    balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
-                    balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
-                    balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
-                    balance.exchange_rate_open = balance_previous.exchange_rate_open
-                    balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
-                    balance_previous.save()
-                    balance.save()
-                else:
-                    balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
-                    balance.save()
+        if request.POST['password'] and request.POST['type'] == 'Transfer Cash':
+            identity = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee
+            user = User.objects.get(username=identity)
+            valid_password = check_password(request.POST['password'], user.password)
+            if valid_password: #apabila password sudah benar
+                if cashPayment_credit_form.is_valid():
+                    # Mengapprove
+                    cashier.is_approve_cashier = True
+                    cashier.cashier = request.user
+                    # Menambahkan remark pada cashPayment
+                    cashPayment_form = cashPayment_credit_form.save(commit=False)
+                    cashPayment_id = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id
+                    cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
+                    cashPayment_credit.remark = cashPayment_form.remark
+                    cashPayment_credit.type   = cashPayment_form.type
+                    # Mengurangi Balance pada Master Balance
+                    # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
+                    # cashPayment_balance.save()
+                    # Edit untuk cashPayment
+                    if(cashPayment_balance is None):
+                        balance = cashPaymentBalanceForms().save(commit=False)
+                        if(balance_previous is not None):
+                            balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
+                            balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                            balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
+                            balance.exchange_rate_open = balance_previous.exchange_rate_open
+                            balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                            balance_previous.save()
+                            balance.save()
+                        else:
+                            balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                            balance.save()
+                    else:
+                        cashPayment_balance.save()
+                                # Simpan data attachment
+                    files = request.FILES.getlist('attachment')
+                    for f in files:
+                         attachment = cashierAttachment(attachment=f)
+                         attachment.cashPayment = cashPayment_credit
+                         attachment.save()
+                    cashPayment_credit.save()
+                    cashier.save()
+                    messages.success(request, 'Transfer Succcesfully')
             else:
-                cashPayment_balance.save()
-                        # Simpan data attachment
-            files = request.FILES.getlist('attachment')
-            for f in files:
-                 attachment = cashierAttachment(attachment=f)
-                 attachment.cashPayment = cashPayment_credit
-                 attachment.save()
-            cashPayment_credit.save()
-            cashier.save()
-            messages.success(request, 'Approve Succcesfully')
+                messages.warning(request, 'Password yang dimasukan salah')
+                return redirect('accounting_app:cashPayment_index')
+            # mari kita buat Validasi password dari Assignee, apakah sudah sesuai apa belum
+        else:
+            if cashPayment_credit_form.is_valid():
+                # Mengapprove
+                cashier.is_approve_cashier = True
+                cashier.cashier = request.user
+                # Menambahkan remark pada cashPayment
+                cashPayment_form = cashPayment_credit_form.save(commit=False)
+                cashPayment_id = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id
+                cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
+                cashPayment_credit.remark = cashPayment_form.remark
+                cashPayment_credit.type   = cashPayment_form.type
+                # Mengurangi Balance pada Master Balance
+                # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment - cashPayment_credit.rp_total
+                # cashPayment_balance.save()
+                # Edit untuk cashPayment
+                if(cashPayment_balance is None):
+                    balance = cashPaymentBalanceForms().save(commit=False)
+                    if(balance_previous is not None):
+                        balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
+                        balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                        balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
+                        balance.exchange_rate_open = balance_previous.exchange_rate_open
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance_previous.save()
+                        balance.save()
+                    else:
+                        balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                        balance.save()
+                else:
+                    cashPayment_balance.save()
+                            # Simpan data attachment
+                files = request.FILES.getlist('attachment')
+                for f in files:
+                     attachment = cashierAttachment(attachment=f)
+                     attachment.cashPayment = cashPayment_credit
+                     attachment.save()
+                cashPayment_credit.save()
+                cashier.save()
+                messages.success(request, 'Transfer Succcesfully')
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalCashier.DoesNotExist:
         raise Http404("Cash Payment Error!")

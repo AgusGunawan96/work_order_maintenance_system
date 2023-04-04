@@ -29,6 +29,11 @@ class cashPaymentCreditForms(forms.ModelForm):
         model = cashPayment
         fields = ('remark',)
 
+class cashPaymentCashierForms(forms.ModelForm):
+    class Meta():
+        model = cashPayment
+        fields = ('remark','type',)
+
 class cashPaymentDebitForms(forms.ModelForm):
     class Meta():
         model = cashPayment
