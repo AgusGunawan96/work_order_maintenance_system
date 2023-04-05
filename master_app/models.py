@@ -42,7 +42,7 @@ class Notification(models.Model):
     message     = models.TextField()
     is_read     = models.BooleanField(default=False)
     link        = models.CharField(max_length=128, unique=True)
-    
+    category    = models.CharField(max_length=128, unique=True, default=False)
 
 
 
