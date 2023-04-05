@@ -53,7 +53,8 @@ class IPAddress(models.Model):
     updated_at  = models.DateTimeField('updated at', auto_now=True)
     
     def __str__(self):
-        return self.name
+        return self.ip
+    
 # IP ADDRESS END
 
 # TICKET START
