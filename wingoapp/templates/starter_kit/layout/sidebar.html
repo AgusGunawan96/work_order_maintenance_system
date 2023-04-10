@@ -76,6 +76,18 @@
           {% comment %} <li class="dropdown"><a class="nav-link menu-title link-nav" href="/it_app/profile/"><i data-feather="user">
           </i><span>Profile</span></a></li> {% endcomment %}
           {% endif %}
+          {% if perms.qc_app %}
+          <li class="dropdown"><a class="nav-link menu-title" href="javascript:void(0)">QC Module</a>
+            <ul class="nav-submenu menu-content">
+              <li class="dropdown"><a href="{% url 'qc_app:rir_add' %}"><i data-feather="book"></i><span>Add RIR</span></a></li>
+              <li class="dropdown"><a href="{% url 'qc_app:rir_judgement_index' %}"><i data-feather="book"></i><span>Judgement</span></a></li>
+              <li class="dropdown"><a href="{% url 'qc_app:rir_checked_by_index' %}"><i data-feather="book"></i><span>Checked By</span></a></li>
+              <li class="dropdown"><a href="{% url 'qc_app:rir_special_judgement_index' %}"><i data-feather="book"></i><span>Special Judgement</span></a></li>
+            </ul>
+          </li>
+          {% comment %} <li class="dropdown"><a class="nav-link menu-title link-nav" href="/it_app/profile/"><i data-feather="user">
+          </i><span>Profile</span></a></li> {% endcomment %}
+          {% endif %}
           
           <li class="dropdown"><a class="nav-link menu-title" href="javascript:void(0)">Accounting Module</a>
             <ul class="nav-submenu menu-content">
