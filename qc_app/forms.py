@@ -1,12 +1,25 @@
 from django import forms 
-from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager
+from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, CategoryType
 from django.forms import ClearableFileInput, formset_factory
+from django_select2.forms import Select2Widget
 
 # RIR START
 class rirHeaderForms(forms.ModelForm):
+    incoming_at = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
+    expired_at = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
+    incoming_type = forms.TypedChoiceField(
+        choices=IncomingType.choices,
+        widget=Select2Widget,
+        coerce=str,
+    )
+    category = forms.TypedChoiceField(
+    choices=CategoryType.choices,
+    widget=Select2Widget,
+    coerce=str,
+    )
     class Meta():
         model = rirHeader
-        fields = ('incoming_type','category','material','vendor','po_number','lot_no','quantity','rir_no','incoming_at','expired_at',)
+        fields = ('incoming_type','category','material','vendor','po_number','lot_no','quantity','expired_at', 'incoming_at')
 
 class rirDetailCoaContentJudgementForms(forms.ModelForm):
     class Meta():

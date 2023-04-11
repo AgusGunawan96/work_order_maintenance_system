@@ -6,7 +6,8 @@
 
 <!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
-<!-- Plugins css Ends-->
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+  <!-- Plugins css Ends-->
 {% endblock css %}
 {% block content %}
 <div class="page-body">
@@ -131,5 +132,12 @@
 <script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
 <script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
 <script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<script>
+  $(document).ready(function() {
+      $('#id_hardware').select2();
+  });
+</script>
 <!-- Plugins JS Ends-->
 {% endblock scriptcontent %}

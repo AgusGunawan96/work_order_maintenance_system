@@ -1,0 +1,119 @@
+
+  {% extends 'starter_kit/base.html' %}
+  {% load static %}
+  {% load sass_tags %}
+  {% block css %}
+  {% load widget_tweaks %}
+  
+  <!-- Plugins css start-->
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+
+  <!-- Plugins css Ends-->
+  {% endblock css %}
+  {% block content %}
+  <div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+      <div class="row starter-main">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header pb-0">
+                <h5>RIR Add | Data Identify</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Name</label>
+                    <input class="form-control" type="text" value="{{request.user.first_name}} {{request.user.last_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Nomor Karyawan</label>
+                    <input class="form-control" type="text" value="{{request.user.username}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Department</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.department.department_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Division</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.division.division_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Section</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.section.section_name}}" readonly>
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Position</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.position}}" readonly>
+                </div>
+              </div>
+            </div>
+         </div>
+          <div class="card">
+            <div class="card-header pb-0">
+              <h5>RIR Add | Form</h5>
+          </div>
+              <div class="card-body">
+              <form method="POST" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Container-fluid Ends-->
+  </div>
+  {% endblock content %}
+  {% block scriptcontent %}
+  <!-- Plugins JS start-->
+  <script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+  <script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+  <script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+  <script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+  <script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+  <script>
+    $(document).ready(function() {
+        $('#id_incoming_type').select2();
+        $('#id_category').select2();
+    });
+  </script>
+  <!-- Plugins JS Ends-->
+  {% endblock scriptcontent %}

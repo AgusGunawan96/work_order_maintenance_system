@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        @page {
+            size: A4;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                font-size: 12pt;
+            }
+
+            @page {
+                margin: 2cm;
+            }
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .table2 {
+            width: 50%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-bottom: 20px;
+            position: fixed;
+            right: 0;
+        }
+
+        td {
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .section-header {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .section-detail td:first-child {
+            width: 50%;
+        }
+
+        .bordered-heading {
+            border: 1px solid black;
+            padding: 10px;
+            display: inline-block;
+            position: relative;
+            left: 100%;
+            transform: translateX(-100%);
+        }
+
+        p.form_text1>span {
+            display: inline-block;
+            min-width: 150px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT SEIWA INDONESIA | QC/QA Dept.</title>
+</head>
+
+<body onload="printContent()">
+    <h5 class="bordered-heading" style="border: 1px solid #ccc;">CHEMICALS</h5>
+    <h3 style="text-align: center;"><u>RECEIVING INSPECTION REPORT</u></h3>
+    <p class="form_text1"><span>MATERIAL NAME</span>: <u>Test</u> </p>
+    <p class="form_text1"><span>VENDOR </span>: <u>Test</u> </p>
+    <p class="form_text1"><span>PO NUMBER</span>: <u>232323</u> </p>
+    <p class="form_text1"><span>LOT NO</span>: <u>2</u> </p>
+    <p class="form_text1"><span>QUANTITY</span>: <u>14</u> </p>
+    <p class="form_text1"><span>INCOMING DATE</span>: <u>04 April 2023</u> </p>
+    <p class="form_text1"><span>EXPIRED DATE</span>: <u>05 April 2023</u> </p>
+
+    <table class="table">
+        <tr class="section-header">
+            <th style="text-align: center;">INSPECTION ITEM</th>
+            <th style="text-align: center;">JUDGEMENT</th>
+            <th style="text-align: center;">CHECKED BY</th>
+            <th style="text-align: center;">REMARKS</th>
+        </tr>
+        <tr class="section-detail">
+            <td style="padding: 15px;">1. COA Content</td>
+            <td style="padding: 15px;">Judgement By Lorem.</td>
+            <td style="padding: 15px;">Checked By Lorem.</td>
+            <td style="padding: 15px;">Remarks By Judge and Checked</td>
+        </tr>
+        <tr class="section-detail">
+            <td style="padding: 15px;">2. Appearance</td>
+            <td style="padding: 15px;">Judgement By Lorem.</td>
+            <td style="padding: 15px;">Checked By Lorem.</td>
+            <td style="padding: 15px;">Remarks By Judge and Checked</td>
+        </tr>
+        <tr class="section-detail">
+            <td style="padding: 15px;">3. Restricted Substance</td>
+            <td style="padding: 15px;">Judgement By Lorem.</td>
+            <td style="padding: 15px;">Checked By Lorem.</td>
+            <td style="padding: 15px;">Remarks By Judge and Checked</td>
+        </tr>
+        <tr class="section-detail">
+            <td style="padding: 15px;">4. Environmental Issue</td>
+            <td style="padding: 15px;">Judgement By Lorem.</td>
+            <td style="padding: 15px;">Checked By Lorem.</td>
+            <td style="padding: 15px;">Remarks By Judge and Checked</td>
+        </tr>
+    </table>
+
+    <table class="table2">
+        <tr class="section-header">
+            <th style="text-align: center;" rowspan="2"><b>Special Judgement</b></th>
+            <th style="text-align: center;" colspan="2"><b>PIC</b></th>
+        </tr>
+        <tr class="section-detail">
+            <td>QC/QA <br> Supervisor</td>
+            <td>QC/QA <br> Manager</td>
+        </tr>
+        <tr class="section-detail">
+            <td rowspan="2" style="padding: 25px;">Status</td>
+            <td rowspan="2" style="padding: 25px;">Approved</td>
+            <td rowspan="2" style="padding: 25px;">Approved</td>
+        </tr>
+    </table>
+
+    <script>
+        function printContent() {
+            // Open the print dialog
+            window.print();
+        }
+        </script>
+</body>
+
+</html>
