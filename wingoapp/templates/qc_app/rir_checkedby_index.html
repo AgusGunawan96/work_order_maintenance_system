@@ -13,7 +13,7 @@
   <div class="col-sm-12 col-xl-12 xl-100">
     <div class="card">
       <div class="card-header pb-0">
-        <h5>RIR Checked | {{request.user.first_name}} {{request.user.last_name}}</h5><span>COA, Appearance, Restirected Substance, sample test, and environmental Issue.</span>
+        <h5>RIR Checked | {{request.user.first_name}} {{request.user.last_name}}</h5><span>COA, Appearance, restricted Substance, sample test, and environmental Issue.</span>
       </div>
       <div class="card-body btn-showcase">
         {% if messages %}
@@ -33,7 +33,7 @@
         <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
           <li class="nav-item"><a class="nav-link active" id="top-checkedby-coa-tab" data-bs-toggle="tab" href="#top-checkedby-coa" role="tab" aria-controls="top-checkedby-coa" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>COA Content</a></li>
           <li class="nav-item"><a class="nav-link" id="top-checkedby-appearance-tab" data-bs-toggle="tab" href="#top-checkedby-appearance" role="tab" aria-controls="top-checkedby-appearance" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Appearance</a></li>
-          <li class="nav-item"><a class="nav-link" id="top-checkedby-restirected-substance-tab" data-bs-toggle="tab" href="#top-checkedby-restirected-substance" role="tab" aria-controls="top-checkedby-restirected-substance" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Restirected Substance</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-checkedby-restricted-substance-tab" data-bs-toggle="tab" href="#top-checkedby-restricted-substance" role="tab" aria-controls="top-checkedby-restricted-substance" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>restricted Substance</a></li>
           <li class="nav-item"><a class="nav-link" id="top-sample-test-tab" data-bs-toggle="tab" href="#top-sample-test" role="tab" aria-controls="top-sample-test" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Sample Test</a></li>
           <li class="nav-item"><a class="nav-link" id="top-environmental-issue-tab" data-bs-toggle="tab" href="#top-environmental-issue" role="tab" aria-controls="top-environmental-issue" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Environmental Issue</a></li>
         </ul>
@@ -109,7 +109,7 @@
                 </div>
             </div>
          
-            <div class="tab-pane fade show" id="top-checkedby-restirected-substance" role="tabpanel" aria-labelledby="top-checkedby-restirected-substance-tab">
+            <div class="tab-pane fade show" id="top-checkedby-restricted-substance" role="tabpanel" aria-labelledby="top-checkedby-restricted-substance-tab">
                 <div class="col-sm-12">
                     <div class="card">
                       <div class="card-body">
@@ -126,13 +126,13 @@
                               </tr>
                             </thead>
                             <tbody>
-                                {% for restirected_substance in checkedby_restirected_substance %}
+                                {% for restricted_substance in checkedby_restricted_substance %}
                                 <tr>
-                                    <td><a href="{% url 'qc_app:rir_checkedby_detail' coa.header.id %}"> {{restirected_substance.header.rir_no}}</td>
-                                    <td>{{restirected_substance.header.category}}</td>
-                                    <td>{{restirected_substance.header.material}}</td>
-                                    <td>{{restirected_substance.header.incoming_at}}</td>
-                                    <td>{{restirected_substance.header.expired_at}}</td>
+                                    <td><a href="{% url 'qc_app:rir_checkedby_detail' coa.header.id %}"> {{restricted_substance.header.rir_no}}</td>
+                                    <td>{{restricted_substance.header.category}}</td>
+                                    <td>{{restricted_substance.header.material}}</td>
+                                    <td>{{restricted_substance.header.incoming_at}}</td>
+                                    <td>{{restricted_substance.header.expired_at}}</td>
                                     <td><a href="{% url 'qc_app:rir_checkedby_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span> Print</a></td>
                                 </tr>
                                 {% endfor %}

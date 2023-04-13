@@ -15,6 +15,13 @@ class CategoryType(models.TextChoices):
     CHLOROPRENE_POLYMER = 'Chloroprene Polymer'
     
 # RIR START
+class rirApprovalList(models.Model):
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    is_judgement    = models.BooleanField(default=False, blank=True, null=True)
+    is_checked_by   = models.BooleanField(default=False, blank=True, null=True)
+    is_supervisor   = models.BooleanField(default=False, blank=True, null=True)
+    is_manager      = models.BooleanField(default=False, blank=True, null=True)
+
 class rirHeader (models.Model):
     incoming_type           = models.CharField(max_length=25, choices=IncomingType.choices)
     category                = models.CharField(max_length=25, choices=CategoryType.choices)
@@ -33,72 +40,66 @@ class rirHeader (models.Model):
 
 class rirDetailCoaContentJudgement (models.Model):
     header                          = models.OneToOneField(rirHeader, on_delete = models.CASCADE, null=True, blank=True)
-    coa_content_user_judgement      = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True) 
+    coa_content_user_judgement      = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True) 
     coa_content_judgement           = models.BooleanField(default=False, blank=True, null=True)
     coa_content_remark              = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailCoaContentCheckedby (models.Model):
     coa_content_judgement           = models.OneToOneField(rirDetailCoaContentJudgement, on_delete = models.CASCADE, null=True, blank=True)
-    coa_content_user_checked_by     = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    coa_content_user_checked_by     = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     coa_content_checked_by          = models.BooleanField(default=False, blank=True, null=True)
     coa_content_remark              = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailAppearenceJudgement (models.Model):
     header                          = models.OneToOneField(rirHeader, on_delete = models.CASCADE, null=True, blank=True)
-    appearence_user_judgement       = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    appearence_user_judgement       = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     appearence_judgement            = models.BooleanField(default=False, blank=True, null=True)
     appearence_remark               = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailAppearenceCheckedby (models.Model):
     appearence_judgement            = models.OneToOneField(rirDetailAppearenceJudgement, on_delete = models.CASCADE, null=True, blank=True)
-    appearence_user_checked_by      = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    appearence_user_checked_by      = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     appearence_checked_by           = models.BooleanField(default=False, blank=True, null=True)
     appearence_remark               = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailRestrictedSubstanceJudgement (models.Model):
     header                                  = models.OneToOneField(rirHeader, on_delete = models.CASCADE, null=True, blank=True)
-    restricted_substance_user_judgement     = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    restricted_substance_user_judgement     = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     restricted_substance_judgement          = models.BooleanField(default=False, blank=True, null=True)
     restricted_substance_remark             = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailRestrictedSubstanceCheckedby (models.Model):
     restricted_substance_judgement          = models.OneToOneField(rirDetailRestrictedSubstanceJudgement, on_delete = models.CASCADE, null=True, blank=True)
-    restricted_substance_user_checked_by    = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    restricted_substance_user_checked_by    = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     restricted_substance_checked_by         = models.BooleanField(default=False, blank=True, null=True)
     restricted_substance_remark             = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailEnvironmentalIssueJudgement (models.Model):
     header                              = models.OneToOneField(rirHeader, on_delete = models.CASCADE, null=True, blank=True)
-    environmental_issue_user_judgement  = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    environmental_issue_user_judgement  = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     environmental_issue_judgement       = models.BooleanField(default=False, blank=True, null=True)
     environmental_issue_remark          = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailEnvironmentalIssueCheckedby (models.Model):
     environmental_issue_judgement       = models.OneToOneField(rirDetailEnvironmentalIssueJudgement, on_delete = models.CASCADE, null=True, blank=True)
-    environmental_issue_user_checked_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    environmental_issue_user_checked_by = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     environmental_issue_checked_by      = models.BooleanField(default=False, blank=True, null=True)
     environmental_issue_remark          = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailSampleTestJudgement (models.Model):
     header                      = models.OneToOneField(rirHeader, on_delete = models.CASCADE, null=True, blank=True)
-    sample_test_user_judgement  = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    sample_test_user_judgement  = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     sample_test_judgement       = models.BooleanField(default=False, blank=True, null=True)
     sample_test_remark          = models.CharField(max_length=200, null=True, blank=True)
 
 class rirDetailSampleTestCheckedby (models.Model):
     sample_test_judgement       = models.OneToOneField(rirDetailSampleTestJudgement, on_delete = models.CASCADE, null=True, blank=True)
-    sample_test_user_checked_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    sample_test_user_checked_by = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     sample_test_checked_by      = models.BooleanField(default=False, blank=True, null=True)
     sample_test_remark          = models.CharField(max_length=200, null=True, blank=True)
 # RIR END
 
 # SPECIAL JUDGEMENT START
-class rirApprovalList(models.Model):
-    user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    is_judgement    = models.BooleanField(default=False, blank=True, null=True)
-    is_checked_by   = models.BooleanField(default=False, blank=True, null=True)
-    is_supervisor   = models.BooleanField(default=False, blank=True, null=True)
-    is_manager      = models.BooleanField(default=False, blank=True, null=True)
 
 class specialJudgement(models.Model):
     rir         = models.OneToOneField(rirHeader, on_delete=models.CASCADE, null=True, blank=True)

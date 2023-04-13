@@ -18,5 +18,5 @@ urlpatterns = [
     path('rir/rir_manager_approval/<int:rir_id>', views.rir_manager_approval, name = 'rir_manager_approval'),
     path('rir/rir_supervisor_return/<int:rir_id>', views.rir_supervisor_return, name = 'rir_supervisor_return'),
     path('rir/rir_manager_return/<int:rir_id>', views.rir_manager_return, name = 'rir_manager_return'),
-    path('rir/rir_download_report/', views.rir_download_report, name = 'rir_download_report'),
+    path('rir/rir_download_report/<int:rir_id>', views.rir_download_report, name = 'rir_download_report'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

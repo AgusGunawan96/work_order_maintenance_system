@@ -81,45 +81,150 @@
 <body onload="printContent()">
     <h5 class="bordered-heading" style="border: 1px solid #ccc;">CHEMICALS</h5>
     <h3 style="text-align: center;"><u>RECEIVING INSPECTION REPORT</u></h3>
-    <p class="form_text1"><span>MATERIAL NAME</span>: <u>Test</u> </p>
-    <p class="form_text1"><span>VENDOR </span>: <u>Test</u> </p>
-    <p class="form_text1"><span>PO NUMBER</span>: <u>232323</u> </p>
-    <p class="form_text1"><span>LOT NO</span>: <u>2</u> </p>
-    <p class="form_text1"><span>QUANTITY</span>: <u>14</u> </p>
-    <p class="form_text1"><span>INCOMING DATE</span>: <u>04 April 2023</u> </p>
-    <p class="form_text1"><span>EXPIRED DATE</span>: <u>05 April 2023</u> </p>
+    <p class="form_text1"><span>MATERIAL NAME</span>: <u>{{ rir_header.material }}</u> </p>
+    <p class="form_text1"><span>VENDOR </span>: <u>{{ rir_header.vendor }}</u> </p>
+    <p class="form_text1"><span>PO NUMBER</span>: <u>{{ rir_header.po_number }}</u> </p>
+    <p class="form_text1"><span>LOT NO</span>: <u>{{ rir_header.lot_no }}</u> </p>
+    <p class="form_text1"><span>QUANTITY</span>: <u>{{ rir_header.quantity }}</u> </p>
+    <p class="form_text1"><span>INCOMING TYPE</span>: <u>{{ rir_header.category }}</u> </p>
+    <p class="form_text1"><span>INCOMING DATE</span>: <u>{{ rir_header.incoming_at|date:"F j, Y" }}</u> </p>
+    <p class="form_text1"><span>EXPIRED DATE</span>: <u>{{ rir_header.expired_at|date:"F j, Y" }}</u> </p>
 
     <table class="table">
-        <tr class="section-header">
-            <th style="text-align: center;">INSPECTION ITEM</th>
-            <th style="text-align: center;">JUDGEMENT</th>
-            <th style="text-align: center;">CHECKED BY</th>
-            <th style="text-align: center;">REMARKS</th>
-        </tr>
-        <tr class="section-detail">
-            <td style="padding: 15px;">1. COA Content</td>
-            <td style="padding: 15px;">Judgement By Lorem.</td>
-            <td style="padding: 15px;">Checked By Lorem.</td>
-            <td style="padding: 15px;">Remarks By Judge and Checked</td>
-        </tr>
-        <tr class="section-detail">
-            <td style="padding: 15px;">2. Appearance</td>
-            <td style="padding: 15px;">Judgement By Lorem.</td>
-            <td style="padding: 15px;">Checked By Lorem.</td>
-            <td style="padding: 15px;">Remarks By Judge and Checked</td>
-        </tr>
-        <tr class="section-detail">
-            <td style="padding: 15px;">3. Restricted Substance</td>
-            <td style="padding: 15px;">Judgement By Lorem.</td>
-            <td style="padding: 15px;">Checked By Lorem.</td>
-            <td style="padding: 15px;">Remarks By Judge and Checked</td>
-        </tr>
-        <tr class="section-detail">
-            <td style="padding: 15px;">4. Environmental Issue</td>
-            <td style="padding: 15px;">Judgement By Lorem.</td>
-            <td style="padding: 15px;">Checked By Lorem.</td>
-            <td style="padding: 15px;">Remarks By Judge and Checked</td>
-        </tr>
+        <thead>
+             <tr class="section-header">
+                 <th style="text-align: center;">INSPECTION ITEM</th>
+                 <th style="text-align: center;">JUDGEMENT</th>
+                 <th style="text-align: center;">CHECKED BY</th>
+                 <th style="text-align: center;">REMARKS</th>
+             </tr>
+        </thead>
+        <tbody>
+            {% if rir_coa_judgement or rir_coa_checkedby %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">1. COA Content</td>
+                <td style="padding: 15px;">
+                    {% if rir_coa_judgement.coa_content_user_judgement %}
+                    Judgement By {{ rir_coa_judgement.coa_content_user_judgement.user.first_name }} {{ rir_coa_judgement.coa_content_user_judgement.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_coa_checkedby.coa_content_user_checked_by %}
+                    Checked By {{ rir_coa_checkedby.coa_content_user_checked_by.user.first_name }} {{ rir_coa_checkedby.coa_content_user_checked_by.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_coa_judgement.coa_content_remark %} {{ rir_coa_judgement.coa_content_remark }} {% endif %} 
+                    <br>
+                    {% if rir_coa_checkedby.coa_content_remark %} {{ rir_coa_checkedby.coa_content_remark }} {% endif %} 
+                </td>
+            </tr>
+            {% endif %}
+            {% if rir_appearance_judgement or rir_appearance_checkedby %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">2. Appearance</td>
+                <td style="padding: 15px;">
+                    {% if rir_appearance_judgement.appearence_user_judgement %}
+                    Judgement By {{ rir_appearance_judgement.appearence_user_judgement.user.first_name }} {{ rir_coa_judgement.appearence_user_judgement.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_appearance_checkedby.appearence_user_checked_by %}
+                    Checked By {{ rir_appearance_checkedby.appearence_user_checked_by.user.first_name }} {{ rir_appearance_checkedby.appearence_user_checked_by.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_appearance_judgement.appearence_remark %} {{ rir_appearance_judgement.appearence_remark }} {% endif %} 
+                    <br>
+                    {% if rir_appearance_checkedby.appearence_remark %} {{ rir_appearance_checkedby.appearence_remark }} {% endif %} 
+                </td>
+            </tr>
+            {% endif %}
+            {% if rir_sampletest_judgement or rir_sampletest_checkedby %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">3. Sample Test</td>
+                <td style="padding: 15px;">
+                    {% if rir_sampletest_judgement.sample_test_user_judgement %}
+                    Judgement By {{ rir_sampletest_judgement.sample_test_user_judgement.user.first_name }} {{ rir_sampletest_judgement.sample_test_user_judgement.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_sampletest_checkedby.sample_test_user_checked_by %}
+                    Checked By {{ rir_sampletest_checkedby.sample_test_user_checked_by.user.first_name }} {{ rir_sampletest_checkedby.sample_test_user_checked_by.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_sampletest_judgement.sample_test_remark %} {{ rir_sampletest_judgement.sample_test_remark }} {% endif %} 
+                    <br>
+                    {% if rir_sampletest_checkedby.sample_test_remark %} {{ rir_sampletest_checkedby.sample_test_remark }} {% endif %} 
+                </td>
+            </tr>
+            {% endif %}
+            {% if rir_restrictedsubstance_judgement or rir_restrictedsubstance_checkedby %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">3. Restricted Substance</td>
+                <td style="padding: 15px;">
+                    {% if rir_restrictedsubstance_judgement.restricted_substance_user_judgement %}
+                    Judgement By {{ rir_restrictedsubstance_judgement.restricted_substance_user_judgement.user.first_name }} {{ rir_restrictedsubstance_judgement.restricted_substance_user_judgement.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_restrictedsubstance_checkedby.restricted_substance_user_checked_by %}
+                    Checked By {{ rir_restrictedsubstance_checkedby.restricted_substance_user_checked_by.user.first_name }} {{ rir_restrictedsubstance_checkedby.restricted_substance_user_checked_by.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_restrictedsubstance_judgement.restricted_substance_remark %} {{ rir_restrictedsubstance_judgement.restricted_substance_remark }} {% endif %} 
+                    <br>
+                    {% if rir_restrictedsubstance_checkedby.restricted_substance_remark %} {{ rir_restrictedsubstance_checkedby.restricted_substance_remark }} {% endif %} 
+                </td>
+            </tr>
+            {% endif %}
+            {% if rir_environmentalissue_judgement or rir_environmentalissue_checkedby %}
+                {% if rir_restrictedsubstance_judgement or rir_restrictedsubstance_checkedby %}
+                     {% if rir_sampletest_judgement or rir_sampletest_checkedby %}
+                        <tr class="section-detail">
+                            <td style="padding: 15px;">4. Environmental Issue</td>
+                            <td style="padding: 15px;">
+                                {% if rir_environmentalissue_judgement.environmental_issue_user_judgement %}
+                                Judgement By {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.first_name }} {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.last_name }}
+                                {% endif %}
+                            </td>
+                            <td style="padding: 15px;">
+                                {% if rir_environmentalissue_checkedby.environmental_issue_user_checked_by %}
+                                Checked By {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.first_name }} {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.last_name }}
+                                {% endif %}
+                            </td>
+                            <td style="padding: 15px;">
+                                {% if rir_environmentalissue_judgement.environmental_issue_remark %} {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
+                                <br>
+                                {% if rir_environmentalissue_checkedby.environmental_issue_remark %} {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr class="section-detail">
+                            <td style="padding: 15px;">3. Environmental Issue</td>
+                            <td style="padding: 15px;">
+                                {% if rir_environmentalissue_judgement.environmental_issue_user_judgement %}
+                                Judgement By {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.first_name }} {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.last_name }}
+                                {% endif %}
+                            </td>
+                            <td style="padding: 15px;">
+                                {% if rir_environmentalissue_checkedby.environmental_issue_user_checked_by %}
+                                Checked By {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.first_name }} {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.last_name }}
+                                {% endif %}
+                            </td>
+                            <td style="padding: 15px;">
+                                {% if rir_environmentalissue_judgement.environmental_issue_remark %} {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
+                                <br>
+                                {% if rir_environmentalissue_checkedby.environmental_issue_remark %} {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
+                            </td>
+                        </tr>
+                     {% endif %}
+                {% endif %}
+            {% endif %}
+        </tbody>
+        
     </table>
 
     <table class="table2">
@@ -128,13 +233,23 @@
             <th style="text-align: center;" colspan="2"><b>PIC</b></th>
         </tr>
         <tr class="section-detail">
-            <td>QC/QA <br> Supervisor</td>
-            <td>QC/QA <br> Manager</td>
+            <td  style="padding: 5 px;">QC/QA <br> Supervisor</td>
+            <td  style="padding: 5 px;">QC/QA <br> Manager</td>
         </tr>
         <tr class="section-detail">
-            <td rowspan="2" style="padding: 25px;">Status</td>
-            <td rowspan="2" style="padding: 25px;">Approved</td>
-            <td rowspan="2" style="padding: 25px;">Approved</td>
+            <td rowspan="2" style="padding: 25px;">
+                -
+            </td>
+            <td rowspan="2" style="padding: 25px;">
+                {% if rir_approval_supervisor.is_approve_supervisor %}
+                Approved By {{ rir_approval_supervisor.supervisor.user.first_name }} {{ rir_approval_supervisor.supervisor.user.last_name }}
+                {% endif %}
+            </td>
+            <td rowspan="2" style="padding: 25px;">
+                {% if rir_approval_manager.is_approve_manager %}
+                Approved By {{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }}
+                {% endif %}
+            </td>
         </tr>
     </table>
 
