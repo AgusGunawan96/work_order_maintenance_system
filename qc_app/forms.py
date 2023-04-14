@@ -23,7 +23,7 @@ class rirHeaderForms(forms.ModelForm):
     )
     class Meta():
         model = rirHeader
-        fields = ('incoming_type','category','material','vendor','po_number','lot_no','quantity','expired_at', 'incoming_at')
+        fields = ('incoming_type','category','material','vendor','po_number','lot_no','quantity','incoming_at', 'expired_at' )
 
 class rirDetailCoaContentJudgementForms(forms.ModelForm):
     class Meta():

@@ -79,14 +79,14 @@
 </head>
 
 <body onload="printContent()">
-    <h5 class="bordered-heading" style="border: 1px solid #ccc;">CHEMICALS</h5>
+    <h5 class="bordered-heading" style="border: 1px solid #ccc;">{{ rir_header.category }}</h5>
     <h3 style="text-align: center;"><u>RECEIVING INSPECTION REPORT</u></h3>
     <p class="form_text1"><span>MATERIAL NAME</span>: <u>{{ rir_header.material }}</u> </p>
     <p class="form_text1"><span>VENDOR </span>: <u>{{ rir_header.vendor }}</u> </p>
     <p class="form_text1"><span>PO NUMBER</span>: <u>{{ rir_header.po_number }}</u> </p>
     <p class="form_text1"><span>LOT NO</span>: <u>{{ rir_header.lot_no }}</u> </p>
     <p class="form_text1"><span>QUANTITY</span>: <u>{{ rir_header.quantity }}</u> </p>
-    <p class="form_text1"><span>INCOMING TYPE</span>: <u>{{ rir_header.category }}</u> </p>
+    <p class="form_text1"><span>INCOMING TYPE</span>: <u>{{ rir_header.incoming_type }}</u> </p>
     <p class="form_text1"><span>INCOMING DATE</span>: <u>{{ rir_header.incoming_at|date:"F j, Y" }}</u> </p>
     <p class="form_text1"><span>EXPIRED DATE</span>: <u>{{ rir_header.expired_at|date:"F j, Y" }}</u> </p>
 

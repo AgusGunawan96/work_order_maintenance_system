@@ -58,12 +58,12 @@
                             <tbody>
                                 {% for coa in judgement_coa %}
                                 <tr>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' coa.header.id %}">{{coa.header.rir_no}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}">{{coa.header.rir_no}}</td>
                                     <td>{{coa.header.category}}</td>
-                                    <td>{{coa.header.material}}</td>
+                                    <td>{{coa.header.material.name}}</td>
                                     <td>{{coa.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{coa.header.expired_at|date:"F j, Y"}}</td>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' coa.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' coa.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -93,12 +93,12 @@
                             <tbody>
                                 {% for appearance in judgement_appearance %}
                                 <tr>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' appearance.header.id %}"> {{appearance.header.rir_no}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' appearance.header.id %}"> {{appearance.header.rir_no}}</td>
                                     <td>{{appearance.header.category}}</td>
-                                    <td>{{appearance.header.material}}</td>
+                                    <td>{{appearance.header.material.name}}</td>
                                     <td>{{appearance.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{appearance.header.expired_at|date:"F j, Y"}}</td>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' appearance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' appearance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -128,12 +128,12 @@
                             <tbody>
                                 {% for restricted_substance in judgement_restricted_substance %}
                                 <tr>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' coa.header.id %}"> {{restricted_substance.header.rir_no}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}"> {{restricted_substance.header.rir_no}}</td>
                                     <td>{{restricted_substance.header.category}}</td>
-                                    <td>{{restricted_substance.header.material}}</td>
+                                    <td>{{restricted_substance.header.material.name}}</td>
                                     <td>{{restricted_substance.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{restricted_substance.header.expired_at|date:"F j, Y"}}</td>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' restricted_substance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' restricted_substance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -161,10 +161,10 @@
                             <tbody>
                                 {% for sample_test in judgement_sample_test %}
                                 <tr>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' coa.header.id %}">{{sample_test.header.rir_no}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}">{{sample_test.header.rir_no}}</td>
                                     <td>{{sample_test.header.category}}</td>
-                                    <td>{{sample_test.header.material}}</td>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' sample_test.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td>{{sample_test.header.material.name}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' sample_test.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -194,12 +194,12 @@
                             <tbody>
                                 {% for environmental_issue in judgement_environmental_issue %}
                                 <tr>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' environmental_issue.header.id %}">{{environmental_issue.header.rir_no}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' environmental_issue.header.id %}">{{environmental_issue.header.rir_no}}</td>
                                     <td>{{environmental_issue.header.category}}</td>
-                                    <td>{{environmental_issue.header.material}}</td>
+                                    <td>{{environmental_issue.header.material.name}}</td>
                                     <td>{{environmental_issue.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{environmental_issue.header.expired_at|date:"F j, Y"}}</td>
-                                    <td><a href="{% url 'qc_app:rir_judgement_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' environmental_issue.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' environmental_issue.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

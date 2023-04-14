@@ -59,7 +59,7 @@ def rir_judgement_index(request):
     return HttpResponse('ini merupakan RIR Judgement Index')
 
 @login_required
-def rir_judgement_detail(request, rir_id):
+def rir_detail(request, rir_id):
 
     rir_header                         = rirHeader.objects.get(pk=rir_id)
     rir_coa_judgement                  = rirDetailCoaContentJudgement.objects.filter(header_id=rir_header).first()
@@ -92,7 +92,7 @@ def rir_judgement_detail(request, rir_id):
         'rir_approval_supervisor'           : rir_approval_supervisor,
         'rir_approval_manager'              : rir_approval_manager,
     }
-    return render(request, 'qc_app/rir_judgement_detail.html', context)
+    return render(request, 'qc_app/rir_detail.html', context)
 
 @login_required
 def rir_judgement_approve(request):
@@ -119,10 +119,6 @@ def rir_checked_by_index(request):
     }
     return render(request, 'qc_app/rir_checkedby_index.html', context)
     return HttpResponse('ini merupakan RIR Checked By Index')
-
-@login_required
-def rir_checked_by_detail(request, rir_detail):
-    return HttpResponse('ini merupakan Checked by Detail')
 
 @login_required
 def rir_special_judgement_index(request):

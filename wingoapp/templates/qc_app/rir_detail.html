@@ -1,0 +1,327 @@
+{% extends 'starter_kit/base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <div class="row starter-main">
+      <div class="col-sm-12">
+        {% if rir_header %}
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>RIR Header | {{rir_header.rir_no}} | {{rir_header.category}} </h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                {% comment %} START ISI {% endcomment %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">VENDOR</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.vendor }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">PO NUMBER</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.po_number }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">LOT NO</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.lot_no }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">QUANTITY</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.quantity }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">INCOMING TYPE</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.incoming_type }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">INCOMING DATE</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.incoming_at|date:'F j, Y' }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">EXPIRED DATE</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.expired_at|date:'F j, Y' }}" readonly>
+                  </div>
+                </div>
+                {% comment %} END ISI {% endcomment %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% comment %} COA START {% endcomment %}
+        {% if rir_coa_judgement %}
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>COA Content</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            {% comment %} ISI DARI BODY {% endcomment %}
+            {% comment %} JUDGEMENT START {% endcomment %}
+            <div class="card-header">
+              <h5>Judgement</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_coa_judgement.created_at }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% comment %} JUDGEMENT END {% endcomment %}
+            {% comment %} CHECKEDBY START {% endcomment %}
+            {% if rir_coa_checkedby %}
+            <div class="card-header">
+              <h5>Checked By</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% comment %} CHECKEDBY END {% endcomment %}
+            {% comment %} ISI SELESAI DARI BODY {% endcomment %}
+          </div>
+        </div>
+        {% endif %}
+        {% comment %} COA END {% endcomment %}
+
+        {% comment %} APPEARANCE START {% endcomment %}
+        {% if rir_appearance_judgement %}
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Appearance</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            {% comment %} ISI DARI BODY {% endcomment %}
+            {% comment %} JUDGEMENT START {% endcomment %}
+            <div class="card-header">
+              <h5>Judgement</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% comment %} JUDGEMENT END {% endcomment %}
+            {% comment %} CHECKEDBY START {% endcomment %}
+            {% if rir_appearance_checkedby %}
+            <div class="card-header">
+              <h5>Checked By</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% comment %} CHECKEDBY END {% endcomment %}
+            {% comment %} ISI SELESAI DARI BODY {% endcomment %}
+          </div>
+        </div>
+        {% endif %}
+        {% comment %} APPEARANCE END {% endcomment %}
+
+        {% comment %} SAMPLE TEST START {% endcomment %}
+        {% if rir_sampletest_judgement %}
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Sample Test</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            {% comment %} ISI DARI BODY {% endcomment %}
+            {% comment %} JUDGEMENT START {% endcomment %}
+            <div class="card-header">
+              <h5>Judgement</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% comment %} JUDGEMENT END {% endcomment %}
+            {% comment %} CHECKEDBY START {% endcomment %}
+            {% if rir_sampletest_checkedby %}
+            <div class="card-header">
+              <h5>Checked By</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% comment %} CHECKEDBY END {% endcomment %}
+            {% comment %} ISI SELESAI DARI BODY {% endcomment %}
+          </div>
+        </div>
+        {% endif %}
+        {% comment %} SAMPLE TEST END {% endcomment %}
+
+        {% comment %} RESTRICTED SUBSTANCE START {% endcomment %}
+        {% if rir_restrictedsubstance_judgement %}
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Restricted Substance</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            {% comment %} ISI DARI BODY {% endcomment %}
+            {% comment %} JUDGEMENT START {% endcomment %}
+            <div class="card-header">
+              <h5>Judgement</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% comment %} JUDGEMENT END {% endcomment %}
+            {% comment %} CHECKEDBY START {% endcomment %}
+            {% if rir_restrictedsubstance_checkedby %}
+            <div class="card-header">
+              <h5>Checked By</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% comment %} CHECKEDBY END {% endcomment %}
+            {% comment %} ISI SELESAI DARI BODY {% endcomment %}
+          </div>
+        </div>
+        {% endif %}
+        {% comment %} RESTRICTED SUBSTANCE END {% endcomment %}
+
+        {% comment %} ENVIRONMENTAL ISSUE START {% endcomment %}
+        {% if rir_environmentalissue_judgement %}
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Environmental Issue</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            {% comment %} ISI DARI BODY {% endcomment %}
+            {% comment %} JUDGEMENT START {% endcomment %}
+            <div class="card-header">
+              <h5>Judgement</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% comment %} JUDGEMENT END {% endcomment %}
+            {% comment %} CHECKEDBY START {% endcomment %}
+            {% if rir_environmentalissue_checkedby %}
+            <div class="card-header">
+              <h5>Checked By</h5>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% comment %} CHECKEDBY END {% endcomment %}
+            {% comment %} ISI SELESAI DARI BODY {% endcomment %}
+          </div>
+        </div>
+        {% endif %}
+        {% comment %} ENVIRONMENTAL ISSUE END {% endcomment %}
+
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}
