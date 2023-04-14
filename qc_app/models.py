@@ -13,6 +13,7 @@ class CategoryType(models.TextChoices):
     ROPES               = 'Ropes'
     CHOPPED_FIBERS      = 'Chopped Fibers'
     CHLOROPRENE_POLYMER = 'Chloroprene Polymer'
+    RAW_CORDS           = 'Raw Cords'
     
 # RIR START
 class rirApprovalList(models.Model):
