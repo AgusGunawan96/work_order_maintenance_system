@@ -98,6 +98,17 @@ class rirDetailSampleTestCheckedby (models.Model):
     sample_test_user_checked_by = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     sample_test_checked_by      = models.BooleanField(default=False, blank=True, null=True)
     sample_test_remark          = models.CharField(max_length=200, null=True, blank=True)
+
+class rirMaterial(models.Model):
+    name                           = models.CharField(max_length=200)
+    classification                 = models.CharField(max_length=50, choices=CategoryType.choices)
+    condition                      = models.CharField(max_length=200, null=True, blank=True)
+    location                       = models.CharField(max_length=200, null=True, blank=True)
+    classification_status          = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return self.name + " " + self.classification
+    
 # RIR END
 
 # SPECIAL JUDGEMENT START

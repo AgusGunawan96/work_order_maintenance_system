@@ -1,5 +1,5 @@
 from django import forms 
-from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, CategoryType
+from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, CategoryType, rirMaterial
 from django.forms import ClearableFileInput, formset_factory
 from django_select2.forms import Select2Widget
 
@@ -16,6 +16,10 @@ class rirHeaderForms(forms.ModelForm):
     choices=CategoryType.choices,
     widget=Select2Widget,
     coerce=str,
+    )
+    material = forms.ModelChoiceField(
+        queryset=rirMaterial.objects.all(),
+        widget=Select2Widget
     )
     class Meta():
         model = rirHeader

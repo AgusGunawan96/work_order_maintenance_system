@@ -8,4 +8,5 @@ urlpatterns = [
     # path('CreateUserdata/', views.CreateUserdata, name='CreateUserdata'),
     # path('CreateUserInfoData/', views.CreateUserInfoData, name='CreateUserInfoData'),
     # path('CreateIPAddressUnRegistered/', views.CreateIPAddressUnRegistered, name='CreateIPAddressUnRegistered'),
+    # path('CreateMaterial/', views.CreateMaterial, name='CreateMaterial'),
 ]

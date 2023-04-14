@@ -9,6 +9,7 @@ from csv import reader
 from django.contrib.auth.models import User, Group
 from master_app.models import UserProfileInfo
 from it_app.models import IPAddress, Hardware
+from qc_app.models import rirMaterial
 from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
@@ -129,3 +130,14 @@ def CreateIPAddressUnRegistered(request):
             data.append(IPAddressUNRegistered)
         IPAddress.objects.bulk_create(data)
     return JsonResponse('IP Address Un Registered csv is now working', safe=False)
+
+@login_required
+def CreateMaterial(request):
+    with open('templates/csv/material.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for name,classification,condition,location, classification_status, *__ in csvf:
+            material = rirMaterial(name = name, classification = classification, condition = condition, location = location, classification_status = classification_status )
+            data.append(material)
+        rirMaterial.objects.bulk_create(data)
+    return JsonResponse('Material csv is now working', safe=False)
