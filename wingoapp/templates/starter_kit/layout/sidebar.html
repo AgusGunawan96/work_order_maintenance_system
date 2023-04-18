@@ -38,7 +38,7 @@
               ><i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
             </div>
           </li>
-          {% if perms.costcontrol_app %}
+          {% comment %} {% if perms.costcontrol_app %}
           <li class="dropdown"><a class="nav-link menu-title link-nav" href="/costcontrol_app/dashboard/"><i data-feather="home">
           </i><span>Dashboard</span></a></li>
           {% endif %}
@@ -57,7 +57,7 @@
           {% if perms.accounting_app %}
           <li class="dropdown"><a class="nav-link menu-title link-nav" href="/accounting_app/dashboard/"><i data-feather="home">
           </i><span>Dashboard</span></a></li>
-          {% endif %}
+          {% endif %} {% endcomment %}
           {% comment %} {{ request.user.username }}  {% endcomment %}
           {% if perms.it_app %}
           {% comment %} <li class="dropdown"><a class="nav-link menu-title" href="javascript:void(0)">Master Module</a>

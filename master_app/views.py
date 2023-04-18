@@ -136,8 +136,8 @@ def CreateMaterial(request):
     with open('templates/csv/material.csv', 'r') as csv_file:
         csvf = reader(csv_file)
         data = []
-        for name,classification,condition,location, classification_status, *__ in csvf:
-            material = rirMaterial(name = name, classification = classification, condition = condition, location = location, classification_status = classification_status )
+        for name,classification_id,condition,location, classification_status, *__ in csvf:
+            material = rirMaterial(name = name, classification_id = classification_id, condition = condition, location = location, classification_status = classification_status )
             data.append(material)
         rirMaterial.objects.bulk_create(data)
     return JsonResponse('Material csv is now working', safe=False)
