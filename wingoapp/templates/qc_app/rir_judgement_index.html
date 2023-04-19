@@ -50,6 +50,7 @@
                                 <th>RIR No</th>
                                 <th>Type</th>
                                 <th>Material Name</th>
+                                <th>Incoming Type</th>
                                 <th>Incoming</th>
                                 <th>Expired</th>
                                 <th>Action</th>
@@ -61,6 +62,7 @@
                                     <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}">{{coa.header.rir_no}}</td>
                                     <td>{{coa.header.category}}</td>
                                     <td>{{coa.header.material.name}}</td>
+                                    <td>{{coa.header.incoming_type}}</td>
                                     <td>{{coa.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{coa.header.expired_at|date:"F j, Y"}}</td>
                                     <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' coa.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
@@ -85,6 +87,7 @@
                                 <th>RIR No</th>
                                 <th>Type</th>
                                 <th>Material Name</th>
+                                <th>Incoming Type</th>
                                 <th>Incoming</th>
                                 <th>Expired</th>
                                 <th>Action</th>
@@ -95,7 +98,7 @@
                                 <tr>
                                     <td><a href="{% url 'qc_app:rir_detail' appearance.header.id %}"> {{appearance.header.rir_no}}</td>
                                     <td>{{appearance.header.category}}</td>
-                                    <td>{{appearance.header.material.name}}</td>
+                                    <td>{{appearance.header.incoming_type}}</td>
                                     <td>{{appearance.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{appearance.header.expired_at|date:"F j, Y"}}</td>
                                     <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' appearance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
@@ -120,6 +123,7 @@
                                 <th>RIR No</th>
                                 <th>Type</th>
                                 <th>Material Name</th>
+                                <th>Incoming Type</th>
                                 <th>Incoming</th>
                                 <th>Expired</th>
                                 <th>Action</th>
@@ -130,7 +134,7 @@
                                 <tr>
                                     <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}"> {{restricted_substance.header.rir_no}}</td>
                                     <td>{{restricted_substance.header.category}}</td>
-                                    <td>{{restricted_substance.header.material.name}}</td>
+                                    <td>{{restricted_substance.header.incoming_type}}</td>
                                     <td>{{restricted_substance.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{restricted_substance.header.expired_at|date:"F j, Y"}}</td>
                                     <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' restricted_substance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
@@ -186,6 +190,7 @@
                                 <th>RIR No</th>
                                 <th>Type</th>
                                 <th>Material Name</th>
+                                <th>Incoming Type</th>
                                 <th>Incoming</th>
                                 <th>Expired</th>
                                 <th>Action</th>
@@ -196,7 +201,7 @@
                                 <tr>
                                     <td><a href="{% url 'qc_app:rir_detail' environmental_issue.header.id %}">{{environmental_issue.header.rir_no}}</td>
                                     <td>{{environmental_issue.header.category}}</td>
-                                    <td>{{environmental_issue.header.material.name}}</td>
+                                    <td>{{environmental_issue.header.incoming_type}}</td>
                                     <td>{{environmental_issue.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{environmental_issue.header.expired_at|date:"F j, Y"}}</td>
                                     <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' environmental_issue.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>

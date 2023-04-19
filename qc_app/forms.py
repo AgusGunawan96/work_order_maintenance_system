@@ -38,13 +38,19 @@ class rirHeaderForms(forms.ModelForm):
 class rirDetailCoaContentJudgementForms(forms.ModelForm):
     class Meta():
         model = rirDetailCoaContentJudgement
-        fields = ('coa_content_remark',)
-
+        fields = ('coa_content_remark','is_special_judgement')
+        widgets = {
+            'coa_content_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirDetailCoaContentCheckedByForms(forms.ModelForm):
     class Meta():
         model = rirDetailCoaContentCheckedby
-        fields = ('coa_content_remark',)
-
+        fields = ('coa_content_remark','is_special_judgement')
+        widgets = {
+            'coa_content_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirCoaContentAttachmentForms(forms.ModelForm):
     class Meta():
         model = rirCoaContentAttachment
@@ -56,13 +62,19 @@ class rirCoaContentAttachmentForms(forms.ModelForm):
 class rirDetailAppearenceJudgementForms(forms.ModelForm):
     class Meta():
         model = rirDetailAppearenceJudgement
-        fields = ('appearence_remark',)
-
+        fields = ('appearence_remark','is_special_judgement')
+        widgets = {
+            'appearence_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirDetailAppearenceCheckedByForms(forms.ModelForm):
     class Meta():
         model = rirDetailAppearenceCheckedby
-        fields = ('appearence_remark',)
-
+        fields = ('appearence_remark','is_special_judgement')
+        widgets = {
+            'appearence_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirAppearanceAttachmentForms(forms.ModelForm):
     class Meta():
         model = rirAppearanceAttachment
@@ -74,13 +86,19 @@ class rirAppearanceAttachmentForms(forms.ModelForm):
 class rirDetailRestrictedSubstanceJudgementForms(forms.ModelForm):
     class Meta():
         model = rirDetailRestrictedSubstanceJudgement
-        fields = ('restricted_substance_remark',)
-
+        fields = ('restricted_substance_remark','is_special_judgement')
+        widgets = {
+            'restricted_substance_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirDetailRestrictedSubstanceCheckedByForms(forms.ModelForm):
     class Meta():
         model = rirDetailRestrictedSubstanceCheckedby
-        fields = ('restricted_substance_remark',)
-
+        fields = ('restricted_substance_remark','is_special_judgement')
+        widgets = {
+            'restricted_substance_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirRestrictedSubstanceAttachmentForms(forms.ModelForm):
     class Meta():
         model = rirRestrictedSubstanceAttachment
@@ -92,13 +110,19 @@ class rirRestrictedSubstanceAttachmentForms(forms.ModelForm):
 class rirDetailEnvironmentalIssueJudgementForms(forms.ModelForm):
     class Meta():
         model = rirDetailEnvironmentalIssueJudgement
-        fields = ('environmental_issue_remark',)
-
+        fields = ('environmental_issue_remark','is_special_judgement')
+        widgets = {
+            'environmental_issue_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirDetailEnvironmentalIssueCheckedByForms(forms.ModelForm):
     class Meta():
         model = rirDetailEnvironmentalIssueCheckedby
-        fields = ('environmental_issue_remark',)
-
+        fields = ('environmental_issue_remark','is_special_judgement')
+        widgets = {
+            'environmental_issue_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirEnvironmentalIssueAttachmentForms(forms.ModelForm):
     class Meta():
         model = rirEnvironmentalIssueAttachment
@@ -110,13 +134,19 @@ class rirEnvironmentalIssueAttachmentForms(forms.ModelForm):
 class rirDetailSampleTestJudgementForms(forms.ModelForm):
     class Meta():
         model = rirDetailSampleTestJudgement
-        fields = ('sample_test_remark',)
-
+        fields = ('sample_test_remark','is_special_judgement')
+        widgets = {
+            'sample_test_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirDetailSampleTestCheckedByForms(forms.ModelForm):
     class Meta():
         model = rirDetailSampleTestCheckedby
-        fields = ('sample_test_remark',)
-
+        fields = ('sample_test_remark','is_special_judgement')
+        widgets = {
+            'sample_test_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirSampleTestAttachmentForms(forms.ModelForm):
     class Meta():
         model = rirSampleTestAttachment

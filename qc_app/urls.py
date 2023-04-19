@@ -18,4 +18,17 @@ urlpatterns = [
     path('rir/rir_supervisor_return/<int:rir_id>', views.rir_supervisor_return, name = 'rir_supervisor_return'),
     path('rir/rir_manager_return/<int:rir_id>', views.rir_manager_return, name = 'rir_manager_return'),
     path('rir/rir_download_report/<int:rir_id>', views.rir_download_report, name = 'rir_download_report'),
+
+    path('rir/rir_judgement_coa_approve/<int:rir_id>', views.rir_judgement_coa_approve, name='rir_judgement_coa_approve'),
+    path('rir/rir_judgement_appearance_approve/<int:rir_id>', views.rir_judgement_appearance_approve, name='rir_judgement_appearance_approve'),
+    path('rir/rir_judgement_sampletest_approve/<int:rir_id>', views.rir_judgement_sampletest_approve, name='rir_judgement_sampletest_approve'),
+    path('rir/rir_judgement_restrictedsubstance_approve/<int:rir_id>', views.rir_judgement_restrictedsubstance_approve, name='rir_judgement_restrictedsubstance_approve'),
+    path('rir/rir_judgement_environmentalissue_approve/<int:rir_id>', views.rir_judgement_environmentalissue_approve, name='rir_judgement_environmentalissue_approve'),
+
+    path('rir/rir_checkedby_coa_approve/<int:rir_id>', views.rir_checkedby_coa_approve, name='rir_checkedby_coa_approve'),
+    path('rir/rir_checkedby_appearance_approve/<int:rir_id>', views.rir_checkedby_appearance_approve, name='rir_checkedby_appearance_approve'),
+    path('rir/rir_checkedby_sampletest_approve/<int:rir_id>', views.rir_checkedby_sampletest_approve, name='rir_checkedby_sampletest_approve'),
+    path('rir/rir_checkedby_restrictedsubstance_approve/<int:rir_id>', views.rir_checkedby_restrictedsubstance_approve, name='rir_checkedby_restrictedsubstance_approve'),
+    path('rir/rir_checkedby_environmentalissue_approve/<int:rir_id>', views.rir_checkedby_environmentalissue_approve, name='rir_checkedby_environmentalissue_approve'),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
