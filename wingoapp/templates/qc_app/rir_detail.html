@@ -96,10 +96,11 @@
           <div class="card-body">
             {% comment %} ISI DARI BODY {% endcomment %}
             {% comment %} JUDGEMENT START {% endcomment %}
+            <hr class="">
             <div class="card-header">
-              <h5>Judgement</h5>
+              <h5>Judgement | {% if not rir_coa_judgement.coa_content_judgement %} Waiting for judgement {% else %} Approved {% endif %}</h5>
             </div>
-            <div class="row">
+          <div class="row">
               <div class="col">
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Issue Date</label>
@@ -108,16 +109,43 @@
                   </div>
                 </div>
                 {% if rir_coa_judgement.coa_content_judgement %}
-{% comment %} Kondisi apabila start {% endcomment %}
+                  {% comment %} Kondisi apabila start {% endcomment %}
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">Bakal jadi list Attachment apaboila sudah di approve</label>
+                  <label class="col-sm-3 col-form-label">Judgement By</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_coa_judgement.created_at }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_coa_judgement.coa_content_user_judgement.user.first_name }} {{ rir_coa_judgement.coa_content_user_judgement.user.last_name }}" readonly>
                   </div>
                 </div>
-{% comment %}  Kondisi selesai {% endcomment %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_coa_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_coa_judgement.coa_content_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_coa_judgement_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+              {% comment %}  Kondisi selesai {% endcomment %}
                 {% else %}
                 {% if rir_approval_judgement_list %}
+               
                 <form method="POST" action="{% url 'qc_app:rir_judgement_coa_approve' rir_coa_judgement.header_id %}" enctype="multipart/form-data" >
                   {% csrf_token %}
                   {% for hidden in form_rir_coa_judgement_detail.hidden_fields %}
@@ -198,17 +226,131 @@
             {% comment %} JUDGEMENT END {% endcomment %}
             {% comment %} CHECKEDBY START {% endcomment %}
             {% if rir_coa_checkedby %}
+            <hr class="">
             <div class="card-header">
-              <h5>Checked By</h5>
+              <h5>Checked By | {% if not rir_coa_checkedby.coa_content_checked_by %} Waiting for Checked by {% else %} Approved {% endif %}</h5>
             </div>
             <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_coa_checkedby.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_coa_checkedby.coa_content_checked_by %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Checked By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_coa_checkedby.coa_content_user_checked_by.user.first_name }} {{ rir_coa_checkedby.coa_content_user_checked_by.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_coa_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_coa_checkedby.coa_content_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_coa_checkedby_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+                {% else %}
+                {% comment %} DIMULAI ISI FORM CHECKED BY {% endcomment %}
+                {% if rir_approval_checkedby_list %}
+                <form method="POST" action="{% url 'qc_app:rir_checkedby_coa_approve' rir_coa_checkedby.coa_content_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_coa_checkedby_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_coa_checkedby_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_coa_checkedby_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_coa_checkedby_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_coa_checkedby_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_coa_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_coa_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_coa_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_coa_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_coa_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+            <hr class="">
+          </form>
+                {% endif %}
+                {% comment %} SELESAI ISI FORM CHECKED BY {% endcomment %}
+                {% endif %}
               </div>
             </div>
             {% endif %}
@@ -229,33 +371,261 @@
           <div class="card-body">
             {% comment %} ISI DARI BODY {% endcomment %}
             {% comment %} JUDGEMENT START {% endcomment %}
+            <hr class="">
             <div class="card-header">
-              <h5>Judgement</h5>
+              <h5>Judgement | {% if not rir_appearance_judgement.appearence_judgement %} Waiting for judgement {% else %} Approved {% endif %}</h5>
             </div>
-            <div class="row">
+          <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_appearance_judgement.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_appearance_judgement.appearence_judgement %}
+                  {% comment %} Kondisi apabila start {% endcomment %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Judgement By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_appearance_judgement.appearence_user_judgement.user.first_name }} {{ rir_appearance_judgement.appearence_user_judgement.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_appearance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_appearance_judgement.appearence_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_appearance_judgement_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+              {% comment %}  Kondisi selesai {% endcomment %}
+                {% else %}
+                {% if rir_approval_judgement_list %}
+               
+                <form method="POST" action="{% url 'qc_app:rir_judgement_appearance_approve' rir_appearance_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_appearance_judgement_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_appearance_judgement_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_appearance_judgement_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_appearance_judgement_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_appearance_judgement_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_appearance_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_appearance_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_appearance_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_appearance_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_appearance_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+              </form>
+                {% endif %}
+                {% endif %}
               </div>
             </div>
             {% comment %} JUDGEMENT END {% endcomment %}
             {% comment %} CHECKEDBY START {% endcomment %}
             {% if rir_appearance_checkedby %}
+            <hr class="">
             <div class="card-header">
-              <h5>Checked By</h5>
+              <h5>Checked By | {% if not rir_appearance_checkedby.appearence_checked_by %} Waiting for Checked by {% else %} Approved {% endif %}</h5>
             </div>
             <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_appearance_checkedby.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_appearance_checkedby.appearence_checked_by %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Checked By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_appearance_checkedby.appearence_user_checked_by.user.first_name }} {{ rir_appearance_checkedby.appearence_user_checked_by.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_appearance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_appearance_checkedby.appearence_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_appearance_checkedby_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+                {% else %}
+                {% comment %} DIMULAI ISI FORM CHECKED BY {% endcomment %}
+                {% if rir_approval_checkedby_list %}
+                <form method="POST" action="{% url 'qc_app:rir_checkedby_appearance_approve' rir_appearance_checkedby.appearence_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_appearance_checkedby_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_appearance_checkedby_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_appearance_checkedby_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_appearance_checkedby_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_appearance_checkedby_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_appearance_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_appearance_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_appearance_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_appearance_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_appearance_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+            <hr class="">
+          </form>
+                {% endif %}
+                {% comment %} SELESAI ISI FORM CHECKED BY {% endcomment %}
+                {% endif %}
               </div>
             </div>
             {% endif %}
@@ -276,33 +646,261 @@
           <div class="card-body">
             {% comment %} ISI DARI BODY {% endcomment %}
             {% comment %} JUDGEMENT START {% endcomment %}
+            <hr class="">
             <div class="card-header">
-              <h5>Judgement</h5>
+              <h5>Judgement | {% if not rir_sampletest_judgement.sample_test_judgement %} Waiting for judgement {% else %} Approved {% endif %}</h5>
             </div>
-            <div class="row">
+          <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_sampletest_judgement.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_sampletest_judgement.sample_test_judgement %}
+                  {% comment %} Kondisi apabila start {% endcomment %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Judgement By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_sampletest_judgement.sample_test_user_judgement.user.first_name }} {{ rir_sampletest_judgement.sample_test_user_judgement.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_sampletest_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_sampletest_judgement.sample_test_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_sampletest_judgement_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+              {% comment %}  Kondisi selesai {% endcomment %}
+                {% else %}
+                {% if rir_approval_judgement_list %}
+               
+                <form method="POST" action="{% url 'qc_app:rir_judgement_sampletest_approve' rir_sampletest_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_sampletest_judgement_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_sampletest_judgement_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_sampletest_judgement_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_sampletest_judgement_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_sampletest_judgement_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_sampletest_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_sampletest_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_sampletest_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_sampletest_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_sampletest_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+              </form>
+                {% endif %}
+                {% endif %}
               </div>
             </div>
             {% comment %} JUDGEMENT END {% endcomment %}
             {% comment %} CHECKEDBY START {% endcomment %}
             {% if rir_sampletest_checkedby %}
+            <hr class="">
             <div class="card-header">
-              <h5>Checked By</h5>
+              <h5>Checked By | {% if not rir_sampletest_checkedby.sample_test_checked_by %} Waiting for Checked by {% else %} Approved {% endif %}</h5>
             </div>
             <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_sampletest_checkedby.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_sampletest_checkedby.sample_test_checked_by %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Checked By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_sampletest_checkedby.sample_test_user_checked_by.user.first_name }} {{ rir_sampletest_checkedby.sample_test_user_checked_by.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_sampletest_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_sampletest_checkedby.sample_test_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_sampletest_checkedby_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+                {% else %}
+                {% comment %} DIMULAI ISI FORM CHECKED BY {% endcomment %}
+                {% if rir_approval_checkedby_list %}
+                <form method="POST" action="{% url 'qc_app:rir_checkedby_sampletest_approve' rir_sampletest_checkedby.sample_test_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_sampletest_checkedby_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_sampletest_checkedby_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_sampletest_checkedby_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_sampletest_checkedby_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_sampletest_checkedby_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_sampletest_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_sampletest_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_sampletest_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_sampletest_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_sampletest_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+            <hr class="">
+          </form>
+                {% endif %}
+                {% comment %} SELESAI ISI FORM CHECKED BY {% endcomment %}
+                {% endif %}
               </div>
             </div>
             {% endif %}
@@ -312,7 +910,7 @@
         </div>
         {% endif %}
         {% comment %} SAMPLE TEST END {% endcomment %}
-
+        
         {% comment %} RESTRICTED SUBSTANCE START {% endcomment %}
         {% if rir_restrictedsubstance_judgement %}
         <div class="card">
@@ -323,33 +921,261 @@
           <div class="card-body">
             {% comment %} ISI DARI BODY {% endcomment %}
             {% comment %} JUDGEMENT START {% endcomment %}
+            <hr class="">
             <div class="card-header">
-              <h5>Judgement</h5>
+              <h5>Judgement | {% if not rir_restrictedsubstance_judgement.restricted_substance_judgement %} Waiting for judgement {% else %} Approved {% endif %}</h5>
             </div>
-            <div class="row">
+          <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_restrictedsubstance_judgement.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_restrictedsubstance_judgement.restricted_substance_judgement %}
+                  {% comment %} Kondisi apabila start {% endcomment %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Judgement By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_restrictedsubstance_judgement.restricted_substance_user_judgement.user.first_name }} {{ rir_restrictedsubstance_judgement.restricted_substance_user_judgement.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_restrictedsubstance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_restrictedsubstance_judgement.restricted_substance_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_restrictedsubstance_judgement_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+              {% comment %}  Kondisi selesai {% endcomment %}
+                {% else %}
+                {% if rir_approval_judgement_list %}
+               
+                <form method="POST" action="{% url 'qc_app:rir_judgement_restrictedsubstance_approve' rir_restrictedsubstance_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_restrictedsubstance_judgement_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_restrictedsubstance_judgement_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_restrictedsubstance_judgement_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_restrictedsubstance_judgement_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_restrictedsubstance_judgement_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_restrictedsubstance_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_restrictedsubstance_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_restrictedsubstance_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_restrictedsubstance_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_restrictedsubstance_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+              </form>
+                {% endif %}
+                {% endif %}
               </div>
             </div>
             {% comment %} JUDGEMENT END {% endcomment %}
             {% comment %} CHECKEDBY START {% endcomment %}
             {% if rir_restrictedsubstance_checkedby %}
+            <hr class="">
             <div class="card-header">
-              <h5>Checked By</h5>
+              <h5>Checked By | {% if not rir_restrictedsubstance_checkedby.restricted_substance_checked_by %} Waiting for Checked by {% else %} Approved {% endif %}</h5>
             </div>
             <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_restrictedsubstance_checkedby.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_restrictedsubstance_checkedby.restricted_substance_checked_by %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Checked By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_restrictedsubstance_checkedby.restricted_substance_user_checked_by.user.first_name }} {{ rir_restrictedsubstance_checkedby.restricted_substance_user_checked_by.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_restrictedsubstance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_restrictedsubstance_checkedby.restricted_substance_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_restrictedsubstance_checkedby_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+                {% else %}
+                {% comment %} DIMULAI ISI FORM CHECKED BY {% endcomment %}
+                {% if rir_approval_checkedby_list %}
+                <form method="POST" action="{% url 'qc_app:rir_checkedby_restrictedsubstance_approve' rir_restrictedsubstance_checkedby.restricted_substance_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_restrictedsubstance_checkedby_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_restrictedsubstance_checkedby_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_restrictedsubstance_checkedby_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_restrictedsubstance_checkedby_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_restrictedsubstance_checkedby_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_restrictedsubstance_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_restrictedsubstance_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_restrictedsubstance_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_restrictedsubstance_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_restrictedsubstance_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+            <hr class="">
+          </form>
+                {% endif %}
+                {% comment %} SELESAI ISI FORM CHECKED BY {% endcomment %}
+                {% endif %}
               </div>
             </div>
             {% endif %}
@@ -370,33 +1196,261 @@
           <div class="card-body">
             {% comment %} ISI DARI BODY {% endcomment %}
             {% comment %} JUDGEMENT START {% endcomment %}
+            <hr class="">
             <div class="card-header">
-              <h5>Judgement</h5>
+              <h5>Judgement | {% if not rir_environmentalissue_judgement.environmental_issue_judgement %} Waiting for judgement {% else %} Approved {% endif %}</h5>
             </div>
-            <div class="row">
+          <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_environmentalissue_judgement.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_environmentalissue_judgement.environmental_issue_judgement %}
+                  {% comment %} Kondisi apabila start {% endcomment %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Judgement By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.first_name }} {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_environmentalissue_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_environmentalissue_judgement.environmental_issue_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_environmentalissue_judgement_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+              {% comment %}  Kondisi selesai {% endcomment %}
+                {% else %}
+                {% if rir_approval_judgement_list %}
+               
+                <form method="POST" action="{% url 'qc_app:rir_judgement_environmentalissue_approve' rir_environmentalissue_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_environmentalissue_judgement_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_environmentalissue_judgement_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_environmentalissue_judgement_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_environmentalissue_judgement_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_environmentalissue_judgement_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_environmentalissue_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_environmentalissue_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_environmentalissue_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_environmentalissue_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_environmentalissue_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+              </form>
+                {% endif %}
+                {% endif %}
               </div>
             </div>
             {% comment %} JUDGEMENT END {% endcomment %}
             {% comment %} CHECKEDBY START {% endcomment %}
             {% if rir_environmentalissue_checkedby %}
+            <hr class="">
             <div class="card-header">
-              <h5>Checked By</h5>
+              <h5>Checked By | {% if not rir_environmentalissue_checkedby.environmental_issue_checked_by %} Waiting for Checked by {% else %} Approved {% endif %}</h5>
             </div>
             <div class="row">
               <div class="col">
                 <div class="mb-3 row">
-                  <label class="col-sm-3 col-form-label">MATERIAL NAME</label>
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_header.material }}" readonly>
+                    <input class="form-control" type="text" value="{{ rir_environmentalissue_checkedby.created_at }}" readonly>
                   </div>
                 </div>
+                {% if rir_environmentalissue_checkedby.environmental_issue_checked_by %}
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Checked By</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.first_name }} {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Special Judgement</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{% if rir_environmentalissue_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Remark</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_environmentalissue_checkedby.environmental_issue_remark}}</textarea >
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <form class="theme-form mega-form">
+                      <div class="mb-3">  
+                        <label class="col-form-label">List Attachment</label>
+                        <ul>
+                            <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                              {% for attachment in rir_environmentalissue_checkedby_attachment %}
+                          <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                          {% endfor %}
+                            </div>
+                          </ul>
+                      </div>
+                    </form>
+                </div>
+                {% else %}
+                {% comment %} DIMULAI ISI FORM CHECKED BY {% endcomment %}
+                {% if rir_approval_checkedby_list %}
+                <form method="POST" action="{% url 'qc_app:rir_checkedby_environmentalissue_approve' rir_environmentalissue_checkedby.environmental_issue_judgement.header_id %}" enctype="multipart/form-data" >
+                  {% csrf_token %}
+                  {% for hidden in form_rir_environmentalissue_checkedby_detail.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_environmentalissue_checkedby_detail.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_environmentalissue_checkedby_detail.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_environmentalissue_checkedby_detail.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_environmentalissue_checkedby_detail.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% for hidden in form_rir_environmentalissue_attachment.hidden_fields %}
+                  {{ hidden }}
+                   {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                  {% if form_rir_environmentalissue_attachment.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_rir_environmentalissue_attachment.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% for field in form_rir_environmentalissue_attachment.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+        
+                      {% if form_rir_environmentalissue_attachment.is_bound %}
+                        {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                              {{ error }}
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-success">Approve</button>
+            <hr class="">
+          </form>
+                {% endif %}
+                {% comment %} SELESAI ISI FORM CHECKED BY {% endcomment %}
+                {% endif %}
               </div>
             </div>
             {% endif %}

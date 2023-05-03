@@ -34,7 +34,7 @@
           <li class="nav-item"><a class="nav-link active" id="top-judgement-coa-tab" data-bs-toggle="tab" href="#top-judgement-coa" role="tab" aria-controls="top-judgement-coa" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>COA Content</a></li>
           <li class="nav-item"><a class="nav-link" id="top-judgement-appearance-tab" data-bs-toggle="tab" href="#top-judgement-appearance" role="tab" aria-controls="top-judgement-appearance" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Appearance</a></li>
           <li class="nav-item"><a class="nav-link" id="top-judgement-restricted-substance-tab" data-bs-toggle="tab" href="#top-judgement-restricted-substance" role="tab" aria-controls="top-judgement-restricted-substance" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>restricted Substance</a></li>
-          <li class="nav-item"><a class="nav-link" id="top-sample-test-tab" data-bs-toggle="tab" href="#top-sample-test" role="tab" aria-controls="top-sample-test" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Sample Test</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-judgement-sample-test-tab" data-bs-toggle="tab" href="#top-judgement-sample-test" role="tab" aria-controls="top-judgement-sample-test" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Sample Test</a></li>
           <li class="nav-item"><a class="nav-link" id="top-environmental-issue-tab" data-bs-toggle="tab" href="#top-environmental-issue" role="tab" aria-controls="top-environmental-issue" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Environmental Issue</a></li>
         </ul>
         <div class="tab-content" id="top-tabContent">
@@ -81,7 +81,7 @@
                     <div class="card">
                       <div class="card-body">
                         <div class="table-responsive">
-                          <table class="display" id="basic-6">
+                          <table class="display" id="basic-3">
                             <thead>
                               <tr>
                                 <th>RIR No</th>
@@ -98,12 +98,14 @@
                                 <tr>
                                     <td><a href="{% url 'qc_app:rir_detail' appearance.header.id %}"> {{appearance.header.rir_no}}</td>
                                     <td>{{appearance.header.category}}</td>
+                                    <td>{{appearance.header.material.name}}</td>
                                     <td>{{appearance.header.incoming_type}}</td>
                                     <td>{{appearance.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{appearance.header.expired_at|date:"F j, Y"}}</td>
-                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' appearance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td><a href="{% url 'qc_app:rir_detail' appearance.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' appearance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
+
                             </tbody>
                           </table>
                         </div>
@@ -117,7 +119,7 @@
                     <div class="card">
                       <div class="card-body">
                         <div class="table-responsive">
-                          <table class="display" id="basic-3">
+                          <table class="display" id="basic-5">
                             <thead>
                               <tr>
                                 <th>RIR No</th>
@@ -132,12 +134,13 @@
                             <tbody>
                                 {% for restricted_substance in judgement_restricted_substance %}
                                 <tr>
-                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}"> {{restricted_substance.header.rir_no}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' restricted_substance.header.id %}"> {{restricted_substance.header.rir_no}}</td>
                                     <td>{{restricted_substance.header.category}}</td>
+                                    <td>{{restricted_substance.header.material.name}}</td>
                                     <td>{{restricted_substance.header.incoming_type}}</td>
                                     <td>{{restricted_substance.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{restricted_substance.header.expired_at|date:"F j, Y"}}</td>
-                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' restricted_substance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td><a href="{% url 'qc_app:rir_detail' restricted_substance.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' restricted_substance.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -153,22 +156,28 @@
                     <div class="card">
                       <div class="card-body">
                         <div class="table-responsive">
-                          <table class="display" id="basic-3">
+                          <table class="display" id="basic-7">
                             <thead>
                               <tr>
                                 <th>RIR No</th>
                                 <th>Type</th>
                                 <th>Material Name</th>
+                                <th>Incoming Type</th>
+                                <th>Incoming</th>
+                                <th>Expired</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
                             <tbody>
                                 {% for sample_test in judgement_sample_test %}
                                 <tr>
-                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}">{{sample_test.header.rir_no}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' sample_test.header.id %}">{{sample_test.header.rir_no}}</td>
                                     <td>{{sample_test.header.category}}</td>
                                     <td>{{sample_test.header.material.name}}</td>
-                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' sample_test.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td>{{sample_test.header.incoming_type}}</td>
+                                    <td>{{sample_test.header.incoming_at|date:"F j, Y"}}</td>
+                                    <td>{{sample_test.header.expired_at|date:"F j, Y"}}</td>
+                                    <td><a href="{% url 'qc_app:rir_detail' sample_test.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' sample_test.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -184,7 +193,7 @@
                     <div class="card">
                       <div class="card-body">
                         <div class="table-responsive">
-                          <table class="display" id="basic-4">
+                          <table class="display" id="basic-9">
                             <thead>
                               <tr>
                                 <th>RIR No</th>
@@ -201,10 +210,11 @@
                                 <tr>
                                     <td><a href="{% url 'qc_app:rir_detail' environmental_issue.header.id %}">{{environmental_issue.header.rir_no}}</td>
                                     <td>{{environmental_issue.header.category}}</td>
+                                    <td>{{environmental_issue.header.material.name}}</td>
                                     <td>{{environmental_issue.header.incoming_type}}</td>
                                     <td>{{environmental_issue.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{environmental_issue.header.expired_at|date:"F j, Y"}}</td>
-                                    <td><a href="{% url 'qc_app:rir_detail' coa.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' environmental_issue.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
+                                    <td><a href="{% url 'qc_app:rir_detail' environmental_issue.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' environmental_issue.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

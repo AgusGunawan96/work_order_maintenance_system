@@ -81,7 +81,7 @@
 <body onload="printContent()">
     <h5 class="bordered-heading" style="border: 1px solid #ccc;">{{ rir_header.category }}</h5>
     <h3 style="text-align: center;"><u>RECEIVING INSPECTION REPORT</u></h3>
-    <p class="form_text1"><span>MATERIAL NAME</span>: <u>{{ rir_header.material }}</u> </p>
+    <p class="form_text1"><span>MATERIAL NAME</span>: <u>{{ rir_header.material.name }}</u> </p>
     <p class="form_text1"><span>VENDOR </span>: <u>{{ rir_header.vendor }}</u> </p>
     <p class="form_text1"><span>PO NUMBER</span>: <u>{{ rir_header.po_number }}</u> </p>
     <p class="form_text1"><span>LOT NO</span>: <u>{{ rir_header.lot_no }}</u> </p>
@@ -105,7 +105,7 @@
         <tbody>
             {% if rir_coa_judgement or rir_coa_checkedby %}
             <tr class="section-detail">
-                <td style="padding: 15px;">1. COA Content</td>
+                <td style="padding: 15px;">COA Content</td>
                 <td style="padding: 15px;">
                     {% if rir_coa_judgement.coa_content_user_judgement %}
                     Judgement By {{ rir_coa_judgement.coa_content_user_judgement.user.first_name }} {{ rir_coa_judgement.coa_content_user_judgement.user.last_name }}
@@ -125,7 +125,7 @@
             {% endif %}
             {% if rir_appearance_judgement or rir_appearance_checkedby %}
             <tr class="section-detail">
-                <td style="padding: 15px;">2. Appearance</td>
+                <td style="padding: 15px;">Appearance</td>
                 <td style="padding: 15px;">
                     {% if rir_appearance_judgement.appearence_user_judgement %}
                     Judgement By {{ rir_appearance_judgement.appearence_user_judgement.user.first_name }} {{ rir_coa_judgement.appearence_user_judgement.user.last_name }}
@@ -145,7 +145,7 @@
             {% endif %}
             {% if rir_sampletest_judgement or rir_sampletest_checkedby %}
             <tr class="section-detail">
-                <td style="padding: 15px;">3. Sample Test</td>
+                <td style="padding: 15px;">Sample Test</td>
                 <td style="padding: 15px;">
                     {% if rir_sampletest_judgement.sample_test_user_judgement %}
                     Judgement By {{ rir_sampletest_judgement.sample_test_user_judgement.user.first_name }} {{ rir_sampletest_judgement.sample_test_user_judgement.user.last_name }}
@@ -165,7 +165,7 @@
             {% endif %}
             {% if rir_restrictedsubstance_judgement or rir_restrictedsubstance_checkedby %}
             <tr class="section-detail">
-                <td style="padding: 15px;">3. Restricted Substance</td>
+                <td style="padding: 15px;">Restricted Substance</td>
                 <td style="padding: 15px;">
                     {% if rir_restrictedsubstance_judgement.restricted_substance_user_judgement %}
                     Judgement By {{ rir_restrictedsubstance_judgement.restricted_substance_user_judgement.user.first_name }} {{ rir_restrictedsubstance_judgement.restricted_substance_user_judgement.user.last_name }}
@@ -187,7 +187,7 @@
                 {% if rir_restrictedsubstance_judgement or rir_restrictedsubstance_checkedby %}
                      {% if rir_sampletest_judgement or rir_sampletest_checkedby %}
                         <tr class="section-detail">
-                            <td style="padding: 15px;">4. Environmental Issue</td>
+                            <td style="padding: 15px;">Environmental Issue</td>
                             <td style="padding: 15px;">
                                 {% if rir_environmentalissue_judgement.environmental_issue_user_judgement %}
                                 Judgement By {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.first_name }} {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.last_name }}
@@ -206,7 +206,7 @@
                         </tr>
                         {% else %}
                         <tr class="section-detail">
-                            <td style="padding: 15px;">3. Environmental Issue</td>
+                            <td style="padding: 15px;">Environmental Issue</td>
                             <td style="padding: 15px;">
                                 {% if rir_environmentalissue_judgement.environmental_issue_user_judgement %}
                                 Judgement By {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.first_name }} {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.last_name }}

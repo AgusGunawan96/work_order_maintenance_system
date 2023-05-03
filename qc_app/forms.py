@@ -1,5 +1,5 @@
 from django import forms 
-from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, rirMaterial, categoryTypeRIR, rirAppearanceAttachment, rirCoaContentAttachment, rirSampleTestAttachment, rirEnvironmentalIssueAttachment, rirRestrictedSubstanceAttachment
+from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, rirMaterial, categoryTypeRIR, rirAppearanceAttachment, rirCoaContentAttachment, rirSampleTestAttachment, rirEnvironmentalIssueAttachment, rirRestrictedSubstanceAttachment, specialJudgement
 from django.forms import ClearableFileInput, formset_factory
 from django_select2.forms import Select2Widget
 from django.forms.widgets import DateTimeInput
@@ -158,6 +158,20 @@ class rirSampleTestAttachmentForms(forms.ModelForm):
 # RIR END
 
 # SPECIAL JUDGEMENT START
+class rirSpecialJudgementForms(forms.ModelForm):
+    class Meta():
+        model = specialJudgement
+        fields = ('rir',)
+
+class rirApprovalSupervisorForms(forms.ModelForm):
+    class Meta():
+        model = rirApprovalSupervisor
+        fields = ('specialjudgement',)
+
+class rirApprovalManagerForms(forms.ModelForm):
+    class Meta():
+        model = rirApprovalManager
+        fields = ('rir_approval_supervisor',)
 class rirApprovalSupervisorReturnForms(forms.ModelForm):
     class Meta():
         model = rirApprovalSupervisor
