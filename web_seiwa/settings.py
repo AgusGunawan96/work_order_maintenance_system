@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',  # Required for elapsed time formatting
     'widget_tweaks',
+    'mathfilters',
     'django_select2',
     'sweetify',
     'accounting_app',

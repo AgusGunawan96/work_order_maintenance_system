@@ -4,7 +4,9 @@ from django.contrib.auth.decorators import login_required
 from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms, ipAddressForms, hardwareForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
+from django.db.models import Count, F, Value
 import datetime
+
 # Create your views here.
 
 @login_required
@@ -80,7 +82,7 @@ def ticket_index(request):
     supervisors = TicketApprovalSupervisor.objects.order_by('-id')
     managers = TicketApprovalManager.objects.order_by('-id')
     its = TicketApprovalIT.objects.order_by('-id')
-    progress = TicketProgressIT.objects.order_by('-id')
+    progress = TicketProgressIT.objects.annotate(percentage=F('function_start') / F('function_end')).order_by('-id')
     context = {
         'tickets'           : tickets, 
         'supervisors'       : supervisors, 

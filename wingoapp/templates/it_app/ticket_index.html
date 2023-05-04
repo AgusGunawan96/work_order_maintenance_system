@@ -1,6 +1,7 @@
 {% extends 'starter_kit/base.html' %}{% load static %}
 {% load sass_tags %}
 {% load widget_tweaks %}
+{% load mathfilters %}
 {% block css %}
 <!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
@@ -448,6 +449,7 @@
                             <th>Summary</th>
                             <th>Assignee</th>
                             <th>priority</th>
+                            <th>Progress</th>
                             <th>Created</th>
                             <th>Last Updated</th>
                           </tr>
@@ -458,9 +460,16 @@
                           {% if progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.id == request.user.id or request.user.userprofileinfo.section_id == 22 %}
                           <tr>
                           <td><a href="{% url 'it_app:ticket_detail' progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.id %}">{{progress.ticket_no}}</td>
-                           <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.title}}</td>
-                           <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.last_name}}</td>
-                           <td>{{progress.priority}}</td>
+                          <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.title}}</td>
+                          <td>{{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.first_name}} {{progress.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.assignee.last_name}}</td>
+                          <td>{{progress.priority}}</td>
+                          <td>
+                            {% if progress.function_start %}
+                            {% widthratio progress.function_start progress.function_end 100 %}%
+                            {% else %}
+                            0%
+                            {% endif %}
+                          </td>
                           <td>{{progress.created_at}}</td>
                           <td>{{progress.updated_at}}</td>
                           </tr>

@@ -145,6 +145,8 @@ class TicketProgressIT(models.Model):
     priority            = models.CharField(max_length=25, choices=TicketPriority.choices, default=TicketPriority.LOW)
     cost                = models.PositiveBigIntegerField(null=True, blank=True)
     review_description  = models.TextField(blank=True, null=True)
+    function_start      = models.PositiveBigIntegerField(blank=True, null=True)
+    function_end        = models.PositiveBigIntegerField(blank=True, null=True)
     created_at          = models.DateTimeField(auto_now_add=True)
     updated_at          = models.DateTimeField(auto_now=True)
     
