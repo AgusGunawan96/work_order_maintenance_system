@@ -53,11 +53,15 @@ class rirHeader (models.Model):
     rir_no                  = models.CharField(max_length=128, null=True, blank=True)
     status                  = models.CharField(max_length=128, null=True, blank=True)
     is_special_judgement    = models.BooleanField(default=False, blank=True, null=True)
+    is_sa                   = models.BooleanField(default=False, blank=True, null=True)
+    is_return               = models.BooleanField(default=False, blank=True, null=True)
     expired_at              = models.DateTimeField('expired at')
     incoming_at             = models.DateTimeField('incoming at')
     incoming_at_external    = models.DateTimeField('incoming at external', null=True, blank=True)
     created_at              = models.DateTimeField('created at', auto_now_add = True)
     updated_at              = models.DateTimeField('updated at', auto_now = True)
+    def __str__(self):
+        return self.rir_no  
 
 class rirCoaContentAttachment (models.Model):
     rir             = models.ForeignKey(rirHeader, on_delete=models.CASCADE, blank=True, null=True)
@@ -193,10 +197,10 @@ class specialJudgement(models.Model):
     updated_at  = models.DateTimeField('updated at', auto_now = True)
 
 class rirApprovalSupervisor(models.Model):
-    specialjudgement            = models.OneToOneField(rirHeader, on_delete=models.CASCADE, null=True, blank=True)
+    specialjudgement            = models.OneToOneField(specialJudgement, on_delete=models.CASCADE, null=True, blank=True)
     supervisor                  = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
-    is_approve_supervisor       = models.BooleanField(default=False, blank=True, null=True)
-    is_rejected_supervisor      = models.BooleanField(default=False, blank=True, null=True)
+    is_pass_supervisor          = models.BooleanField(default=False, blank=True, null=True)
+    is_return_supervisor        = models.BooleanField(default=False, blank=True, null=True)
     is_checked_supervisor       = models.BooleanField(default=False, blank=True, null=True)
     return_reason_supervisor    = models.TextField(blank=True, null=True)
     review_supervisor           = models.TextField(blank=True, null=True)
@@ -206,11 +210,20 @@ class rirApprovalSupervisor(models.Model):
 class rirApprovalManager(models.Model):
     rir_approval_supervisor = models.OneToOneField(rirApprovalSupervisor, on_delete=models.CASCADE, null=True, blank=True)
     manager                 = models.ForeignKey(rirApprovalList, on_delete=models.CASCADE, blank=True, null=True)
-    is_approve_manager      = models.BooleanField(default=False, blank=True, null=True)
-    is_rejected_manager     = models.BooleanField(default=False, blank=True, null=True)
+    is_pass_manager         = models.BooleanField(verbose_name='Is Pass',default=False, blank=True, null=True)
+    is_return_manager       = models.BooleanField(verbose_name='Is Return', default=False, blank=True, null=True)
     is_checked_manager      = models.BooleanField(default=False, blank=True, null=True)
     return_reason_manager   = models.TextField(blank=True, null=True)
     review_manager          = models.TextField(blank=True, null=True)
     created_at              = models.DateTimeField('created_at', auto_now_add=True)
     updated_at              = models.DateTimeField('updated_at', auto_now=True)
+
+class rirApprovalSupervisorAttachment (models.Model):
+    specialJudgement    = models.ForeignKey(specialJudgement, on_delete=models.CASCADE, blank=True, null=True)
+    attachment          = models.FileField(upload_to='RIRSupervisorAttachment/', null=False, blank=True)
+
+class rirApprovalManagerAttachment (models.Model):
+    specialJudgement    = models.ForeignKey(specialJudgement, on_delete=models.CASCADE, blank=True, null=True)
+    attachment          = models.FileField(upload_to='RIRManagerAttachment/', null=False, blank=True)
+
 # SPECIAL JUDGEMENT END

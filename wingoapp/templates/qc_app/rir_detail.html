@@ -1461,6 +1461,459 @@
         {% endif %}
         {% comment %} ENVIRONMENTAL ISSUE END {% endcomment %}
 
+        {% comment %} RIR SPECIAL JUDGEMENT START {% endcomment %}
+        {% if rir_special_judgement %}
+          <div class="card">
+            <div class="card-header pb-0">
+              <h5>Special Judgement Supervisor </h5>
+            </div>
+            <hr class="mt-4 mb-2">
+            <div class="card-body">
+              {% comment %} ISI DARI BODY {% endcomment %}
+              {% comment %} JUDGEMENT START {% endcomment %}
+              <hr class="">
+              <div class="card-header">
+                <h5>Approval Supervisor | {% if not rir_approval_supervisor.is_checked_supervisor %} Waiting for Approval Supervisor {% elif rir_approval_supervisor.is_pass_supervisor %} Passed {% elif rir_approval_supervisor.is_return_supervisor %} Return {% endif %}</h5>
+              </div>
+            <div class="row">
+                <div class="col">
+                  <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label">Issue Date</label>
+                    <div class="col-sm-9">
+                      <input class="form-control" type="text" value="{{ rir_approval_supervisor.created_at }}" readonly>
+                    </div>
+                  </div>
+                  {% if rir_approval_supervisor.is_checked_supervisor %}
+                        {% comment %} Kondisi apabila start {% endcomment %}
+                      <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Approved By</label>
+                        <div class="col-sm-9">
+                          <input class="form-control" type="text" value="{{ rir_approval_supervisor.supervisor.user.first_name }} {{ rir_approval_supervisor.supervisor.user.last_name }}" readonly>
+                        </div>
+                      </div>
+                          {% comment %} Terdapat Reason dan Review dari Supervisor {% endcomment %}
+                          {% if rir_approval_supervisor.review_supervisor %}
+                          <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Review</label>
+                            <div class="col-sm-9">
+                              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_approval_supervisor.review_supervisor}}</textarea >
+                            </div>
+                          </div>
+                          {% elif rir_approval_supervisor.return_reason_supervisor %}
+                          <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Return Reason</label>
+                            <div class="col-sm-9">
+                              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_approval_supervisor.return_reason_supervisor}}</textarea >
+                            </div>
+                          </div>
+                          {% endif %}
+                      <div class="mb-3 row">
+                        <form class="theme-form mega-form">
+                            <div class="mb-3">  
+                              <label class="col-form-label">List Attachment</label>
+                              <ul>
+                                  <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                                    {% for attachment in rir_approval_supervisor_attachment %}
+                                <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                                {% endfor %}
+                                  </div>
+                                </ul>
+                            </div>
+                          </form>
+                      </div>
+                      {% comment %}  Kondisi selesai {% endcomment %}
+                  {% else %}
+                      {% if rir_approval_supervisor_list %}
+                        <form method="POST" action="{% url 'qc_app:rir_supervisor_approval' rir_approval_supervisor.specialjudgement.rir_id %}" enctype="multipart/form-data" >
+                          {% csrf_token %}
+
+                          <!--FORM START -->
+                          {% for hidden in form_rir_approval_supervisor_passreturn_detail.hidden_fields %}
+                          {{ hidden }}
+                           {% endfor %}
+                          <!-- merender semua field form dari objek TaskForm -->
+                          {% if form_rir_approval_supervisor_passreturn_detail.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {% for error in form_rir_approval_supervisor_passreturn_detail.non_field_errors %}
+                                {{ error }}
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+                          {% for field in form_rir_approval_supervisor_passreturn_detail.visible_fields %}
+                            <div class="form-group">
+                              {{ field.label_tag }}
+                            
+                              {% if form_rir_approval_supervisor_passreturn_detail.is_bound %}
+                                {% if field.errors %}
+                                  {% render_field field class="form-control is-invalid" %}
+                                  {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                      {{ error }}
+                                    </div>
+                                  {% endfor %}
+                                {% else %}
+                                  {% render_field field class="form-control is-valid" %}
+                                {% endif %}
+                              {% else %}
+                                {% render_field field class="form-control" %}
+                              {% endif %}
+                              {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                              {% endif %}
+                            </div>
+                          {% endfor %}
+                          <!--FORM END -->
+
+                          <!--FORM START -->
+                          {% for hidden in form_rir_approval_supervisor_pass_detail.hidden_fields %}
+                          {{ hidden }}
+                           {% endfor %}
+                          <!-- merender semua field form dari objek TaskForm -->
+                          {% if form_rir_approval_supervisor_pass_detail.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {% for error in form_rir_approval_supervisor_pass_detail.non_field_errors %}
+                                {{ error }}
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+                          {% for field in form_rir_approval_supervisor_pass_detail.visible_fields %}
+                            <div class="form-group">
+                              {{ field.label_tag }}
+                            
+                              {% if form_rir_approval_supervisor_pass_detail.is_bound %}
+                                {% if field.errors %}
+                                  {% render_field field class="form-control is-invalid" %}
+                                  {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                      {{ error }}
+                                    </div>
+                                  {% endfor %}
+                                {% else %}
+                                  {% render_field field class="form-control is-valid" %}
+                                {% endif %}
+                              {% else %}
+                                {% render_field field class="form-control" %}
+                              {% endif %}
+                              {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                              {% endif %}
+                            </div>
+                          {% endfor %}
+                          <!--FORM END -->
+
+                          <!--FORM START -->
+                          {% for hidden in form_rir_approval_supervisor_return_detail.hidden_fields %}
+                          {{ hidden }}
+                           {% endfor %}
+                          <!-- merender semua field form dari objek TaskForm -->
+                          {% if form_rir_approval_supervisor_return_detail.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {% for error in form_rir_approval_supervisor_return_detail.non_field_errors %}
+                                {{ error }}
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+                          {% for field in form_rir_approval_supervisor_return_detail.visible_fields %}
+                            <div class="form-group">
+                              {{ field.label_tag }}
+                            
+                              {% if form_rir_approval_supervisor_return_detail.is_bound %}
+                                {% if field.errors %}
+                                  {% render_field field class="form-control is-invalid" %}
+                                  {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                      {{ error }}
+                                    </div>
+                                  {% endfor %}
+                                {% else %}
+                                  {% render_field field class="form-control is-valid" %}
+                                {% endif %}
+                              {% else %}
+                                {% render_field field class="form-control" %}
+                              {% endif %}
+                              {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                              {% endif %}
+                            </div>
+                          {% endfor %}
+                          <!--FORM END -->
+
+                          <!--FORM START -->
+                          {% for hidden in form_rir_approval_supervisor.hidden_fields %}
+                          {{ hidden }}
+                           {% endfor %}
+                          <!-- merender semua field form dari objek TaskForm -->
+                          {% if form_rir_approval_supervisor.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {% for error in form_rir_approval_supervisor.non_field_errors %}
+                                {{ error }}
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+                          {% for field in form_rir_approval_supervisor.visible_fields %}
+                            <div class="form-group">
+                              {{ field.label_tag }}
+                            
+                              {% if form_rir_approval_supervisor.is_bound %}
+                                {% if field.errors %}
+                                  {% render_field field class="form-control is-invalid" %}
+                                  {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                      {{ error }}
+                                    </div>
+                                  {% endfor %}
+                                {% else %}
+                                  {% render_field field class="form-control is-valid" %}
+                                {% endif %}
+                              {% else %}
+                                {% render_field field class="form-control" %}
+                              {% endif %}
+                              {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                              {% endif %}
+                            </div>
+                          {% endfor %}
+                          <!--FORM END -->
+
+                          <button type="submit" class="btn btn-success">Approve</button>
+                         </form>
+                      {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+              {% comment %} JUDGEMENT END {% endcomment %}
+              {% comment %} ISI SELESAI DARI BODY {% endcomment %}
+            </div>
+          </div>
+        {% endif %}
+        {% comment %} RIR APPROVAL SUPERVISOR END {% endcomment %}
+
+        {% comment %} RIR APPROVAL MANAGER START {% endcomment %}
+        {% if rir_approval_manager %}
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Special Judgement Manager</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            {% comment %} ISI DARI BODY {% endcomment %}
+            {% comment %} JUDGEMENT START {% endcomment %}
+            <hr class="">
+            <div class="card-header">
+              <h5>Approval Manager | {% if not rir_approval_manager.rir_approval_supervisor %} Waiting for Approval Supervisor {% elif not rir_approval_manager.is_checked_manager %} Waiting for Approval Manager {% elif rir_approval_manager.is_pass_manager %} Passed {% elif rir_approval_manager.is_return_manager %} Returned {% endif %}</h5>
+            </div>
+          <div class="row">
+              <div class="col">
+                <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Issue Date</label>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value="{{ rir_approval_manager.created_at }}" readonly>
+                  </div>
+                </div>
+                {% if rir_approval_manager.is_checked_manager %}
+                      {% comment %} Kondisi apabila start {% endcomment %}
+                    <div class="mb-3 row">
+                      <label class="col-sm-3 col-form-label">Approved By</label>
+                      <div class="col-sm-9">
+                        <input class="form-control" type="text" value="{{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }}" readonly>
+                      </div>
+                    </div>
+                        {% comment %} Terdapat Reason dan Review dari Supervisor {% endcomment %}
+                        {% if rir_approval_manager.review_manager %}
+                        <div class="mb-3 row">
+                          <label class="col-sm-3 col-form-label">Review</label>
+                          <div class="col-sm-9">
+                            <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_approval_manager.review_manager}}</textarea >
+                          </div>
+                        </div>
+                        {% elif rir_approval_manager.return_reason_manager %}
+                        <div class="mb-3 row">
+                          <label class="col-sm-3 col-form-label">Return Reason</label>
+                          <div class="col-sm-9">
+                            <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{rir_approval_manager.return_reason_manager}}</textarea >
+                          </div>
+                        </div>
+                        {% endif %}
+                    <div class="mb-3 row">
+                      <form class="theme-form mega-form">
+                          <div class="mb-3">  
+                            <label class="col-form-label">List Attachment</label>
+                            <ul>
+                                <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                                  {% for attachment in rir_approval_manager_attachment %}
+                              <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                              {% endfor %}
+                                </div>
+                              </ul>
+                          </div>
+                        </form>
+                    </div>
+                    {% comment %}  Kondisi selesai {% endcomment %}
+                {% else %}
+                    {% if rir_approval_manager_list %}
+                      <form method="POST" action="{% url 'qc_app:rir_manager_approval' rir_approval_manager.rir_approval_supervisor.specialjudgement.rir_id %}" enctype="multipart/form-data" >
+                        {% csrf_token %}
+                        
+                          <!--FORM START -->
+                          {% for hidden in form_rir_approval_manager_passreturn_detail.hidden_fields %}
+                          {{ hidden }}
+                           {% endfor %}
+                          <!-- merender semua field form dari objek TaskForm -->
+                          {% if form_rir_approval_manager_passreturn_detail.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {% for error in form_rir_approval_manager_passreturn_detail.non_field_errors %}
+                                {{ error }}
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+                          {% for field in form_rir_approval_manager_passreturn_detail.visible_fields %}
+                            <div class="form-group">
+                              {{ field.label_tag }}
+                            
+                              {% if form_rir_approval_manager_passreturn_detail.is_bound %}
+                                {% if field.errors %}
+                                  {% render_field field class="form-control is-invalid" %}
+                                  {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                      {{ error }}
+                                    </div>
+                                  {% endfor %}
+                                {% else %}
+                                  {% render_field field class="form-control is-valid" %}
+                                {% endif %}
+                              {% else %}
+                                {% render_field field class="form-control" %}
+                              {% endif %}
+                              {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                              {% endif %}
+                            </div>
+                          {% endfor %}
+                          <!--FORM END -->
+
+                        <!--FORM START -->
+                        {% for hidden in form_rir_approval_manager_pass_detail.hidden_fields %}
+                        {{ hidden }}
+                         {% endfor %}
+                        <!-- merender semua field form dari objek TaskForm -->
+                        {% if form_rir_approval_manager_pass_detail.non_field_errors %}
+                          <div class="alert alert-danger" role="alert">
+                            {% for error in form_rir_approval_manager_pass_detail.non_field_errors %}
+                              {{ error }}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                        {% for field in form_rir_approval_manager_pass_detail.visible_fields %}
+                          <div class="form-group">
+                            {{ field.label_tag }}
+                          
+                            {% if form_rir_approval_manager_pass_detail.is_bound %}
+                              {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                  <div class="invalid-feedback">
+                                    {{ error }}
+                                  </div>
+                                {% endfor %}
+                              {% else %}
+                                {% render_field field class="form-control is-valid" %}
+                              {% endif %}
+                            {% else %}
+                              {% render_field field class="form-control" %}
+                            {% endif %}
+                            {% if field.help_text %}
+                              <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                          </div>
+                        {% endfor %}
+                        <!--FORM END -->
+
+                        <!--FORM START -->
+                        {% for hidden in form_rir_approval_manager_return_detail.hidden_fields %}
+                        {{ hidden }}
+                         {% endfor %}
+                        <!-- merender semua field form dari objek TaskForm -->
+                        {% if form_rir_approval_manager_return_detail.non_field_errors %}
+                          <div class="alert alert-danger" role="alert">
+                            {% for error in form_rir_approval_manager_return_detail.non_field_errors %}
+                              {{ error }}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                        {% for field in form_rir_approval_manager_return_detail.visible_fields %}
+                          <div class="form-group">
+                            {{ field.label_tag }}
+                          
+                            {% if form_rir_approval_manager_return_detail.is_bound %}
+                              {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                  <div class="invalid-feedback">
+                                    {{ error }}
+                                  </div>
+                                {% endfor %}
+                              {% else %}
+                                {% render_field field class="form-control is-valid" %}
+                              {% endif %}
+                            {% else %}
+                              {% render_field field class="form-control" %}
+                            {% endif %}
+                            {% if field.help_text %}
+                              <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                          </div>
+                        {% endfor %}
+                        <!--FORM END -->
+
+                        <!--FORM START -->
+                        {% for hidden in form_rir_approval_manager.hidden_fields %}
+                        {{ hidden }}
+                         {% endfor %}
+                        <!-- merender semua field form dari objek TaskForm -->
+                        {% if form_rir_approval_manager.non_field_errors %}
+                          <div class="alert alert-danger" role="alert">
+                            {% for error in form_rir_approval_manager.non_field_errors %}
+                              {{ error }}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                        {% for field in form_rir_approval_manager.visible_fields %}
+                          <div class="form-group">
+                            {{ field.label_tag }}
+                          
+                            {% if form_rir_approval_manager.is_bound %}
+                              {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                  <div class="invalid-feedback">
+                                    {{ error }}
+                                  </div>
+                                {% endfor %}
+                              {% else %}
+                                {% render_field field class="form-control is-valid" %}
+                              {% endif %}
+                            {% else %}
+                              {% render_field field class="form-control" %}
+                            {% endif %}
+                            {% if field.help_text %}
+                              <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                          </div>
+                        {% endfor %}
+                        <!--FORM END -->
+
+                        <button type="submit" class="btn btn-success">Approve</button>
+                       </form>
+                    {% endif %}
+                {% endif %}
+              </div>
+            </div>
+            {% comment %} JUDGEMENT END {% endcomment %}
+            {% comment %} ISI SELESAI DARI BODY {% endcomment %}
+          </div>
+        </div>
+        {% endif %}
+        {% comment %} RIR APPROVAL MANAGER END {% endcomment %}
       </div>
     </div>
   </div>

@@ -9,10 +9,47 @@ import csv
 import xlwt
 from dateutil.relativedelta import relativedelta
 from csv import reader
-from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, specialJudgement, rirCoaContentAttachment, rirAppearanceAttachment, rirSampleTestAttachment, rirEnvironmentalIssueAttachment, rirRestrictedSubstanceAttachment, rirApprovalList
-from qc_app.forms import rirHeaderForms, rirDetailCoaContentJudgementForms, rirDetailCoaContentCheckedByForms, rirDetailAppearenceJudgementForms, rirDetailAppearenceCheckedByForms, rirDetailRestrictedSubstanceJudgementForms, rirDetailRestrictedSubstanceCheckedByForms, rirDetailEnvironmentalIssueJudgementForms, rirDetailEnvironmentalIssueCheckedByForms, rirDetailSampleTestJudgementForms, rirDetailSampleTestCheckedByForms, rirApprovalSupervisorReturnForms, rirApprovalSupervisorPassForms, rirApprovalManagerReturnForms, rirApprovalManagerPassForms, rirCoaContentAttachmentForms, rirAppearanceAttachmentForms, rirSampleTestAttachmentForms, rirEnvironmentalIssueAttachmentForms, rirRestrictedSubstanceAttachmentForms, rirSpecialJudgementForms, rirApprovalSupervisorForms, rirApprovalManagerForms
+from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, specialJudgement, rirCoaContentAttachment, rirAppearanceAttachment, rirSampleTestAttachment, rirEnvironmentalIssueAttachment, rirRestrictedSubstanceAttachment, rirApprovalList, rirApprovalSupervisorAttachment, rirApprovalManagerAttachment
+from qc_app.forms import rirHeaderForms, rirDetailCoaContentJudgementForms, rirDetailCoaContentCheckedByForms, rirDetailAppearenceJudgementForms, rirDetailAppearenceCheckedByForms, rirDetailRestrictedSubstanceJudgementForms, rirDetailRestrictedSubstanceCheckedByForms, rirDetailEnvironmentalIssueJudgementForms, rirDetailEnvironmentalIssueCheckedByForms, rirDetailSampleTestJudgementForms, rirDetailSampleTestCheckedByForms, rirApprovalSupervisorReturnForms, rirApprovalSupervisorPassForms, rirApprovalManagerReturnForms, rirApprovalManagerPassForms, rirCoaContentAttachmentForms, rirAppearanceAttachmentForms, rirSampleTestAttachmentForms, rirEnvironmentalIssueAttachmentForms, rirRestrictedSubstanceAttachmentForms, rirSpecialJudgementForms, rirApprovalSupervisorForms, rirApprovalManagerForms, riApprovalSupervisorAttachmentForms, riApprovalManagerAttachmentForms, rirApprovalSupervisorPassReturnForms, rirApprovalManagerPassReturnForms
 from django.http import HttpResponse
 # Create your views here.
+
+# FUNGSI START
+# Fungsi umum untuk menambahkan kondisi SA
+def rir_sa_check(rir_id):
+    rir_coa_check = rirDetailCoaContentCheckedby.objects.filter(coa_content_judgement__header_id = rir_id).first()
+    rir_appearence_check = rirDetailAppearenceCheckedby.objects.filter(appearence_judgement__header_id = rir_id).first()
+    rir_sampletest_check = rirDetailSampleTestCheckedby.objects.filter(sample_test_judgement__header_id = rir_id).first()
+    rir_restrictedsubstance_check = rirDetailRestrictedSubstanceCheckedby.objects.filter(restricted_substance_judgement__header_id = rir_id).first()
+    rir_environmentalissue_check = rirDetailEnvironmentalIssueCheckedby.objects.filter(environmental_issue_judgement__header_id = rir_id).first()
+    
+    if not rir_coa_check:
+        rir_coa_check = rirDetailCoaContentCheckedByForms().save(commit=False)
+        rir_coa_check.coa_content_checked_by = False
+    if not rir_appearence_check:
+        rir_appearence_check = rirDetailAppearenceCheckedByForms().save(commit=False)
+        rir_appearence_check.appearence_checked_by = False
+    if not rir_sampletest_check:
+        rir_sampletest_check = rirDetailSampleTestCheckedByForms().save(commit=False)
+        rir_sampletest_check.sample_test_checked_by = False
+    if not rir_restrictedsubstance_check:
+        rir_restrictedsubstance_check = rirDetailRestrictedSubstanceCheckedByForms().save(commit=False)
+        rir_restrictedsubstance_check.restricted_substance_checked_by = False
+    if not rir_environmentalissue_check:
+        rir_environmentalissue_check = rirDetailEnvironmentalIssueCheckedByForms().save(commit=False)
+        rir_environmentalissue_check.environmental_issue = False
+        
+    rir_header_check = rirHeader.objects.filter(category__coa_content = rir_coa_check.coa_content_checked_by).filter(category__appearance = rir_appearence_check.appearence_checked_by).filter(category__sample_test = rir_sampletest_check.sample_test_checked_by).filter(category__restricted_substance = rir_restrictedsubstance_check.restricted_substance_checked_by).filter(category__environmental_issue = rir_environmentalissue_check.environmental_issue_checked_by).filter(pk=rir_id)
+    if rir_header_check:
+        rir_header = rirHeader.objects.get(pk = rir_id)
+        rir_header.is_sa = True
+        rir_header.save()
+        return True
+    else:
+        return False
+# End fungsi umum
+# FUNGSI END
+
 @login_required
 def dashboard(request):
     return render(request, 'qc_app/dashboard.html')
@@ -81,6 +118,7 @@ def rir_detail(request, rir_id):
     rir_special_judgement                        = specialJudgement.objects.filter(rir=rir_header).first()
     rir_approval_supervisor                      = rirApprovalSupervisor.objects.filter(specialjudgement=rir_special_judgement).first()
     rir_approval_manager                         = rirApprovalManager.objects.filter(rir_approval_supervisor=rir_approval_supervisor).first()
+    
     rir_coa_judgement_attachment                 = rirCoaContentAttachment.objects.filter(rir_id = rir_id).filter(is_judgement = True ).values('attachment')
     rir_appearance_judgement_attachment          = rirAppearanceAttachment.objects.filter(rir_id = rir_id).filter(is_judgement = True ).values('attachment')
     rir_sampletest_judgement_attachment          = rirSampleTestAttachment.objects.filter(rir_id = rir_id).filter(is_judgement = True ).values('attachment')
@@ -91,11 +129,14 @@ def rir_detail(request, rir_id):
     rir_sampletest_checkedby_attachment          = rirSampleTestAttachment.objects.filter(rir_id = rir_id).filter(is_checkedby = True ).values('attachment')
     rir_restrictedsubstance_checkedby_attachment = rirRestrictedSubstanceAttachment.objects.filter(rir_id = rir_id).filter(is_checkedby = True ).values('attachment')
     rir_environmentalissue_checkedby_attachment  = rirEnvironmentalIssueAttachment.objects.filter(rir_id = rir_id).filter(is_checkedby = True ).values('attachment')
+    rir_approval_supervisor_attachment           = rirApprovalSupervisorAttachment.objects.filter(specialJudgement = rir_special_judgement).values('attachment')
+    rir_approval_manager_attachment              = rirApprovalManagerAttachment.objects.filter(specialJudgement = rir_special_judgement).values('attachment')
+    
     rir_approval_checkedby_list                  = rirApprovalList.objects.filter(is_checked_by = True).filter(user_id = request.user.id).first()
     rir_approval_judgement_list                  = rirApprovalList.objects.filter(is_judgement = True).filter(user_id = request.user.id).first()
     rir_approval_supervisor_list                 = rirApprovalList.objects.filter(is_supervisor = True).filter(user_id = request.user.id).first()
     rir_approval_manager_list                    = rirApprovalList.objects.filter(is_manager = True).filter(user_id = request.user.id).first()
-    
+    # return HttpResponse(rir_special_judgement)    
 
     context = {
         'rir_header'                                    : rir_header,
@@ -110,8 +151,10 @@ def rir_detail(request, rir_id):
         'rir_environmentalissue_judgement'              : rir_environmentalissue_judgement,
         'rir_environmentalissue_checkedby'              : rir_environmentalissue_checkedby,
         'rir_special_judgement'                         : rir_special_judgement,
+
         'rir_approval_supervisor'                       : rir_approval_supervisor,
         'rir_approval_manager'                          : rir_approval_manager,
+
         'rir_coa_judgement_attachment'                  : rir_coa_judgement_attachment,
         'rir_appearance_judgement_attachment'           : rir_appearance_judgement_attachment,
         'rir_sampletest_judgement_attachment'           : rir_sampletest_judgement_attachment,
@@ -122,6 +165,9 @@ def rir_detail(request, rir_id):
         'rir_sampletest_checkedby_attachment'           : rir_sampletest_checkedby_attachment,
         'rir_restrictedsubstance_checkedby_attachment'  : rir_restrictedsubstance_checkedby_attachment,
         'rir_environmentalissue_checkedby_attachment'   : rir_environmentalissue_checkedby_attachment,
+        'rir_approval_supervisor_attachment'            : rir_approval_supervisor_attachment,
+        'rir_approval_manager_attachment'               : rir_approval_manager_attachment,
+
         'rir_approval_checkedby_list'                   : rir_approval_checkedby_list,
         'rir_approval_judgement_list'                   : rir_approval_judgement_list,
         'rir_approval_supervisor_list'                  : rir_approval_supervisor_list,
@@ -133,7 +179,9 @@ def rir_detail(request, rir_id):
         'form_rir_sampletest_attachment'                : rirSampleTestAttachmentForms,
         'form_rir_restrictedsubstance_attachment'       : rirRestrictedSubstanceAttachmentForms,
         'form_rir_environmental_attachment'             : rirEnvironmentalIssueAttachmentForms,
-        
+        'form_rir_approval_supervisor'                  : riApprovalSupervisorAttachmentForms,
+        'form_rir_approval_manager'                     : riApprovalManagerAttachmentForms,
+
         'form_rir_coa_judgement_detail'                 : rirDetailCoaContentJudgementForms,
         'form_rir_appearance_judgement_detail'          : rirDetailAppearenceJudgementForms,
         'form_rir_sampletest_judgement_detail'          : rirDetailSampleTestJudgementForms,
@@ -145,6 +193,14 @@ def rir_detail(request, rir_id):
         'form_rir_sampletest_checkedby_detail'          : rirDetailSampleTestCheckedByForms,
         'form_rir_restrictedsubstance_checkedby_detail' : rirDetailRestrictedSubstanceCheckedByForms,
         'form_rir_environmentalissue_checkedby_detail'  : rirDetailEnvironmentalIssueCheckedByForms,
+
+        'form_rir_approval_supervisor_pass_detail'      : rirApprovalSupervisorPassForms,
+        'form_rir_approval_supervisor_return_detail'    : rirApprovalSupervisorReturnForms,
+        'form_rir_approval_supervisor_passreturn_detail': rirApprovalSupervisorPassReturnForms,
+
+        'form_rir_approval_manager_pass_detail'         : rirApprovalManagerPassForms,
+        'form_rir_approval_manager_return_detail'       : rirApprovalManagerReturnForms,
+        'form_rir_approval_manager_passreturn_detail'   : rirApprovalManagerPassReturnForms,
 
     }
     return render(request, 'qc_app/rir_detail.html', context)
@@ -361,7 +417,8 @@ def rir_checkedby_coa_approve(request, rir_id):
                 rir_detail_sample_test = rirDetailSampleTestJudgementForms().save(commit=False)
                 rir_detail_sample_test.header = rir_header
                 rir_detail_sample_test.save()
-            return redirect('qc_app:rir_judgement_index')
+            rir_sa_check(rir_header.id)
+            return redirect('qc_app:rir_checked_by_index')
         
 @login_required
 def rir_checkedby_appearance_approve(request, rir_id):
@@ -403,7 +460,8 @@ def rir_checkedby_appearance_approve(request, rir_id):
             rir_approval_supervisor.save()
             return redirect('qc_app:rir_special_judgement_index')
         else:
-            return redirect('qc_app:rir_judgement_index')
+            rir_sa_check(rir_header.id)
+            return redirect('qc_app:rir_checked_by_index')
 
 @login_required
 def rir_checkedby_sampletest_approve(request, rir_id):
@@ -445,7 +503,8 @@ def rir_checkedby_sampletest_approve(request, rir_id):
             rir_approval_supervisor.save()
             return redirect('qc_app:rir_special_judgement_index')
         else:
-            return redirect('qc_app:rir_judgement_index')
+            rir_sa_check(rir_header.id)
+            return redirect('qc_app:rir_checked_by_index')
         
 
 @login_required
@@ -488,7 +547,8 @@ def rir_checkedby_restrictedsubstance_approve(request, rir_id):
             rir_approval_supervisor.save()
             return redirect('qc_app:rir_special_judgement_index')
         else:
-            return redirect('qc_app:rir_judgement_index')
+            rir_sa_check(rir_header.id)
+            return redirect('qc_app:rir_checked_by_index')
 
 
 @login_required
@@ -531,7 +591,8 @@ def rir_checkedby_environmentalissue_approve(request, rir_id):
             rir_approval_supervisor.save()
             return redirect('qc_app:rir_special_judgement_index')
         else:
-            return redirect('qc_app:rir_judgement_index')
+            rir_sa_check(rir_header.id)
+            return redirect('qc_app:rir_checked_by_index')
 
 
 @login_required
@@ -552,28 +613,136 @@ def rir_checked_by_index(request):
     return render(request, 'qc_app/rir_checkedby_index.html', context)
 
 @login_required
+def rir_list_sa_index(request):
+    # Disini RIR Header akan disortir apakah kondisinya Pass pada saat di special judgement atau pass ketika tidak ada kondisi SA
+    rir = rirHeader.objects.filter(is_sa = True).order_by('-id')
+    context = {
+        'list_sa_rir' : rir,
+    }
+    return render(request, 'qc_app/rir_list_sa_index.html', context)
+
+@login_required
+def rir_list_return_index(request):
+    # Disini RIR Header akan disortir apakah kondisinya Return pada saat di Special Judgement
+    rir = rirHeader.objects.filter(is_return = True).order_by('-id')
+    context = {
+        'list_return_rir' : rir,
+    }
+    return render(request, 'qc_app/rir_list_return_index.html', context)
+
+@login_required
 def rir_special_judgement_index(request):
-    return HttpResponse('ini merupakan RIR Special Judgement Index')
+    # Disini RIR Header akan disortir apakah kondisinya Special Judgement atau tidak dan akan menampilkan Approval Supervisor dan Manager
+    rir_approval_supervisor = rirApprovalSupervisor.objects.filter(supervisor__isnull = True).order_by('-id')
+    rir_approval_manager = rirApprovalManager.objects.filter(manager__isnull = True).order_by('-id')
+    context = {
+        'rir_supervisor' : rir_approval_supervisor,
+        'rir_manager' : rir_approval_manager,
+    }
+    return render(request, 'qc_app/rir_special_judgement_index.html', context)
 
 @login_required
-def rir_special_judgement_detail(request, rir_detail):
-    return HttpResponse('ini merupakan RIR Special Judgement Detail')
+def rir_supervisor_approval(request, rir_id):
+    # Memanggil Approval dan Header dari COA Content
+    rir_approval = rirApprovalList.objects.filter(user = request.user).first()
+    rir_header = rirHeader.objects.get(pk=rir_id)
+    rir_special_judgement = specialJudgement.objects.filter(rir = rir_header).first()
+    # Update Form Form yang sudah di inisiasikan 
+    rir_approval_supervisor = rirApprovalSupervisor.objects.filter(specialjudgement = rir_special_judgement).first()
+    post = request.POST.copy()
+    post.update({'is_checked_supervisor': True})
+    rir_approval_supervisor_form  = rirApprovalSupervisorPassReturnForms(request.POST, instance = rir_approval_supervisor)
+    rir_approval_supervisor_pass_detail_form = rirApprovalSupervisorPassForms(data=request.POST)
+    rir_approval_supervisor_return_detail_form =  rirApprovalSupervisorReturnForms(data=request.POST)
+    if rir_approval_supervisor_form.is_valid():
+        rir_approval_supervisor_detail = rir_approval_supervisor_form.save(commit=False)
+        rir_approval_supervisor_detail.is_checked_supervisor = True
+        rir_approval_supervisor_detail.supervisor = rir_approval
+        rir_approval_supervisor_detail.save()
+        # memanggil lagi rir_approval_supervisor
+        rir_approval_supervisor = rirApprovalSupervisor.objects.filter(specialjudgement = rir_special_judgement).first()
+        # Dimulai dengan kondisi 
+        if rir_approval_supervisor_pass_detail_form.is_valid() and rir_approval_supervisor_detail.is_pass_supervisor == True:
+            if rir_approval_supervisor_pass_detail_form.is_valid():
+                rir_approval_supervisor_pass_detail_form  = rirApprovalSupervisorPassForms(request.POST, instance = rir_approval_supervisor)
+                rir_approval_supervisor_pass_detail = rir_approval_supervisor_pass_detail_form.save(commit=False)
+                if not rir_approval_supervisor_pass_detail_form == '':
+                    rir_approval_supervisor_pass_detail.is_pass_supervisor = True
+                    rir_approval_supervisor_pass_detail.save()
+            
+        if rir_approval_supervisor_return_detail_form.is_valid() and rir_approval_supervisor_detail.is_return_supervisor == True:
+            if rir_approval_supervisor_return_detail_form.is_valid():
+                rir_approval_supervisor_return_detail_form = rirApprovalSupervisorReturnForms(request.POST, instance = rir_approval_supervisor)
+                rir_approval_supervisor_return_detail = rir_approval_supervisor_return_detail_form.save(commit=False)
+                if not rir_approval_supervisor_return_detail_form == '':
+                    rir_approval_supervisor_return_detail.is_return_supervisor = True
+                    rir_approval_supervisor_return_detail.save()
+        
+        # Simpan Attachment Approval Supervisor (Apabila ada)
+        files = request.FILES.getlist('attachment')
+        for f in files:
+            attachment = rirApprovalSupervisorAttachment(attachment=f)
+            attachment.specialJudgement = rir_special_judgement
+            attachment.save()
+        # Membuat Approval Manager pada Special Judgement
+        rir_approval_manager = rirApprovalManagerForms().save(commit=False)
+        rir_approval_manager.rir_approval_supervisor = rir_approval_supervisor_detail
+        rir_approval_manager.save()
+    return redirect('qc_app:rir_special_judgement_index')
+
 
 @login_required
-def rir_supervisor_approval(request):
-    return HttpResponse('ini merupakan Approval dari supervisor')
+def rir_manager_approval(request, rir_id):
+    # Memanggil Approval dan Header dari COA Content
+    rir_approval = rirApprovalList.objects.filter(user = request.user).first()
+    rir_header = rirHeader.objects.get(pk=rir_id)
+    rir_special_judgement = specialJudgement.objects.filter(rir = rir_header).first()
+    # Update Form Form yang sudah di inisiasikan 
+    rir_approval_manager = rirApprovalManager.objects.filter(rir_approval_supervisor__specialjudgement = rir_special_judgement).first()
+    post = request.POST.copy()
+    post.update({'is_checked_manager': True})
+    rir_approval_manager_form  = rirApprovalManagerPassReturnForms(request.POST, instance = rir_approval_manager)
+    rir_approval_manager_pass_detail_form = rirApprovalManagerPassForms(data=request.POST)
+    rir_approval_manager_return_detail_form =  rirApprovalManagerReturnForms(data=request.POST)
+    if rir_approval_manager_form.is_valid():
+        rir_approval_manager_detail = rir_approval_manager_form.save(commit=False)
+        rir_approval_manager_detail.is_checked_manager = True
+        rir_approval_manager_detail.manager = rir_approval
+        rir_approval_manager_detail.save()
+        # memanggil lagi rir_approval_manager
+        # Dimulai dengan kondisi 
+        if rir_approval_manager_pass_detail_form.is_valid() and rir_approval_manager_detail.is_pass_manager == True:
+            if rir_approval_manager_pass_detail_form.is_valid():
+                rir_approval_manager_pass_detail_form  = rirApprovalManagerPassForms(request.POST, instance = rir_approval_manager)
+                rir_approval_manager_pass_detail = rir_approval_manager_pass_detail_form.save(commit=False)
+                if not rir_approval_manager_pass_detail_form == '':
+                    rir_approval_manager_pass_detail.is_pass_manager = True
+                    rir_special_judgement.is_pass = True
+                    rir_header.is_sa = True
+                    rir_special_judgement.save()
+                    rir_header.save()
+                    rir_approval_manager_pass_detail.save()
+            
+        if rir_approval_manager_return_detail_form.is_valid() and rir_approval_manager_detail.is_return_manager == True:
+            if rir_approval_manager_return_detail_form.is_valid():
+                rir_approval_manager_return_detail_form = rirApprovalManagerReturnForms(request.POST, instance = rir_approval_manager)
+                rir_approval_manager_return_detail = rir_approval_manager_return_detail_form.save(commit=False)
+                if not rir_approval_manager_return_detail_form == '':
+                    rir_approval_manager_return_detail.is_return_manager = True
+                    rir_special_judgement.is_return = True
+                    rir_header.is_return = True
+                    rir_special_judgement.save()
+                    rir_header.save()
+                    rir_approval_manager_return_detail.save()
+        
+        # Simpan Attachment Approval Manager (Apabila ada)
+        files = request.FILES.getlist('attachment')
+        for f in files:
+            attachment = rirApprovalManagerAttachment(attachment=f)
+            attachment.specialJudgement = rir_special_judgement
+            attachment.save()
 
-@login_required
-def rir_manager_approval(request):
-    return HttpResponse('ini merupakan Approval dari Manager')
-
-@login_required
-def rir_supervisor_return(request):
-    return HttpResponse('ini merupakan Return dari supervisor')
-
-@login_required
-def rir_manager_return(request):
-    return HttpResponse('ini merupakan return dari manager')
+    return redirect('qc_app:rir_special_judgement_index')
 
 @login_required
 def rir_download_report(request, rir_id):

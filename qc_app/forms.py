@@ -1,5 +1,5 @@
 from django import forms 
-from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, rirMaterial, categoryTypeRIR, rirAppearanceAttachment, rirCoaContentAttachment, rirSampleTestAttachment, rirEnvironmentalIssueAttachment, rirRestrictedSubstanceAttachment, specialJudgement
+from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, rirMaterial, categoryTypeRIR, rirAppearanceAttachment, rirCoaContentAttachment, rirSampleTestAttachment, rirEnvironmentalIssueAttachment, rirRestrictedSubstanceAttachment, specialJudgement, rirApprovalSupervisorAttachment, rirApprovalManagerAttachment
 from django.forms import ClearableFileInput, formset_factory
 from django_select2.forms import Select2Widget
 from django.forms.widgets import DateTimeInput
@@ -172,23 +172,71 @@ class rirApprovalManagerForms(forms.ModelForm):
     class Meta():
         model = rirApprovalManager
         fields = ('rir_approval_supervisor',)
+
+class rirApprovalSupervisorPassReturnForms(forms.ModelForm):
+    class Meta():
+        model = rirApprovalSupervisor
+        fields = ('is_pass_supervisor', 'is_return_supervisor',)
+    def __init__(self, *args, **kwargs):
+        super(rirApprovalSupervisorPassReturnForms, self).__init__(*args, **kwargs)
+        self.fields['is_pass_supervisor'].label = 'Pass'
+        self.fields['is_return_supervisor'].label = 'Return'
+
+
 class rirApprovalSupervisorReturnForms(forms.ModelForm):
     class Meta():
         model = rirApprovalSupervisor
         fields = ('return_reason_supervisor',)
-
+        widgets = {
+            'return_reason_supervisor'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirApprovalSupervisorPassForms(forms.ModelForm):
     class Meta():
         model = rirApprovalSupervisor
         fields = ('review_supervisor',)
+        widgets = {
+            'review_supervisor'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
+class rirApprovalManagerPassReturnForms(forms.ModelForm):
+    class Meta():
+        model = rirApprovalManager
+        fields = ('is_pass_manager', 'is_return_manager',)
+    def __init__(self, *args, **kwargs):
+        super(rirApprovalManagerPassReturnForms, self).__init__(*args, **kwargs)
+        self.fields['is_pass_manager'].label = 'Pass'
+        self.fields['is_return_manager'].label = 'Return'
 
 class rirApprovalManagerReturnForms(forms.ModelForm):
     class Meta():
         model = rirApprovalManager
         fields = ('return_reason_manager',)
-
+        widgets = {
+            'return_reason_manager'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
 class rirApprovalManagerPassForms(forms.ModelForm):
     class Meta():
         model = rirApprovalManager
         fields = ('review_manager',)
+        widgets = {
+            'review_manager'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            }
+        
+class riApprovalSupervisorAttachmentForms(forms.ModelForm):
+    class Meta():
+        model = rirApprovalSupervisorAttachment
+        fields = ('attachment',)
+        widgets = {
+            'attachment'    : ClearableFileInput(attrs={'multiple':True}),
+        }
+        
+class riApprovalManagerAttachmentForms(forms.ModelForm):
+    class Meta():
+        model = rirApprovalManagerAttachment
+        fields = ('attachment',)
+        widgets = {
+            'attachment'    : ClearableFileInput(attrs={'multiple':True}),
+        }
 # SPECIAL JUDGEMENT END

@@ -241,15 +241,19 @@
         </tr>
         <tr class="section-detail">
             <td rowspan="2" style="padding: 25px;">
-                -
+                {% if rir_approval_manager.is_pass_manager %}
+                Passed
+                {% elif rir_approval_manager.is_return_manager %}
+                Returned
+                {% endif %}
             </td>
             <td rowspan="2" style="padding: 25px;">
-                {% if rir_approval_supervisor.is_approve_supervisor %}
+                {% if rir_approval_supervisor.is_checked_supervisor %}
                 Approved By {{ rir_approval_supervisor.supervisor.user.first_name }} {{ rir_approval_supervisor.supervisor.user.last_name }}
                 {% endif %}
             </td>
             <td rowspan="2" style="padding: 25px;">
-                {% if rir_approval_manager.is_approve_manager %}
+                {% if rir_approval_manager.is_checked_manager %}
                 Approved By {{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }}
                 {% endif %}
             </td>
