@@ -118,9 +118,9 @@
                     {% endif %}
                 </td>
                 <td style="padding: 15px;">
-                    {% if rir_coa_judgement.coa_content_remark %} {{ rir_coa_judgement.coa_content_remark }} {% endif %} 
+                    {% if rir_coa_judgement.coa_content_remark %} - {{ rir_coa_judgement.coa_content_remark }} {% endif %} 
                     <br>
-                    {% if rir_coa_checkedby.coa_content_remark %} {{ rir_coa_checkedby.coa_content_remark }} {% endif %} 
+                    {% if rir_coa_checkedby.coa_content_remark %} - {{ rir_coa_checkedby.coa_content_remark }} {% endif %} 
                 </td>
             </tr>
             {% endif %}
@@ -138,9 +138,9 @@
                     {% endif %}
                 </td>
                 <td style="padding: 15px;">
-                    {% if rir_appearance_judgement.appearence_remark %} {{ rir_appearance_judgement.appearence_remark }} {% endif %} 
+                    {% if rir_appearance_judgement.appearence_remark %} - {{ rir_appearance_judgement.appearence_remark }} {% endif %} 
                     <br>
-                    {% if rir_appearance_checkedby.appearence_remark %} {{ rir_appearance_checkedby.appearence_remark }} {% endif %} 
+                    {% if rir_appearance_checkedby.appearence_remark %} - {{ rir_appearance_checkedby.appearence_remark }} {% endif %} 
                 </td>
             </tr>
             {% endif %}
@@ -158,9 +158,9 @@
                     {% endif %}
                 </td>
                 <td style="padding: 15px;">
-                    {% if rir_sampletest_judgement.sample_test_remark %} {{ rir_sampletest_judgement.sample_test_remark }} {% endif %} 
+                    {% if rir_sampletest_judgement.sample_test_remark %} - {{ rir_sampletest_judgement.sample_test_remark }} {% endif %} 
                     <br>
-                    {% if rir_sampletest_checkedby.sample_test_remark %} {{ rir_sampletest_checkedby.sample_test_remark }} {% endif %} 
+                    {% if rir_sampletest_checkedby.sample_test_remark %} - {{ rir_sampletest_checkedby.sample_test_remark }} {% endif %} 
                 </td>
             </tr>
             {% endif %}
@@ -178,9 +178,9 @@
                     {% endif %}
                 </td>
                 <td style="padding: 15px;">
-                    {% if rir_restrictedsubstance_judgement.restricted_substance_remark %} {{ rir_restrictedsubstance_judgement.restricted_substance_remark }} {% endif %} 
+                    {% if rir_restrictedsubstance_judgement.restricted_substance_remark %} - {{ rir_restrictedsubstance_judgement.restricted_substance_remark }} {% endif %} 
                     <br>
-                    {% if rir_restrictedsubstance_checkedby.restricted_substance_remark %} {{ rir_restrictedsubstance_checkedby.restricted_substance_remark }} {% endif %} 
+                    {% if rir_restrictedsubstance_checkedby.restricted_substance_remark %} - {{ rir_restrictedsubstance_checkedby.restricted_substance_remark }} {% endif %} 
                 </td>
             </tr>
             {% endif %}
@@ -200,9 +200,9 @@
                                 {% endif %}
                             </td>
                             <td style="padding: 15px;">
-                                {% if rir_environmentalissue_judgement.environmental_issue_remark %} {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
+                                {% if rir_environmentalissue_judgement.environmental_issue_remark %} - {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
                                 <br>
-                                {% if rir_environmentalissue_checkedby.environmental_issue_remark %} {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
+                                {% if rir_environmentalissue_checkedby.environmental_issue_remark %} - {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
                             </td>
                         </tr>
                         {% else %}
@@ -219,9 +219,9 @@
                                 {% endif %}
                             </td>
                             <td style="padding: 15px;">
-                                {% if rir_environmentalissue_judgement.environmental_issue_remark %} {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
+                                {% if rir_environmentalissue_judgement.environmental_issue_remark %} = {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
                                 <br>
-                                {% if rir_environmentalissue_checkedby.environmental_issue_remark %} {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
+                                {% if rir_environmentalissue_checkedby.environmental_issue_remark %} - {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
                             </td>
                         </tr>
                      {% endif %}
@@ -246,6 +246,8 @@
                 Passed
                 {% elif rir_approval_manager.is_return_manager %}
                 Returned
+                {% elif rir_header.is_special_judgement %}
+                Need
                 {% else %}
                 No Need
                 {% endif %}
@@ -258,6 +260,8 @@
                     {% if rir_approval_supervisor.is_return_supervisor %}
                     Rejected By {{ rir_approval_supervisor.supervisor.user.first_name }} {{ rir_approval_supervisor.supervisor.user.last_name }}
                     {% endif %}
+                    {% elif rir_header.is_special_judgement %}
+                    Need
                     {% else %}
                     No Need
                 {% endif %}
@@ -270,6 +274,8 @@
                     {% if rir_approval_manager.is_return_supervisor %}
                     Rejected by {{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }}
                     {% endif %}
+                    {% elif rir_header.is_special_judgement %}
+                    Need
                     {% else %}
                     No Need
                 {% endif %}

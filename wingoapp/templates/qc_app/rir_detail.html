@@ -16,7 +16,7 @@
         {% if rir_header %}
         <div class="card">
           <div class="card-header pb-0">
-            <h5>RIR Header | {{rir_header.rir_no}} | {{rir_header.category}} </h5>
+            <h3 class="text-center">RIR Header | {{rir_header.rir_no}} | {{rir_header.category}} </h3>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -96,7 +96,7 @@
         {% if rir_coa_judgement %}
         <div class="card">
           <div class="card-header pb-0">
-            <h5>COA Content</h5>
+            <h3 class="text-center">COA Content</h3>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -125,7 +125,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_coa_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_coa_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_coa_judgement.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_coa_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -181,7 +181,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -216,7 +220,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -254,7 +262,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_coa_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_coa_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_coa_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_coa_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -309,7 +317,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -344,7 +356,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -371,7 +387,7 @@
         {% if rir_appearance_judgement %}
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Appearance</h5>
+            <h3 class="text-center">Appearance</h3>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -400,7 +416,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_appearance_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_appearance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_appearance_judgement.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_appearance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -456,7 +472,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -491,7 +511,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -529,7 +553,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_appearance_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_appearance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_appearance_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_appearance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -584,7 +608,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -619,7 +647,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -646,7 +678,7 @@
         {% if rir_sampletest_judgement %}
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Sample Test</h5>
+            <h3 class="text-center">Sample Test</h3>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -675,7 +707,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_sampletest_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_sampletest_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_sampletest_judgement.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_sampletest_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -731,7 +763,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -766,7 +802,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -804,7 +844,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_sampletest_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_sampletest_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_sampletest_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_sampletest_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -859,7 +899,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -894,7 +938,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -921,7 +969,7 @@
         {% if rir_restrictedsubstance_judgement %}
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Restricted Substance</h5>
+            <h3 class="text-center">Restricted Substance</h3>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -950,7 +998,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_restrictedsubstance_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_restrictedsubstance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_restrictedsubstance_judgement.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_restrictedsubstance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -1006,7 +1054,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1041,7 +1093,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1079,7 +1135,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_restrictedsubstance_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_restrictedsubstance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_restrictedsubstance_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_restrictedsubstance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -1134,7 +1190,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1169,7 +1229,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1196,7 +1260,7 @@
         {% if rir_environmentalissue_judgement %}
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Environmental Issue</h5>
+            <h3 class="text-center">Environmental Issue</h3>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -1225,7 +1289,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_environmentalissue_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_environmentalissue_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_environmentalissue_judgement.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_environmentalissue_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -1281,7 +1345,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1316,7 +1384,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1354,7 +1426,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control {% if not rir_environmentalissue_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_environmentalissue_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_environmentalissue_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_environmentalissue_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -1409,7 +1481,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1444,7 +1520,11 @@
                           {% render_field field class="form-control is-valid" %}
                         {% endif %}
                       {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                       {% endif %}
                       {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1471,7 +1551,7 @@
         {% if rir_special_judgement %}
           <div class="card">
             <div class="card-header pb-0">
-              <h5>Special Judgement Supervisor </h5>
+              <h3 class="text-center">Special Judgement Supervisor </h3>
             </div>
             <hr class="mt-4 mb-2">
             <div class="card-body">
@@ -1561,7 +1641,8 @@
                                   {% render_field field class="form-control is-valid" %}
                                 {% endif %}
                               {% else %}
-                                {% render_field field class="form-control" %}
+                          {% render_field field class="form-check-input" %}
+
                               {% endif %}
                               {% if field.help_text %}
                                 <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1598,7 +1679,11 @@
                                   {% render_field field class="form-control is-valid" %}
                                 {% endif %}
                               {% else %}
-                                {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                               {% endif %}
                               {% if field.help_text %}
                                 <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1635,7 +1720,11 @@
                                   {% render_field field class="form-control is-valid" %}
                                 {% endif %}
                               {% else %}
-                                {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                               {% endif %}
                               {% if field.help_text %}
                                 <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1672,7 +1761,11 @@
                                   {% render_field field class="form-control is-valid" %}
                                 {% endif %}
                               {% else %}
-                                {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                               {% endif %}
                               {% if field.help_text %}
                                 <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1698,7 +1791,7 @@
         {% if rir_approval_manager %}
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Special Judgement Manager</h5>
+            <h3 class="text-center">Special Judgement Manager</h3>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -1788,7 +1881,7 @@
                                   {% render_field field class="form-control is-valid" %}
                                 {% endif %}
                               {% else %}
-                                {% render_field field class="form-control" %}
+                          {% render_field field class="form-check-input" %}
                               {% endif %}
                               {% if field.help_text %}
                                 <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1825,7 +1918,11 @@
                                 {% render_field field class="form-control is-valid" %}
                               {% endif %}
                             {% else %}
-                              {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                             {% endif %}
                             {% if field.help_text %}
                               <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1862,7 +1959,11 @@
                                 {% render_field field class="form-control is-valid" %}
                               {% endif %}
                             {% else %}
-                              {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                             {% endif %}
                             {% if field.help_text %}
                               <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -1899,7 +2000,11 @@
                                 {% render_field field class="form-control is-valid" %}
                               {% endif %}
                             {% else %}
-                              {% render_field field class="form-control" %}
+                        {% if field.label == 'Special Judgement' %}
+                          {% render_field field class="form-check-input" %}
+                        {% else %}
+                          {% render_field field class="form-control" %}
+                        {% endif %}
                             {% endif %}
                             {% if field.help_text %}
                               <small class="form-text text-muted">{{ field.help_text }}</small>

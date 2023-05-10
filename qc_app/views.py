@@ -416,6 +416,10 @@ def rir_checkedby_coa_approve(request, rir_id):
             rir_approval_supervisor.specialjudgement = rir_special_judgement
             rir_approval_supervisor.save()
             return redirect('qc_app:rir_special_judgement_index')
+        else:
+            rir_sa_check(rir_header.id)
+            return redirect('qc_app:rir_checked_by_index')
+
 
         
 @login_required

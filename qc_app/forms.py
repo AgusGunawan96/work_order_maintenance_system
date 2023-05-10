@@ -60,6 +60,10 @@ class rirCoaContentAttachmentForms(forms.ModelForm):
         }
 
 class rirDetailAppearenceJudgementForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailAppearenceJudgement
         fields = ('appearence_remark','is_special_judgement')
@@ -68,6 +72,10 @@ class rirDetailAppearenceJudgementForms(forms.ModelForm):
             }
         
 class rirDetailAppearenceCheckedByForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailAppearenceCheckedby
         fields = ('appearence_remark','is_special_judgement')
@@ -84,6 +92,10 @@ class rirAppearanceAttachmentForms(forms.ModelForm):
         }
 
 class rirDetailRestrictedSubstanceJudgementForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailRestrictedSubstanceJudgement
         fields = ('restricted_substance_remark','is_special_judgement')
@@ -92,6 +104,10 @@ class rirDetailRestrictedSubstanceJudgementForms(forms.ModelForm):
             }
         
 class rirDetailRestrictedSubstanceCheckedByForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailRestrictedSubstanceCheckedby
         fields = ('restricted_substance_remark','is_special_judgement')
@@ -108,6 +124,10 @@ class rirRestrictedSubstanceAttachmentForms(forms.ModelForm):
         }
 
 class rirDetailEnvironmentalIssueJudgementForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailEnvironmentalIssueJudgement
         fields = ('environmental_issue_remark','is_special_judgement')
@@ -116,6 +136,10 @@ class rirDetailEnvironmentalIssueJudgementForms(forms.ModelForm):
             }
         
 class rirDetailEnvironmentalIssueCheckedByForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailEnvironmentalIssueCheckedby
         fields = ('environmental_issue_remark','is_special_judgement')
@@ -132,6 +156,10 @@ class rirEnvironmentalIssueAttachmentForms(forms.ModelForm):
         }
 
 class rirDetailSampleTestJudgementForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailSampleTestJudgement
         fields = ('sample_test_remark','is_special_judgement')
@@ -140,6 +168,10 @@ class rirDetailSampleTestJudgementForms(forms.ModelForm):
             }
         
 class rirDetailSampleTestCheckedByForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailSampleTestCheckedby
         fields = ('sample_test_remark','is_special_judgement')
@@ -174,13 +206,17 @@ class rirApprovalManagerForms(forms.ModelForm):
         fields = ('rir_approval_supervisor',)
 
 class rirApprovalSupervisorPassReturnForms(forms.ModelForm):
+    is_pass_supervisor = forms.BooleanField(
+    label='Pass',
+    widget=forms.CheckboxInput(),
+    required=False)
+    is_return_supervisor = forms.BooleanField(
+    label='Return',
+    widget=forms.CheckboxInput(),
+    required=False)
     class Meta():
         model = rirApprovalSupervisor
         fields = ('is_pass_supervisor', 'is_return_supervisor',)
-    def __init__(self, *args, **kwargs):
-        super(rirApprovalSupervisorPassReturnForms, self).__init__(*args, **kwargs)
-        self.fields['is_pass_supervisor'].label = 'Pass'
-        self.fields['is_return_supervisor'].label = 'Return'
 
 
 class rirApprovalSupervisorReturnForms(forms.ModelForm):
@@ -200,13 +236,17 @@ class rirApprovalSupervisorPassForms(forms.ModelForm):
             }
         
 class rirApprovalManagerPassReturnForms(forms.ModelForm):
+    is_pass_manager = forms.BooleanField(
+    label='Pass',
+    widget=forms.CheckboxInput(),
+    required=False)
+    is_return_manager = forms.BooleanField(
+    label='Return',
+    widget=forms.CheckboxInput(),
+    required=False)
     class Meta():
         model = rirApprovalManager
         fields = ('is_pass_manager', 'is_return_manager',)
-    def __init__(self, *args, **kwargs):
-        super(rirApprovalManagerPassReturnForms, self).__init__(*args, **kwargs)
-        self.fields['is_pass_manager'].label = 'Pass'
-        self.fields['is_return_manager'].label = 'Return'
 
 class rirApprovalManagerReturnForms(forms.ModelForm):
     class Meta():
