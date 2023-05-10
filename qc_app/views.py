@@ -232,6 +232,23 @@ def rir_judgement_coa_approve(request, rir_id):
         rir_detail_coaContent_checkedby = rirDetailCoaContentCheckedByForms().save(commit=False)
         rir_detail_coaContent_checkedby.coa_content_judgement   = rir_detail_coaContent_judgement
         rir_detail_coaContent_checkedby.save()
+        # Kondisi apabila tidak adanya special judgement(maka akan dibuat sesuai dengan adanya category) dan akan membuat judgement judgement berikutnya
+        if rir_header.category.appearance:
+            rir_detail_appearance_judgement = rirDetailAppearenceJudgementForms().save(commit=False)
+            rir_detail_appearance_judgement.header = rir_header
+            rir_detail_appearance_judgement.save()
+        if rir_header.category.restricted_substance:
+            rir_detail_restricted_substance_judgement = rirDetailRestrictedSubstanceJudgementForms().save(commit=False)
+            rir_detail_restricted_substance_judgement.header = rir_header
+            rir_detail_restricted_substance_judgement.save()
+        if rir_header.category.environmental_issue:
+            rir_detail_environmental_issue = rirDetailEnvironmentalIssueJudgementForms().save(commit=False)
+            rir_detail_environmental_issue.header = rir_header
+            rir_detail_environmental_issue.save()
+        if rir_header.category.sample_test:
+            rir_detail_sample_test = rirDetailSampleTestJudgementForms().save(commit=False)
+            rir_detail_sample_test.header = rir_header
+            rir_detail_sample_test.save()
         messages.success(request, 'RIR Approved')
         return redirect('qc_app:rir_judgement_index')
     return redirect('qc_app:rir_detail', rir_id)
@@ -399,26 +416,7 @@ def rir_checkedby_coa_approve(request, rir_id):
             rir_approval_supervisor.specialjudgement = rir_special_judgement
             rir_approval_supervisor.save()
             return redirect('qc_app:rir_special_judgement_index')
-        else:
-            # Kondisi apabila tidak adanya special judgement(maka akan dibuat sesuai dengan adanya category) dan akan membuat judgement judgement berikutnya
-            if rir_header.category.appearance:
-                rir_detail_appearance_judgement = rirDetailAppearenceJudgementForms().save(commit=False)
-                rir_detail_appearance_judgement.header = rir_header
-                rir_detail_appearance_judgement.save()
-            if rir_header.category.restricted_substance:
-                rir_detail_restricted_substance_judgement = rirDetailRestrictedSubstanceJudgementForms().save(commit=False)
-                rir_detail_restricted_substance_judgement.header = rir_header
-                rir_detail_restricted_substance_judgement.save()
-            if rir_header.category.environmental_issue:
-                rir_detail_environmental_issue = rirDetailEnvironmentalIssueJudgementForms().save(commit=False)
-                rir_detail_environmental_issue.header = rir_header
-                rir_detail_environmental_issue.save()
-            if rir_header.category.sample_test:
-                rir_detail_sample_test = rirDetailSampleTestJudgementForms().save(commit=False)
-                rir_detail_sample_test.header = rir_header
-                rir_detail_sample_test.save()
-            rir_sa_check(rir_header.id)
-            return redirect('qc_app:rir_checked_by_index')
+
         
 @login_required
 def rir_checkedby_appearance_approve(request, rir_id):
@@ -784,7 +782,7 @@ def rir_download_report(request, rir_id):
 @login_required
 def rir_download_report_excel(request):
     # Test Distinct
-    rir_header = rirHeader.objects.all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement')
+    rir_header = rirHeader.objects.all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement').order_by('-rir_no')
     # return HttpResponse(rir_header)
 
     # Memanggil RIR dari tahun awal sampai tahun akhir

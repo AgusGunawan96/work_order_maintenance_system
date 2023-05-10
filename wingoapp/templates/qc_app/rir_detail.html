@@ -119,13 +119,13 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Judgement By</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{{ rir_coa_judgement.coa_content_user_judgement.user.first_name }} {{ rir_coa_judgement.coa_content_user_judgement.user.last_name }}" readonly>
+                    <input class="form-control " type="text" value="{{ rir_coa_judgement.coa_content_user_judgement.user.first_name }} {{ rir_coa_judgement.coa_content_user_judgement.user.last_name }}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_coa_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_coa_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_coa_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -254,7 +254,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_coa_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_coa_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_coa_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -400,7 +400,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_appearance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_appearance_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_appearance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -529,7 +529,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_appearance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_appearance_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_appearance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -675,7 +675,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_sampletest_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_sampletest_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_sampletest_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -804,7 +804,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_sampletest_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_sampletest_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_sampletest_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -950,7 +950,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_restrictedsubstance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_restrictedsubstance_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_restrictedsubstance_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -1079,7 +1079,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_restrictedsubstance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_restrictedsubstance_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_restrictedsubstance_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -1225,7 +1225,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_environmentalissue_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_environmentalissue_judgement.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_environmentalissue_judgement.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -1354,7 +1354,7 @@
                 <div class="mb-3 row">
                   <label class="col-sm-3 col-form-label">Special Judgement</label>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value="{% if rir_environmentalissue_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
+                    <input class="form-control {% if not rir_environmentalissue_checkedby.is_special_judgement %} txt-secondary {% else %} txt-success {% endif %}" type="text" value="{% if rir_environmentalissue_checkedby.is_special_judgement %} Yes {% else %} No {% endif %}" readonly>
                   </div>
                 </div>
                 <div class="mb-3 row">
