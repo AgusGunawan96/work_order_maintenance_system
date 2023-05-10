@@ -50,6 +50,7 @@ class rirHeader (models.Model):
     po_number               = models.CharField(max_length=200)
     lot_no                  = models.CharField(max_length=200)
     quantity                = models.CharField(max_length=200)
+    quantity_actual         = models.CharField(max_length=200, default= 0)
     rir_no                  = models.CharField(max_length=128, null=True, blank=True)
     status                  = models.CharField(max_length=128, null=True, blank=True)
     is_special_judgement    = models.BooleanField(default=False, blank=True, null=True)

@@ -86,6 +86,7 @@
     <p class="form_text1"><span>PO NUMBER</span>: <u>{{ rir_header.po_number }}</u> </p>
     <p class="form_text1"><span>LOT NO</span>: <u>{{ rir_header.lot_no }}</u> </p>
     <p class="form_text1"><span>QUANTITY</span>: <u>{{ rir_header.quantity }}</u> </p>
+    <p class="form_text1"><span>QUANTITY(ACTUAL)</span>: <u>{{ rir_header.quantity_actual }}</u> </p>
     <p class="form_text1"><span>INCOMING TYPE</span>: <u>{{ rir_header.incoming_type }}</u> </p>
     <p class="form_text1"><span>INCOMING DATE</span>: <u>{{ rir_header.incoming_at|date:"F j, Y" }}</u> </p>
     {% if rir_header.incoming_at_external %}
@@ -245,16 +246,32 @@
                 Passed
                 {% elif rir_approval_manager.is_return_manager %}
                 Returned
+                {% else %}
+                No Need
                 {% endif %}
             </td>
             <td rowspan="2" style="padding: 25px;">
                 {% if rir_approval_supervisor.is_checked_supervisor %}
-                Approved By {{ rir_approval_supervisor.supervisor.user.first_name }} {{ rir_approval_supervisor.supervisor.user.last_name }}
+                    {% if rir_approval_supervisor.is_pass_supervisor %}
+                    Passed By {{ rir_approval_supervisor.supervisor.user.first_name }} {{ rir_approval_supervisor.supervisor.user.last_name }}
+                    {% endif %}
+                    {% if rir_approval_supervisor.is_return_supervisor %}
+                    Rejected By {{ rir_approval_supervisor.supervisor.user.first_name }} {{ rir_approval_supervisor.supervisor.user.last_name }}
+                    {% endif %}
+                    {% else %}
+                    No Need
                 {% endif %}
             </td>
             <td rowspan="2" style="padding: 25px;">
                 {% if rir_approval_manager.is_checked_manager %}
-                Approved By {{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }}
+                    {% if rir_approval_manager.is_pass_manager %}
+                    Passed by {{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }} 
+                    {% endif %}
+                    {% if rir_approval_manager.is_return_supervisor %}
+                    Rejected by {{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }}
+                    {% endif %}
+                    {% else %}
+                    No Need
                 {% endif %}
             </td>
         </tr>

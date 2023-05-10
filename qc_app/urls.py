@@ -21,7 +21,9 @@ urlpatterns = [
     path('rir/rir_supervisor_approval/<int:rir_id>', views.rir_supervisor_approval, name = 'rir_supervisor_approval'),
     path('rir/rir_manager_approval/<int:rir_id>', views.rir_manager_approval, name = 'rir_manager_approval'),
 
+    path('rir/rir_download_report_excel/', views.rir_download_report_excel, name = 'rir_download_report_excel'),
     path('rir/rir_download_report/<int:rir_id>', views.rir_download_report, name = 'rir_download_report'),
+
 
     path('rir/rir_judgement_coa_approve/<int:rir_id>', views.rir_judgement_coa_approve, name='rir_judgement_coa_approve'),
     path('rir/rir_judgement_appearance_approve/<int:rir_id>', views.rir_judgement_appearance_approve, name='rir_judgement_appearance_approve'),

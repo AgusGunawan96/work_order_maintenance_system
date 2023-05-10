@@ -780,3 +780,70 @@ def rir_download_report(request, rir_id):
     }
 
     return render(request, 'qc_app/rir_download_report.html', context)
+
+@login_required
+def rir_download_report_excel(request):
+    # Test Distinct
+    rir_header = rirHeader.objects.all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement')
+    # return HttpResponse(rir_header)
+
+    # Memanggil RIR dari tahun awal sampai tahun akhir
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=RIR.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('RIR', cell_overwrite_ok=True) # this will make a sheet named Users Data
+
+# Dimulai dari Row 1
+    row_num = 1
+    font_style_bold = xlwt.XFStyle()
+    font_style_bold.font.bold = True
+    columns = ['RIR No', 'Incoming Type', 'Category', 'Material', 'PO Number', 'Vendor', 'Lot. No', 'Quantity','Quantity(Actual)','Incoming At', 'Incoming At External', 'Created At', 'Special Judgement', 'Return', 'SA',]
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
+
+    font_style = xlwt.XFStyle()
+    # Body dari Excel Laporan yang akan dibuat
+    for body in rir_header:
+        # Kondisi untuk Special Judgement
+        if body[12]:
+            special_judgement  = 'Need'
+        else:
+            special_judgement = 'No Need'
+        # Kondisi untuk Return
+        if body[13]:
+            is_return = 'Yes'
+        else:
+            is_return = 'No'
+        # Kondisi untuk SA
+        if body[14]:
+            is_sa = 'Yes'
+        else:
+            is_sa = 'No'
+        # Kondisi Incoming Eksternal 
+        if body[10]:
+            incoming_at_eksternal = body[10].strftime("%d-%m-%Y")
+        else:
+            incoming_at_eksternal = '-'
+        row_num += 1
+        row = [body[0],
+               body[1],
+               body[2],
+               body[3],
+               body[4],
+               body[5],
+               body[6],
+               body[7],
+               body[8],
+               body[9].strftime("%d-%m-%Y"),
+               incoming_at_eksternal,
+               body[11].strftime("%d-%m-%Y"),
+               special_judgement,
+               is_return,
+               is_sa,
+             ]
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
+    # return HttpResponse('ini adalah merupakan download Excel Report untuk rir dan ada indexnya')

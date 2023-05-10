@@ -16,8 +16,18 @@ class rirApprovalListAdmin(admin.ModelAdmin):
     def no_karyawan(self, obj):
         return obj.user.username
     
+class rirHeaderAdmin(admin.ModelAdmin):
+    list_display = ('rir_no', 'incoming_type','po_number','category_name', 'material_name', 'lot_no','incoming_at', 'incoming_at_external', 'is_special_judgement', 'is_return', 'is_sa')
+    search_fields = ['material','po_number',]
+    list_filter = ['incoming_type', 'category', 'incoming_at', 'incoming_at_external', 'is_special_judgement','is_return', 'is_sa']
+    def category_name(self, obj):
+        return obj.category.name
+    def material_name(self, obj):
+        return obj.material.name
+    
+
 # Register your models here.
-admin.site.register(rirHeader)
+admin.site.register(rirHeader, rirHeaderAdmin)
 admin.site.register(specialJudgement)
 admin.site.register(rirApprovalSupervisor)
 admin.site.register(rirApprovalManager)

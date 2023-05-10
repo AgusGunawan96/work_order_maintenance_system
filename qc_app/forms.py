@@ -33,12 +33,12 @@ class rirHeaderForms(forms.ModelForm):
     )
     class Meta():
         model = rirHeader
-        fields = ('incoming_type','category','material','vendor','po_number','lot_no','quantity','incoming_at', 'incoming_at_external', 'expired_at' )
+        fields = ('incoming_type','category','material','po_number','vendor','lot_no','quantity', 'quantity_actual','incoming_at', 'incoming_at_external', 'expired_at' )
 
 class rirDetailCoaContentJudgementForms(forms.ModelForm):
     class Meta():
         model = rirDetailCoaContentJudgement
-        fields = ('coa_content_remark','is_special_judgement')
+        fields = ('coa_content_remark',)
         widgets = {
             'coa_content_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
             }
@@ -46,7 +46,7 @@ class rirDetailCoaContentJudgementForms(forms.ModelForm):
 class rirDetailCoaContentCheckedByForms(forms.ModelForm):
     class Meta():
         model = rirDetailCoaContentCheckedby
-        fields = ('coa_content_remark','is_special_judgement')
+        fields = ('coa_content_remark',)
         widgets = {
             'coa_content_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
             }
