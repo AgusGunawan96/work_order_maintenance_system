@@ -271,7 +271,7 @@
                     {% if rir_approval_manager.is_pass_manager %}
                     Passed by {{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }} 
                     {% endif %}
-                    {% if rir_approval_manager.is_return_supervisor %}
+                    {% if rir_approval_manager.is_return_manager %}
                     Rejected by {{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }}
                     {% endif %}
                     {% elif rir_header.is_special_judgement %}

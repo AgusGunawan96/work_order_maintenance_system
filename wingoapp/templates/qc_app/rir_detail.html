@@ -1577,6 +1577,12 @@
                           <input class="form-control" type="text" value="{{ rir_approval_supervisor.supervisor.user.first_name }} {{ rir_approval_supervisor.supervisor.user.last_name }}" readonly>
                         </div>
                       </div>
+                      <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label">Status</label>
+                        <div class="col-sm-9">
+                          <input class="form-control {% if not rir_approval_supervisor.is_pass_supervisor %} txt-secondary is-invalid {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_approval_supervisor.is_pass_supervisor %} Passed {% else %} Rejected {% endif %}" readonly>
+                        </div>
+                      </div>
                           {% comment %} Terdapat Reason dan Review dari Supervisor {% endcomment %}
                           {% if rir_approval_supervisor.review_supervisor %}
                           <div class="mb-3 row">
@@ -1815,6 +1821,12 @@
                       <label class="col-sm-3 col-form-label">Approved By</label>
                       <div class="col-sm-9">
                         <input class="form-control" type="text" value="{{ rir_approval_manager.manager.user.first_name }} {{ rir_approval_manager.manager.user.last_name }}" readonly>
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label class="col-sm-3 col-form-label">Status</label>
+                      <div class="col-sm-9">
+                        <input class="form-control {% if not rir_approval_manager.is_pass_manager %} txt-secondary is-invalid {% else %} txt-success is-valid {% endif %}" type="text" value="{% if rir_approval_manager.is_pass_manager %} Passed {% else %} Rejected {% endif %}" readonly>
                       </div>
                     </div>
                         {% comment %} Terdapat Reason dan Review dari Supervisor {% endcomment %}

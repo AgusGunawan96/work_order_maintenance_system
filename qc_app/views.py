@@ -42,9 +42,12 @@ def rir_sa_check(rir_id):
     rir_header_check = rirHeader.objects.filter(category__coa_content = rir_coa_check.coa_content_checked_by).filter(category__appearance = rir_appearence_check.appearence_checked_by).filter(category__sample_test = rir_sampletest_check.sample_test_checked_by).filter(category__restricted_substance = rir_restrictedsubstance_check.restricted_substance_checked_by).filter(category__environmental_issue = rir_environmentalissue_check.environmental_issue_checked_by).filter(pk=rir_id)
     if rir_header_check:
         rir_header = rirHeader.objects.get(pk = rir_id)
-        rir_header.is_sa = True
-        rir_header.save()
-        return True
+        if not rir_header.is_return:
+            rir_header.is_sa = True
+            rir_header.save()
+            return True
+        else:
+            return False
     else:
         return False
 # End fungsi umum
@@ -733,9 +736,13 @@ def rir_manager_approval(request, rir_id):
                     rir_approval_manager_return_detail.is_return_manager = True
                     rir_special_judgement.is_return = True
                     rir_header.is_return = True
+                    rir_header.is_sa = False
                     rir_special_judgement.save()
                     rir_header.save()
                     rir_approval_manager_return_detail.save()
+                else:
+                    rir_header.is_sa = False
+                    rir_header.save()
         
         # Simpan Attachment Approval Manager (Apabila ada)
         files = request.FILES.getlist('attachment')
