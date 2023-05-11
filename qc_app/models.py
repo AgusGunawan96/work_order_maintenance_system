@@ -203,8 +203,7 @@ class rirApprovalSupervisor(models.Model):
     is_pass_supervisor          = models.BooleanField(default=False, blank=True, null=True)
     is_return_supervisor        = models.BooleanField(default=False, blank=True, null=True)
     is_checked_supervisor       = models.BooleanField(default=False, blank=True, null=True)
-    return_reason_supervisor    = models.TextField(blank=True, null=True)
-    review_supervisor           = models.TextField(blank=True, null=True)
+    reason                      = models.TextField(blank=True, null=True)
     created_at                  = models.DateTimeField('created_at', auto_now_add=True)
     updated_at                  = models.DateTimeField('updated_at', auto_now=True)
 
@@ -214,8 +213,7 @@ class rirApprovalManager(models.Model):
     is_pass_manager         = models.BooleanField(verbose_name='Is Pass',default=False, blank=True, null=True)
     is_return_manager       = models.BooleanField(verbose_name='Is Return', default=False, blank=True, null=True)
     is_checked_manager      = models.BooleanField(default=False, blank=True, null=True)
-    return_reason_manager   = models.TextField(blank=True, null=True)
-    review_manager          = models.TextField(blank=True, null=True)
+    reason                  = models.TextField(blank=True, null=True)
     created_at              = models.DateTimeField('created_at', auto_now_add=True)
     updated_at              = models.DateTimeField('updated_at', auto_now=True)
 

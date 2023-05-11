@@ -185,47 +185,24 @@
             </tr>
             {% endif %}
             {% if rir_environmentalissue_judgement or rir_environmentalissue_checkedby %}
-                {% if rir_restrictedsubstance_judgement or rir_restrictedsubstance_checkedby %}
-                     {% if rir_sampletest_judgement or rir_sampletest_checkedby %}
-                        <tr class="section-detail">
-                            <td style="padding: 15px;">Environmental Issue</td>
-                            <td style="padding: 15px;">
-                                {% if rir_environmentalissue_judgement.environmental_issue_user_judgement %}
-                                Judgement By {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.first_name }} {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.last_name }}
-                                {% endif %}
-                            </td>
-                            <td style="padding: 15px;">
-                                {% if rir_environmentalissue_checkedby.environmental_issue_user_checked_by %}
-                                Checked By {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.first_name }} {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.last_name }}
-                                {% endif %}
-                            </td>
-                            <td style="padding: 15px;">
-                                {% if rir_environmentalissue_judgement.environmental_issue_remark %} - {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
-                                <br>
-                                {% if rir_environmentalissue_checkedby.environmental_issue_remark %} - {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr class="section-detail">
-                            <td style="padding: 15px;">Environmental Issue</td>
-                            <td style="padding: 15px;">
-                                {% if rir_environmentalissue_judgement.environmental_issue_user_judgement %}
-                                Judgement By {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.first_name }} {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.last_name }}
-                                {% endif %}
-                            </td>
-                            <td style="padding: 15px;">
-                                {% if rir_environmentalissue_checkedby.environmental_issue_user_checked_by %}
-                                Checked By {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.first_name }} {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.last_name }}
-                                {% endif %}
-                            </td>
-                            <td style="padding: 15px;">
-                                {% if rir_environmentalissue_judgement.environmental_issue_remark %} = {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
-                                <br>
-                                {% if rir_environmentalissue_checkedby.environmental_issue_remark %} - {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
-                            </td>
-                        </tr>
-                     {% endif %}
-                {% endif %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">Environmental Issue</td>
+                <td style="padding: 15px;">
+                    {% if rir_environmentalissue_judgement.environmental_issue_user_judgement %}
+                    Judgement By {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.first_name }} {{ rir_environmentalissue_judgement.environmental_issue_user_judgement.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_environmentalissue_checkedby.environmental_issue_user_checked_by %}
+                    Checked By {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.first_name }} {{ rir_environmentalissue_checkedby.environmental_issue_user_checked_by.user.last_name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 15px;">
+                    {% if rir_environmentalissue_judgement.environmental_issue_remark %} - {{ rir_environmentalissue_judgement.environmental_issue_remark }} {% endif %} 
+                    <br>
+                    {% if rir_environmentalissue_checkedby.environmental_issue_remark %} - {{ rir_environmentalissue_checkedby.environmental_issue_remark }} {% endif %} 
+                </td>
+            </tr>
             {% endif %}
         </tbody>
         

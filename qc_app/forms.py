@@ -36,17 +36,25 @@ class rirHeaderForms(forms.ModelForm):
         fields = ('incoming_type','category','material','po_number','vendor','lot_no','quantity', 'quantity_actual','incoming_at', 'incoming_at_external', 'expired_at' )
 
 class rirDetailCoaContentJudgementForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailCoaContentJudgement
-        fields = ('coa_content_remark',)
+        fields = ('coa_content_remark','is_special_judgement')
         widgets = {
             'coa_content_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
             }
         
 class rirDetailCoaContentCheckedByForms(forms.ModelForm):
+    is_special_judgement = forms.BooleanField(
+        label='Special Judgement',
+        widget=forms.CheckboxInput(),
+        required=False)
     class Meta():
         model = rirDetailCoaContentCheckedby
-        fields = ('coa_content_remark',)
+        fields = ('coa_content_remark','is_special_judgement')
         widgets = {
             'coa_content_remark'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
             }
@@ -219,20 +227,12 @@ class rirApprovalSupervisorPassReturnForms(forms.ModelForm):
         fields = ('is_pass_supervisor', 'is_return_supervisor',)
 
 
-class rirApprovalSupervisorReturnForms(forms.ModelForm):
+class rirApprovalSupervisorReasonForms(forms.ModelForm):
     class Meta():
         model = rirApprovalSupervisor
-        fields = ('return_reason_supervisor',)
+        fields = ('reason',)
         widgets = {
-            'return_reason_supervisor'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
-            }
-        
-class rirApprovalSupervisorPassForms(forms.ModelForm):
-    class Meta():
-        model = rirApprovalSupervisor
-        fields = ('review_supervisor',)
-        widgets = {
-            'review_supervisor'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'reason'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
             }
         
 class rirApprovalManagerPassReturnForms(forms.ModelForm):
@@ -248,20 +248,12 @@ class rirApprovalManagerPassReturnForms(forms.ModelForm):
         model = rirApprovalManager
         fields = ('is_pass_manager', 'is_return_manager',)
 
-class rirApprovalManagerReturnForms(forms.ModelForm):
+class rirApprovalManagerReasonForms(forms.ModelForm):
     class Meta():
         model = rirApprovalManager
-        fields = ('return_reason_manager',)
+        fields = ('reason',)
         widgets = {
-            'return_reason_manager'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
-            }
-        
-class rirApprovalManagerPassForms(forms.ModelForm):
-    class Meta():
-        model = rirApprovalManager
-        fields = ('review_manager',)
-        widgets = {
-            'review_manager'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
+            'reason'        : forms.Textarea(attrs={'rows':2, 'cols':15}),
             }
         
 class riApprovalSupervisorAttachmentForms(forms.ModelForm):
