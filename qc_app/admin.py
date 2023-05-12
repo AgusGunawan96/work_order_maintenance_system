@@ -1,5 +1,5 @@
 from django.contrib import admin
-from qc_app.models import rirHeader, specialJudgement, rirApprovalSupervisor, rirApprovalManager, rirApprovalList, rirMaterial, categoryTypeRIR
+from qc_app.models import rirHeader, specialJudgement, rirApprovalSupervisor, rirApprovalManager, rirApprovalList, rirMaterial, categoryTypeRIR, rirVendor
 import datetime 
 
 class categoryTypeRIRAdmin(admin.ModelAdmin):
@@ -33,4 +33,5 @@ admin.site.register(rirApprovalSupervisor)
 admin.site.register(rirApprovalManager)
 admin.site.register(rirApprovalList, rirApprovalListAdmin)
 admin.site.register(rirMaterial)
+admin.site.register(rirVendor)
 admin.site.register(categoryTypeRIR, categoryTypeRIRAdmin)
