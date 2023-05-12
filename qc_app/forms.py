@@ -1,5 +1,5 @@
 from django import forms 
-from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, rirMaterial, categoryTypeRIR, rirAppearanceAttachment, rirCoaContentAttachment, rirSampleTestAttachment, rirEnvironmentalIssueAttachment, rirRestrictedSubstanceAttachment, specialJudgement, rirApprovalSupervisorAttachment, rirApprovalManagerAttachment
+from qc_app.models import rirHeader, rirDetailCoaContentJudgement, rirDetailCoaContentCheckedby, rirDetailAppearenceJudgement, rirDetailAppearenceCheckedby, rirDetailRestrictedSubstanceJudgement, rirDetailRestrictedSubstanceCheckedby, rirDetailEnvironmentalIssueJudgement, rirDetailEnvironmentalIssueCheckedby,rirDetailSampleTestJudgement, rirDetailSampleTestCheckedby, rirApprovalSupervisor, rirApprovalManager, IncomingType, rirMaterial, categoryTypeRIR, rirAppearanceAttachment, rirCoaContentAttachment, rirSampleTestAttachment, rirEnvironmentalIssueAttachment, rirRestrictedSubstanceAttachment, specialJudgement, rirApprovalSupervisorAttachment, rirApprovalManagerAttachment, rirVendor
 from django.forms import ClearableFileInput, formset_factory
 from django_select2.forms import Select2Widget
 from django.forms.widgets import DateTimeInput
@@ -26,6 +26,10 @@ class rirHeaderForms(forms.ModelForm):
     material = forms.ModelChoiceField(
         queryset=rirMaterial.objects.all(),
         widget=Select2Widget
+    )
+    vendor = forms.ModelChoiceField(
+    queryset=rirVendor.objects.all(),
+    widget=Select2Widget
     )
     category = forms.ModelChoiceField(
         queryset=categoryTypeRIR.objects.all(),

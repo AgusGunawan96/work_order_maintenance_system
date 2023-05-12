@@ -9,7 +9,7 @@ from csv import reader
 from django.contrib.auth.models import User, Group
 from master_app.models import UserProfileInfo
 from it_app.models import IPAddress, Hardware
-from qc_app.models import rirMaterial
+from qc_app.models import rirMaterial, rirVendor
 from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
@@ -141,3 +141,14 @@ def CreateMaterial(request):
             data.append(material)
         rirMaterial.objects.bulk_create(data)
     return JsonResponse('Material csv is now working', safe=False)
+
+@login_required 
+def CreateVendor(request):
+    with open('templates/csv/vendor.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for vendor_company, *__ in csvf:
+            vendor = rirVendor(vendor_company = vendor_company)
+            data.append(vendor)
+        rirVendor.objects.bulk_create(data)
+    return JsonResponse('Vendor csv is now working', safe=False)

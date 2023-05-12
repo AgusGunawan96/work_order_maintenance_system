@@ -6,6 +6,7 @@ class IncomingType(models.TextChoices):
     INCOMING_EKSTERNAL  = 'Incoming Eksternal'
     INCOMING_INTERNAL   = 'Incoming Internal'
     
+    
 # RIR START
 class categoryTypeRIR(models.Model):
     name                    = models.CharField(max_length=200)
@@ -20,6 +21,21 @@ class categoryTypeRIR(models.Model):
     def __str__(self):
         return self.name
 
+class rirVendor(models.Model):
+    vendor_company                        = models.CharField(max_length=200, blank=True, null=True)
+    vendor_address                        = models.CharField(max_length=200, blank=True, null=True)
+    vendor_telephone                      = models.CharField(max_length=200, blank=True, null=True)
+    vendor_fax                            = models.CharField(max_length=200, blank=True, null=True)
+    vendor_desc                           = models.CharField(max_length=200, blank=True, null=True)
+    vendor_person_name                    = models.CharField(max_length=200, blank=True, null=True)
+    vendor_vendor_code                    = models.CharField(max_length=200, blank=True, null=True)
+    vendor_classification                 = models.CharField(max_length=200, blank=True, null=True)
+    vendor_term_of_payment                = models.CharField(max_length=200, blank=True, null=True)
+    vendor_created_at                     = models.DateTimeField('created at', auto_now_add = True, null=True, blank=True)
+    vendor_updated_at                     = models.DateTimeField('updated at', auto_now = True)
+    def __str__(self):
+        return self.vendor_company
+        
 class rirMaterial(models.Model):
     classification                 = models.ForeignKey(categoryTypeRIR, on_delete=models.CASCADE, blank=True, null=True)
     name                           = models.CharField(max_length=200)
@@ -44,9 +60,10 @@ class rirApprovalList(models.Model):
         
 class rirHeader (models.Model):
     material                = models.ForeignKey(rirMaterial, on_delete=models.CASCADE, blank=True, null=True)
+    vendor                  = models.ForeignKey(rirVendor, on_delete=models.CASCADE, blank=True, null=True)
     category                = models.ForeignKey(categoryTypeRIR, on_delete=models.CASCADE, blank=True, null=True)
-    incoming_type           = models.CharField(max_length=25, choices=IncomingType.choices)
     vendor                  = models.CharField(max_length=200)
+    incoming_type           = models.CharField(max_length=25, choices=IncomingType.choices)
     po_number               = models.CharField(max_length=200)
     lot_no                  = models.CharField(max_length=200)
     quantity                = models.CharField(max_length=200)
