@@ -9,67 +9,122 @@
 {% endblock css %}
 {% block content %}
 <div class="page-body">
-  {% include 'starter_kit/layout/breadcrumb.html' %}
-  <div class="col-sm-12 col-xl-12 xl-100">
-    <div class="card">
-      <div class="card-header pb-0">
-        <h5>RIR List Complete | {{request.user.first_name}} {{request.user.last_name}}</h5><span>List Complete.</span>
-      </div>
-        <div class="card-body btn-showcase">
-            {% if messages %}
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="col-sm-12 col-xl-12 xl-100">
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>RIR List Complete | {{request.user.first_name}} {{request.user.last_name}}</h5><span>List
+                    Complete.</span>
+            </div>
+            <div class="card-body btn-showcase">
+                {% if messages %}
                 {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message | safe }}
                     <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 {% endfor %}
-            {% endif %}
-            <!-- blok untuk menampilkan notifikasi pesan sukses -->
-        <div>
-    </div>
-</div>
-      <div class="card-body">
-
+                {% endif %}
+                <!-- blok untuk menampilkan notifikasi pesan sukses -->
+                <div>
+                </div>
+            </div>
+            <div class="card-body">
                 <div class="col-sm-12">
                     <div class="card">
-                      <div class="card-body">
-                        <div class="table-responsive">
-                          <table class="display" id="basic-1">
-                            <thead>
-                              <tr>
-                                <th>RIR No</th>
-                                <th>Type</th>
-                                <th>Material Name</th>
-                                <th>Incoming</th>
-                                <th>Expired</th>
-                                <th>Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                                {% for rir in list_complete_rir %}
-                                <tr>
-                                    <td><a href="{% url 'qc_app:rir_detail' rir.id %}">{{rir.rir_no}}</td>
-                                    <td>{{rir.category}}</td>
-                                    <td>{{rir.material.name}}</td>
-                                    <td>{{rir.incoming_at|date:"F j, Y"}}</td>                                    
-                                    <td>{{rir.expired_at|date:"F j, Y"}}</td>
-                                    <td><a href="{% url 'qc_app:rir_detail' rir.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> | <a href="{% url 'qc_app:rir_download_report' rir.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span> Print</a></td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                          </table>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="display" id="basic-1">
+                                    <thead>
+                                        <tr>
+                                            <th>RIR No</th>
+                                            <th>Type</th>
+                                            <th>Material Name</th>
+                                            <th>Incoming</th>
+                                            <th>Expired</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for rir in list_complete_rir %}
+                                        <tr>
+                                            <td><a href="{% url 'qc_app:rir_detail' rir.id %}">{{rir.rir_no}}</td>
+                                            <td>{{rir.category}}</td>
+                                            <td>{{rir.material.name}}</td>
+                                            <td>{{rir.incoming_at|date:"F j, Y"}}</td>
+                                            <td>{{rir.expired_at|date:"F j, Y"}}</td>
+                                            <td>
+                                                <a href="{% url 'qc_app:rir_detail' rir.id %}"
+                                                    class="btn btn-info btn-sm"><span class="icon-info"></span>
+                                                    Detail</a>
+                                                {% comment %} | <a class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#ModalRIRDelete{{ rir.id }}"
+                                                    data-whatever="@mdo"><span class="icon-close"></span> Delete</a> {%
+                                                endcomment %}
+                                                | <a href="{% url 'qc_app:rir_download_report' rir.id %}"
+                                                    class="btn btn-success btn-sm" target="_blank"><span
+                                                        class="icon-printer"></span> Print</a>
+                                            </td>
+                                        </tr>
+                                        {% comment %} MODAL DELETE START {% endcomment %}
+                                        <div class="modal fade" id="ModalRIRDelete{{ rir.id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel2">{{rir.rir_no}}
+                                                        </h5>
+                                                        <button class="btn-close" type="button" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{% url 'qc_app:rir_delete' rir.id %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="col-form-label"
+                                                                    for="recipient-name">Material Name:</label>
+                                                                <input class="form-control" type="text"
+                                                                    value="{{rir.material.name}}" readonly>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="col-form-label"
+                                                                    for="recipient-name">Incoming At:</label>
+                                                                <input class="form-control" type="text"
+                                                                    value="{{rir.incoming_at|date:'F j, Y'}}" readonly>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="col-form-label"
+                                                                    for="recipient-name">Expired At:</label>
+                                                                <input class="form-control" type="text"
+                                                                    value="{{rir.expired_at|date:'F j, Y'}}" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-primary" type="button"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <button class="btn btn-secondary"
+                                                                type="submit">Delete</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% comment %} MODAL DELETE END {% endcomment %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                      </div>
                     </div>
                 </div>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <!-- Container-fluid starts-->
-  {% comment %} <div class="container-fluid">
-   
-  </div> {% endcomment %}
-  <!-- Container-fluid Ends-->
+    <!-- Container-fluid starts-->
+    {% comment %} <div class="container-fluid">
+
+    </div> {% endcomment %}
+    <!-- Container-fluid Ends-->
 </div>
 {% endblock content %}
 {% block scriptcontent %}

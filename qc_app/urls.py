@@ -10,6 +10,8 @@ urlpatterns = [
 
     path('rir/rir_add/', views.rir_add, name = 'rir_add'),
 
+    path('rir/rir_delete/<int:rir_id>', views.rir_delete, name = 'rir_delete'),
+
     path('rir/rir_judgement_index/', views.rir_judgement_index, name = 'rir_judgement_index'),
     path('rir/rir_checked_by_index/', views.rir_checked_by_index, name = 'rir_checked_by_index'),
     path('rir/rir_list_sa_index/', views.rir_list_sa_index, name = 'rir_list_sa_index'),

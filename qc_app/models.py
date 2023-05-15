@@ -74,6 +74,7 @@ class rirHeader (models.Model):
     is_sa                   = models.BooleanField(default=False, blank=True, null=True)
     is_return               = models.BooleanField(default=False, blank=True, null=True)
     is_complete             = models.BooleanField(default=False, blank=True, null=True)
+    is_delete               = models.BooleanField(default=False, blank=True, null=True)
     expired_at              = models.DateTimeField('expired at')
     incoming_at             = models.DateTimeField('incoming at')
     incoming_at_external    = models.DateTimeField('incoming at external', null=True, blank=True)

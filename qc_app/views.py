@@ -92,12 +92,14 @@ def rir_add(request):
 
 @login_required
 def rir_judgement_index(request):
-    coa                     = rirDetailCoaContentJudgement.objects.filter(coa_content_judgement = False).filter(header__is_special_judgement = False).order_by('-id')
-    appearance              = rirDetailAppearenceJudgement.objects.filter(appearence_judgement = False).filter(header__is_special_judgement = False).order_by('-id')
-    restricted_substance    = rirDetailRestrictedSubstanceJudgement.objects.filter(restricted_substance_judgement = False).filter(header__is_special_judgement = False).order_by('-id')
-    sample_test             = rirDetailSampleTestJudgement.objects.filter(sample_test_judgement = False).filter(header__is_special_judgement = False).order_by('-id')
-    environmental_issue     = rirDetailEnvironmentalIssueJudgement.objects.filter(environmental_issue_judgement = False).filter(header__is_special_judgement = False).order_by('-id')
+    rir                     = rirHeader.objects.all()
+    coa                     = rirDetailCoaContentJudgement.objects.filter(coa_content_judgement = False).filter(header__is_delete = False).order_by('-id')
+    appearance              = rirDetailAppearenceJudgement.objects.filter(appearence_judgement = False).filter(header__is_delete = False).order_by('-id')
+    restricted_substance    = rirDetailRestrictedSubstanceJudgement.objects.filter(restricted_substance_judgement = False).filter(header__is_delete = False).order_by('-id')
+    sample_test             = rirDetailSampleTestJudgement.objects.filter(sample_test_judgement = False).filter(header__is_delete = False).order_by('-id')
+    environmental_issue     = rirDetailEnvironmentalIssueJudgement.objects.filter(environmental_issue_judgement = False).filter(header__is_delete = False).order_by('-id')
     context = {
+        'rir'  : rir,
         'judgement_coa' : coa,
         'judgement_appearance' : appearance,
         'judgement_restricted_substance' : restricted_substance,
@@ -614,12 +616,14 @@ def rir_checkedby_environmentalissue_approve(request, rir_id):
 
 @login_required
 def rir_checked_by_index(request):
-    checkedby_coa = rirDetailCoaContentCheckedby.objects.filter(coa_content_checked_by = False ).order_by('-id')
-    checkedby_appearance = rirDetailAppearenceCheckedby.objects.filter(appearence_checked_by = False ).order_by('-id')
-    checkedby_restricted_substance = rirDetailRestrictedSubstanceCheckedby.objects.filter(restricted_substance_checked_by = False ).order_by('-id')
-    checkedby_sample_test = rirDetailSampleTestCheckedby.objects.filter(sample_test_checked_by = False ).order_by('-id')
-    checkedby_environmental_issue = rirDetailEnvironmentalIssueCheckedby.objects.filter(environmental_issue_checked_by = False ).order_by('-id')
+    rir                     = rirHeader.objects.all()
+    checkedby_coa = rirDetailCoaContentCheckedby.objects.filter(coa_content_checked_by = False ).filter(coa_content_judgement__header__is_delete = False).order_by('-id')
+    checkedby_appearance = rirDetailAppearenceCheckedby.objects.filter(appearence_checked_by = False ).filter(appearence_judgement__header__is_delete = False).order_by('-id')
+    checkedby_restricted_substance = rirDetailRestrictedSubstanceCheckedby.objects.filter(restricted_substance_checked_by = False ).filter(restricted_substance_judgement__header__is_delete = False).order_by('-id')
+    checkedby_sample_test = rirDetailSampleTestCheckedby.objects.filter(sample_test_checked_by = False ).filter(sample_test_judgement__header__is_delete = False).order_by('-id')
+    checkedby_environmental_issue = rirDetailEnvironmentalIssueCheckedby.objects.filter(environmental_issue_checked_by = False ).filter(environmental_issue_judgement__header__is_delete = False).order_by('-id')
     context = {
+        'rir'   : rir,
         'checkedby_coa' : checkedby_coa,
         'checkedby_appearance' : checkedby_appearance,
         'checkedby_restricted_substance' : checkedby_restricted_substance,
@@ -632,7 +636,7 @@ def rir_checked_by_index(request):
 @login_required
 def rir_list_sa_index(request):
     # Disini RIR Header akan disortir apakah kondisinya Pass pada saat di special judgement atau pass ketika tidak ada kondisi SA
-    rir = rirHeader.objects.filter(is_sa = True).filter(is_special_judgement = True).order_by('-id')
+    rir = rirHeader.objects.filter(is_sa = True).filter(is_delete = False).filter(is_special_judgement = True).order_by('-id')
     context = {
         'list_sa_rir' : rir,
     }
@@ -641,7 +645,7 @@ def rir_list_sa_index(request):
 @login_required
 def rir_list_return_index(request):
     # Disini RIR Header akan disortir apakah kondisinya Return pada saat di Special Judgement
-    rir = rirHeader.objects.filter(is_return = True).order_by('-id')
+    rir = rirHeader.objects.filter(is_return = True).filter(is_delete = False).order_by('-id')
     context = {
         'list_return_rir' : rir,
     }
@@ -650,11 +654,19 @@ def rir_list_return_index(request):
 @login_required
 def rir_list_complete_index(request):
     # RIR yang sudah complete dan bisa di print
-    rir = rirHeader.objects.filter(is_complete = True).filter(is_special_judgement = False).filter(is_return = False).filter(is_sa = False).order_by('-id')
+    rir = rirHeader.objects.filter(is_complete = True).filter(is_special_judgement = False).filter(is_return = False).filter(is_sa = False).filter(is_delete = False).order_by('-id')
     context = {
         'list_complete_rir' : rir,
     }
     return render(request, 'qc_app/rir_list_complete_index.html', context)
+
+@login_required
+def rir_delete(request, rir_id):
+    rir = rirHeader.objects.get(pk = rir_id)
+    rir.is_delete = True
+    rir.save()
+    messages.success(request, 'RIR '+ rir.rir_no +' Deleted')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 @login_required
 def rir_special_judgement_index(request):
@@ -779,7 +791,7 @@ def rir_manager_approval(request, rir_id):
 @login_required
 def rir_download_report(request, rir_id):
 
-    rir_header                         = rirHeader.objects.get(pk=rir_id)
+    rir_header                         = rirHeader.objects.filter(is_delete = False).get(pk=rir_id)
     rir_coa_judgement                  = rirDetailCoaContentJudgement.objects.filter(header_id=rir_header).first()
     rir_coa_checkedby                  = rirDetailCoaContentCheckedby.objects.filter(coa_content_judgement_id=rir_coa_judgement).first()
     rir_appearance_judgement           = rirDetailAppearenceJudgement.objects.filter(header_id=rir_header).first()
