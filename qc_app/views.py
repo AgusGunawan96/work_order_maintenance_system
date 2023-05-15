@@ -16,7 +16,7 @@ from django.http import HttpResponse
 
 # FUNGSI START
 # Fungsi umum untuk menambahkan kondisi SA
-def rir_sa_check(rir_id, rir):
+def rir_complete_check(rir_id, rir):
     rir_header = rirHeader.objects.get(pk = rir_id)
     rir_coa_check = rirDetailCoaContentCheckedby.objects.filter(coa_content_judgement__header_id = rir).first()
     rir_appearence_check = rirDetailAppearenceCheckedby.objects.filter(appearence_judgement__header_id = rir).first()
@@ -43,10 +43,10 @@ def rir_sa_check(rir_id, rir):
     rir_header_check = rirHeader.objects.filter(category__coa_content = rir_coa_check.coa_content_checked_by).filter(category__appearance = rir_appearence_check.appearence_checked_by).filter(category__sample_test = rir_sampletest_check.sample_test_checked_by).filter(category__restricted_substance = rir_restrictedsubstance_check.restricted_substance_checked_by).filter(category__environmental_issue = rir_environmentalissue_check.environmental_issue_checked_by).filter(pk=rir_id)
     if rir_header_check:
         if  rir_header.is_return == False:
-            rir_header.is_sa = True
+            rir_header.is_complete = True
             rir_header.save()
         if rir_header.is_special_judgement == True:
-            rir_header.is_sa = False
+            rir_header.is_complete = False
             rir_header.save()
             return True
         else:
@@ -424,7 +424,7 @@ def rir_checkedby_coa_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            # rir_sa_check(rir_header.id, rir_header)
+            rir_complete_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
 
 
@@ -471,7 +471,7 @@ def rir_checkedby_appearance_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            # rir_sa_check(rir_header.id, rir_header)
+            rir_complete_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
 
 @login_required
@@ -516,7 +516,7 @@ def rir_checkedby_sampletest_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            # rir_sa_check(rir_header.id, rir_header)
+            rir_complete_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
         
 
@@ -562,7 +562,7 @@ def rir_checkedby_restrictedsubstance_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            # rir_sa_check(rir_header.id, rir_header)
+            rir_complete_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
 
 
@@ -608,7 +608,7 @@ def rir_checkedby_environmentalissue_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            # rir_sa_check(rir_header.id, rir_header)
+            rir_complete_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
 
 
@@ -646,6 +646,15 @@ def rir_list_return_index(request):
         'list_return_rir' : rir,
     }
     return render(request, 'qc_app/rir_list_return_index.html', context)
+
+@login_required
+def rir_list_complete_index(request):
+    # RIR yang sudah complete dan bisa di print
+    rir = rirHeader.objects.filter(is_complete = True).order_by('-id')
+    context = {
+        'list_complete_rir' : rir,
+    }
+    return render(request, 'qc_app/rir_list_complete_index.html', context)
 
 @login_required
 def rir_special_judgement_index(request):
@@ -736,6 +745,7 @@ def rir_manager_approval(request, rir_id):
                     rir_approval_manager_pass_detail.is_pass_manager = True
                     rir_special_judgement.is_pass = True
                     rir_header.is_sa = True
+                    rir_header.is_complete = True
                     rir_special_judgement.save()
                     rir_header.save()
                     rir_approval_manager_pass_detail.save()
@@ -749,6 +759,7 @@ def rir_manager_approval(request, rir_id):
                     rir_special_judgement.is_return = True
                     rir_header.is_return = True
                     rir_header.is_sa = False
+                    rir_header.is_complete = True
                     rir_special_judgement.save()
                     rir_header.save()
                     rir_approval_manager_return_detail.save()
@@ -805,7 +816,7 @@ def rir_download_report(request, rir_id):
 @login_required
 def rir_download_report_excel(request):
     # Test Distinct
-    rir_header = rirHeader.objects.all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement', 'id').order_by('-rir_no')
+    rir_header = rirHeader.objects.all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement', 'id', 'is_complete').order_by('-rir_no')
     # Memanggil RIR dari tahun awal sampai tahun akhir
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename=RIR.xls'
@@ -816,7 +827,7 @@ def rir_download_report_excel(request):
     row_num = 1
     font_style_bold = xlwt.XFStyle()
     font_style_bold.font.bold = True
-    columns = ['RIR No', 'Incoming Type', 'Category', 'Material', 'PO Number', 'Vendor', 'Lot. No', 'Quantity','Quantity(Actual)','Incoming At', 'Incoming At External', 'Created At', 'Special Judgement', 'Return', 'SA', 'Remark COA Judgement', 'Remark COA Checked By', 'Remark Appearance Judgement', 'Remark Appearance Checked By ', 'Remark Environmental Issue judgement', 'Remark Environmental Issue Checked By', 'Remark Restricted Substance Judgement', 'Remark Restricted Substance Checked By ', 'Remark Sample Test Judgement ', 'Remark Sample Test Checked by', 'Reason Supervisor', 'Reason Manager']
+    columns = ['RIR No', 'Incoming Type', 'Category', 'Material', 'PO Number', 'Vendor', 'Lot. No', 'Quantity','Quantity(Actual)','Incoming At', 'Incoming At External', 'Created At', 'Special Judgement', 'Return', 'SA', 'Remark COA Judgement', 'Remark COA Checked By', 'Remark Appearance Judgement', 'Remark Appearance Checked By ', 'Remark Environmental Issue judgement', 'Remark Environmental Issue Checked By', 'Remark Restricted Substance Judgement', 'Remark Restricted Substance Checked By ', 'Remark Sample Test Judgement ', 'Remark Sample Test Checked by', 'Reason Supervisor', 'Reason Manager', 'Status']
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
 
@@ -851,6 +862,11 @@ def rir_download_report_excel(request):
             is_sa = 'Yes'
         else:
             is_sa = 'No'
+        # Kondisi untuk Complete
+        if body[17]:
+            is_complete = 'Yes'
+        else:
+            is_complete = 'No'
         # Kondisi Incoming Eksternal 
         if body[10]:
             incoming_at_eksternal = body[10].strftime("%d-%m-%Y")
@@ -927,6 +943,7 @@ def rir_download_report_excel(request):
                rir_sampletest_checkedby.sample_test_remark,
                rir_approval_supervisor.reason,
                rir_approval_manager.reason,
+               is_complete,
              ]
         for col_num in range(len(row)):
             ws.write(row_num, col_num, row[col_num], font_style)

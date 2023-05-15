@@ -13,6 +13,7 @@ urlpatterns = [
     path('rir/rir_judgement_index/', views.rir_judgement_index, name = 'rir_judgement_index'),
     path('rir/rir_checked_by_index/', views.rir_checked_by_index, name = 'rir_checked_by_index'),
     path('rir/rir_list_sa_index/', views.rir_list_sa_index, name = 'rir_list_sa_index'),
+    path('rir/rir_list_complete_index/', views.rir_list_complete_index, name = 'rir_list_complete_index'),
     path('rir/rir_list_return_index/', views.rir_list_return_index, name = 'rir_list_return_index'),
     path('rir/rir_special_judgement_index/', views.rir_special_judgement_index, name = 'rir_special_judgement_index'),
 
