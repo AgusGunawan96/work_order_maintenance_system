@@ -424,7 +424,7 @@ def rir_checkedby_coa_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            rir_sa_check(rir_header.id, rir_header)
+            # rir_sa_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
 
 
@@ -471,7 +471,7 @@ def rir_checkedby_appearance_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            rir_sa_check(rir_header.id, rir_header)
+            # rir_sa_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
 
 @login_required
@@ -516,7 +516,7 @@ def rir_checkedby_sampletest_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            rir_sa_check(rir_header.id, rir_header)
+            # rir_sa_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
         
 
@@ -562,7 +562,7 @@ def rir_checkedby_restrictedsubstance_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            rir_sa_check(rir_header.id, rir_header)
+            # rir_sa_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
 
 
@@ -608,7 +608,7 @@ def rir_checkedby_environmentalissue_approve(request, rir_id):
                 rir_approval_supervisor.save()
             return redirect('qc_app:rir_checked_by_index')
         else:
-            rir_sa_check(rir_header.id, rir_header)
+            # rir_sa_check(rir_header.id, rir_header)
             return redirect('qc_app:rir_checked_by_index')
 
 
@@ -632,7 +632,7 @@ def rir_checked_by_index(request):
 @login_required
 def rir_list_sa_index(request):
     # Disini RIR Header akan disortir apakah kondisinya Pass pada saat di special judgement atau pass ketika tidak ada kondisi SA
-    rir = rirHeader.objects.filter(is_sa = True).order_by('-id')
+    rir = rirHeader.objects.filter(is_sa = True).filter(is_special_judgement = True).order_by('-id')
     context = {
         'list_sa_rir' : rir,
     }
