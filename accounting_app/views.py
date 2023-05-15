@@ -1298,6 +1298,7 @@ def export_cashPayment_xls(request):
     wb.save(response)
 
     return response
+
 @login_required
 def CreateCashPayment(request):
     with open('templates/csv/list_cashPayment.csv', 'r') as csv_file:
@@ -1310,4 +1311,39 @@ def CreateCashPayment(request):
             data.append(cashpayment)
         cashPayment.objects.bulk_create(data)
     return JsonResponse('Cash Payment csv is now working', safe=False)
+
+@login_required
+def accounting_cashPayment_report(request, cashPayment_id):
+    cash_payment                            = cashPayment.objects.get(pk=cashPayment_id)   
+    cashPayment_approval_manager            = cashPaymentApprovalManager.objects.filter(cashPayment_id = cash_payment).first()
+    cashPayment_approval_accounting_manager = cashPaymentApprovalAccountingManager.objects.filter(cashPayment_approval_manager_id = cashPayment_approval_manager).first()
+    cashPayment_approval_president          = cashPaymentApprovalPresident.objects.filter(cashPayment_approval_accounting_manager_id = cashPayment_approval_accounting_manager).first()
+    cashPayment_approval_cashier            = cashPaymentApprovalCashier.objects.filter(cashPayment_approval_president_id = cashPayment_approval_president).first()
+
+    context = {
+        'cashPayment'                               : cash_payment,
+        'cashPayment_approval_manager'              : cashPayment_approval_manager, 
+        'cashPayment_approval_accounting_manager'   : cashPayment_approval_accounting_manager, 
+        'cashPayment_approval_president'            : cashPayment_approval_president, 
+        'cashPayment_approval_cashier'              : cashPayment_approval_cashier, 
+    }
+
+    return render(request, 'accounting_app/cashPayment_download_report.html', context)
+
+@login_required
+def accounting_advance_report(request, cashPayment_id):
+    advance_payment = cashPayment.objects.get(pk=cashPayment_id)
+    advance_approval_manager            = advanceApprovalManager.objects.filter(advance_id = advance_payment).first()
+    advance_approval_accounting_manager = advanceApprovalAccountingManager.objects.filter(advance_approval_manager_id = advance_approval_manager).first()
+    advance_approval_president          = advanceApprovalPresident.objects.filter(advance_approval_accounting_manager_id = advance_approval_accounting_manager).first()
+    advance_approval_cashier            = advanceApprovalCashier.objects.filter(advance_approval_president_id = advance_approval_president).first()
+
+    context = {
+    'advance'                               : advance_payment,
+    'advance_approval_manager'              : advance_approval_manager, 
+    'advance_approval_accounting_manager'   : advance_approval_accounting_manager, 
+    'advance_approval_president'            : advance_approval_president, 
+    'advance_approval_cashier'              : advance_approval_cashier, 
+    }
+    return render(request, 'accounting_app/advance_download_report.html', context)
 # CASHPAYMENT END

@@ -109,8 +109,8 @@
               {% if perms.accounting_app %}
               {% comment %} <li class="dropdown"><a class="nav-link menu-title link-nav" href="{% url 'ppc_app:millingSchedule_index' %}"><i data-feather="dollar-sign">
               </i><span>Cash Received</span></a></li> {% endcomment %}
-              <li class="dropdown"><a href="{% url 'accounting_app:cashPayment_settle_index' %}"><i data-feather="dollar-sign"></i><span>List Settle</span></a></li>
-              <li class="dropdown"><a href="{% url 'accounting_app:cashPayment_adv_index' %}"><i data-feather="dollar-sign"></i><span>List Adv</span></a></li>
+              {% comment %} <li class="dropdown"><a href="{% url 'accounting_app:cashPayment_settle_index' %}"><i data-feather="dollar-sign"></i><span>List Settle</span></a></li>
+              <li class="dropdown"><a href="{% url 'accounting_app:cashPayment_adv_index' %}"><i data-feather="dollar-sign"></i><span>List Adv</span></a></li> {% endcomment %}
               {% endif %}
             </ul>
           </li>

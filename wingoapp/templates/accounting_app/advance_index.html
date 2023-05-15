@@ -85,7 +85,8 @@
                            <td>
                              <a href="{% url 'accounting_app:advance_manager_approve' manager.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
                              <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalManagerReject{{ manager.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
-                           </td>
+                             <a href="{% url 'accounting_app:accounting_advance_report' manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                            </td>
                            {% else %}
                            {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id != manager.advance.assignee.userprofileinfo.department_id %}
                            <td>Cannot Approved</td>
@@ -100,7 +101,8 @@
                           {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == manager.advance.assignee.userprofileinfo.department_id and  manager.is_rejected_manager == False and manager.is_approve_manager == False %}
                           <td>
                             <a class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ModalManagerCheck{{ manager.id }}" data-whatever="@mdo"><span class="icon-info"></span> Check Attachment</a>
-                          </td>
+                             <a href="{% url 'accounting_app:accounting_advance_report' manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                            </td>
                           {% else %}
                           {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == manager.advance.assignee.userprofileinfo.department_id and  manager.is_rejected_manager == True and manager.is_approve_manager == False %}
                           <td></td>
@@ -255,7 +257,8 @@
                            <td>
                              <a href="{% url 'accounting_app:advance_accounting_manager_approve' managerAccounting.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
                              <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalManagerAccountingReject{{ managerAccounting.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
-                           </td>
+                             <a href="{% url 'accounting_app:accounting_advance_report' managerAccounting.advance_approval_manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                            </td>
                            {% else %}
                            {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id != managerAccounting.advance.assignee.userprofileinfo.department_id %}
                            <td>Cannot Approved</td>
@@ -270,7 +273,8 @@
                           {% if request.user.userprofileinfo.is_manager and request.user.userprofileinfo.department_id == 7 and  managerAccounting.is_rejected_manager_accounting == False and managerAccounting.is_approve_manager_accounting == False %}
                           <td>
                             <a class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ModalManagerAccountingCheck{{ managerAccounting.id }}" data-whatever="@mdo"><span class="icon-info"></span> Check Attachment</a>
-                          </td>
+                            <a href="{% url 'accounting_app:accounting_advance_report' managerAccounting.advance_approval_manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                            </td>
                            {% endif %}
                            {% endif %}
                           {% comment %}  CHECK ATTACHMENT END {% endcomment %}
@@ -420,6 +424,7 @@
                           <td>
                             <a href="{% url 'accounting_app:advance_president_approve' president.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
                             <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalPresidentReject{{ president.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
+                            <a href="{% url 'accounting_app:accounting_advance_report' president.advance_approval_accounting_manager.advance_approval_manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
                           {% else %}
                           {% if request.user.userprofileinfo.is_bod == False and request.user.userprofileinfo.id != 6 %}
@@ -433,6 +438,7 @@
                           {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 6 and  president.is_rejected_president == False and president.is_approve_president == False %}
                           <td>
                             <a class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ModalPresidentCheck{{ president.id }}" data-whatever="@mdo"><span class="icon-info"></span> Check Attachment</a>
+                            <a href="{% url 'accounting_app:accounting_advance_report' president.advance_approval_accounting_manager.advance_approval_manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
                            {% endif %}
                            {% endif %}
@@ -583,6 +589,7 @@
                           {% if request.user.userprofileinfo.id == 521  %}
                           <td>
                             <a data-bs-toggle="modal" data-bs-target="#ModalCashierApprove{{ cashier.id }}" data-whatever="@mdo" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                            <a href="{% url 'accounting_app:accounting_advance_report' cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
                           {% else %}
                           {% if request.user.userprofileinfo.id != 521 %}
@@ -596,6 +603,7 @@
                           {% if request.user.userprofileinfo.id == 521 and cashier.is_approve_cashier == False %}
                           <td>
                             <a class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ModalCashierCheck{{ cashier.id }}" data-whatever="@mdo"><span class="icon-info"></span> Check Attachment</a>
+                            <a href="{% url 'accounting_app:accounting_advance_report' cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
                            {% endif %}
 
@@ -748,7 +756,10 @@
                           <td>{{cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.assignee.first_name}} {{cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.assignee.last_name}}</td>
                           <td>Waiting cash From Cashier</td>
                           <td>{{cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.rp_total}}</td>
-                          <td>Transfered  <i class="icofont icofont-tick-mark"></td>
+                          <td>
+                            Transfered  <i class="icofont icofont-tick-mark">
+                            <a href="{% url 'accounting_app:accounting_advance_report' cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                            </td>
                         </tr>
                         {% endif %}
                         {% endif %}

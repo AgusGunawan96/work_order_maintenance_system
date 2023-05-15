@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        @page {
+            size: A4;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                font-size: 12pt;
+            }
+
+            @page {
+                margin: 2cm;
+            }
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .table2 {
+            width: 50%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-bottom: 20px;
+            position: fixed;
+            right: 0;
+        }
+
+        td {
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .section-header {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .section-detail td:first-child {
+            width: 50%;
+        }
+
+        .bordered-heading {
+            border: 1px solid black;
+            padding: 10px;
+            display: inline-block;
+            position: relative;
+            left: 100%;
+            transform: translateX(-100%);
+        }
+
+        p.form_text1>span {
+            display: inline-block;
+            min-width: 220px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT SEIWA INDONESIA | Accounting Dept.</title>
+</head>
+<body onload="printContent()">
+    {% if cashPayment.ticket_no %}
+    <h5 class="bordered-heading" style="border: 1px solid #ccc;">{{ cashPayment.ticket_no }}  </h5>
+    {% endif %}
+    <h3 style="text-align: center;"><u>CASH PAYMENT VOUCHER</u></h3>
+    <p class="form_text1"><span>NAME</span>: <u>{{ cashPayment.assignee.first_name }} {{ cashPayment.assignee.last_name }}</u> </p>
+    <p class="form_text1"><span>NO. KARYAWAN</span>: <u>{{ cashPayment.assignee.username }}</u> </p>
+    <p class="form_text1"><span>DEPARTMENT </span>: <u>{{ cashPayment.assignee.userprofileinfo.department.department_name }}</u> </p>
+    <p class="form_text1"><span>SECTION</span>: <u>{{ cashPayment.assignee.userprofileinfo.section.section_name }}</u> </p>
+    <p class="form_text1"><span>ISSUED DATE</span>: <u>{{ cashPayment.created_at }}</u> </p>
+
+    <table class="table">
+        <thead>
+             <tr class="section-header">
+                 <th style="text-align: center;">Description</th>
+                 <th style="text-align: center;">Ammount</th>
+             </tr>
+        </thead>
+        <tbody>
+            {% if cashPayment.rp_detail_1 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_1 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_1}}</td>
+            </tr>
+            {% endif %}
+            {% if cashPayment.rp_detail_2 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_2 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_2}}</td>
+            </tr>
+            {% endif %}            
+            {% if cashPayment.rp_detail_3 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_3 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_3}}</td>
+            </tr>
+            {% endif %}
+            {% if cashPayment.rp_detail_4 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_4 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_4}}</td>
+            </tr>
+            {% endif %}
+            {% if cashPayment.rp_detail_5 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_5 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_5}}</td>
+            </tr>
+            {% endif %}
+            {% if cashPayment.rp_detail_6 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_6 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_6}}</td>
+            </tr>
+            {% endif %}
+            {% if cashPayment.rp_detail_7 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_7 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_7}}</td>
+            </tr>
+            {% endif %}
+            {% if cashPayment.rp_detail_8 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_8 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_8}}</td>
+            </tr>
+            {% endif %}
+            {% if cashPayment.rp_detail_9 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_9 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_9}}</td>
+            </tr>
+            {% endif %}
+            {% if cashPayment.rp_detail_10 %}
+            <tr class="section-detail">
+                <td style="padding: 15px;">{{ cashPayment.description_10 }}</td>
+                <td style="padding: 15px;">RP. {{ cashPayment.rp_detail_10}}</td>
+            </tr>
+            {% endif %}
+            <tr class="section-detail">
+                <td style="padding: 15px; font-weight: bold;">Total RP.</td>
+                <td style="padding: 15px; font-weight: bold;">RP. {{ cashPayment.rp_total}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table2">
+
+        <tr class="section-detail">
+            <td  style="padding: 20px;">Status</td>
+            <td  style="padding: 20px;">Dept. Head</td>
+            <td  style="padding: 20px;">Account Dept.</td>
+            <td  style="padding: 20px;">President</td>
+            <td  style="padding: 20px;">Cashier</td>
+        </tr>
+        <tr class="section-detail">
+            <td style="padding: 20px;">
+                {% if not cashPayment.ticket_no %}
+                Waiting Approval
+                {% elif cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.cashier %}
+                Pay to {{ cashPayment.assignee.first_name }} {{ cashPayment.assignee.last_name }}
+                {% else %}
+                waiting for Transfer
+                {% endif %}
+            </td>
+            <td style="padding: 20px;">
+                {% if cashPayment.cashpaymentapprovalmanager.is_approve_manager %}
+                Approved by {{ cashPayment.cashpaymentapprovalmanager.manager.first_name }} {{ cashPayment.cashpaymentapprovalmanager.manager.last_name }}
+                {% elif cashPayment.cashpaymentapprovalmanager.is_rejected_manager %}
+                Rejected
+                {% else %}
+                -
+                {% endif %}
+            </td>
+            <td style="padding: 20px;">
+                {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.is_approve_manager_accounting %}
+                Approved by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.manager_accounting.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.manager_accounting.last_name }}
+                {% elif cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.is_rejected_manager_accounting %}
+                Rejected
+                {% else %}
+                -
+                {% endif %}
+            </td>
+            <td style="padding: 20px;">
+                {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.is_approve_president %}
+                Approved by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.president.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.president.last_name }}
+                {% elif cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.is_rejected_president %}
+                Rejected
+                {% else %}
+                -
+                {% endif %}
+            </td>
+            <td style="padding: 20px;">
+                {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.is_approve_cashier %}
+                Approved by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.cashier.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.cashier.last_name}}
+                {% elif cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.is_rejected_cashier %}
+                Rejected
+                {% else %}
+                -
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        function printContent() {
+            // Open the print dialog
+            window.print();
+        }
+    </script>
+</body>
+</html>

@@ -35,6 +35,9 @@ urlpatterns = [
     path('cashPayment/cashPayment_cashier_checked/<int:cashPayment_id>', views.cashPayment_cashier_check, name='cashPayment_cashier_check'),
     path('cashPayment/cashPayment_cashier_approve/<int:cashPayment_id>', views.cashPayment_cashier_approval, name='cashPayment_cashier_approve'),
     path('cashPayment/cashPayment_cashier_reject/<int:cashPayment_id>', views.cashPayment_cashier_reject, name='cashPayment_cashier_reject'),
+
+    path('cashPayment/accoounting_cashPayment_report/<int:cashPayment_id>', views.accounting_cashPayment_report, name='accounting_cashPayment_report'),
+
     # CASHPAYMENT END
 
     # ADVANCE START
@@ -53,6 +56,7 @@ urlpatterns = [
     path('advance/advance_cashier_checked/<int:cashPayment_id>', views.advance_cashier_check, name='advance_cashier_check'),
     path('advance/advance_cashier_approve/<int:cashPayment_id>', views.advance_cashier_approval, name='advance_cashier_approve'),
     path('advance/advance_cashier_reject/<int:cashPayment_id>', views.advance_cashier_reject, name='advance_cashier_reject'),
+    path('advance/accounting_advance_report/<int:cashPayment_id>', views.accounting_advance_report, name='accounting_advance_report'),
     # ADVANCE END
 
     path('cashPayment/cashPayment_download_csv', views.export_cashPayment_csv, name = 'cashPayment_download_csv'),
