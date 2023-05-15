@@ -650,7 +650,7 @@ def rir_list_return_index(request):
 @login_required
 def rir_list_complete_index(request):
     # RIR yang sudah complete dan bisa di print
-    rir = rirHeader.objects.filter(is_complete = True).order_by('-id')
+    rir = rirHeader.objects.filter(is_complete = True).filter(is_special_judgement = False).filter(is_return = False).filter(is_sa = False).order_by('-id')
     context = {
         'list_complete_rir' : rir,
     }
