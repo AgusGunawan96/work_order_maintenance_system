@@ -33,11 +33,14 @@ class medicalJenisMelahirkan(models.TextChoices):
     KEGUGURAN       = 'Keguguran'
 
 class medicalHeader(models.Model):
-    user        = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    rp_total    = models.PositiveBigIntegerField(null=True, blank=True)
-    is_approved = models.BooleanField(default=False, null=True)
-    created_at  = models.DateTimeField('created at', auto_now_add = True)
-    updated_at  = models.DateTimeField('updated at', auto_now = True)
+    user          = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    medical_no    = models.CharField(max_length=128, null=True, blank=True)
+    rp_total      = models.PositiveBigIntegerField(null=True, blank=True)
+    is_foreman    = models.BooleanField(default=False)
+    is_supervisor = models.BooleanField(default=False)
+    is_manager    = models.BooleanField(default=False)
+    created_at    = models.DateTimeField('created at', auto_now_add = True)
+    updated_at    = models.DateTimeField('updated at', auto_now = True)
     
 class medicalDetailPasienKeluarga(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
@@ -49,14 +52,14 @@ class medicalDetailPasienKeluarga(models.Model):
     updated_at      = models.DateTimeField('updated at', auto_now = True)
 
 class medicalDetailDokter(models.Model):
-    medical     = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
-    nama_dokter = models.CharField(max_length=128,null=True, blank=True)
-    hubungan    = models.CharField(max_length=25, choices=medicalTempatPelayanan.choices)
-    nama_klinik = models.CharField(max_length=128,null=True, blank=True)
-    alamat      = models.TextField(null=True, blank=True)
-    no_telp     = models.CharField(max_length=128,null=True, blank=True)
-    created_at  = models.DateTimeField('created at', auto_now_add = True)
-    updated_at  = models.DateTimeField('updated at', auto_now = True)
+    medical             = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
+    nama_dokter         = models.CharField(max_length=128,null=True, blank=True)
+    tempat_pelayanan    = models.CharField(max_length=25, choices=medicalTempatPelayanan.choices)
+    nama_klinik         = models.CharField(max_length=128,null=True, blank=True)
+    alamat              = models.TextField(null=True, blank=True)
+    no_telp             = models.CharField(max_length=128,null=True, blank=True)
+    created_at          = models.DateTimeField('created at', auto_now_add = True)
+    updated_at          = models.DateTimeField('updated at', auto_now = True)
 
 class medicalDetailInformation(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
@@ -70,7 +73,6 @@ class medicalDetailInformation(models.Model):
 class medicalClaimStatus(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     is_lengkap = models.BooleanField(default=False)
-    reason     = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
 
@@ -94,6 +96,9 @@ class medicalApprovalList(models.Model):
 class medicalApprovalForeman(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     foreman    = models.ForeignKey(medicalApprovalList, on_delete=models.CASCADE, blank=True, null=True)
+    is_approve = models.BooleanField(default=False, blank=True, null=True)
+    is_reject  = models.BooleanField(default=False, blank=True, null=True)
+    reason     = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
     
@@ -103,6 +108,9 @@ class medicalApprovalForeman(models.Model):
 class medicalApprovalSupervisor(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     supervisor = models.ForeignKey(medicalApprovalList, on_delete=models.CASCADE, blank=True, null=True)
+    is_approve = models.BooleanField(default=False, blank=True, null=True)
+    is_reject  = models.BooleanField(default=False, blank=True, null=True)
+    reason     = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
 
@@ -112,6 +120,9 @@ class medicalApprovalSupervisor(models.Model):
 class medicalApprovalManager(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     manager    = models.ForeignKey(medicalApprovalList, on_delete=models.CASCADE, blank=True, null=True)
+    is_approve = models.BooleanField(default=False, blank=True, null=True)
+    is_reject  = models.BooleanField(default=False, blank=True, null=True)
+    reason     = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
 
@@ -121,6 +132,9 @@ class medicalApprovalManager(models.Model):
 class medicalApprovalHR(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     hr         = models.ForeignKey(medicalApprovalList, on_delete=models.CASCADE, blank=True, null=True)
+    is_approve = models.BooleanField(default=False, blank=True, null=True)
+    is_reject  = models.BooleanField(default=False, blank=True, null=True)
+    reason     = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
 
