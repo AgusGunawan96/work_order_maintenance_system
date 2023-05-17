@@ -45,7 +45,7 @@ class medicalHeader(models.Model):
 class medicalDetailPasienKeluarga(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     nama_pasien     = models.CharField(max_length=128,null=True, blank=True)
-    tanggal_lahir   = models.DateTimeField('tanggal lahir', auto_now_add = True, null=True, blank=True)
+    tanggal_lahir   = models.DateTimeField('tanggal lahir', null=True, blank=True)
     jenis_kelamin   = GenderField(null=True, blank=True)
     hubungan        = models.CharField(max_length=25, choices=medicalHubungan.choices, default=False, null=True)
     created_at      = models.DateTimeField('created at', auto_now_add = True)
@@ -65,7 +65,7 @@ class medicalDetailInformation(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     jenis_pelayanan = models.CharField(max_length=25, choices=medicalHubungan.choices, default=False, null=True)
     melahirkan      = models.CharField(max_length=25, choices=medicalHubungan.choices, default=False, null=True)
-    tanggal_berobat = models.DateTimeField('tanggal berobat', auto_now_add = True, null=True, blank=True)
+    tanggal_berobat = models.DateTimeField('tanggal berobat', null=True, blank=True)
     diagnosa        = models.CharField(max_length=128,null=True, blank=True)
     created_at      = models.DateTimeField('created at', auto_now_add = True)
     updated_at      = models.DateTimeField('updated at', auto_now = True)

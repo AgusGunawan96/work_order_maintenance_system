@@ -25,7 +25,7 @@ class medicalPelayananKesehatanForms(forms.ModelForm):
 class medicalStatusKlaimForms(forms.ModelForm):
     class Meta():
         model = medicalClaimStatus
-        fields = ('is_lengkap','reason',                                                                           x)
+        fields = ('is_lengkap',)                                                                          
 
 class medicalAttachmentForms(forms.ModelForm):
     class Meta():
