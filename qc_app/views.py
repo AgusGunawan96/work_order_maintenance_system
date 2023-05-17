@@ -256,6 +256,7 @@ def rir_judgement_coa_approve(request, rir_id):
             rir_detail_sample_test.header = rir_header
             rir_detail_sample_test.save()
         messages.success(request, 'RIR Approved')
+        return redirect(request.META.get('HTTP_REFERER'))
         return redirect('qc_app:rir_judgement_index')
     return redirect('qc_app:rir_detail', rir_id)
 
@@ -287,6 +288,7 @@ def rir_judgement_appearance_approve(request, rir_id):
         rir_detail_appearance_checkedby.appearence_judgement   = rir_detail_appearance_judgement
         rir_detail_appearance_checkedby.save()
         messages.success(request, 'RIR Appearance Approved')
+        return redirect(request.META.get('HTTP_REFERER'))
         return redirect('qc_app:rir_judgement_index')
     return redirect('qc_app:rir_detail', rir_id)
 
@@ -318,6 +320,7 @@ def rir_judgement_sampletest_approve(request, rir_id):
         rir_detail_sampletest_checkedby.sample_test_judgement   = rir_detail_sampletest_judgement
         rir_detail_sampletest_checkedby.save()
         messages.success(request, 'RIR Sample Test Approved')
+        return redirect(request.META.get('HTTP_REFERER'))
         return redirect('qc_app:rir_judgement_index')
     return redirect('qc_app:rir_detail', rir_id)
 
@@ -349,6 +352,7 @@ def rir_judgement_restrictedsubstance_approve(request, rir_id):
         rir_detail_restrictedsubstance_checkedby.restricted_substance_judgement   = rir_detail_restrictedsubstance_judgement
         rir_detail_restrictedsubstance_checkedby.save()
         messages.success(request, 'RIR Restricted Substance Approved')
+        return redirect(request.META.get('HTTP_REFERER'))
         return redirect('qc_app:rir_judgement_index')
     return redirect('qc_app:rir_detail', rir_id)
 
@@ -380,6 +384,7 @@ def rir_judgement_environmentalissue_approve(request, rir_id):
         rir_detail_environmentalissue_checkedby.environmental_issue_judgement   = rir_detail_environmentalissue_judgement
         rir_detail_environmentalissue_checkedby.save()
         messages.success(request, 'RIR Environmental Issue Approved')
+        return redirect(request.META.get('HTTP_REFERER'))
         return redirect('qc_app:rir_judgement_index')
     return redirect('qc_app:rir_detail', rir_id)
 
@@ -424,9 +429,11 @@ def rir_checkedby_coa_approve(request, rir_id):
                 rir_approval_supervisor = rirApprovalSupervisorForms().save(commit=False)
                 rir_approval_supervisor.specialjudgement = rir_special_judgement
                 rir_approval_supervisor.save()
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
         else:
             rir_complete_check(rir_header.id, rir_header)
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
 
 
@@ -471,9 +478,11 @@ def rir_checkedby_appearance_approve(request, rir_id):
                 rir_approval_supervisor = rirApprovalSupervisorForms().save(commit=False)
                 rir_approval_supervisor.specialjudgement = rir_special_judgement
                 rir_approval_supervisor.save()
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
         else:
             rir_complete_check(rir_header.id, rir_header)
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
 
 @login_required
@@ -516,9 +525,11 @@ def rir_checkedby_sampletest_approve(request, rir_id):
                 rir_approval_supervisor = rirApprovalSupervisorForms().save(commit=False)
                 rir_approval_supervisor.specialjudgement = rir_special_judgement
                 rir_approval_supervisor.save()
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
         else:
             rir_complete_check(rir_header.id, rir_header)
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
         
 
@@ -562,9 +573,11 @@ def rir_checkedby_restrictedsubstance_approve(request, rir_id):
                 rir_approval_supervisor = rirApprovalSupervisorForms().save(commit=False)
                 rir_approval_supervisor.specialjudgement = rir_special_judgement
                 rir_approval_supervisor.save()
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
         else:
             rir_complete_check(rir_header.id, rir_header)
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
 
 
@@ -608,9 +621,11 @@ def rir_checkedby_environmentalissue_approve(request, rir_id):
                 rir_approval_supervisor = rirApprovalSupervisorForms().save(commit=False)
                 rir_approval_supervisor.specialjudgement = rir_special_judgement
                 rir_approval_supervisor.save()
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
         else:
             rir_complete_check(rir_header.id, rir_header)
+            return redirect(request.META.get('HTTP_REFERER'))
             return redirect('qc_app:rir_checked_by_index')
 
 
