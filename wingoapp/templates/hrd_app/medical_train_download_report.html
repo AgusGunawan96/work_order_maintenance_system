@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        @page {
+            size: A4;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                font-size: 11pt;
+                border: 1px solid black;
+                padding: 10px;
+                zoom: 84%;
+            }
+
+            @page {
+                margin: 1cm;
+            }
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .table2 {
+            width: 50%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-bottom: 20px;
+            position: fixed;
+            right: 0;
+        }
+
+        td {
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .section-header {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .section-detail td:first-child {
+            width: 50%;
+        }
+
+        .card-body{
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        p{
+
+        }
+        p.form_text1>span {
+            display: inline-block;
+            min-width: 220px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT SEIWA INDONESIA | Human Resource Dept.</title>
+</head>
+
+<body onload="printContent()">
+    <h3 style="text-align: center;">FORMULIR KLAIM MEDIS</h3>
+
+
+    <div class="card-body">
+        <h5 style="text-align: center;">DATA KARYAWAN / KELUARGA</h5>
+        <p class="form_text1"><span>Nomor Karyawan</span>: <u>002183</u> </p>
+        <p class="form_text1"><span>Nama Karyawan </span>: <u>Raffael Lucas T</u> </p>
+        <p class="form_text1"><span>Department</span>: <u>Engineering</u> </p>
+        <p class="form_text1"><span>Section</span>: <u>IT</u> </p>
+        <p class="form_text1"><span>Jenis Kelamin</span>: <u>Laki-Laki</u> </p>
+        <p class="form_text1"><span>Status Karyawan</span>: <u>Contract</u> </p>
+        <h5><i>Diisi bila pasien keluarga karyawan*</i></h5>
+        <p class="form_text1"><span>Nama Pasien</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Tanggal Lahir</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Jenis Kelamin</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Hubungan</span>: <u>Lorem, ipsum dolor.</u> </p>
+    </div>
+    <div class="card-body">
+        <h5 style="text-align: center;">INFORMASI PEMBERI LAYANAN KESEHATAN</h5>
+        <p class="form_text1"><span>Nama Dokter</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Tempat Pelayanan</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Nama Klinik/RS</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Alamat</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>No. Telepon</span>: <u>Lorem, ipsum dolor.</u> </p>
+    </div>
+    <div class="card-body">
+        <h5 style="text-align: center;">INFORMASI PELAYANAN KESEHATAN</h5>
+        <p class="form_text1"><span>Jenis Pelayanan</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Melahirkan </span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Tanggal Berobat</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Diagnosa</span>: <u>Lorem, ipsum dolor.</u> </p>
+        <p class="form_text1"><span>Total Biaya</span>: <u>Lorem, ipsum dolor.</u> </p>
+    </div>
+    <div class="card-body">
+        <h5 style="text-align: center;">STATUS KLAIM(diisi oleh HR Dept.)</h5>
+        <p class="form_text1"><span>Status</span>: <u>Lorem, ipsum dolor.</u> </p>
+    </div>
+    <div class="card-body">
+        <table>
+            <thead>
+                <tr class="section-header">
+                    <th style="text-align: center;">Diserahkan Oleh</th>
+                    <th style="text-align: center;">Mengetahui atasan ybs</th>
+                    <th style="text-align: center;">Diterima Oleh</th>
+                    <th style="text-align: center;">Di input oleh</th>
+                </tr>
+           </thead>
+           <tbody>
+            <tr class="section-detail">
+                <td style="padding: 15px;">Lorem, ipsum dolor.</td>
+                <td style="padding: 15px;">Lorem, ipsum dolor.</td>
+                <td style="padding: 15px;">Lorem, ipsum dolor.</td>
+                <td style="padding: 15px;">Lorem, ipsum dolor.</td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+    <script>
+        function printContent() {
+            // Open the print dialog
+            window.print();
+        }
+        </script>
+</body>
+
+</html>
