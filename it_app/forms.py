@@ -14,11 +14,11 @@ class hardwareForms(forms.ModelForm):
         model = Hardware
         fields = ('name', 'quantity', 'hardware', )
 
-
 class ticketForms(forms.ModelForm):
     hardware = forms.ModelChoiceField(
         queryset=Hardware.objects.all(),
-        widget=Select2Widget
+        widget=Select2Widget, 
+        required=False
     )
     class Meta():
         model = Ticket
