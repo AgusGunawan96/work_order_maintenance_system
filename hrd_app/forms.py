@@ -8,6 +8,7 @@ class medicalHeaderForms(forms.ModelForm):
         fields = ('rp_total',)
 
 class medicalDataKeluargaForms(forms.ModelForm):
+    tanggal_lahir = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
     class Meta():
         model = medicalDetailPasienKeluarga
         fields = ('nama_pasien','tanggal_lahir','jenis_kelamin','hubungan',)
@@ -18,6 +19,7 @@ class medicalPemberiLayananForms(forms.ModelForm):
         fields = ('nama_dokter','tempat_pelayanan','nama_klinik','alamat','no_telp')
 
 class medicalPelayananKesehatanForms(forms.ModelForm):
+    tanggal_berobat = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
     class Meta():
         model = medicalDetailInformation
         fields = ('jenis_pelayanan','melahirkan','tanggal_berobat','diagnosa',)

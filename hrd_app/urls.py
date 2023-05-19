@@ -23,7 +23,9 @@ urlpatterns = [
 
     # MEDICAL TRAIN START
     path('medicalTrain/medical_train_index/', views.medical_train_index, name = 'medical_train_index'),
-    path('medicalTrain/medical_train_download_report/', views.medical_train_download_report, name = 'medical_train_download_report'),
+    path('medicalTrain/medical_train_add/', views.medical_train_add, name = 'medical_train_add'),
+    path('medicalTrain/medical_train_detail/<int:medical_id>', views.medical_train_detail, name = 'medical_train_detail'),
+    path('medicalTrain/medical_train_download_report/<int:medical_id>', views.medical_train_download_report, name = 'medical_train_download_report'),
     # MEDICAL TRAIN END
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
