@@ -64,7 +64,7 @@
                                     <td>{{coa.coa_content_judgement.header.incoming_at|date:"F j, Y"}}</td>                                    
                                     <td>{{coa.coa_content_judgement.header.expired_at|date:"F j, Y"}}</td>
                                     <td><a href="{% url 'qc_app:rir_detail' coa.coa_content_judgement.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> 
-                                        {% comment %} | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ coa.coa_content_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a> {% endcomment %}
+                                        | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ coa.coa_content_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a> {% endcomment %}
                                         | <a href="{% url 'qc_app:rir_download_report' coa.coa_content_judgement.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span> Print</a></td>
                                 </tr>
                                 
@@ -102,7 +102,7 @@
                                     <td>{{appearance.appearence_judgement.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{appearance.appearence_judgement.header.expired_at|date:"F j, Y"}}</td>
                                     <td><a href="{% url 'qc_app:rir_detail' appearance.appearence_judgement.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> 
-                                        {% comment %} | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ appearance.appearence_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a> {% endcomment %}
+                                        | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ appearance.appearence_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a>
                                         | <a href="{% url 'qc_app:rir_download_report' appearance.appearence_judgement.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span> Print</a></td>
                                 </tr>
                                 {% endfor %}
@@ -139,7 +139,7 @@
                                     <td>{{restricted_substance.restricted_substance_judgement.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{restricted_substance.restricted_substance_judgement.header.expired_at|date:"F j, Y"}}</td>
                                     <td><a href="{% url 'qc_app:rir_detail' restricted_substance.restricted_substance_judgement.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> 
-                                        {% comment %} | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ restricted_substance.restricted_substance_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a> {% endcomment %}
+                                        | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ restricted_substance.restricted_substance_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a>
                                         | <a href="{% url 'qc_app:rir_download_report' restricted_substance.restricted_substance_judgement.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span> Print</a></td>
                                 </tr>
                                 {% endfor %}
@@ -178,7 +178,7 @@
                                   <td>{{sample_test.sample_test_judgement.header.incoming_at|date:"F j, Y"}}</td>
                                   <td>{{sample_test.sample_test_judgement.header.expired_at|date:"F j, Y"}}</td>
                                   <td><a href="{% url 'qc_app:rir_detail' sample_test.sample_test_judgement.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> 
-                                        {% comment %} | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ sample_test.sample_test_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a> {% endcomment %}
+                                        | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ sample_test.sample_test_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a>
                                         | <a href="{% url 'qc_app:rir_download_report' sample_test.sample_test_judgement.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a></td>
                               </tr>
                               {% endfor %}
@@ -215,7 +215,7 @@
                                     <td>{{environmental_issue.environmental_issue_judgement.header.incoming_at|date:"F j, Y"}}</td>
                                     <td>{{environmental_issue.environmental_issue_judgement.header.expired_at|date:"F j, Y"}}</td>
                                     <td><a href="{% url 'qc_app:rir_detail' environmental_issue.environmental_issue_judgement.header.id %}" class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a> 
-                                        {% comment %} | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ environmental_issue.environmental_issue_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a> {% endcomment %}
+                                        | <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRIRDelete{{ environmental_issue.environmental_issue_judgement.header.id }}" data-whatever="@mdo"><span class="icon-close"></span> Delete</a>
                                         | <a href="{% url 'qc_app:rir_download_report' environmental_issue.environmental_issue_judgement.header.id %}" class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span> Print</a></td>
                                 </tr>
                                 {% endfor %}

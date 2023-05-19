@@ -17,7 +17,7 @@ from django.http import HttpResponse
 # FUNGSI START
 # Fungsi umum untuk menambahkan kondisi SA
 def rir_complete_check(rir_id, rir):
-    rir_header = rirHeader.objects.get(pk = rir_id)
+    rir_header = rirHeader.objects.filter(is_delete = False).get(pk = rir_id)
     rir_coa_check = rirDetailCoaContentCheckedby.objects.filter(coa_content_judgement__header_id = rir).first()
     rir_appearence_check = rirDetailAppearenceCheckedby.objects.filter(appearence_judgement__header_id = rir).first()
     rir_sampletest_check = rirDetailSampleTestCheckedby.objects.filter(sample_test_judgement__header_id = rir).first()
@@ -40,7 +40,7 @@ def rir_complete_check(rir_id, rir):
         rir_environmentalissue_check = rirDetailEnvironmentalIssueCheckedByForms().save(commit=False)
         rir_environmentalissue_check.environmental_issue = False
         
-    rir_header_check = rirHeader.objects.filter(category__coa_content = rir_coa_check.coa_content_checked_by).filter(category__appearance = rir_appearence_check.appearence_checked_by).filter(category__sample_test = rir_sampletest_check.sample_test_checked_by).filter(category__restricted_substance = rir_restrictedsubstance_check.restricted_substance_checked_by).filter(category__environmental_issue = rir_environmentalissue_check.environmental_issue_checked_by).filter(pk=rir_id)
+    rir_header_check = rirHeader.objects.filter(is_delete = False).filter(category__coa_content = rir_coa_check.coa_content_checked_by).filter(category__appearance = rir_appearence_check.appearence_checked_by).filter(category__sample_test = rir_sampletest_check.sample_test_checked_by).filter(category__restricted_substance = rir_restrictedsubstance_check.restricted_substance_checked_by).filter(category__environmental_issue = rir_environmentalissue_check.environmental_issue_checked_by).filter(pk=rir_id)
     if rir_header_check:
         if  rir_header.is_return == False:
             rir_header.is_complete = True
@@ -92,7 +92,7 @@ def rir_add(request):
 
 @login_required
 def rir_judgement_index(request):
-    rir                     = rirHeader.objects.all()
+    rir                     = rirHeader.objects.filter(is_delete = False).all()
     coa                     = rirDetailCoaContentJudgement.objects.filter(coa_content_judgement = False).filter(header__is_delete = False).order_by('-id')
     appearance              = rirDetailAppearenceJudgement.objects.filter(appearence_judgement = False).filter(header__is_delete = False).order_by('-id')
     restricted_substance    = rirDetailRestrictedSubstanceJudgement.objects.filter(restricted_substance_judgement = False).filter(header__is_delete = False).order_by('-id')
@@ -631,7 +631,7 @@ def rir_checkedby_environmentalissue_approve(request, rir_id):
 
 @login_required
 def rir_checked_by_index(request):
-    rir                     = rirHeader.objects.all()
+    rir                     = rirHeader.objects.filter(is_delete = False).all()
     checkedby_coa = rirDetailCoaContentCheckedby.objects.filter(coa_content_checked_by = False ).filter(coa_content_judgement__header__is_delete = False).order_by('-id')
     checkedby_appearance = rirDetailAppearenceCheckedby.objects.filter(appearence_checked_by = False ).filter(appearence_judgement__header__is_delete = False).order_by('-id')
     checkedby_restricted_substance = rirDetailRestrictedSubstanceCheckedby.objects.filter(restricted_substance_checked_by = False ).filter(restricted_substance_judgement__header__is_delete = False).order_by('-id')
