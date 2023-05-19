@@ -50,25 +50,37 @@ def medical_train_download_report(request):
 @login_required
 def medical_train_add(request):
     if request.method == "POST":
-        medical_form = medicalHeaderForms(data=request.POST)
-        if medical_form.is_valid():
+        medical_header_form                 = medicalHeaderForms(data=request.POST)
+        medical_data_keluarga               = medicalDataKeluargaForms(data=request.POST)
+        medical_pemberi_layanan_form        = medicalPemberiLayananForms(data=request.POST)     
+        medical_pelayanan_kesehatan_form    = medicalPelayananKesehatanForms(data=request.POST)
+        medical_status_claim_form           = medicalStatusKlaimForms(data=request.POST)
+        medical_attachment_form             = medicalAttachmentForms(data=request.POST)
+        if medical_header_form.is_valid() and medical_pemberi_layanan_form.is_valid() and medical_pelayanan_kesehatan_form.is_valid() and medical_status_claim_form.is_valid() and medical_attachment_form.is_valid():
+            medical_header = medical_header_form.save(commit=False)
+            return HttpResponse(medical_header.rp_total)
             return redirect('hrd_app:medical_train_index')
         else:
-            print(medical_form.errors)
+            print(medical_header_form.errors)
+            print(medical_pemberi_layanan_form.errors)
+            print(medical_pelayanan_kesehatan_form.errors)
+            print(medical_status_claim_form.errors)
+            print(medical_attachment_form.errors)
+
     else:
-        medical_header = medicalHeaderForms()
-        medical_data_keluarga = medicalDataKeluargaForms()
-        medical_pemberi_layananan = medicalPemberiLayananForms()
+        medical_header              = medicalHeaderForms()
+        medical_data_keluarga       = medicalDataKeluargaForms()
+        medical_pemberi_layananan   = medicalPemberiLayananForms()
         medical_pelayanan_kesehatan = medicalPelayananKesehatanForms()
-        medical_status_claim    = medicalStatusKlaimForms()
-        medical_attachment      = medicalAttachmentForms()
+        medical_status_claim        = medicalStatusKlaimForms()
+        medical_attachment          = medicalAttachmentForms()
     context = {
-        'medical_header_form'  :medical_header ,
-        'medical_data_keluarga_form'  :medical_data_keluarga ,
-        'medical_pemberi_layanan_form'  :medical_pemberi_layananan ,
-        'medical_pelayanan_kesehatan_form'  :medical_pelayanan_kesehatan ,
-        'medical_status_claim_form'  :medical_status_claim ,
-        'medical_attachment_form'  :medical_attachment ,
+        'medical_header_form'  :    medical_header ,
+        'medical_data_keluarga_form'  : medical_data_keluarga ,
+        'medical_pemberi_layanan_form'  :   medical_pemberi_layananan ,
+        'medical_pelayanan_kesehatan_form'  :   medical_pelayanan_kesehatan ,
+        'medical_status_claim_form'  :  medical_status_claim ,
+        'medical_attachment_form'  :    medical_attachment ,
     }
     return render(request, 'hrd_app/medical_train_add.html', context)
 

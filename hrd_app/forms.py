@@ -6,9 +6,10 @@ class medicalHeaderForms(forms.ModelForm):
     class Meta():
         model = medicalHeader
         fields = ('rp_total',)
+        widgets = {'rp_total': forms.HiddenInput()}
 
 class medicalDataKeluargaForms(forms.ModelForm):
-    tanggal_lahir = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
+    tanggal_lahir = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}), required=False)
     class Meta():
         model = medicalDetailPasienKeluarga
         fields = ('nama_pasien','tanggal_lahir','jenis_kelamin','hubungan',)
