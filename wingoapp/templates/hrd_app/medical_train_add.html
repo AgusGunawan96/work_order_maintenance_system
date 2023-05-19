@@ -20,7 +20,7 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header pb-0">
-              <h5>Medical Train Add | DATA KARYAWAN / KELUARGA</h5>
+              <h5>Medical Train Add | DATA KARYAWAN / KELUARGA</h5><span>1. Formulir ini harus diisi dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama, alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan hasil laboratorium</span>
           </div>
          
           <div class="card-body">
@@ -55,7 +55,7 @@
        
         <div class="card">
             <div class="card-header pb-0">
-                <h5>Medical Train Add | <i style="color: red;">*Diisi bila pasien keluarga karyawan</i></h5>
+                <h5>Medical Train Add | <i style="color: red;">*Diisi bila pasien keluarga karyawan</i></h5><span>1. Formulir ini harus diisi dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama, alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan hasil laboratorium</span>
             </div>
             <div class="card-body">
                 <form method="POST" enctype="multipart/form-data" >
@@ -94,16 +94,15 @@
                         {% endif %}
                       </div>
                     {% endfor %}
-                </form>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header pb-0">
-                <h5>Medical Train Add | INFORMASI PEMBERI LAYANAN KESEHATAN</i></h5>
+                <h5>Medical Train Add | INFORMASI PEMBERI LAYANAN KESEHATAN</i></h5><span>1. Formulir ini harus diisi dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama, alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan hasil laboratorium</span>
             </div>
             <div class="card-body">
-                <form method="POST" enctype="multipart/form-data" >
+
                     {% csrf_token %}
                     {% for hidden in medical_pemberi_layanan_form.hidden_fields %}
                     {{ hidden }}
@@ -119,7 +118,6 @@
                     {% for field in medical_pemberi_layanan_form.visible_fields %}
                       <div class="form-group">
                         {{ field.label_tag }}
-                    
                         {% if medical_pemberi_layanan_form.is_bound %}
                           {% if field.errors %}
                             {% render_field field class="form-control is-invalid" %}
@@ -139,16 +137,15 @@
                         {% endif %}
                       </div>
                     {% endfor %}
-                </form>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header pb-0">
-                <h5>Medical Train Add | INFORMASI PELAYANAN KESEHATAN</i></h5>
+                <h5>Medical Train Add | INFORMASI PELAYANAN KESEHATAN</i></h5><span>1. Formulir ini harus diisi dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama, alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan hasil laboratorium</span>
             </div>
             <div class="card-body">
-                <form method="POST" enctype="multipart/form-data" >
+
                     {% csrf_token %}
                     {% for hidden in medical_pelayanan_kesehatan_form.hidden_fields %}
                     {{ hidden }}
@@ -184,16 +181,15 @@
                         {% endif %}
                       </div>
                     {% endfor %}
-                </form>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header pb-0">
-                <h5>Medical Train Add | Total Biaya & Attachment</i></h5>
+                <h5>Medical Train Add | Total Biaya & Attachment</i></h5><span>1. Formulir ini harus diisi dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama, alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan hasil laboratorium</span>
             </div>
             <div class="card-body">
-                <form method="POST" enctype="multipart/form-data" >
+
                     {% csrf_token %}
                     {% for hidden in medical_header_form.hidden_fields %}
                     {{ hidden }}
@@ -229,8 +225,13 @@
                         {% endif %}
                       </div>
                     {% endfor %}
-                </form>
-                <form method="POST" enctype="multipart/form-data" >
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                          <div class="input-group"><span class="input-group-text">IDR  </span>
+                              <input  class="form-control" id="number-mask1" type="text" required>
+                            </div>
+                      </div>
+                  </div>
                     {% csrf_token %}
                     {% for hidden in medical_attachment_form.hidden_fields %}
                     {{ hidden }}
@@ -266,6 +267,7 @@
                         {% endif %}
                       </div>
                     {% endfor %}
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>
@@ -283,6 +285,7 @@
 <script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
 <script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
 <script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/1.8.2/autoNumeric.js"></script>
 <script>
   $(document).ready(function() {
       $('#id_incoming_type').select2();
@@ -290,6 +293,13 @@
       $('#id_material').select2();
       $('#id_vendor').select2();
   });
+</script>
+<script>
+  easyNumberSeparator({
+      selector: '#number-mask1',
+      separator: '.',
+      resultInput: '#id_rp_total',
+  })
 </script>
 <!-- Plugins JS Ends-->
 {% endblock scriptcontent %}
