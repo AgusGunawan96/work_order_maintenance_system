@@ -40,6 +40,7 @@ class medicalHeader(models.Model):
     is_supervisor = models.BooleanField(default=False)
     is_manager    = models.BooleanField(default=False)
     is_complete   = models.BooleanField(default=False)
+    is_reject     = models.BooleanField(default=False)
     is_delete     = models.BooleanField(default=False)
     created_at    = models.DateTimeField('created at', auto_now_add = True)
     updated_at    = models.DateTimeField('updated at', auto_now = True)

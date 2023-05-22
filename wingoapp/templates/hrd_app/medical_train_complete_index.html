@@ -1,0 +1,85 @@
+{% extends 'starter_kit/base.html' %}{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="col-sm-12 col-xl-12 xl-100">
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>Medical Train List Complete | {{request.user.first_name}} {{request.user.last_name}}</h5><span>List
+                    Complete.</span>
+            </div>
+            <div class="card-body btn-showcase">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message | safe }}
+                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- blok untuk menampilkan notifikasi pesan sukses -->
+                <div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="display" id="basic-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Medical No</th>
+                                            <th>Assignee</th>
+                                            <th>RP Total</th>
+                                            <th>Created At</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for medical in medical_header %}
+                                        <tr>
+                                          <td><a href="{% url 'hrd_app:medical_train_detail' medical.id %}">{{medical.medical_no}}</td>
+                                          <td>{{request.user.first_name}} {{request.user.last_name}}</td>  
+                                          <td>Rp. {{medical.rp_total}}</td>
+                                          <td>{{medical.created_at|date:"F j, Y"}}</td>
+                                          <td><a href="{% url 'hrd_app:medical_train_detail' medical.id %}" class="btn btn-info btn-sm"><span
+                                                class="icon-info"></span> Detail</a>
+                                            | <a href="{% url 'hrd_app:medical_train_download_report' medical.id %}"
+                                              class="btn btn-success btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                                          </td>
+                                        </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid starts-->
+    {% comment %} <div class="container-fluid">
+
+    </div> {% endcomment %}
+    <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

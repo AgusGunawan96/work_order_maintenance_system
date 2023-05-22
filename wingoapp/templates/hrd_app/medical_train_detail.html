@@ -1,0 +1,260 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+{% load widget_tweaks %}
+
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row starter-main">
+            <div class="col-sm-12">
+
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Medical Train Detail | DATA KARYAWAN / KELUARGA</h5><span>1. Formulir ini harus diisi dengan
+                            lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi dan semua
+                            dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama, alamat,
+                            no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp &nbsp b.
+                            Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan hasil
+                            laboratorium</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Name</label>
+                                <input class="form-control" type="text"
+                                    value="{{request.user.first_name}} {{request.user.last_name}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Nomor Karyawan</label>
+                                <input class="form-control" type="text" value="{{request.user.username}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Department</label>
+                                <input class="form-control" type="text"
+                                    value="{{request.user.userprofileinfo.department.department_name}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Division</label>
+                                <input class="form-control" type="text"
+                                    value="{{request.user.userprofileinfo.division.division_name}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Section</label>
+                                <input class="form-control" type="text"
+                                    value="{{request.user.userprofileinfo.section.section_name}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Position</label>
+                                <input class="form-control" type="text"
+                                    value="{{request.user.userprofileinfo.position}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if medical_detail_pasien_keluarga.nama_pasien %}
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Medical Train Detail  | <i style="color: red;">*Diisi bila pasien keluarga karyawan</i></h5>
+                        <span>1. Formulir ini harus diisi dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses,
+                            apabila formulir telah diisi dan semua dokumen pengajuan klaim telah dilampirkan dengan
+                            lengkap. <br>&nbsp &nbsp a. Nama, alamat, no.telepon tempat berobat (Rumah sakit,
+                            Poliklinik, praktek dokter, dsb) <br>&nbsp &nbsp b. Stempel dan tanda tangan dokter
+                            <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan hasil laboratorium</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Nama Pasien</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_detail_pasien_keluarga.nama_pasien}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Tanggal Lahir</label>
+                                <input class="form-control" type="text" value="{{medical_detail_pasien_keluarga.tanggal_lahir|date:'F j, Y'}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Jenis Kelamin</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_detail_pasien_keluarga.jenis_kelamin}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Hubungan</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_detail_pasien_keluarga.hubungan}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Medical Train Detail  | INFORMASI PEMBERI LAYANAN KESEHATAN</i></h5><span>1. Formulir ini harus
+                            diisi dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah
+                            diisi dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a.
+                            Nama, alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb)
+                            <br>&nbsp &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep
+                            obat-obatan, dan hasil laboratorium</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Nama Dokter</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_dokter.nama_dokter}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Tempat Pelayanan</label>
+                                <input class="form-control" type="text" value="{{medical_dokter.tempat_pelayanan}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Nama Tempat</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_dokter.nama_tempat}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Alamat</label>
+                            <textarea readonly name="" id="" class="form-control" rows="5" cols="5">{{medical_dokter.alamat}}</textarea>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Nomor Telepon</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_dokter.no_telp}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Medical Train Detail  | INFORMASI PELAYANAN KESEHATAN</i></h5><span>1. Formulir ini harus diisi
+                            dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi
+                            dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama,
+                            alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp
+                            &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan
+                            hasil laboratorium</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Jenis Pelayanan</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_detail_information.jenis_pelayanan}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Melahirkan</label>
+                                <input class="form-control" type="text" value="{{medical_detail_information.melahirkan}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Tanggal Berobat</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_detail_information.tanggal_berobat|date:'F j, Y'}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Diagnosa</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_detail_information.diagnosa}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Medical Train Detail  | Status Klaim</i></h5><span>1. Formulir ini harus diisi
+                            dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi
+                            dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama,
+                            alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp
+                            &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan
+                            hasil laboratorium</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Status</label>
+                                {% if not medical_header.is_complete %}
+                                <input class="form-control" type="text" value="Waiting for Approval" readonly>
+                                {% elif medical_header.medicalclaimstatus.is_lengkap %}
+                                <input class="form-control" type="text" value="Klaim lengkap bisa di proses" readonly>
+                                {% else %}
+                                <input class="form-control" type="text" value="Klaim di tolak" readonly>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Medical Train Detail  | Total Biaya & Attachment</i></h5><span>1. Formulir ini harus diisi
+                            dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi
+                            dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama,
+                            alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp
+                            &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan
+                            hasil laboratorium</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 row">
+                                <label class="col-form-label">Total Biaya</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_header.rp_total}}" readonly>
+                            </div>
+                            <div class="mb-3 row">
+                                <form class="theme-form mega-form">
+                                    <div class="mb-3">  
+                                      <label class="col-form-label">List Attachment</label>
+                                      <ul>
+                                          <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                                            {% for attachment in medical_attachment %}
+                                        <li><a target="_blank" href="{{ MEDIA_URL }}{{ attachment.attachment }}">{{ attachment.attachment }}</a></li>
+                                        {% endfor %}
+                                          </div>
+                                        </ul>
+                                    </div>
+                                  </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/1.8.2/autoNumeric.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_incoming_type').select2();
+        $('#id_category').select2();
+        $('#id_material').select2();
+        $('#id_vendor').select2();
+    });
+</script>
+<script>
+    easyNumberSeparator({
+        selector: '#number-mask1',
+        separator: '.',
+        resultInput: '#id_rp_total',
+    })
+</script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

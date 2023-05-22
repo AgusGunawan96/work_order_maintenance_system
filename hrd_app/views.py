@@ -68,11 +68,19 @@ def medical_train_index(request):
 
 @login_required
 def medical_train_complete_index(request):
-    return HttpResponse('jadi ini merupakan kondisi complete Train ')
+    medical_header = medicalHeader.objects.filter(is_complete = True).order_by('-id')
+    context = {
+        'medical_header'    : medical_header,
+    }
+    return render(request, 'hrd_app/medical_train_complete_index.html', context)
 
 @login_required
 def medical_train_reject_index(request):
-    return HttpResponse('jadi ini merupakan kondisi reject Train')
+    medical_header = medicalHeader.objects.filter(is_reject = True).order_by('-id')
+    context = {
+        'medical_header'    : medical_header,
+    }
+    return render(request, 'hrd_app/medical_train_reject_index.html', context)
 
 
 @login_required
@@ -152,17 +160,23 @@ def medical_train_add(request):
         'medical_attachment_form'           :   medical_attachment ,
     }
     return render(request, 'hrd_app/medical_train_add.html', context)
+
 @login_required
 def medical_train_delete(request, medical_id):
-    HttpResponse('jadi ini merupakan medical Delete')
+    medical = medicalHeader.objects.get(pk = medical_id)
+    medical.is_delete = True
+    medical.save()
+    messages.success(request, 'Medical Train '+ medical.medical_no +' Deleted')
+    return redirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required
 def medical_train_detail(request, medical_id):
     medical_header                  = medicalHeader.objects.get(pk=medical_id)
     medical_detail_pasien_keluarga  = medicalDetailPasienKeluarga.objects.filter(medical_id=medical_header).first()
-    medical_dokter                  = medicalDetailDokter.objects.filter(medical_id = medical_header)
-    medical_detail_information      = medicalDetailInformation.objects.filter(medical_id = medical_header)
-    medical_claim_status            = medicalClaimStatus.objects.filter(medical_id = medical_header)
+    medical_dokter                  = medicalDetailDokter.objects.filter(medical_id = medical_header).first()
+    medical_detail_information      = medicalDetailInformation.objects.filter(medical_id = medical_header).first()
+    medical_claim_status            = medicalClaimStatus.objects.filter(medical_id = medical_header).first()
     medical_attachment              = medicalAttachment.objects.filter(medical_id = medical_header).values('attachment')
     
     context = {
