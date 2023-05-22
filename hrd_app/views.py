@@ -42,11 +42,11 @@ def medical_train_index(request):
     # Kondisi Approval 
     if medical_approval_list:
         if medical_approval_list.is_foreman:
-            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
         if medical_approval_list.is_supervisor:
-            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
         if medical_approval_list.is_manager:
-            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
         if medical_approval_list.is_hr:
             medical_approval_hr         = medicalApprovalHR.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
     else:
