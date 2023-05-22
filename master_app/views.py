@@ -10,6 +10,7 @@ from django.contrib.auth.models import User, Group
 from master_app.models import UserProfileInfo
 from it_app.models import IPAddress, Hardware
 from qc_app.models import rirMaterial, rirVendor
+from hrd_app.models import medicalApprovalList
 from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
@@ -152,3 +153,14 @@ def CreateVendor(request):
             data.append(vendor)
         rirVendor.objects.bulk_create(data)
     return JsonResponse('Vendor csv is now working', safe=False)
+
+@login_required
+def CreateApprovalMedical(request):
+    with open('templates/csv/ApprovalMedical.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for user_id, is_foreman, is_supervisor, is_manager, is_hr, *__ in csvf:
+            ApprovalMedical = medicalApprovalList(user_id = user_id, is_foreman = is_foreman, is_supervisor = is_supervisor, is_manager = is_manager, is_hr = is_hr)
+            data.append(ApprovalMedical)
+        medicalApprovalList.objects.bulk_create(data)
+    return JsonResponse('ApprovalMedical csv is now working', safe=False)

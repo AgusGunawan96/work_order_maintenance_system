@@ -10,4 +10,5 @@ urlpatterns = [
     # path('CreateIPAddressUnRegistered/', views.CreateIPAddressUnRegistered, name='CreateIPAddressUnRegistered'),
     # path('CreateMaterial/', views.CreateMaterial, name='CreateMaterial'),
     # path('CreateVendor/', views.CreateVendor, name='CreateVendor'),
+    # path('CreateApprovalMedical/', views.CreateApprovalMedical, name='CreateApprovalMedical'),
 ]

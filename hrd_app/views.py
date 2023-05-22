@@ -10,7 +10,7 @@ import xlwt
 from dateutil.relativedelta import relativedelta
 from csv import reader
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan
-from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms
+from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms
 from django.http import HttpResponse
 # Create your views here.
 def index(request):
@@ -51,15 +51,56 @@ def medical_train_download_report(request):
 def medical_train_add(request):
     if request.method == "POST":
         medical_header_form                 = medicalHeaderForms(data=request.POST)
-        medical_data_keluarga               = medicalDataKeluargaForms(data=request.POST)
+        medical_data_keluarga_form          = medicalDataKeluargaForms(data=request.POST)
         medical_pemberi_layanan_form        = medicalPemberiLayananForms(data=request.POST)     
         medical_pelayanan_kesehatan_form    = medicalPelayananKesehatanForms(data=request.POST)
         medical_status_claim_form           = medicalStatusKlaimForms(data=request.POST)
         medical_attachment_form             = medicalAttachmentForms(data=request.POST)
         if medical_header_form.is_valid() and medical_pemberi_layanan_form.is_valid() and medical_pelayanan_kesehatan_form.is_valid() and medical_status_claim_form.is_valid() and medical_attachment_form.is_valid():
+            #Save apa yang sudah di post
             medical_header = medical_header_form.save(commit=False)
-            return HttpResponse(medical_header.rp_total)
+            medical_data_keluarga = medical_data_keluarga_form.save(commit=False)
+            medical_pemberi_layanan = medical_pemberi_layanan_form.save(commit=False)
+            medical_pelayanan_kesehatan = medical_pelayanan_kesehatan_form.save(commit=False)
+            medical_status_claim = medical_status_claim_form.save(commit=False)
+            # Simpan data data yang ada sudah ada
+            medical_header.save()
+            if medical_data_keluarga:
+                medical_data_keluarga.medical = medical_header
+                medical_data_keluarga.save()
+
+            medical_pemberi_layanan.medical = medical_header
+            medical_pemberi_layanan.save()
+
+            medical_pelayanan_kesehatan.medical = medical_header
+            medical_pelayanan_kesehatan.save()
+
+            medical_status_claim.medical = medical_header
+            medical_status_claim.save()
+            # Simpan Attachment Apppearance Judgement (Apabila ada)
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                attachment = medicalAttachment(attachment=f)
+                attachment.medical = medical_header
+                attachment.save()
+            # Nanti akan lanjut ke proses approval
+            medical_approval_foreman = medicalReasonForemanForms().save(commit=False)
+            medical_approval_supervisor = medicalReasonSupervisorForms().save(commit=False)
+            medical_approval_manager = medicalReasonManagerForms().save(commit=False)
+            medical_approval_hr = medicalReasonHRForms().save(commit=False)
+            # Memasukan Nilai medical ke masing masing approval
+            medical_approval_foreman.medical = medical_header
+            medical_approval_supervisor.medical = medical_header
+            medical_approval_manager.medical = medical_header
+            medical_approval_hr.medical = medical_header
+            # save nilai approval 
+            medical_approval_foreman.save()
+            medical_approval_supervisor.save()
+            medical_approval_manager.save()
+            medical_approval_hr.save()
+            
             return redirect('hrd_app:medical_train_index')
+            return HttpResponse(medical_header.rp_total)
         else:
             print(medical_header_form.errors)
             print(medical_pemberi_layanan_form.errors)

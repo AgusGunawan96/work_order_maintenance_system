@@ -17,7 +17,7 @@ class medicalDataKeluargaForms(forms.ModelForm):
 class medicalPemberiLayananForms(forms.ModelForm):
     class Meta():
         model = medicalDetailDokter
-        fields = ('nama_dokter','tempat_pelayanan','nama_klinik','alamat','no_telp')
+        fields = ('nama_dokter','tempat_pelayanan','nama_tempat','alamat','no_telp')
 
 class medicalPelayananKesehatanForms(forms.ModelForm):
     tanggal_berobat = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
@@ -38,25 +38,25 @@ class medicalAttachmentForms(forms.ModelForm):
             'attachment'    : ClearableFileInput(attrs={'multiple':True}),
         }
 
-class medicalReasonForeman(forms.ModelForm):
+class medicalReasonForemanForms(forms.ModelForm):
     class Meta():
         model = medicalApprovalForeman
         fields = ('reason',)
 
 
-class medicalReasonSupervisor(forms.ModelForm):
+class medicalReasonSupervisorForms(forms.ModelForm):
     class Meta():
         model = medicalApprovalSupervisor
         fields = ('reason',)
 
 
-class medicalReasonManager(forms.ModelForm):
+class medicalReasonManagerForms(forms.ModelForm):
     class Meta():
         model = medicalApprovalManager
         fields = ('reason',)
 
 
-class medicalReasonHR(forms.ModelForm):
+class medicalReasonHRForms(forms.ModelForm):
     class Meta():
         model = medicalApprovalHR
         fields = ('reason',)

@@ -57,7 +57,7 @@ class medicalDetailDokter(models.Model):
     medical             = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     nama_dokter         = models.CharField(max_length=128)
     tempat_pelayanan    = models.CharField(max_length=25, choices=medicalTempatPelayanan.choices)
-    nama_klinik         = models.CharField(max_length=128)
+    nama_tempat         = models.CharField(max_length=128)
     alamat              = models.TextField()
     no_telp             = models.CharField(max_length=128)
     created_at          = models.DateTimeField('created at', auto_now_add = True)
