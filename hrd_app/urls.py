@@ -29,6 +29,7 @@ urlpatterns = [
     path('medicalTrain/medical_train_delete/<int:medical_id>', views.medical_train_delete, name = 'medical_train_delete'),
     path('medicalTrain/medical_train_detail/<int:medical_id>', views.medical_train_detail, name = 'medical_train_detail'),
     path('medicalTrain/medical_train_download_report/<int:medical_id>', views.medical_train_download_report, name = 'medical_train_download_report'),
+    path('medicalTrain/medical_train_download_report_excel/', views.medical_train_download_report_excel, name = 'medical_train_download_report_excel'),
     # MEDICAL TRAIN END
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -74,23 +74,6 @@ def medical_train_complete_index(request):
 def medical_train_reject_index(request):
     return HttpResponse('jadi ini merupakan kondisi reject Train')
 
-@login_required
-def medical_train_download_report(request, medical_id):
-    medical_header                  = medicalHeader.objects.get(pk=medical_id)
-    medical_detail_pasien_keluarga  = medicalDetailPasienKeluarga.objects.filter(medical_id=medical_header).first()
-    medical_dokter                  = medicalDetailDokter.objects.filter(medical_id = medical_header).first()
-    medical_detail_information      = medicalDetailInformation.objects.filter(medical_id = medical_header).first()
-    medical_claim_status            = medicalClaimStatus.objects.filter(medical_id = medical_header).first()
-    medical_attachment              = medicalAttachment.objects.filter(medical_id = medical_header).values('attachment')
-    context = {
-        'medical_header'                    :   medical_header,
-        'medical_detail_pasien_keluarga'    :   medical_detail_pasien_keluarga,
-        'medical_dokter'                    :   medical_dokter,
-        'medical_detail_information'        :   medical_detail_information,
-        'medical_claim_status'              :   medical_claim_status,
-        'medical_attachment'                :   medical_attachment,
-    }
-    return render(request, 'hrd_app/medical_train_download_report.html', context)
 
 @login_required
 def medical_train_add(request):
@@ -201,4 +184,25 @@ def medical_submit_atasan(request, medical_id):
 def medical_submit_hr(request, medical_id):
     return HttpResponse('Merupakan Submit dari HR, Apakah Approve atau Reject')
 
+@login_required
+def medical_train_download_report(request, medical_id):
+    medical_header                  = medicalHeader.objects.get(pk=medical_id)
+    medical_detail_pasien_keluarga  = medicalDetailPasienKeluarga.objects.filter(medical_id=medical_header).first()
+    medical_dokter                  = medicalDetailDokter.objects.filter(medical_id = medical_header).first()
+    medical_detail_information      = medicalDetailInformation.objects.filter(medical_id = medical_header).first()
+    medical_claim_status            = medicalClaimStatus.objects.filter(medical_id = medical_header).first()
+    medical_attachment              = medicalAttachment.objects.filter(medical_id = medical_header).values('attachment')
+    context = {
+        'medical_header'                    :   medical_header,
+        'medical_detail_pasien_keluarga'    :   medical_detail_pasien_keluarga,
+        'medical_dokter'                    :   medical_dokter,
+        'medical_detail_information'        :   medical_detail_information,
+        'medical_claim_status'              :   medical_claim_status,
+        'medical_attachment'                :   medical_attachment,
+    }
+    return render(request, 'hrd_app/medical_train_download_report.html', context)
+
+@login_required
+def medical_train_download_report_excel(request):
+    return HttpResponse('ini adalah report yang akan diexcel')
 # MEDICAL TRAIN END
