@@ -1,5 +1,5 @@
 from django.contrib import admin
-from hrd_app.models import medicalApprovalList
+from hrd_app.models import medicalApprovalList, medicalHeader
 
 class medicalApprovalListAdmin(admin.ModelAdmin):
     list_display = ('no_karyawan', 'first_name', 'last_name', 'is_foreman', 'is_supervisor', 'is_manager', 'is_hr')
@@ -12,3 +12,4 @@ class medicalApprovalListAdmin(admin.ModelAdmin):
     
 # Register your models here.
 admin.site.register(medicalApprovalList, medicalApprovalListAdmin)
+admin.site.register(medicalHeader)

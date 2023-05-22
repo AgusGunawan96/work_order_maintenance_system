@@ -23,7 +23,10 @@ urlpatterns = [
 
     # MEDICAL TRAIN START
     path('medicalTrain/medical_train_index/', views.medical_train_index, name = 'medical_train_index'),
+    path('medicalTrain/medical_train_complete_index/', views.medical_train_complete_index, name = 'medical_train_complete_index'),
+    path('medicalTrain/medical_train_reject_index/', views.medical_train_reject_index, name = 'medical_train_reject_index'),
     path('medicalTrain/medical_train_add/', views.medical_train_add, name = 'medical_train_add'),
+    path('medicalTrain/medical_train_delete/<int:medical_id>', views.medical_train_delete, name = 'medical_train_delete'),
     path('medicalTrain/medical_train_detail/<int:medical_id>', views.medical_train_detail, name = 'medical_train_detail'),
     path('medicalTrain/medical_train_download_report/<int:medical_id>', views.medical_train_download_report, name = 'medical_train_download_report'),
     # MEDICAL TRAIN END

@@ -37,15 +37,60 @@ def kesejahteraan_index(request):
 # MEDICAL TRAIN START
 @login_required
 def medical_train_index(request):
-    medical = medicalHeader.objects.all()
+    medical_approval_list       = medicalApprovalList.objects.filter(user_id = request.user).first()
+    medical_header              = medicalHeader.objects.filter(user_id = request.user).order_by('-id')
+    # Kondisi Approval 
+    if medical_approval_list:
+        if medical_approval_list.is_foreman:
+            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+        if medical_approval_list.is_supervisor:
+            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+        if medical_approval_list.is_manager:
+            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+        if medical_approval_list.is_hr:
+            medical_approval_hr         = medicalApprovalHR.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+    else:
+        medical_approval_foreman    = None
+        medical_approval_supervisor = None
+        medical_approval_manager    = None
+        medical_approval_hr         = None
+
     context = {
-        'medical'  : medical,
+        'medical_header'                : medical_header,
+        'medical_approval_foreman'      : medical_approval_foreman, 
+        'medical_approval_supervisor'   : medical_approval_supervisor, 
+        'medical_approval_manager'      : medical_approval_manager, 
+        'medical_approval_hr'           : medical_approval_hr, 
+        'medical_approval_list'         : medical_approval_list,
     }
+        
     return render(request, 'hrd_app/medical_train_index.html', context)
 
 @login_required
-def medical_train_download_report(request):
-    return render(request, 'hrd_app/medical_train_download_report.html')
+def medical_train_complete_index(request):
+    return HttpResponse('jadi ini merupakan kondisi complete Train ')
+
+@login_required
+def medical_train_reject_index(request):
+    return HttpResponse('jadi ini merupakan kondisi reject Train')
+
+@login_required
+def medical_train_download_report(request, medical_id):
+    medical_header                  = medicalHeader.objects.get(pk=medical_id)
+    medical_detail_pasien_keluarga  = medicalDetailPasienKeluarga.objects.filter(medical_id=medical_header).first()
+    medical_dokter                  = medicalDetailDokter.objects.filter(medical_id = medical_header).first()
+    medical_detail_information      = medicalDetailInformation.objects.filter(medical_id = medical_header).first()
+    medical_claim_status            = medicalClaimStatus.objects.filter(medical_id = medical_header).first()
+    medical_attachment              = medicalAttachment.objects.filter(medical_id = medical_header).values('attachment')
+    context = {
+        'medical_header'                    :   medical_header,
+        'medical_detail_pasien_keluarga'    :   medical_detail_pasien_keluarga,
+        'medical_dokter'                    :   medical_dokter,
+        'medical_detail_information'        :   medical_detail_information,
+        'medical_claim_status'              :   medical_claim_status,
+        'medical_attachment'                :   medical_attachment,
+    }
+    return render(request, 'hrd_app/medical_train_download_report.html', context)
 
 @login_required
 def medical_train_add(request):
@@ -64,6 +109,10 @@ def medical_train_add(request):
             medical_pelayanan_kesehatan = medical_pelayanan_kesehatan_form.save(commit=False)
             medical_status_claim = medical_status_claim_form.save(commit=False)
             # Simpan data data yang ada sudah ada
+            medical_maks = medicalHeader.objects.filter(medical_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
+            medical_no = "MDC" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( medical_maks, ))  
+            medical_header.medical_no = medical_no   
+            medical_header.user = request.user
             medical_header.save()
             if medical_data_keluarga:
                 medical_data_keluarga.medical = medical_header
@@ -98,15 +147,11 @@ def medical_train_add(request):
             medical_approval_supervisor.save()
             medical_approval_manager.save()
             medical_approval_hr.save()
-            
+            messages.success(request, 'Medical Train Added')    
             return redirect('hrd_app:medical_train_index')
-            return HttpResponse(medical_header.rp_total)
+        
         else:
-            print(medical_header_form.errors)
-            print(medical_pemberi_layanan_form.errors)
-            print(medical_pelayanan_kesehatan_form.errors)
-            print(medical_status_claim_form.errors)
-            print(medical_attachment_form.errors)
+            print(medical_header_form.errors, medical_pemberi_layanan_form.errors,medical_pelayanan_kesehatan_form.errors,medical_status_claim_form.errors,medical_attachment_form.errors)
 
     else:
         medical_header              = medicalHeaderForms()
@@ -116,14 +161,17 @@ def medical_train_add(request):
         medical_status_claim        = medicalStatusKlaimForms()
         medical_attachment          = medicalAttachmentForms()
     context = {
-        'medical_header_form'  :    medical_header ,
-        'medical_data_keluarga_form'  : medical_data_keluarga ,
-        'medical_pemberi_layanan_form'  :   medical_pemberi_layananan ,
+        'medical_header_form'               :   medical_header ,
+        'medical_data_keluarga_form'        :   medical_data_keluarga ,
+        'medical_pemberi_layanan_form'      :   medical_pemberi_layananan ,
         'medical_pelayanan_kesehatan_form'  :   medical_pelayanan_kesehatan ,
-        'medical_status_claim_form'  :  medical_status_claim ,
-        'medical_attachment_form'  :    medical_attachment ,
+        'medical_status_claim_form'         :   medical_status_claim ,
+        'medical_attachment_form'           :   medical_attachment ,
     }
     return render(request, 'hrd_app/medical_train_add.html', context)
+@login_required
+def medical_train_delete(request, medical_id):
+    HttpResponse('jadi ini merupakan medical Delete')
 
 @login_required
 def medical_train_detail(request, medical_id):

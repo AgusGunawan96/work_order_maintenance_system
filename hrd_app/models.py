@@ -39,6 +39,8 @@ class medicalHeader(models.Model):
     is_foreman    = models.BooleanField(default=False)
     is_supervisor = models.BooleanField(default=False)
     is_manager    = models.BooleanField(default=False)
+    is_complete   = models.BooleanField(default=False)
+    is_delete     = models.BooleanField(default=False)
     created_at    = models.DateTimeField('created at', auto_now_add = True)
     updated_at    = models.DateTimeField('updated at', auto_now = True)
     def __str__(self):
@@ -47,7 +49,7 @@ class medicalHeader(models.Model):
 class medicalDetailPasienKeluarga(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     nama_pasien     = models.CharField(max_length=128,null=True, blank=True)
-    tanggal_lahir   = models.DateTimeField('tanggal lahir')
+    tanggal_lahir   = models.DateTimeField('tanggal lahir', blank=True, null=True)
     jenis_kelamin   = GenderField(null=True, blank=True)
     hubungan        = models.CharField(max_length=25, choices=medicalHubungan.choices, default=False, null=True, blank=True)
     created_at      = models.DateTimeField('created at', auto_now_add = True)
