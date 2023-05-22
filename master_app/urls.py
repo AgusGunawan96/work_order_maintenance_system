@@ -11,4 +11,5 @@ urlpatterns = [
     # path('CreateMaterial/', views.CreateMaterial, name='CreateMaterial'),
     # path('CreateVendor/', views.CreateVendor, name='CreateVendor'),
     # path('CreateApprovalMedical/', views.CreateApprovalMedical, name='CreateApprovalMedical'),
+    # path('UpdateUpdateUserProfileInfoGenderStatus/', views.UpdateUpdateUserProfileInfoGenderStatus, name='UpdateUpdateUserProfileInfoGenderStatus'),
 ]

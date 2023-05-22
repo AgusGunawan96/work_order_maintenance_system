@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.urls import path, reverse_lazy
 
 # LIBRARY FOR IMPORT DATA
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from csv import reader
 from django.contrib.auth.models import User, Group
 from master_app.models import UserProfileInfo
@@ -12,6 +12,7 @@ from it_app.models import IPAddress, Hardware
 from qc_app.models import rirMaterial, rirVendor
 from hrd_app.models import medicalApprovalList
 from django.contrib.auth.decorators import user_passes_test
+import csv
 # Create your views here.
 
 from datetime import datetime
@@ -77,7 +78,7 @@ def index(request):
     # return render(request,'it_app/index.html')
 
 
-
+# CREATE START
 @login_required
 def CreateUserdata(request):
     with open('templates/csv/list_user.csv', 'r') as csv_file:
@@ -164,3 +165,27 @@ def CreateApprovalMedical(request):
             data.append(ApprovalMedical)
         medicalApprovalList.objects.bulk_create(data)
     return JsonResponse('ApprovalMedical csv is now working', safe=False)
+
+# CREATE END
+
+# UPDATE START
+@login_required
+def UpdateUpdateUserProfileInfoGenderStatus(request):
+    # Read CSV file
+    with open('templates/csv/updateuserprofileinfogenderandstatus.csv') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip header row
+        data = list(reader)
+    # Extract IDs from CSV data
+    ids = [row[0] for row in data]
+    # Retrieve objects from database and update fields
+    objects = UserProfileInfo.objects.filter(user__username__in=ids)
+    # Return the response object
+    for obj, row in zip(objects, data):
+        obj.is_contract = row[1]
+        obj.is_permanent = row[2]
+        obj.gender = row[3]
+    UserProfileInfo.objects.bulk_update(objects, ['is_contract', 'is_permanent', 'gender'])
+    return JsonResponse('updateuserprofileinfogenderandstatus csv is now working', safe=False)
+
+# UPDATE END

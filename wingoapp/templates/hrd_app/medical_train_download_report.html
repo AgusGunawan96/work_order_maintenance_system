@@ -90,13 +90,13 @@
         <p class="form_text1"><span>Nama Karyawan </span>: <u>{{ medical_header.user.first_name }} {{ medical_header.user.last_name }}</u> </p>
         <p class="form_text1"><span>Department</span>: <u>{{ medical_header.user.userprofileinfo.department.department_name }}</u> </p>
         <p class="form_text1"><span>Section</span>: <u>{{ medical_header.user.userprofileinfo.section.section_name }}</u> </p>
-        <p class="form_text1"><span>Jenis Kelamin</span>: <u>Laki-Laki (Belum diupdate pada database)</u> </p>
-        <p class="form_text1"><span>Status Karyawan</span>: <u>Contract (Belum diupdate pada database)</u> </p>
+        <p class="form_text1"><span>Jenis Kelamin</span>: <u>{% if medical_header.user.userprofileinfo.gender == 'M' %}Laki-Laki{% else %}Perempuan{% endif %}</u> </p>
+        <p class="form_text1"><span>Status Karyawan</span>: <u>{% if medical_header.user.userprofileinfo.is_permanent %} PERMANENT {% else %} CONTRACT {% endif %}</u> </p>
         <h5><i>Diisi bila pasien keluarga karyawan*</i></h5>
-        <p class="form_text1"><span>Nama Pasien</span>: <u>{{ medical_detail_pasien_keluarga.nama_pasien }}</u> </p>
-        <p class="form_text1"><span>Tanggal Lahir</span>: <u>{{ medical_detail_pasien_keluarga.tanggal_lahir }}</u> </p>
-        <p class="form_text1"><span>Jenis Kelamin</span>: <u>{{ medical_detail_pasien_keluarga.jenis_kelamin }}</u> </p>
-        <p class="form_text1"><span>Hubungan</span>: <u>{{ medical_detail_pasien_keluarga.hubungan }}</u> </p>
+        <p class="form_text1"><span>Nama Pasien</span>: <u>{% if medical_detail_pasien_keluarga.nama_pasien %}{{ medical_detail_pasien_keluarga.nama_pasien }} {% else %} - {% endif %}</u> </p>
+        <p class="form_text1"><span>Tanggal Lahir</span>: <u>{% if medical_detail_pasien_keluarga.tanggal_lahir %} {{ medical_detail_pasien_keluarga.tanggal_lahir|date:"F j, Y" }}{% else %} -{% endif %}</u> </p>
+        <p class="form_text1"><span>Jenis Kelamin</span>: <u>{% if medical_detail_pasien_keluarga.jenis_kelamin %} {{ medical_detail_pasien_keluarga.jenis_kelamin }}{% else %} -{% endif %}</u> </p>
+        <p class="form_text1"><span>Hubungan</span>: <u>{% if medical_detail_pasien_keluarga.hubungan %} {{ medical_detail_pasien_keluarga.hubungan }}{% else %} -{% endif %}</u> </p>
     </div>
     <div class="card-body">
         <h5 style="text-align: center;">INFORMASI PEMBERI LAYANAN KESEHATAN</h5>
@@ -110,7 +110,7 @@
         <h5 style="text-align: center;">INFORMASI PELAYANAN KESEHATAN</h5>
         <p class="form_text1"><span>Jenis Pelayanan</span>: <u>{{ medical_detail_information.jenis_pelayanan }}</u> </p>
         <p class="form_text1"><span>Melahirkan </span>: <u>{{ medical_detail_information.melahirkan }}</u> </p>
-        <p class="form_text1"><span>Tanggal Berobat</span>: <u>{{ medical_detail_information.tanggal_berobat }}</u> </p>
+        <p class="form_text1"><span>Tanggal Berobat</span>: <u>{{ medical_detail_information.tanggal_berobat|date:"F j, Y" }}</u> </p>
         <p class="form_text1"><span>Diagnosa</span>: <u>{{ medical_detail_information.diagnosa }}</u> </p>
         <p class="form_text1"><span>Total Biaya</span>: <u>Rp.{{ medical_header.rp_total }}</u> </p>
     </div>
