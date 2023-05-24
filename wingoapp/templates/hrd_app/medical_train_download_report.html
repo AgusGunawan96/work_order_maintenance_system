@@ -137,8 +137,12 @@
            <tbody>
             <tr class="section-detail">
                 <td style="padding: 15px;">-</td>
-                <td style="padding: 15px;">-</td>
-                <td style="padding: 15px;">-</td>
+                <td style="padding: 15px;">
+                    {% if medical_header.is_foreman %}{{ medical_foreman }}{% endif %}
+                    {% if medical_header.is_supervisor %}{{ medical_supervisor }}{% endif %}
+                    {% if medical_header.is_manager %}{{ medical_manager }}{% endif %}
+                </td>
+                <td style="padding: 15px;">{% if medical_hr.is_approve or medical_hr.is_reject %} {{ medical_hr }} {% else %} - {% endif %}</td>
                 <td style="padding: 15px;">{{ medical_header.user.first_name }} {{ medical_header.user.last_name }}</td>
             </tr>
         </tbody>

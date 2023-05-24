@@ -31,9 +31,22 @@ class medicalJenisMelahirkan(models.TextChoices):
     NORMAL          = 'Normal'
     CAESAR          = 'Caesar'
     KEGUGURAN       = 'Keguguran'
+    
+class medicalApprovalList(models.Model):
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    is_foreman      = models.BooleanField(default=False, blank=True, null=True)
+    is_supervisor   = models.BooleanField(default=False, blank=True, null=True)
+    is_manager      = models.BooleanField(default=False, blank=True, null=True)
+    is_hr           = models.BooleanField(default=False, blank=True, null=True)
+    created_at = models.DateTimeField('created at', auto_now_add = True)
+    updated_at = models.DateTimeField('updated at', auto_now = True)
 
+    def __str__(self):
+        return self.user.first_name + " " + self.user.last_name
+    
 class medicalHeader(models.Model):
     user          = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    hr            = models.ForeignKey(medicalApprovalList, on_delete=models.CASCADE, blank=True, null=True)
     medical_no    = models.CharField(max_length=128, null=True, blank=True)
     rp_total      = models.PositiveBigIntegerField(null=True, blank=True)
     is_foreman    = models.BooleanField(default=False)
@@ -86,17 +99,7 @@ class medicalAttachment(models.Model):
     attachment      = models.FileField(upload_to='MedicalAttachment/', null=False, blank=True)
 
 # APPROVAL MEDICAL START
-class medicalApprovalList(models.Model):
-    user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    is_foreman      = models.BooleanField(default=False, blank=True, null=True)
-    is_supervisor   = models.BooleanField(default=False, blank=True, null=True)
-    is_manager      = models.BooleanField(default=False, blank=True, null=True)
-    is_hr           = models.BooleanField(default=False, blank=True, null=True)
-    created_at = models.DateTimeField('created at', auto_now_add = True)
-    updated_at = models.DateTimeField('updated at', auto_now = True)
 
-    def __str__(self):
-        return self.user.first_name + " " + self.user.last_name
     
 class medicalApprovalForeman(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
