@@ -7,7 +7,7 @@ from django.urls import path, reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from csv import reader
 from django.contrib.auth.models import User, Group
-from master_app.models import UserProfileInfo
+from master_app.models import UserProfileInfo, UserKeluargaInfo
 from it_app.models import IPAddress, Hardware
 from qc_app.models import rirMaterial, rirVendor
 from hrd_app.models import medicalApprovalList
@@ -166,9 +166,21 @@ def CreateApprovalMedical(request):
         medicalApprovalList.objects.bulk_create(data)
     return JsonResponse('ApprovalMedical csv is now working', safe=False)
 
+@login_required
+def CreateInfoKeluarga(request):
+    with open('templates/csv/userkeluargainfo.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for user_id, tanggal_lahir, gender, hubungan,nama_lengkap, *__ in csvf:
+            user_table_id = User.objects.filter(username = user_id).first()
+            InfoKeluarga = UserKeluargaInfo(user_id = user_table_id.id, tanggal_lahir = tanggal_lahir, gender = gender, hubungan = hubungan, nama_lengkap = nama_lengkap)
+            data.append(InfoKeluarga)
+        UserKeluargaInfo.objects.bulk_create(data)
+    return JsonResponse('userkeluargainfo csv is now working', safe=False)
 # CREATE END
 
 # UPDATE START
+
 @login_required
 def UpdateUpdateUserProfileInfoGenderStatus(request):
     # Read CSV file
@@ -187,5 +199,22 @@ def UpdateUpdateUserProfileInfoGenderStatus(request):
         obj.gender = row[3]
     UserProfileInfo.objects.bulk_update(objects, ['is_contract', 'is_permanent', 'gender'])
     return JsonResponse('updateuserprofileinfogenderandstatus csv is now working', safe=False)
+
+@login_required
+def UpdateUserProfileInfoTanggalLahir(request):
+    # Read CSV File
+    with open('templates/csv/userprofileinfoupdatetanggallahir.csv') as f:
+        reader = csv.reader(f)
+        next(reader) # Skip header row
+        data = list(reader)
+    # Extract IDs from CSV data
+    ids = [row[0] for row in data]
+    # Retrieve objects from database and update fields
+    objects = UserProfileInfo.objects.filter(user__username__in=ids)
+    # Return the response object
+    for obj, row in zip(objects, data):
+        obj.tanggal_lahir = row[1]
+    UserProfileInfo.objects.bulk_update(objects, ['tanggal_lahir',])
+    return JsonResponse('userprofileinfoupdatetanggallahir csv is now working', safe=False)
 
 # UPDATE END

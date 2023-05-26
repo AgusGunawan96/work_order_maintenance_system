@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 # Create your models here.
 
 # FUNCTION START
@@ -24,6 +24,10 @@ class GenderField(models.CharField):
         if kwargs.get('choices') == self.CHOICES:
             del kwargs['choices']
         return name, path, args, kwargs
+
+class userKeluarga(models.TextChoices):
+    ISTRI   = 'Istri'
+    ANAK    = 'Anak'
 # FUNCTION END
 
 # USER START
@@ -58,9 +62,17 @@ class UserProfileInfo(models.Model):
     is_bod          = models.BooleanField(default=False, blank=True, null=True)
     is_contract     = models.BooleanField(default=False, blank=True, null=True)
     is_permanent    = models.BooleanField(default=False, blank=True, null=True)
+    tanggal_lahir   = models.DateTimeField('Tanggal Lahir', default=timezone.now)
     gender          = GenderField(default='NB')
     position        = models.CharField(max_length=128, unique=False, default=False, blank=True, null=True)
     profile_pic     = models.ImageField(upload_to='profile_pics',blank=True, null=True)
+
+class UserKeluargaInfo(models.Model):
+    user                = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    gender              = GenderField(default='NB')
+    tanggal_lahir       = models.DateTimeField('Tanggal Lahir', default=timezone.now)
+    hubungan            = models.CharField(max_length=25, choices=userKeluarga.choices, default=False)
+    nama_lengkap        = models.CharField(max_length=200, unique=False, default=False, blank=True, null=True)
 
 class Notification(models.Model):
     user        = models.ForeignKey(User, on_delete=models.CASCADE)
