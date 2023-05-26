@@ -20,15 +20,21 @@ class medicalPemberiLayananForms(forms.ModelForm):
         fields = ('nama_dokter','tempat_pelayanan','nama_tempat','alamat','no_telp')
 
 class medicalPelayananKesehatanForms(forms.ModelForm):
-    tanggal_berobat = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
+    tanggal_berobat_mulai = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
+    tanggal_berobat_selesai = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
     class Meta():
         model = medicalDetailInformation
-        fields = ('jenis_pelayanan','melahirkan','tanggal_berobat','diagnosa',)
+        fields = ('jenis_pelayanan','melahirkan','tanggal_berobat_mulai','tanggal_berobat_selesai','diagnosa',)
 
 class medicalStatusKlaimForms(forms.ModelForm):
     class Meta():
         model = medicalClaimStatus
         fields = ('is_lengkap',)                                                                          
+
+class medicalRejectStatusKlaimForms(forms.ModelForm):
+    class Meta():
+        model = medicalClaimStatus
+        fields = ('tidak_lengkap',)
 
 class medicalAttachmentForms(forms.ModelForm):
     class Meta():

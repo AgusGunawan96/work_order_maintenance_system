@@ -10,7 +10,7 @@ import xlwt
 from dateutil.relativedelta import relativedelta
 from csv import reader
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan
-from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms
+from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms
 from django.http import HttpResponse
 # Create your views here.
 def index(request):
@@ -39,7 +39,7 @@ def kesejahteraan_index(request):
 def medical_train_index(request):
     medical_approval_list       = medicalApprovalList.objects.filter(user_id = request.user).first()
     medical_header              = medicalHeader.objects.filter(user_id = request.user).order_by('-id')
-    medical_modal  = medicalHeader.objects.order_by('-id')
+    medical_modal               = medicalHeader.objects.order_by('-id')
     if not medical_header:
         medical_header = None
     # Kondisi Approval 
@@ -69,10 +69,12 @@ def medical_train_index(request):
             medical_approval_hr         = medicalApprovalHR.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
             medical_approval_reason_hr  = medicalReasonHRForms()
             medical_klaim_status        = medicalStatusKlaimForms()
+            medical_reject_klaim_status = medicalRejectStatusKlaimForms()
         else:
-            medical_approval_hr = None
-            medical_approval_reason_hr = None
+            medical_approval_hr         = None
+            medical_approval_reason_hr  = None
             medical_klaim_status        = None
+            medical_reject_klaim_status = None
     else:
         medical_approval_foreman            = None
         medical_approval_supervisor         = None
@@ -83,6 +85,7 @@ def medical_train_index(request):
         medical_approval_reason_manager     = None
         medical_approval_reason_hr          = None
         medical_klaim_status                = None
+        medical_reject_klaim_status         = None
 
     context = {
         'medical_header'                            : medical_header,
@@ -92,11 +95,12 @@ def medical_train_index(request):
         'medical_approval_hr'                       : medical_approval_hr, 
         'medical_approval_list'                     : medical_approval_list,
         'medical_modal'                             : medical_modal,
-        'form_medical_approval_reason_foreman'       : medical_approval_reason_foreman ,
-        'form_medical_approval_reason_supervisor'    : medical_approval_reason_supervisor ,
-        'form_medical_approval_reason_manager'       : medical_approval_reason_manager ,
-        'form_medical_approval_reason_hr'            : medical_approval_reason_hr ,
-        'form_medical_klaim_status'                  : medical_klaim_status ,
+        'form_medical_approval_reason_foreman'      : medical_approval_reason_foreman ,
+        'form_medical_approval_reason_supervisor'   : medical_approval_reason_supervisor ,
+        'form_medical_approval_reason_manager'      : medical_approval_reason_manager ,
+        'form_medical_approval_reason_hr'           : medical_approval_reason_hr ,
+        'form_medical_klaim_status'                 : medical_klaim_status ,
+        'form_medical_reject_klaim_status'          : medical_reject_klaim_status,
     }
         
     return render(request, 'hrd_app/medical_train_index.html', context)
@@ -316,12 +320,28 @@ def medical_submit_hr(request, medical_id, is_approve, is_reject):
             hr.is_approve = True
             hr.hr = medical_approval
             hr.save()
-        return HttpResponse('Apabila di Approve')
+        # Mengubah klaim status menjadi lengkap
+        medical_claim_status = medicalClaimStatus.objects.filter(medical_id = medical_id).first()
+        if medical_claim_status and medical_approval.is_hr:
+            medical_claim_status.is_lengkap = True
+            medical_claim_status.save()
+        # Mengubah is_complete yang False menjadi True
+        medical_header = medicalHeader.objects.get(pk = medical_id)
+        if medical_header:
+            medical_header.is_complete = True
+            medical_header.save()
+        messages.success(request, 'Medical Train Verified')
+        return redirect('hrd_app:medical_train_index')
     elif is_reject == 'True':
         # Reject dari HR
-        # Mengubah kalim status menjadi tetap tidak lengkap
-        return HttpResponse('Apabila di Reject')
-    # jadi ini approval HR yang berisikan dia approval atau reject
+        hr = medicalApprovalHR.objects.filter(medical_id = medical_id).first()
+        if hr and medical_approval.is_hr:
+            hr.is_reject = True
+            hr.hr = medical_approval
+            hr.save()
+        messages.success(request, 'Medical Train Rejected')
+        return redirect('hrd_app:medical_train_index')
+
     return HttpResponse('Merupakan Submit dari HR, Apakah Approve atau Reject')
 
 @login_required

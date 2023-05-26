@@ -27,17 +27,24 @@
         <!-- blok untuk menampilkan notifikasi pesan sukses -->
         <div>
         </div>
-        <a class="btn btn-primary btn-lg" href="{% url 'hrd_app:medical_train_add' %}"> <span class="fa fa-plus"></span>Add Medical Train</a>
+        <a class="btn btn-primary btn-lg" href="{% url 'hrd_app:medical_train_add' %}"> <span
+            class="fa fa-plus"></span>Add Medical Train</a>
       </div>
       <div class="card-body">
         <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
-            <li class="nav-item"><a class="nav-link active" id="top-claim-status-tab" data-bs-toggle="tab" href="#top-claim-status" role="tab" aria-controls="top-claim-status" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Claim Status</a></li>
-          <li class="nav-item"><a class="nav-link" id="top-approval-head-tab" data-bs-toggle="tab" href="#top-approval-head" role="tab" aria-controls="top-approval-head" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Approval Head</a></li>
-          <li class="nav-item"><a class="nav-link" id="top-approval-hr-tab" data-bs-toggle="tab" href="#top-approval-hr" role="tab" aria-controls="top-approval-hr" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Approval HR Dept.</a></li>
+          <li class="nav-item"><a class="nav-link active" id="top-claim-status-tab" data-bs-toggle="tab"
+              href="#top-claim-status" role="tab" aria-controls="top-claim-status" aria-selected="true"><i
+                class="icofont icofont-man-in-glasses"></i>Claim Status</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-approval-head-tab" data-bs-toggle="tab"
+              href="#top-approval-head" role="tab" aria-controls="top-approval-head" aria-selected="true"><i
+                class="icofont icofont-man-in-glasses"></i>Approval Head</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-approval-hr-tab" data-bs-toggle="tab" href="#top-approval-hr"
+              role="tab" aria-controls="top-approval-hr" aria-selected="true"><i
+                class="icofont icofont-man-in-glasses"></i>Approval HR Dept.</a></li>
         </ul>
         <div class="tab-content" id="top-tabContent">
 
-            <div class="tab-pane fade show active" id="top-claim-status" role="tabpanel"
+          <div class="tab-pane fade show active" id="top-claim-status" role="tabpanel"
             aria-labelledby="top-claim-status-tab">
             <div class="col-sm-12">
               <div class="card">
@@ -58,7 +65,7 @@
                         {% for medical in medical_header %}
                         <tr>
                           <td><a href="{% url 'hrd_app:medical_train_detail' medical.id %}">{{medical.medical_no}}</td>
-                          <td>{{request.user.first_name}} {{request.user.last_name}}</td>  
+                          <td>{{request.user.first_name}} {{request.user.last_name}}</td>
                           <td>Rp. {{medical.rp_total}}</td>
                           <td>{{medical.created_at|date:"F j, Y"}}</td>
                           {% if not medical.is_complete %}
@@ -68,8 +75,8 @@
                           {% else %}
                           <td>Klaim di tolak</td>
                           {% endif %}
-                          <td><a href="{% url 'hrd_app:medical_train_detail' medical.id %}" class="btn btn-info btn-sm"><span
-                                class="icon-info"></span> Detail</a>
+                          <td><a href="{% url 'hrd_app:medical_train_detail' medical.id %}"
+                              class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a>
                             | <a href="{% url 'hrd_app:medical_train_download_report' medical.id %}"
                               class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
@@ -102,54 +109,70 @@
                       </thead>
                       <tbody>
                         {% for medical_manager in medical_approval_manager %}
-                          {% if medical_manager.medical.user.userprofileinfo.department == request.user.userprofileinfo.department %}
-                          <tr>
-                            <td><a href="{% url 'hrd_app:medical_train_detail' medical_manager.medical.id %}">{{medical_manager.medical.medical_no}}</td>
-                            <td>{{medical_manager.medical.user.first_name}} {{medical_manager.medical.user.last_name}}</td>  
-                            <td>Rp. {{medical_manager.medical.rp_total}}</td>
-                            <td>{{medical_manager.medical.created_at|date:"F j, Y"}}</td>
-                            {% if not medical_manager.medical.is_complete %}
-                            <td>Waiting for Approval</td>
-                            {% elif medical_manager.medical.medicalclaimstatus.is_lengkap %}
-                            <td>Klaim lengkap bisa di proses</td>
-                            {% else %}
-                            <td>Klaim di tolak</td>
-                            {% endif %}
-                            <td><a href="{% url 'hrd_app:medical_submit_atasan' medical_manager.medical.id True False%}" class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
-                            <a data-bs-toggle="modal" data-bs-target="#ModalMedicalReject{{ medical_manager.medical.id }}" data-whatever="@mdo" class="btn btn-secondary btn-sm"></span>Reject</a>
-                            | <a href="{% url 'hrd_app:medical_train_download_report' medical_manager.medical.id %}"
-                                class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
-                            </td>
-                          </tr>
+                        {% if medical_manager.medical.user.userprofileinfo.department == request.user.userprofileinfo.department %}
+                        <tr>
+                          <td><a
+                              href="{% url 'hrd_app:medical_train_detail' medical_manager.medical.id %}">{{medical_manager.medical.medical_no}}
+                          </td>
+                          <td>{{medical_manager.medical.user.first_name}} {{medical_manager.medical.user.last_name}}
+                          </td>
+                          <td>Rp. {{medical_manager.medical.rp_total}}</td>
+                          <td>{{medical_manager.medical.created_at|date:"F j, Y"}}</td>
+                          {% if not medical_manager.medical.is_complete %}
+                          <td>Waiting for Approval</td>
+                          {% elif medical_manager.medical.medicalclaimstatus.is_lengkap %}
+                          <td>Klaim lengkap bisa di proses</td>
+                          {% else %}
+                          <td>Klaim di tolak</td>
                           {% endif %}
+                          <td><a href="{% url 'hrd_app:medical_submit_atasan' medical_manager.medical.id True False%}"
+                              class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
+                            <a data-bs-toggle="modal"
+                              data-bs-target="#ModalMedicalReject{{ medical_manager.medical.id }}" data-whatever="@mdo"
+                              class="btn btn-secondary btn-sm"></span>Reject</a>
+                            | <a href="{% url 'hrd_app:medical_train_download_report' medical_manager.medical.id %}"
+                              class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                          </td>
+                        </tr>
+                        {% endif %}
                         {% endfor %}
                         {% for medical_supervisor in medical_approval_supervisor %}
-                          {% if medical_supervisor.medical.user.userprofileinfo.department == request.user.userprofileinfo.department %}
-                          <tr>
-                            <td><a href="{% url 'hrd_app:medical_train_detail' medical_supervisor.medical.id %}">{{medical_supervisor.medical.medical_no}}</td>
-                            <td>{{medical_supervisor.medical.user.first_name}} {{medical_supervisor.medical.user.last_name}}</td>  
-                            <td>Rp. {{medical_supervisor.medical.rp_total}}</td>
-                            <td>{{medical_supervisor.medical.created_at|date:"F j, Y"}}</td>
-                            {% if not medical_supervisor.medical.is_complete %}
-                            <td>Waiting for Approval</td>
-                            {% elif medical_supervisor.medical.medicalclaimstatus.is_lengkap %}
-                            <td>Klaim lengkap bisa di proses</td>
-                            {% else %}
-                            <td>Klaim di tolak</td>
-                            {% endif %}
-                            <td><a href="{% url 'hrd_app:medical_submit_atasan' medical_supervisor.medical.id True False %}" class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
-                            <a data-bs-toggle="modal" data-bs-target="#ModalMedicalReject{{ medical_supervisor.medical.id }}" data-whatever="@mdo" class="btn btn-secondary btn-sm"></span>Reject</a>
-                            | <a href="{% url 'hrd_app:medical_train_download_report' medical_supervisor.medical.id %}"
-                                class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
-                            </td>
-                          </tr>
+                        {% if medical_supervisor.medical.user.userprofileinfo.department == request.user.userprofileinfo.department %}
+                        <tr>
+                          <td><a
+                              href="{% url 'hrd_app:medical_train_detail' medical_supervisor.medical.id %}">{{medical_supervisor.medical.medical_no}}
+                          </td>
+                          <td>{{medical_supervisor.medical.user.first_name}}
+                            {{medical_supervisor.medical.user.last_name}}</td>
+                          <td>Rp. {{medical_supervisor.medical.rp_total}}</td>
+                          <td>{{medical_supervisor.medical.created_at|date:"F j, Y"}}</td>
+                          {% if not medical_supervisor.medical.is_complete %}
+                          <td>Waiting for Approval</td>
+                          {% elif medical_supervisor.medical.medicalclaimstatus.is_lengkap %}
+                          <td>Klaim lengkap bisa di proses</td>
+                          {% else %}
+                          <td>Klaim di tolak</td>
                           {% endif %}
+                          <td><a
+                              href="{% url 'hrd_app:medical_submit_atasan' medical_supervisor.medical.id True False %}"
+                              class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
+                            <a data-bs-toggle="modal"
+                              data-bs-target="#ModalMedicalReject{{ medical_supervisor.medical.id }}"
+                              data-whatever="@mdo" class="btn btn-secondary btn-sm"></span>Reject</a>
+                            | <a href="{% url 'hrd_app:medical_train_download_report' medical_supervisor.medical.id %}"
+                              class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                          </td>
+                        </tr>
+                        {% endif %}
                         {% endfor %}
                         {% for medical_foreman in medical_approval_foreman %}
                         {% if medical_foreman.medical.user.userprofileinfo.department == request.user.userprofileinfo.department %}
                         <tr>
-                          <td><a href="{% url 'hrd_app:medical_train_detail' medical_foreman.medical.id %}">{{medical_foreman.medical.medical_no}}</td>
-                          <td>{{medical_foreman.medical.user.first_name}} {{medical_foreman.medical.user.last_name}}</td>  
+                          <td><a
+                              href="{% url 'hrd_app:medical_train_detail' medical_foreman.medical.id %}">{{medical_foreman.medical.medical_no}}
+                          </td>
+                          <td>{{medical_foreman.medical.user.first_name}} {{medical_foreman.medical.user.last_name}}
+                          </td>
                           <td>Rp. {{medical_foreman.medical.rp_total}}</td>
                           <td>{{medical_foreman.medical.created_at|date:"F j, Y"}}</td>
                           {% if not medical_foreman.medical.is_complete %}
@@ -160,8 +183,11 @@
                           <td>Klaim di tolak</td>
                           {% endif %}
                           <td>
-                            <a href="{% url 'hrd_app:medical_submit_atasan' medical_foreman.medical.id True False%}" class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
-                            <a data-bs-toggle="modal" data-bs-target="#ModalMedicalReject{{ medical_foreman.medical.id }}" data-whatever="@mdo" class="btn btn-secondary btn-sm"></span>Reject</a>
+                            <a href="{% url 'hrd_app:medical_submit_atasan' medical_foreman.medical.id True False%}"
+                              class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
+                            <a data-bs-toggle="modal"
+                              data-bs-target="#ModalMedicalReject{{ medical_foreman.medical.id }}" data-whatever="@mdo"
+                              class="btn btn-secondary btn-sm"></span>Reject</a>
                             | <a href="{% url 'hrd_app:medical_train_download_report' medical_foreman.medical.id %}"
                               class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
@@ -195,8 +221,10 @@
                       <tbody>
                         {% for medical_hr in medical_approval_hr %}
                         <tr>
-                          <td><a href="{% url 'hrd_app:medical_train_detail' medical_hr.medical.id %}">{{medical_hr.medical.medical_no}}</td>
-                          <td>{{medical_hr.medical.user.first_name}} {{medical_hr.medical.user.last_name}}</td>  
+                          <td><a
+                              href="{% url 'hrd_app:medical_train_detail' medical_hr.medical.id %}">{{medical_hr.medical.medical_no}}
+                          </td>
+                          <td>{{medical_hr.medical.user.first_name}} {{medical_hr.medical.user.last_name}}</td>
                           <td>Rp. {{medical_hr.medical.rp_total}}</td>
                           <td>{{medical_hr.medical.created_at|date:"F j, Y"}}</td>
                           {% if not medical_hr.medical.is_complete %}
@@ -207,9 +235,12 @@
                           <td>Klaim di tolak</td>
                           {% endif %}
                           <td>
-                            <a data-bs-toggle="modal" data-bs-target="#ModalMedicalHRApprove{{ medical_hr.medical.id }}" data-whatever="@mdo" class="btn btn-success btn-sm"></span>Approve</a>
-                            <a data-bs-toggle="modal" data-bs-target="#ModalMedicalHRReject{{ medical_hr.medical.id }}" data-whatever="@mdo" class="btn btn-secondary btn-sm"></span>Reject</a>
-                            |<a href="{% url 'hrd_app:medical_train_download_report' medical_hr.medical.id %}" class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                            <a data-bs-toggle="modal" data-bs-target="#ModalMedicalHRApprove{{ medical_hr.medical.id }}"
+                              data-whatever="@mdo" class="btn btn-success btn-sm"></span>Approve</a>
+                            <a data-bs-toggle="modal" data-bs-target="#ModalMedicalHRReject{{ medical_hr.medical.id }}"
+                              data-whatever="@mdo" class="btn btn-secondary btn-sm"></span>Reject</a>
+                            |<a href="{% url 'hrd_app:medical_train_download_report' medical_hr.medical.id %}"
+                              class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
                         </tr>
                         {% endfor %}
@@ -220,6 +251,7 @@
               </div>
             </div>
           </div>
+
           {% for medical in medical_modal %}
           {% comment %} MODAL REJECT START {% endcomment %}
           <div class="modal fade" id="ModalMedicalReject{{ medical.id }}" tabindex="-1" role="dialog"
@@ -235,44 +267,45 @@
                   <div class="modal-body">
                     <div class="mb-3">
                       <label class="col-form-label" for="recipient-name">Assignee:</label>
-                      <input class="form-control" type="text" value="{{medical.user.first_name}} {{medical.user.last_name}}" readonly>
+                      <input class="form-control" type="text"
+                        value="{{medical.user.first_name}} {{medical.user.last_name}}" readonly>
                     </div>
                     {% if form_medical_approval_reason_foreman %}
-                      {% for hidden in form_medical_approval_reason_foreman.hidden_fields %}
-                      {{ hidden }}
-                       {% endfor %}
-                      <!-- merender semua field form dari objek TaskForm -->
-                      {% if form_medical_approval_reason_foreman.non_field_errors %}
-                        <div class="alert alert-danger" role="alert">
-                          {% for error in form_medical_approval_reason_foreman.non_field_errors %}
-                            {{ error }}
-                          {% endfor %}
-                        </div>
-                      {% endif %}
-                      
-                      {% for field in form_medical_approval_reason_foreman.visible_fields %}
-                        <div class="form-group">
-                          {{ field.label_tag }}
-                          {% if form_medical_approval_reason_foreman.is_bound %}
-                            {% if field.errors %}
-                              {% render_field field class="form-control is-invalid" %}
-                              {% for error in field.errors %}
-                                <div class="invalid-feedback">
-                                  {{ error }}
-                                </div>
-                              {% endfor %}
-                            {% else %}
-                              {% render_field field class="form-control is-valid" %}
-                            {% endif %}
-                          {% else %}
-                            {% render_field field class="form-control" %}
-                          {% endif %}
-                              
-                          {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                          {% endif %}
-                        </div>
+                    {% for hidden in form_medical_approval_reason_foreman.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if form_medical_approval_reason_foreman.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_medical_approval_reason_foreman.non_field_errors %}
+                      {{ error }}
                       {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% for field in form_medical_approval_reason_foreman.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+                      {% if form_medical_approval_reason_foreman.is_bound %}
+                      {% if field.errors %}
+                      {% render_field field class="form-control is-invalid" %}
+                      {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                      {% endfor %}
+                      {% else %}
+                      {% render_field field class="form-control is-valid" %}
+                      {% endif %}
+                      {% else %}
+                      {% render_field field class="form-control" %}
+                      {% endif %}
+
+                      {% if field.help_text %}
+                      <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                    {% endfor %}
                     {% endif %}
                   </div>
                   <div class="modal-footer">
@@ -298,45 +331,83 @@
                   <div class="modal-body">
                     <div class="mb-3">
                       <label class="col-form-label" for="recipient-name">Assignee:</label>
-                      <input class="form-control" type="text" value="{{medical.user.first_name}} {{medical.user.last_name}}" readonly>
+                      <input class="form-control" type="text"
+                        value="{{medical.user.first_name}} {{medical.user.last_name}}" readonly>
                     </div>
+                    {% if form_medical_reject_klaim_status %}
+                        {% for hidden in form_medical_reject_klaim_status.hidden_fields %}
+                        {{ hidden }}
+                        {% endfor %}
+                        <!-- merender semua field form dari objek TaskForm -->
+                        {% if form_medical_reject_klaim_status.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {% for error in form_medical_reject_klaim_status.non_field_errors %}
+                          {{ error }}
+                          {% endfor %}
+                        </div>
+                        {% endif %}
+                      
+                        {% for field in form_medical_reject_klaim_status.visible_fields %}
+                        <div class="form-group">
+                          {{ field.label_tag }}
+                          {% if form_medical_reject_klaim_status.is_bound %}
+                          {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                          <div class="invalid-feedback">
+                            {{ error }}
+                          </div>
+                          {% endfor %}
+                          {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                          {% else %}
+                          {% render_field field class="form-control" %}
+                          {% endif %}
+                        
+                          {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                          {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
                     {% if form_medical_approval_reason_hr %}
-                    {% for hidden in form_medical_approval_reason_hr.hidden_fields %}
-                    {{ hidden }}
-                     {% endfor %}
-                    <!-- merender semua field form dari objek TaskForm -->
-                    {% if form_medical_approval_reason_hr.non_field_errors %}
+                      {% for hidden in form_medical_approval_reason_hr.hidden_fields %}
+                      {{ hidden }}
+                      {% endfor %}
+                      <!-- merender semua field form dari objek TaskForm -->
+                      {% if form_medical_approval_reason_hr.non_field_errors %}
                       <div class="alert alert-danger" role="alert">
                         {% for error in form_medical_approval_reason_hr.non_field_errors %}
-                          {{ error }}
+                        {{ error }}
                         {% endfor %}
                       </div>
-                    {% endif %}
-                    
-                    {% for field in form_medical_approval_reason_hr.visible_fields %}
+                      {% endif %}
+
+                      {% for field in form_medical_approval_reason_hr.visible_fields %}
                       <div class="form-group">
                         {{ field.label_tag }}
                         {% if form_medical_approval_reason_hr.is_bound %}
-                          {% if field.errors %}
-                            {% render_field field class="form-control is-invalid" %}
-                            {% for error in field.errors %}
-                              <div class="invalid-feedback">
-                                {{ error }}
-                              </div>
-                            {% endfor %}
-                          {% else %}
-                            {% render_field field class="form-control is-valid" %}
-                          {% endif %}
+                        {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" %}
+                        {% for error in field.errors %}
+                        <div class="invalid-feedback">
+                          {{ error }}
+                        </div>
+                        {% endfor %}
                         {% else %}
-                          {% render_field field class="form-control" %}
+                        {% render_field field class="form-control is-valid" %}
                         {% endif %}
-                            
+                        {% else %}
+                        {% render_field field class="form-control" %}
+                        {% endif %}
+
                         {% if field.help_text %}
-                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
                         {% endif %}
                       </div>
-                    {% endfor %}
-                  {% endif %}
+                      {% endfor %}
+                    {% endif %}
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
@@ -347,6 +418,7 @@
             </div>
           </div>
           {% comment %} MODAL HR REJECT END {% endcomment %}
+
           {% comment %} MODAL HR APPROVE START {% endcomment %}
           <div class="modal fade" id="ModalMedicalHRApprove{{ medical.id }}" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -361,45 +433,87 @@
                   <div class="modal-body">
                     <div class="mb-3">
                       <label class="col-form-label" for="recipient-name">Assignee:</label>
-                      <input class="form-control" type="text" value="{{medical.user.first_name}} {{medical.user.last_name}}" readonly>
+                      <input class="form-control" type="text"
+                        value="{{medical.user.first_name}} {{medical.user.last_name}}" readonly>
                     </div>
                     {% if form_medical_klaim_status %}
                     {% for hidden in form_medical_klaim_status.hidden_fields %}
                     {{ hidden }}
-                     {% endfor %}
+                    {% endfor %}
                     <!-- merender semua field form dari objek TaskForm -->
-                    {% if form_medical_klaim_status.non_field_errors %}
+                      {% if form_medical_klaim_status.non_field_errors %}
                       <div class="alert alert-danger" role="alert">
                         {% for error in form_medical_klaim_status.non_field_errors %}
-                          {{ error }}
+                        {{ error }}
                         {% endfor %}
                       </div>
+                      {% endif %}
                     {% endif %}
-                    
-                    {% for field in form_medical_klaim_status.visible_fields %}
-                      <div class="form-group">
-                        {{ field.label_tag }}
-                        {% if form_medical_klaim_status.is_bound %}
-                          {% if field.errors %}
-                            {% render_field field class="form-control is-invalid" %}
-                            {% for error in field.errors %}
-                              <div class="invalid-feedback">
-                                {{ error }}
-                              </div>
-                            {% endfor %}
-                          {% else %}
-                            {% render_field field class="form-control is-valid" %}
-                          {% endif %}
-                        {% else %}
-                          {% render_field field class="form-control" %}
-                        {% endif %}
-                            
-                        {% if field.help_text %}
-                          <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
-                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-success" type="submit">Approve</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% comment %} MODAL HR APPROVE END {% endcomment %}
+
+          {% comment %} MODAL HR COMPLETE START {% endcomment %}
+          <div class="modal fade" id="ModalMedicalHRComplete{{ medical.id }}" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel2">{{medical.medical_no}}</h5>
+                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'hrd_app:medical_submit_hr' medical.id True False %}" method="POST">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label class="col-form-label" for="recipient-name">Assignee:</label>
+                      <input class="form-control" type="text"
+                        value="{{medical.user.first_name}} {{medical.user.last_name}}" readonly>
+                    </div>
+                    {% if form_medical_klaim_status %}
+                    {% for hidden in form_medical_klaim_status.hidden_fields %}
+                    {{ hidden }}
                     {% endfor %}
-                  {% endif %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if form_medical_klaim_status.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_medical_klaim_status.non_field_errors %}
+                      {{ error }}
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% for field in form_medical_klaim_status.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+                      {% if form_medical_klaim_status.is_bound %}
+                      {% if field.errors %}
+                      {% render_field field class="form-control is-invalid" %}
+                      {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                      {% endfor %}
+                      {% else %}
+                      {% render_field field class="form-control is-valid" %}
+                      {% endif %}
+                      {% else %}
+                      {% render_field field class="form-control" %}
+                      {% endif %}
+
+                      {% if field.help_text %}
+                      <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
@@ -409,7 +523,8 @@
               </div>
             </div>
           </div>
-          {% comment %} MODAL HR APPROVE END {% endcomment %}
+          {% comment %} MODAL HR COMPLETE END {% endcomment %}
+
           {% endfor %}
 
         </div>

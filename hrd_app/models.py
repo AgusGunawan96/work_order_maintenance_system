@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from master_app.models import GenderField
+from django.utils import timezone
 # Create your models here.
 
 # BIODATA START
@@ -26,12 +27,18 @@ class medicalTempatPelayanan(models.TextChoices):
 class medicalJenisPelayanan(models.TextChoices):
     RAWAT_JALAN     = 'Rawat Jalan'
     RAWAT_INAP      = 'Rawat Inap'
+    KACAMATA        = 'Kacamata'
+    PERSALINAN      = 'Persalinan'
 
 class medicalJenisMelahirkan(models.TextChoices):
     NORMAL          = 'Normal'
     CAESAR          = 'Caesar'
     KEGUGURAN       = 'Keguguran'
-    
+
+class medicalStatus(models.TextChoices):
+    KLAIM_TIDAK_LENGKAP = 'Klaim tidak lengkap'
+    KLAIM_DITOLAK       = 'Klaim ditolak'
+
 class medicalApprovalList(models.Model):
     user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     is_foreman      = models.BooleanField(default=False, blank=True, null=True)
@@ -80,19 +87,21 @@ class medicalDetailDokter(models.Model):
     updated_at          = models.DateTimeField('updated at', auto_now = True)
 
 class medicalDetailInformation(models.Model):
-    medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
-    jenis_pelayanan = models.CharField(max_length=25, choices=medicalJenisPelayanan.choices, default=False)
-    melahirkan      = models.CharField(max_length=25, choices=medicalJenisMelahirkan.choices, default=False, null=True, blank=True)
-    tanggal_berobat = models.DateTimeField('tanggal berobat')
-    diagnosa        = models.CharField(max_length=128)
-    created_at      = models.DateTimeField('created at', auto_now_add = True)
-    updated_at      = models.DateTimeField('updated at', auto_now = True)
+    medical                 = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
+    jenis_pelayanan         = models.CharField(max_length=25, choices=medicalJenisPelayanan.choices, default=False)
+    melahirkan              = models.CharField(max_length=25, choices=medicalJenisMelahirkan.choices, default=False, null=True, blank=True)
+    tanggal_berobat_mulai   = models.DateTimeField('tanggal berobat mulai', default=timezone.now)
+    tanggal_berobat_selesai = models.DateTimeField('tanggal berobat selesai', default=timezone.now)
+    diagnosa                = models.CharField(max_length=128)
+    created_at              = models.DateTimeField('created at', auto_now_add = True)
+    updated_at              = models.DateTimeField('updated at', auto_now = True)
 
 class medicalClaimStatus(models.Model):
-    medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
-    is_lengkap = models.BooleanField(default=False)
-    created_at = models.DateTimeField('created at', auto_now_add = True)
-    updated_at = models.DateTimeField('updated at', auto_now = True)
+    medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
+    is_lengkap      = models.BooleanField(default=False)
+    tidak_lengkap   = models.CharField(max_length=25, choices=medicalStatus.choices, default=False, null=True, blank=True)
+    created_at      = models.DateTimeField('created at', auto_now_add = True)
+    updated_at      = models.DateTimeField('updated at', auto_now = True)
 
 class medicalAttachment(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)

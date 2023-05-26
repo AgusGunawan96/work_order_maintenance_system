@@ -155,9 +155,14 @@
                                 <input class="form-control" type="text" value="{{medical_detail_information.melahirkan}}" readonly>
                             </div>
                             <div class="mb-3 col-md-12">
-                                <label class="col-form-label">Tanggal Berobat</label>
+                                <label class="col-form-label">Tanggal Berobat Mulai</label>
                                 <input class="form-control" type="text"
-                                    value="{{medical_detail_information.tanggal_berobat|date:'F j, Y'}}" readonly>
+                                    value="{{medical_detail_information.tanggal_berobat_mulai|date:'F j, Y'}}" readonly>
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label class="col-form-label">Tanggal Berobat Selesai</label>
+                                <input class="form-control" type="text"
+                                    value="{{medical_detail_information.tanggal_berobat_selesai|date:'F j, Y'}}" readonly>
                             </div>
                             <div class="mb-3 col-md-12">
                                 <label class="col-form-label">Diagnosa</label>
