@@ -35,7 +35,7 @@
         {% endif %}
         {% if request.user.userprofileinfo.department_id == 7 %}
         {% comment %} <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalDownloadCSV" data-whatever="@mdo"> <span class="icon-download"></span>Download Excel</a> {% endcomment %}
-        <a class="btn btn-primary btn-lg" href="{% url 'accounting_app:cashPayment_monitoring' %}" > <span class="fa fa-laptop"></span>Monitoring</a>
+        {% comment %} <a class="btn btn-primary btn-lg" href="{% url 'accounting_app:cashPayment_monitoring' %}" > <span class="fa fa-laptop"></span>Monitoring</a> {% endcomment %}
         {% endif %}
       </div>
       <div class="card-body">
