@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from master_app.models import GenderField
+from master_app.models import GenderField, UserKeluargaInfo
 from django.utils import timezone
 # Create your models here.
 
@@ -69,10 +69,7 @@ class medicalHeader(models.Model):
     
 class medicalDetailPasienKeluarga(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
-    nama_pasien     = models.CharField(max_length=128,null=True, blank=True)
-    tanggal_lahir   = models.DateTimeField('tanggal lahir', blank=True, null=True)
-    jenis_kelamin   = GenderField(null=True, blank=True)
-    hubungan        = models.CharField(max_length=25, choices=medicalHubungan.choices, default=False, null=True, blank=True)
+    keluarga        = models.ForeignKey(UserKeluargaInfo, on_delete=models.CASCADE, blank=True, null=True)
     created_at      = models.DateTimeField('created at', auto_now_add = True)
     updated_at      = models.DateTimeField('updated at', auto_now = True)
 

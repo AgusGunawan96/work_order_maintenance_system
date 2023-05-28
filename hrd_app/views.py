@@ -184,8 +184,10 @@ def medical_train_add(request):
             print(medical_header_form.errors, medical_pemberi_layanan_form.errors,medical_pelayanan_kesehatan_form.errors,medical_status_claim_form.errors,medical_attachment_form.errors)
 
     else:
+        curr_user = request.user
         medical_header              = medicalHeaderForms()
-        medical_data_keluarga       = medicalDataKeluargaForms()
+        medical_data_keluarga       = medicalDataKeluargaForms(request.POST or None, user=curr_user)
+        # return HttpResponse(medical_data_keluarga)
         medical_pemberi_layananan   = medicalPemberiLayananForms()
         medical_pelayanan_kesehatan = medicalPelayananKesehatanForms()
         medical_status_claim        = medicalStatusKlaimForms()

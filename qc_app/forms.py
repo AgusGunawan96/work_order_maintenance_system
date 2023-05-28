@@ -23,18 +23,22 @@ class rirHeaderForms(forms.ModelForm):
         widget=Select2Widget,
         coerce=str,
     )
+
     material = forms.ModelChoiceField(
         queryset=rirMaterial.objects.all(),
         widget=Select2Widget
     )
+
     vendor = forms.ModelChoiceField(
     queryset=rirVendor.objects.all(),
     widget=Select2Widget
     )
+
     category = forms.ModelChoiceField(
         queryset=categoryTypeRIR.objects.all(),
         widget=Select2Widget
     )
+    
     class Meta():
         model = rirHeader
         fields = ('incoming_type','category','material','po_number','vendor','lot_no','quantity', 'quantity_actual','incoming_at', 'incoming_at_external', 'expired_at' )

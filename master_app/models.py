@@ -73,7 +73,9 @@ class UserKeluargaInfo(models.Model):
     tanggal_lahir       = models.DateTimeField('Tanggal Lahir', default=timezone.now)
     hubungan            = models.CharField(max_length=25, choices=userKeluarga.choices, default=False)
     nama_lengkap        = models.CharField(max_length=200, unique=False, default=False, blank=True, null=True)
-
+    def __str__(self):
+        return self.nama_lengkap +' ( '+ self.hubungan + ' ) '
+    
 class Notification(models.Model):
     user        = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp   = models.DateTimeField(auto_now_add = True)

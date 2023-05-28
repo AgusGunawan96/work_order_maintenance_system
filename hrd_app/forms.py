@@ -1,6 +1,9 @@
 from django import forms 
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader
+from master_app.models import UserKeluargaInfo
 from django.forms import ClearableFileInput
+from django_select2.forms import Select2Widget
+
 # MEDICAL TRAIN START
 class medicalHeaderForms(forms.ModelForm):
     class Meta():
@@ -9,10 +12,24 @@ class medicalHeaderForms(forms.ModelForm):
         widgets = {'rp_total': forms.HiddenInput()}
 
 class medicalDataKeluargaForms(forms.ModelForm):
-    tanggal_lahir = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}), required=False)
+    # keluarga = forms.ModelChoiceField(
+    #     queryset=UserKeluargaInfo.objects.all(),
+    #     widget=Select2Widget, 
+    #     required=False
+    # )
+        # Define your fields here...
+    keluarga = forms.ModelChoiceField(queryset=UserKeluargaInfo.objects.none(),
+                                        widget=Select2Widget, 
+                                        required=False)
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['keluarga'].queryset = UserKeluargaInfo.objects.filter(user=user)
+            
     class Meta():
         model = medicalDetailPasienKeluarga
-        fields = ('nama_pasien','tanggal_lahir','jenis_kelamin','hubungan',)
+        fields = ('keluarga',)
 
 class medicalPemberiLayananForms(forms.ModelForm):
     class Meta():
