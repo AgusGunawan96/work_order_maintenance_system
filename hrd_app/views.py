@@ -403,7 +403,7 @@ def medical_train_download_report_excel(request):
     row_num = 1
     font_style_bold = xlwt.XFStyle()
     font_style_bold.font.bold = True
-    columns = ['Medical No','Tanggal dibuat','Diserahkan Oleh','Mengetahui Atasan ybs','Diterima Oleh']
+    columns = ['Medical No','Tanggal dibuat','Diserahkan Oleh','Mengetahui Atasan ybs','Diterima Oleh', 'Anggota Keluarga', 'Nama Anggota Keluarga', 'Hubungan Keluarga', 'Jenis Kelamin', 'Tanggal lahir keluarga', 'Nama Dokter', 'Tempat Pelayanan', 'Nama Tempat', 'Alamat', 'No Telp. Pelayanan', 'Jenis Pelayanan', 'Melahirkan', 'Jenis Persalinan', 'Tanggal Berobat Mulai', 'Tanggal Berobat Selesai', 'Diagnosa', 'Kelengkapan','Status']
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
 
@@ -452,6 +452,36 @@ def medical_train_download_report_excel(request):
         if body[2]:
             tanggal_dibuat = body[2].strftime("%d-%m-%Y")
 
+        # Cek apakah keluarga atau bukan yang sedang di klaim
+        if medical_detail_pasien_keluarga.keluarga:
+            is_keluarga = 'Yes'
+            nama_pasien = medical_detail_pasien_keluarga.keluarga.nama_lengkap
+            hubungan = medical_detail_pasien_keluarga.keluarga.hubungan
+            jenis_kelamin = medical_detail_pasien_keluarga.keluarga.gender
+            tanggal_lahir_keluarga = medical_detail_pasien_keluarga.keluarga.tanggal_lahir.strftime("%d-%m-%Y")
+        else:
+            is_keluarga = 'No'
+            nama_pasien = '-'
+            hubungan    = '-'
+            jenis_kelamin = '-'
+            tanggal_lahir_keluarga = '-'
+
+        # kondisi melahirkan
+        if medical_detail_information.melahirkan:
+            melahirkan = 'Yes'
+        else:
+            melahirkan = 'No'
+        # Kondisi kelengkapan
+        if medical_claim_status.is_lengkap and medical_claim_status.tidak_lengkap == '':
+            kelengkapan = 'Dokumen sudah lengkap'
+        elif body[9] and medical_claim_status.tidak_lengkap:
+            kelengkapan = medical_claim_status.tidak_lengkap
+        # Kondisi status
+        if body[9]:
+            status = 'Completed'
+        elif body[10]:
+            status = 'Rejected'
+
         row_num += 1
         row = [
             body[1],
@@ -459,6 +489,24 @@ def medical_train_download_report_excel(request):
             body[4] +' '+ body[5],
             atasan,
             hr,
+            is_keluarga,
+            nama_pasien,
+            hubungan,
+            jenis_kelamin,
+            tanggal_lahir_keluarga,
+            medical_dokter.nama_dokter,
+            medical_dokter.tempat_pelayanan,
+            medical_dokter.nama_tempat,
+            medical_dokter.alamat,
+            medical_dokter.no_telp,
+            medical_detail_information.jenis_pelayanan,
+            melahirkan,
+            medical_detail_information.melahirkan,
+            medical_detail_information.tanggal_berobat_mulai.strftime("%d-%m-%Y"),
+            medical_detail_information.tanggal_berobat_selesai.strftime("%d-%m-%Y"),
+            medical_detail_information.diagnosa,
+            kelengkapan,
+            status,
         ]
         for col_num in range(len(row)):
             ws.write(row_num, col_num, row[col_num], font_style)

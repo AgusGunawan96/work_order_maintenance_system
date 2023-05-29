@@ -96,10 +96,10 @@ class medicalDetailInformation(models.Model):
 class medicalClaimStatus(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     is_lengkap      = models.BooleanField(default=False)
-    tidak_lengkap   = models.CharField(max_length=25, choices=medicalStatus.choices, default=False, null=True, blank=True)
+    tidak_lengkap   = models.CharField(max_length=25, choices=medicalStatus.choices, default='-', null=True, blank=True)
     created_at      = models.DateTimeField('created at', auto_now_add = True)
-    updated_at      = models.DateTimeField('updated at', auto_now = True)
-
+    updated_at      = models.DateTimeField('updated at', auto_now = True) 
+    
 class medicalAttachment(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     attachment      = models.FileField(upload_to='MedicalAttachment/', null=False, blank=True)
