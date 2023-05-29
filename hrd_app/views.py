@@ -45,28 +45,28 @@ def medical_train_index(request):
     # Kondisi Approval 
     if medical_approval_list:
         if medical_approval_list.is_foreman:
-            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_foreman = medicalReasonForemanForms()
         else:
             medical_approval_foreman = None
             medical_approval_reason_foreman = None
 
         if medical_approval_list.is_supervisor:
-            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_supervisor = medicalReasonSupervisorForms()
         else:
             medical_approval_supervisor = None
             medical_approval_reason_supervisor = None
 
         if medical_approval_list.is_manager:
-            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_manager = medicalReasonManagerForms()
         else:
             medical_approval_manager = None
             medical_approval_reason_manager = None
 
         if medical_approval_list.is_hr:
-            medical_approval_hr         = medicalApprovalHR.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).order_by('-id')
+            medical_approval_hr         = medicalApprovalHR.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_hr  = medicalReasonHRForms()
             medical_klaim_status        = medicalStatusKlaimForms()
             medical_reject_klaim_status = medicalRejectStatusKlaimForms()
@@ -343,6 +343,11 @@ def medical_submit_hr(request, medical_id, is_approve, is_reject):
             hr.is_reject = True
             hr.hr = medical_approval
             hr.save()
+        # Reject dari Medical
+        medical_header = medicalHeader.objects.get(pk = medical_id)
+        if medical_header:
+            medical_header.is_reject = True
+            medical_header.save()
         messages.success(request, 'Medical Train Rejected')
         return redirect('hrd_app:medical_train_index')
 
@@ -359,13 +364,17 @@ def medical_train_download_report(request, medical_id):
     medical_foreman                 = medicalApprovalForeman.objects.filter(medical_id = medical_header).first()
     medical_supervisor              = medicalApprovalSupervisor.objects.filter(medical_id = medical_header).first()
     medical_manager                 = medicalApprovalManager.objects.filter(medical_id = medical_header).first()
-    medical_hr                      = medicalApprovalHR.objects.filter(medical_id = medical_header.id).first()
+    medical_hr                      = medicalApprovalHR.objects.filter(medical_id = medical_header).first()
+
     if not medical_foreman:
         medical_foreman = None
     if not medical_supervisor:
         medical_supervisor = None
     if not medical_manager:
         medical_manager = None
+    if not medical_hr:
+        medical_hr      = None
+
     context = {
         'medical_header'                    :   medical_header,
         'medical_detail_pasien_keluarga'    :   medical_detail_pasien_keluarga,
@@ -382,5 +391,79 @@ def medical_train_download_report(request, medical_id):
 
 @login_required
 def medical_train_download_report_excel(request):
+    # kita akan panggil header dari medical 
+    medical_header = medicalHeader.objects.all().values_list('id','medical_no','created_at','rp_total','user__first_name','user__last_name','is_foreman','is_supervisor','is_manager','is_complete', 'is_reject')
+    # Memanggil RIR dari tahun awal sampai tahun akhir
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=MedicalTrain.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('MedicalTrain', cell_overwrite_ok=True) # this will make a sheet named Users Data
+    
+    # Dimulai dari Row 1
+    row_num = 1
+    font_style_bold = xlwt.XFStyle()
+    font_style_bold.font.bold = True
+    columns = ['Medical No','Tanggal dibuat','Diserahkan Oleh','Mengetahui Atasan ybs','Diterima Oleh']
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
+
+    # masuk kedalam body
+    font_style = xlwt.XFStyle()
+    # Body dari excel laporan yang akan dibuat
+    for body in medical_header:
+        # Kita akan panggil setiap model yang ada di HR
+        medical_detail_pasien_keluarga  = medicalDetailPasienKeluarga.objects.filter(medical_id = body[0]).first()
+        medical_dokter                  = medicalDetailDokter.objects.filter(medical_id = body[0]).first()
+        medical_detail_information      = medicalDetailInformation.objects.filter(medical_id = body[0]).first()
+        medical_claim_status            = medicalClaimStatus.objects.filter(medical_id = body[0]).first()
+        medical_foreman                 = medicalApprovalForeman.objects.filter(medical_id = body[0]).first()
+        medical_supervisor              = medicalApprovalSupervisor.objects.filter(medical_id = body[0]).first()
+        medical_manager                 = medicalApprovalManager.objects.filter(medical_id = body[0]).first()
+        medical_hr                      = medicalApprovalHR.objects.filter(medical_id = body[0]).first()
+        
+        # Akan membuat none apabila tidak ada
+        if not medical_foreman:
+            medical_foreman = None
+        if not medical_supervisor:
+            medical_supervisor = None
+        if not medical_manager:
+            medical_manager = None
+        if not medical_hr:
+            medical_hr = None
+
+        # Membuat kondisi apabila diketahui oleh atasan 
+        if body[6]:
+            atasan = medical_foreman.foreman.user.first_name +' '+ medical_foreman.foreman.user.last_name
+        elif body[7]:
+            atasan = medical_supervisor.supervisor.user.first_name +' '+ medical_supervisor.supervisor.user.last_name
+        elif body[8]:
+            atasan = medical_manager.manager.user.first_name +' '+ medical_manager.manager.user.last_name
+        else:
+            atasan = '-'
+
+        
+        # Membuat kondisi apabiula diketahui oleh HR
+        if not medical_hr == '':
+            hr = medical_hr.hr.user.first_name +' '+medical_hr.hr.user.last_name
+        else:
+            hr = '-'
+
+        #Konversi tanggal yang ada di database
+        if body[2]:
+            tanggal_dibuat = body[2].strftime("%d-%m-%Y")
+
+        row_num += 1
+        row = [
+            body[1],
+            tanggal_dibuat,
+            body[4] +' '+ body[5],
+            atasan,
+            hr,
+        ]
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+    
+    wb.save(response)
+    return response
     return HttpResponse('ini adalah report yang akan diexcel')
 # MEDICAL TRAIN END

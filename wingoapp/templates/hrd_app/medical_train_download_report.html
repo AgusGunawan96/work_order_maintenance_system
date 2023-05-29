@@ -131,19 +131,17 @@
                     <th style="text-align: center;">Diserahkan Oleh</th>
                     <th style="text-align: center;">Mengetahui atasan ybs</th>
                     <th style="text-align: center;">Diterima Oleh</th>
-                    <th style="text-align: center;">Di input oleh</th>
                 </tr>
            </thead>
            <tbody>
             <tr class="section-detail">
-                <td style="padding: 15px;">-</td>
-                <td style="padding: 15px;">
-                    {% if medical_header.is_foreman %}{{ medical_foreman }}{% endif %}
-                    {% if medical_header.is_supervisor %}{{ medical_supervisor }}{% endif %}
-                    {% if medical_header.is_manager %}{{ medical_manager }}{% endif %}
-                </td>
-                <td style="padding: 15px;">{% if medical_hr.is_approve or medical_hr.is_reject %} {{ medical_hr }} {% else %} - {% endif %}</td>
                 <td style="padding: 15px;">{{ medical_header.user.first_name }} {{ medical_header.user.last_name }}</td>
+                <td style="padding: 15px;">
+                    {% if medical_header.is_foreman %} {% if medical_foreman.is_reject %}{{ medical_foreman }}(Rejected){% else %}{{ medical_foreman }}{% endif %}{% endif %}
+                    {% if medical_header.is_supervisor %}{% if medical_supervisor.is_reject %}{{ medical_supervisor }}(Rejected){% else %}{{ medical_supervisor }}{% endif %} {% endif %}
+                    {% if medical_header.is_manager %}{% if medical_manager.is_reject %}{{ medical_manager }}(Rejected){% else %}{{ medical_manager }}{% endif %}{% endif %}
+                </td>
+                <td style="padding: 15px;">{% if medical_hr.is_approve %} {{ medical_hr }} {% elif medical_hr.is_reject %} {{ medical_hr }}(Rejected) {% else %} -  {% endif %}</td>
             </tr>
         </tbody>
         </table>

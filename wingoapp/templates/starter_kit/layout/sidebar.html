@@ -120,12 +120,14 @@
             <ul class="nav-submenu menu-content">
               <li class="dropdown"><a href="{% url 'hrd_app:medical_train_index' %}"><i data-feather="book">
               </i><span>Medical Train</span></a></li>
+              {% if request.user.userprofileinfo.department.department_name == 'Human Resource & General Affairs' %}
               <li class="dropdown"><a href="{% url 'hrd_app:medical_train_complete_index' %}"><i data-feather="book">
               </i><span>List Complete</span></a></li>
               <li class="dropdown"><a href="{% url 'hrd_app:medical_train_reject_index' %}"><i data-feather="book">
               </i><span>List Reject</span></a></li>
               <li class="dropdown"><a href="{% url 'hrd_app:medical_train_download_report_excel' %}"><i data-feather="book">
               </i><span>Download Medical Train Report</span></a></li>
+              {% endif %}
             </ul>
           </li>
 
