@@ -229,7 +229,6 @@ def medical_train_detail(request, medical_id):
     medical_detail_information      = medicalDetailInformation.objects.filter(medical_id = medical_header).first()
     medical_claim_status            = medicalClaimStatus.objects.filter(medical_id = medical_header).first()
     medical_attachment              = medicalAttachment.objects.filter(medical_id = medical_header).values('attachment')
-    
     context = {
         'medical_header'                    :   medical_header,
         'medical_detail_pasien_keluarga'    :   medical_detail_pasien_keluarga,
@@ -286,6 +285,7 @@ def medical_submit_atasan(request, medical_id, is_approve, is_reject):
             # Approve Medical apabila Foreman
             medical = medicalHeader.objects.get(pk=medical_id)
             medical.is_foreman = True
+            medical.is_reject  = True
             medical.save()
         # Reject Supervisor
         supervisor = medicalApprovalSupervisor.objects.filter(medical_id = medical_id).first()
@@ -296,6 +296,7 @@ def medical_submit_atasan(request, medical_id, is_approve, is_reject):
             # Approve Medical apabila Supervisor
             medical = medicalHeader.objects.get(pk=medical_id)
             medical.is_supervisor = True
+            medical.is_reject     = True
             medical.save()
         # Reject manager
         manager = medicalApprovalManager.objects.filter(medical_id = medical_id).first()
@@ -305,7 +306,8 @@ def medical_submit_atasan(request, medical_id, is_approve, is_reject):
             manager.save()
             # Approve Medical apavbila manager
             medical = medicalHeader.objects.get(pk=medical_id)
-            medical.is_manager = medical_approval
+            medical.is_manager = True
+            medical.is_reject  = True
             medical.save()
         messages.success(request, 'Medical Train Rejected')    
         return redirect('hrd_app:medical_train_index')

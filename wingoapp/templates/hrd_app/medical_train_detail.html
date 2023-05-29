@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-                {% if medical_detail_pasien_keluarga.nama_pasien %}
+                {% if medical_detail_pasien_keluarga.keluarga %}
                 <div class="card">
                     <div class="card-header pb-0">
                         <h5>Medical Train Detail  | <i style="color: red;">*Diisi bila pasien keluarga karyawan</i></h5>
@@ -76,21 +76,21 @@
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Nama Pasien</label>
                                 <input class="form-control" type="text"
-                                    value="{{medical_detail_pasien_keluarga.nama_pasien}}" readonly>
+                                    value="{{medical_detail_pasien_keluarga.keluarga.nama_lengkap}}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Tanggal Lahir</label>
-                                <input class="form-control" type="text" value="{{medical_detail_pasien_keluarga.tanggal_lahir|date:'F j, Y'}}" readonly>
+                                <input class="form-control" type="text" value="{{medical_detail_pasien_keluarga.keluarga.tanggal_lahir|date:'F j, Y'}}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Jenis Kelamin</label>
                                 <input class="form-control" type="text"
-                                    value="{{medical_detail_pasien_keluarga.jenis_kelamin}}" readonly>
+                                    value="{% if medical_detail_pasien_keluarga.keluarga.gender == 'M' %}Laki-Laki{% else %}Perempuan{% endif %}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Hubungan</label>
                                 <input class="form-control" type="text"
-                                    value="{{medical_detail_pasien_keluarga.hubungan}}" readonly>
+                                    value="{{medical_detail_pasien_keluarga.keluarga.hubungan}}" readonly>
                             </div>
                         </div>
                     </div>

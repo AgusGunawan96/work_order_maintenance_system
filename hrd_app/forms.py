@@ -18,7 +18,7 @@ class medicalDataKeluargaForms(forms.ModelForm):
     #     required=False
     # )
         # Define your fields here...
-    keluarga = forms.ModelChoiceField(queryset=UserKeluargaInfo.objects.none(),
+    keluarga = forms.ModelChoiceField(queryset=UserKeluargaInfo.objects.all(),
                                         widget=Select2Widget, 
                                         required=False)
     def __init__(self, *args, **kwargs):

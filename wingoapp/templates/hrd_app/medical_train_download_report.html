@@ -93,10 +93,10 @@
         <p class="form_text1"><span>Jenis Kelamin</span>: <u>{% if medical_header.user.userprofileinfo.gender == 'M' %}Laki-Laki{% else %}Perempuan{% endif %}</u> </p>
         <p class="form_text1"><span>Status Karyawan</span>: <u>{% if medical_header.user.userprofileinfo.is_permanent %} PERMANENT {% else %} CONTRACT {% endif %}</u> </p>
         <h5><i>Diisi bila pasien keluarga karyawan*</i></h5>
-        <p class="form_text1"><span>Nama Pasien</span>: <u>{% if medical_detail_pasien_keluarga.nama_pasien %}{{ medical_detail_pasien_keluarga.nama_pasien }} {% else %} - {% endif %}</u> </p>
-        <p class="form_text1"><span>Tanggal Lahir</span>: <u>{% if medical_detail_pasien_keluarga.tanggal_lahir %} {{ medical_detail_pasien_keluarga.tanggal_lahir|date:"F j, Y" }}{% else %} -{% endif %}</u> </p>
-        <p class="form_text1"><span>Jenis Kelamin</span>: <u>{% if medical_detail_pasien_keluarga.jenis_kelamin %} {{ medical_detail_pasien_keluarga.jenis_kelamin }}{% else %} -{% endif %}</u> </p>
-        <p class="form_text1"><span>Hubungan</span>: <u>{% if medical_detail_pasien_keluarga.hubungan %} {{ medical_detail_pasien_keluarga.hubungan }}{% else %} -{% endif %}</u> </p>
+        <p class="form_text1"><span>Nama Pasien</span>: <u>{% if medical_detail_pasien_keluarga.keluarga.nama_lengkap %}{{ medical_detail_pasien_keluarga.keluarga.nama_lengkap }} {% else %} - {% endif %}</u> </p>
+        <p class="form_text1"><span>Tanggal Lahir</span>: <u>{% if medical_detail_pasien_keluarga.keluarga.tanggal_lahir %} {{ medical_detail_pasien_keluarga.keluarga.tanggal_lahir|date:"F j, Y" }}{% else %} -{% endif %}</u> </p>
+        <p class="form_text1"><span>Jenis Kelamin</span>: <u>{% if medical_detail_pasien_keluarga.keluarga.gender %} {% if medical_detail_pasien_keluarga.keluarga.gender == 'M' %}Male{% else %}Female{% endif %}{% else %} -{% endif %}</u> </p>
+        <p class="form_text1"><span>Hubungan</span>: <u>{% if medical_detail_pasien_keluarga.keluarga.hubungan %} {{ medical_detail_pasien_keluarga.keluarga.hubungan }}{% else %} -{% endif %}</u> </p>
     </div>
     <div class="card-body">
         <h5 style="text-align: center;">INFORMASI PEMBERI LAYANAN KESEHATAN</h5>
