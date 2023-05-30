@@ -287,6 +287,12 @@ def medical_submit_atasan(request, medical_id, is_approve, is_reject):
             medical.is_foreman = True
             medical.is_reject  = True
             medical.save()
+            # Reject Reason Foreman
+            medical_foreman_reject_form = medicalReasonForemanForms(data=request.POST, instance=foreman)
+            medical_foreman_reject = medical_foreman_reject_form.save(commit=False)
+            medical_foreman_reject.save(
+
+            )
         # Reject Supervisor
         supervisor = medicalApprovalSupervisor.objects.filter(medical_id = medical_id).first()
         if supervisor and medical_approval.is_supervisor:
@@ -298,6 +304,10 @@ def medical_submit_atasan(request, medical_id, is_approve, is_reject):
             medical.is_supervisor = True
             medical.is_reject     = True
             medical.save()
+            # Reject Supervisor Reason
+            medical_supervisor_reject_form = medicalReasonSupervisorForms(data=request.POST, instance=supervisor)
+            medical_supervisor_reject = medical_supervisor_reject_form.save(commit=False)
+            medical_supervisor_reject.save()
         # Reject manager
         manager = medicalApprovalManager.objects.filter(medical_id = medical_id).first()
         if manager and medical_approval.is_manager:
@@ -309,6 +319,11 @@ def medical_submit_atasan(request, medical_id, is_approve, is_reject):
             medical.is_manager = True
             medical.is_reject  = True
             medical.save()
+            # Reject Manager Reason
+            medical_manager_reject_form = medicalReasonManagerForms(data=request.POST, instance=manager)
+            medical_manager_reject = medical_manager_reject_form.save(commit=False)
+            medical_manager_reject.save()
+
         messages.success(request, 'Medical Train Rejected')    
         return redirect('hrd_app:medical_train_index')
     # jadi ini merupakan approval yang berisikan di Approve atau reject
@@ -337,6 +352,17 @@ def medical_submit_hr(request, medical_id, is_approve, is_reject):
         messages.success(request, 'Medical Train Verified')
         return redirect('hrd_app:medical_train_index')
     elif is_reject == 'True':
+        # get Data Approval HR dan Klaim status
+        medical_train_approval_hr = medicalApprovalHR.objects.filter(medical_id = medical_id).first()
+        medical_train_klaim_status = medicalClaimStatus.objects.filter(medical_id = medical_id).first()
+        # Memasukan data dari HR
+        medical_reject_hr_form = medicalReasonHRForms(data=request.POST, instance = medical_train_approval_hr)
+        medical_reject_hr = medical_reject_hr_form.save(commit=False)
+        medical_reject_hr.save()
+        # Mengubah Klaim Status
+        medical_claim_status_form = medicalRejectStatusKlaimForms(data=request.POST, instance = medical_train_klaim_status)
+        medical_claim_status_reject = medical_claim_status_form.save(commit=False)
+        medical_claim_status_reject.save()
         # Reject dari HR
         hr = medicalApprovalHR.objects.filter(medical_id = medical_id).first()
         if hr and medical_approval.is_hr:
@@ -443,7 +469,7 @@ def medical_train_download_report_excel(request):
 
         
         # Membuat kondisi apabiula diketahui oleh HR
-        if not medical_hr == '':
+        if not medical_hr.hr == None:
             hr = medical_hr.hr.user.first_name +' '+medical_hr.hr.user.last_name
         else:
             hr = '-'
@@ -474,8 +500,10 @@ def medical_train_download_report_excel(request):
         # Kondisi kelengkapan
         if medical_claim_status.is_lengkap and medical_claim_status.tidak_lengkap == '':
             kelengkapan = 'Dokumen sudah lengkap'
-        elif body[9] and medical_claim_status.tidak_lengkap:
+        elif body[10] :
             kelengkapan = medical_claim_status.tidak_lengkap
+        else:
+            kelengkapan = '-'
         # Kondisi status
         if body[9]:
             status = 'Completed'

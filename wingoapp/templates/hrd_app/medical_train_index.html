@@ -270,23 +270,63 @@
                       <input class="form-control" type="text"
                         value="{{medical.user.first_name}} {{medical.user.last_name}}" readonly>
                     </div>
+                    {% comment %} REASON APABILA FOREMAN {% endcomment %}
                     {% if form_medical_approval_reason_foreman %}
-                    {% for hidden in form_medical_approval_reason_foreman.hidden_fields %}
+                        {% for hidden in form_medical_approval_reason_foreman.hidden_fields %}
+                        {{ hidden }}
+                        {% endfor %}
+                        <!-- merender semua field form dari objek TaskForm -->
+                        {% if form_medical_approval_reason_foreman.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {% for error in form_medical_approval_reason_foreman.non_field_errors %}
+                          {{ error }}
+                          {% endfor %}
+                        </div>
+                        {% endif %}
+                      
+                        {% for field in form_medical_approval_reason_foreman.visible_fields %}
+                        <div class="form-group">
+                          {{ field.label_tag }}
+                          {% if form_medical_approval_reason_foreman.is_bound %}
+                          {% if field.errors %}
+                          {% render_field field class="form-control is-invalid" %}
+                          {% for error in field.errors %}
+                          <div class="invalid-feedback">
+                            {{ error }}
+                          </div>
+                          {% endfor %}
+                          {% else %}
+                          {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                          {% else %}
+                          {% render_field field class="form-control" %}
+                          {% endif %}
+                        
+                          {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                          {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% comment %} REASON APABILA SUPERVISOR {% endcomment %}
+                    {% if form_medical_approval_reason_supervisor %}
+                    {% for hidden in form_medical_approval_reason_supervisor.hidden_fields %}
                     {{ hidden }}
                     {% endfor %}
                     <!-- merender semua field form dari objek TaskForm -->
-                    {% if form_medical_approval_reason_foreman.non_field_errors %}
+                    {% if form_medical_approval_reason_supervisor.non_field_errors %}
                     <div class="alert alert-danger" role="alert">
-                      {% for error in form_medical_approval_reason_foreman.non_field_errors %}
+                      {% for error in form_medical_approval_reason_supervisor.non_field_errors %}
                       {{ error }}
                       {% endfor %}
                     </div>
                     {% endif %}
-
-                    {% for field in form_medical_approval_reason_foreman.visible_fields %}
+                  
+                    {% for field in form_medical_approval_reason_supervisor.visible_fields %}
                     <div class="form-group">
                       {{ field.label_tag }}
-                      {% if form_medical_approval_reason_foreman.is_bound %}
+                      {% if form_medical_approval_reason_supervisor.is_bound %}
                       {% if field.errors %}
                       {% render_field field class="form-control is-invalid" %}
                       {% for error in field.errors %}
@@ -300,13 +340,51 @@
                       {% else %}
                       {% render_field field class="form-control" %}
                       {% endif %}
-
+                    
                       {% if field.help_text %}
                       <small class="form-text text-muted">{{ field.help_text }}</small>
                       {% endif %}
                     </div>
                     {% endfor %}
+                {% endif %}
+                    {% comment %} REASON APABILA MANAGER {% endcomment %}
+                    {% if form_medical_approval_reason_manager %}
+                    {% for hidden in form_medical_approval_reason_manager.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if form_medical_approval_reason_manager.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_medical_approval_reason_manager.non_field_errors %}
+                      {{ error }}
+                      {% endfor %}
+                    </div>
                     {% endif %}
+                  
+                    {% for field in form_medical_approval_reason_manager.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+                      {% if form_medical_approval_reason_manager.is_bound %}
+                      {% if field.errors %}
+                      {% render_field field class="form-control is-invalid" %}
+                      {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                      {% endfor %}
+                      {% else %}
+                      {% render_field field class="form-control is-valid" %}
+                      {% endif %}
+                      {% else %}
+                      {% render_field field class="form-control" %}
+                      {% endif %}
+                    
+                      {% if field.help_text %}
+                      <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+                {% endif %}
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>

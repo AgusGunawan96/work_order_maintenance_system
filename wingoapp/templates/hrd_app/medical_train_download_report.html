@@ -116,9 +116,9 @@
     </div>
     <div class="card-body">
         <h5 style="text-align: center;">STATUS KLAIM(diisi oleh HR Dept.)</h5>
-        {% if not medical_header.is_complete %}
+        {% if not medical_header.is_complete and not medical_header.is_reject %}
         <p class="form_text1"><span>Status</span>: <u>Waiting for Approval</u> </p>
-        {% elif medical_header.medicalclaimstatus.is_lengkap %}
+        {% elif medical_header.is_complete %}
         <p class="form_text1"><span>Status</span>: <u>Klaim lengkap bisa di proses</u> </p>
         {% else %}
         <p class="form_text1"><span>Status</span>: <u>Klaim di tolak</u> </p>
