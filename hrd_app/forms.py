@@ -1,5 +1,5 @@
 from django import forms 
-from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader
+from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalJenisPelayanan, medicalJenisPelayananKartap
 from master_app.models import UserKeluargaInfo
 from django.forms import ClearableFileInput
 from django_select2.forms import Select2Widget
@@ -39,6 +39,21 @@ class medicalPemberiLayananForms(forms.ModelForm):
 class medicalPelayananKesehatanForms(forms.ModelForm):
     tanggal_berobat_mulai = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
     tanggal_berobat_selesai = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
+    jenis_pelayanan = forms.TypedChoiceField(
+        widget=Select2Widget,
+        coerce=str,
+    )
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+            # baru ini akan mulai pengkondisian apabila kartap atau bukan
+        if user.userprofileinfo.is_contract:
+            self.fields['jenis_pelayanan'].choices = medicalJenisPelayanan.choices
+
+        elif user.userprofileinfo.is_permanent:
+            self.fields['jenis_pelayanan'].choices = medicalJenisPelayananKartap.choices
+
+
     class Meta():
         model = medicalDetailInformation
         fields = ('jenis_pelayanan','melahirkan','tanggal_berobat_mulai','tanggal_berobat_selesai','diagnosa',)

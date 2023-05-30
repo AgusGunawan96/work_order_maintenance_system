@@ -189,7 +189,7 @@ def medical_train_add(request):
         medical_data_keluarga       = medicalDataKeluargaForms(request.POST or None, user=curr_user)
         # return HttpResponse(medical_data_keluarga)
         medical_pemberi_layananan   = medicalPemberiLayananForms()
-        medical_pelayanan_kesehatan = medicalPelayananKesehatanForms()
+        medical_pelayanan_kesehatan = medicalPelayananKesehatanForms(request.POST or None, user=curr_user)
         medical_status_claim        = medicalStatusKlaimForms()
         medical_attachment          = medicalAttachmentForms()
     context = {

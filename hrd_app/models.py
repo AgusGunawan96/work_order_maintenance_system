@@ -30,6 +30,12 @@ class medicalJenisPelayanan(models.TextChoices):
     KACAMATA        = 'Kacamata'
     PERSALINAN      = 'Persalinan'
 
+class medicalJenisPelayananKartap(models.TextChoices):
+    RAWAT_JALAN     = 'Rawat Jalan'
+    KACAMATA        = 'Kacamata'
+    PERSALINAN      = 'Persalinan'
+
+
 class medicalJenisMelahirkan(models.TextChoices):
     NORMAL          = 'Normal'
     CAESAR          = 'Caesar'
