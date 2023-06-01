@@ -32,31 +32,31 @@
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Name</label>
                                 <input class="form-control" type="text"
-                                    value="{{request.user.first_name}} {{request.user.last_name}}" readonly>
+                                    value="{{medical_header.user.first_name}} {{medical_header.user.last_name}}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Nomor Karyawan</label>
-                                <input class="form-control" type="text" value="{{request.user.username}}" readonly>
+                                <input class="form-control" type="text" value="{{medical_header.user.username}}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Department</label>
                                 <input class="form-control" type="text"
-                                    value="{{request.user.userprofileinfo.department.department_name}}" readonly>
+                                    value="{{medical_header.user.userprofileinfo.department.department_name}}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Division</label>
                                 <input class="form-control" type="text"
-                                    value="{{request.user.userprofileinfo.division.division_name}}" readonly>
+                                    value="{{medical_header.user.userprofileinfo.division.division_name}}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Section</label>
                                 <input class="form-control" type="text"
-                                    value="{{request.user.userprofileinfo.section.section_name}}" readonly>
+                                    value="{{medical_header.user.userprofileinfo.section.section_name}}" readonly>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Position</label>
                                 <input class="form-control" type="text"
-                                    value="{{request.user.userprofileinfo.position}}" readonly>
+                                    value="{{medical_header.user.userprofileinfo.position}}" readonly>
                             </div>
                         </div>
                     </div>
@@ -186,9 +186,9 @@
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Status</label>
-                                {% if not medical_header.is_complete %}
+                                {% if not medical_header.is_complete and not medical_header.is_reject %}
                                 <input class="form-control" type="text" value="Waiting for Approval" readonly>
-                                {% elif medical_header.medicalclaimstatus.is_lengkap %}
+                                {% elif medical_header.is_complete %}
                                 <input class="form-control" type="text" value="Klaim lengkap bisa di proses" readonly>
                                 {% else %}
                                 <input class="form-control" type="text" value="Klaim di tolak" readonly>

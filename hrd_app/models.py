@@ -27,14 +27,21 @@ class medicalTempatPelayanan(models.TextChoices):
 class medicalJenisPelayanan(models.TextChoices):
     RAWAT_JALAN     = 'Rawat Jalan'
     RAWAT_INAP      = 'Rawat Inap'
-    KACAMATA        = 'Kacamata'
-    PERSALINAN      = 'Persalinan'
 
 class medicalJenisPelayananKartap(models.TextChoices):
     RAWAT_JALAN     = 'Rawat Jalan'
-    KACAMATA        = 'Kacamata'
     PERSALINAN      = 'Persalinan'
 
+
+class medicalJenisPelayananSetahun(models.TextChoices):
+    RAWAT_JALAN     = 'Rawat Jalan'
+    RAWAT_INAP      = 'Rawat Inap'
+    KACAMATA        = 'Kacamata'
+
+class medicalJenisPelayananKartapSetahun(models.TextChoices):
+    RAWAT_JALAN     = 'Rawat Jalan'
+    KACAMATA        = 'Kacamata'
+    PERSALINAN      = 'Persalinan'
 
 class medicalJenisMelahirkan(models.TextChoices):
     NORMAL          = 'Normal'
@@ -91,7 +98,7 @@ class medicalDetailDokter(models.Model):
 
 class medicalDetailInformation(models.Model):
     medical                 = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
-    jenis_pelayanan         = models.CharField(max_length=25, choices=medicalJenisPelayanan.choices, default=False)
+    jenis_pelayanan         = models.CharField(max_length=25, default=False)
     melahirkan              = models.CharField(max_length=25, choices=medicalJenisMelahirkan.choices, default=False, null=True, blank=True)
     tanggal_berobat_mulai   = models.DateTimeField('tanggal berobat mulai', default=timezone.now)
     tanggal_berobat_selesai = models.DateTimeField('tanggal berobat selesai', default=timezone.now)

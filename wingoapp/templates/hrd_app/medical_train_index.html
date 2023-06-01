@@ -68,9 +68,9 @@
                           <td>{{request.user.first_name}} {{request.user.last_name}}</td>
                           <td>Rp. {{medical.rp_total}}</td>
                           <td>{{medical.created_at|date:"F j, Y"}}</td>
-                          {% if not medical.is_complete %}
+                          {% if not medical.is_complete and not medical.is_reject %}
                           <td>Waiting for Approval</td>
-                          {% elif medical.medicalclaimstatus.is_lengkap %}
+                          {% elif medical.is_complete %}
                           <td>Klaim lengkap bisa di proses</td>
                           {% else %}
                           <td>Klaim di tolak</td>
@@ -118,9 +118,9 @@
                           </td>
                           <td>Rp. {{medical_manager.medical.rp_total}}</td>
                           <td>{{medical_manager.medical.created_at|date:"F j, Y"}}</td>
-                          {% if not medical_manager.medical.is_complete %}
+                          {% if not medical_manager.medical.is_complete and not medical_manager.medical.is_reject %}
                           <td>Waiting for Approval</td>
-                          {% elif medical_manager.medical.medicalclaimstatus.is_lengkap %}
+                          {% elif medical_manager.medical.is_complete %}
                           <td>Klaim lengkap bisa di proses</td>
                           {% else %}
                           <td>Klaim di tolak</td>
@@ -146,9 +146,9 @@
                             {{medical_supervisor.medical.user.last_name}}</td>
                           <td>Rp. {{medical_supervisor.medical.rp_total}}</td>
                           <td>{{medical_supervisor.medical.created_at|date:"F j, Y"}}</td>
-                          {% if not medical_supervisor.medical.is_complete %}
+                          {% if not medical_supervisor.medical.is_complete and not medical_supervisor.medical.is_reject %}
                           <td>Waiting for Approval</td>
-                          {% elif medical_supervisor.medical.medicalclaimstatus.is_lengkap %}
+                          {% elif medical_supervisor.medical.is_complete %}
                           <td>Klaim lengkap bisa di proses</td>
                           {% else %}
                           <td>Klaim di tolak</td>
@@ -175,9 +175,9 @@
                           </td>
                           <td>Rp. {{medical_foreman.medical.rp_total}}</td>
                           <td>{{medical_foreman.medical.created_at|date:"F j, Y"}}</td>
-                          {% if not medical_foreman.medical.is_complete %}
+                          {% if not medical_foreman.medical.is_complete and not medical_foreman.medical.is_reject %}
                           <td>Waiting for Approval</td>
-                          {% elif medical_foreman.medical.medicalclaimstatus.is_lengkap %}
+                          {% elif medical_foreman.medical.is_complete %}
                           <td>Klaim lengkap bisa di proses</td>
                           {% else %}
                           <td>Klaim di tolak</td>
@@ -227,9 +227,9 @@
                           <td>{{medical_hr.medical.user.first_name}} {{medical_hr.medical.user.last_name}}</td>
                           <td>Rp. {{medical_hr.medical.rp_total}}</td>
                           <td>{{medical_hr.medical.created_at|date:"F j, Y"}}</td>
-                          {% if not medical_hr.medical.is_complete %}
+                          {% if not medical_hr.medical.is_complete and not medical_hr.medical.is_reject %}
                           <td>Waiting for Approval</td>
-                          {% elif medical_hr.medical.medicalclaimstatus.is_lengkap %}
+                          {% elif medical_hr.medical.is_complete %}
                           <td>Klaim lengkap bisa di proses</td>
                           {% else %}
                           <td>Klaim di tolak</td>

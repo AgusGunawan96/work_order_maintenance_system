@@ -1,8 +1,13 @@
 from django import forms 
-from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalJenisPelayanan, medicalJenisPelayananKartap
+from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalJenisPelayanan, medicalJenisPelayananKartap, medicalJenisPelayananSetahun, medicalJenisPelayananKartapSetahun
 from master_app.models import UserKeluargaInfo
 from django.forms import ClearableFileInput
 from django_select2.forms import Select2Widget
+from datetime import date
+
+# Function
+def get_current_year():
+    return date.today().year
 
 # MEDICAL TRAIN START
 class medicalHeaderForms(forms.ModelForm):
@@ -46,12 +51,22 @@ class medicalPelayananKesehatanForms(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-            # baru ini akan mulai pengkondisian apabila kartap atau bukan
-        if user.userprofileinfo.is_contract:
-            self.fields['jenis_pelayanan'].choices = medicalJenisPelayanan.choices
+            # baru ini akan mulai pengkondisian apabila kartap atau bukan (dan ini setahuyn atau bukan)
+        user_year = user.date_joined.year
+        current_year = get_current_year()
+        validate = current_year - user_year
+        if validate >= 1:
+            if user.userprofileinfo.is_contract:
+                self.fields['jenis_pelayanan'].choices = medicalJenisPelayananSetahun.choices
 
-        elif user.userprofileinfo.is_permanent:
-            self.fields['jenis_pelayanan'].choices = medicalJenisPelayananKartap.choices
+            elif user.userprofileinfo.is_permanent:
+                self.fields['jenis_pelayanan'].choices = medicalJenisPelayananKartapSetahun.choices
+        else:
+            if user.userprofileinfo.is_contract:
+                self.fields['jenis_pelayanan'].choices = medicalJenisPelayanan.choices
+
+            elif user.userprofileinfo.is_permanent:
+                self.fields['jenis_pelayanan'].choices = medicalJenisPelayananKartap.choices
 
 
     class Meta():

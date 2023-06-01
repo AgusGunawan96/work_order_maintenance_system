@@ -125,10 +125,11 @@ def medical_train_reject_index(request):
 @login_required
 def medical_train_add(request):
     if request.method == "POST":
+        curr_user = request.user
         medical_header_form                 = medicalHeaderForms(data=request.POST)
         medical_data_keluarga_form          = medicalDataKeluargaForms(data=request.POST)
         medical_pemberi_layanan_form        = medicalPemberiLayananForms(data=request.POST)     
-        medical_pelayanan_kesehatan_form    = medicalPelayananKesehatanForms(data=request.POST)
+        medical_pelayanan_kesehatan_form    = medicalPelayananKesehatanForms(data=request.POST, user=curr_user)
         medical_status_claim_form           = medicalStatusKlaimForms(data=request.POST)
         medical_attachment_form             = medicalAttachmentForms(data=request.POST)
         if medical_header_form.is_valid() and medical_pemberi_layanan_form.is_valid() and medical_pelayanan_kesehatan_form.is_valid() and medical_status_claim_form.is_valid() and medical_attachment_form.is_valid():
