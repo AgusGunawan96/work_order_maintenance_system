@@ -28,14 +28,9 @@
 <div>
   </div>
         <a class="btn btn-primary btn-lg" href="{% url 'accounting_app:advance_add' %}"> <span class="fa fa-plus"></span> Add Advance</a>
-        {% if request.user.username == '007059' %}  
-        {% comment %} <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddDebit"> <span class="icon-credit-card"></span>Add Debit</a> {% endcomment %}
-        {% comment %} <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddSettle"> <span class="icon-credit-card"></span> Add Settle</a> {% endcomment %}
-        {% comment %} <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalAddAdv"> <span class="icon-credit-card"></span> Add Adv</a> {% endcomment %}
-        {% endif %}
         {% if request.user.userprofileinfo.department_id == 7 %}
         {% comment %} <a class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ModalDownloadCSV" data-whatever="@mdo"> <span class="icon-download"></span>Download Excel</a> {% endcomment %}
-        {% comment %} <a class="btn btn-primary btn-lg" href="{% url 'accounting_app:advance_monitoring' %}" > <span class="fa fa-laptop"></span>Monitoring</a> {% endcomment %}
+        <a class="btn btn-primary btn-lg" href="{% url 'accounting_app:advance_monitoring' %}" > <span class="fa fa-laptop"></span>Monitoring</a>
         {% endif %}
       </div>
       <div class="card-body">

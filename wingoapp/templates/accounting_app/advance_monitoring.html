@@ -1,0 +1,65 @@
+{% extends 'starter_kit/other-base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<meta http-equiv="Refresh" content="5">
+<div class="card-body">
+<div class="card manage-invoice-sec">
+    <div class="card-header pb-0">
+      <h3 class="text-center">Cash Payment Monitoring</h3>
+      <hr>
+    </div>
+    <div class="card-body">
+      <div class="manage-invoice-table">
+        <div class="item">
+          <div class="table-responsive manage-invoice">
+            <table class="table table-xl table-striped table-border-vertical">
+             <thead>
+              <tr>
+                <th>Name </th>
+                <th>Department</th>
+                <th>Tanggal Aju</th>
+                <th>Ticket No</th>
+                <th>Status</th>
+              </tr>
+                </thead>
+                    <tbody>
+                        {% for cashPayment in cashPayments  %}
+                        {% comment %}  {% endcomment %}
+                        <tr class="table-info">
+                          <td> 
+                          <div class="d-inline-block align-middle"><a href="{% url 'accounting_app:cashPayment_detail' cashPayment.id %}"><span class="f-w-500">{{ cashPayment.assignee.first_name }} {{ cashPayment.assignee.last_name }}</span></a></div>
+                          </td>
+                          <td><p>{{ cashPayment.assignee.userprofileinfo.department.department_name }}</p></td>
+                          <td><p>{{ cashPayment.created_at }}</p></td>
+                          <td><p>{{ cashPayment.ticket_no }}</p></td>
+                          {% if cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.advanceapprovalpresident.advanceapprovalcashier %}
+                          <td>Ready To Transfer</td>
+                          {% elif cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager.advanceapprovalpresident %}
+                          <td>Waiting Approval President</td>
+                          {% elif cashPayment.advanceapprovalmanager.advanceapprovalaccountingmanager %}
+                          <td>Waiting Approval Accounting</td>
+                          {% endif %}
+                      </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+        </div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+{% comment %} <script>
+    document.getElementById('id_username').value = 'test'
+    document.getElementById('id_password').value = 'testing@123'
+</script> {% endcomment %}
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

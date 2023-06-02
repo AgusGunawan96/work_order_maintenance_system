@@ -80,7 +80,7 @@ def cashPayment_index(request):
 
 @login_required
 def cashPayment_monitoring(request):
-    cashPayments = cashPayment.objects.order_by('created_at')
+    cashPayments = cashPayment.objects.filter(is_adv = False).filter(cashpaymentapprovalmanager__is_approve_manager = True).filter(cashpaymentapprovalmanager__cashpaymentapprovalaccountingmanager__cashpaymentapprovalpresident__cashpaymentapprovalcashier__isnull=True).order_by('created_at')
     context = {
          'cashPayments'             : cashPayments,
     }
@@ -714,7 +714,8 @@ def advance_index(request):
 
 @login_required
 def advance_monitoring(request):
-    cashPayments = cashPayment.objects.order_by('created_at')
+    cashPayments = cashPayment.objects.filter(is_adv = True).filter(advanceapprovalmanager__is_approve_manager = True).filter(advanceapprovalmanager__advanceapprovalaccountingmanager__advanceapprovalpresident__advanceapprovalcashier__isnull=True).order_by('created_at')
+    # return HttpResponse(cashPayments)
     context = {
          'cashPayments'             : cashPayments,
     }
