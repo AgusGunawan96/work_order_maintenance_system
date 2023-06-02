@@ -126,10 +126,10 @@
                           <td>Klaim di tolak</td>
                           {% endif %}
                           <td><a href="{% url 'hrd_app:medical_submit_atasan' medical_manager.medical.id True False%}"
-                              class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
+                              class="btn btn-success btn-sm"><span class="icon-check"></span>
                             <a data-bs-toggle="modal"
                               data-bs-target="#ModalMedicalReject{{ medical_manager.medical.id }}" data-whatever="@mdo"
-                              class="btn btn-secondary btn-sm"></span>Reject</a>
+                              class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>
                             | <a href="{% url 'hrd_app:medical_train_download_report' medical_manager.medical.id %}"
                               class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
@@ -155,10 +155,10 @@
                           {% endif %}
                           <td><a
                               href="{% url 'hrd_app:medical_submit_atasan' medical_supervisor.medical.id True False %}"
-                              class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
+                              class="btn btn-success btn-sm"><span class="icon-check"></span>Approve</a>
                             <a data-bs-toggle="modal"
                               data-bs-target="#ModalMedicalReject{{ medical_supervisor.medical.id }}"
-                              data-whatever="@mdo" class="btn btn-secondary btn-sm"></span>Reject</a>
+                              data-whatever="@mdo" class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>
                             | <a href="{% url 'hrd_app:medical_train_download_report' medical_supervisor.medical.id %}"
                               class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
@@ -184,10 +184,10 @@
                           {% endif %}
                           <td>
                             <a href="{% url 'hrd_app:medical_submit_atasan' medical_foreman.medical.id True False%}"
-                              class="btn btn-success btn-sm"><span class="icon-info"></span>Approve</a>
+                              class="btn btn-success btn-sm"><span class="icon-check"></span>
                             <a data-bs-toggle="modal"
                               data-bs-target="#ModalMedicalReject{{ medical_foreman.medical.id }}" data-whatever="@mdo"
-                              class="btn btn-secondary btn-sm"></span>Reject</a>
+                              class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>
                             | <a href="{% url 'hrd_app:medical_train_download_report' medical_foreman.medical.id %}"
                               class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
@@ -238,7 +238,7 @@
                             <a data-bs-toggle="modal" data-bs-target="#ModalMedicalHRApprove{{ medical_hr.medical.id }}"
                               data-whatever="@mdo" class="btn btn-success btn-sm"></span>Approve</a>
                             <a data-bs-toggle="modal" data-bs-target="#ModalMedicalHRReject{{ medical_hr.medical.id }}"
-                              data-whatever="@mdo" class="btn btn-secondary btn-sm"></span>Reject</a>
+                              data-whatever="@mdo" class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>
                             |<a href="{% url 'hrd_app:medical_train_download_report' medical_hr.medical.id %}"
                               class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>

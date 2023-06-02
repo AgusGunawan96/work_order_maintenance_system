@@ -506,10 +506,12 @@ def medical_train_download_report_excel(request):
         else:
             kelengkapan = '-'
         # Kondisi status
-        if body[9]:
+        if body[9] == True:
             status = 'Completed'
-        elif body[10]:
+        elif body[10] == True:
             status = 'Rejected'
+        else:
+            status = 'Waiting for Approval'
 
         row_num += 1
         row = [
