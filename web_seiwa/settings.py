@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'engineering_app',
     'it_app',
     'master_app',
+    'timing_app',
     'wingoapp',
     'sass_processor',
 
