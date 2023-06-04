@@ -3,16 +3,16 @@ from django.forms import ClearableFileInput
 from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, TicketAttachment, IPAddress, Hardware
 from django_select2.forms import Select2Widget
 
-class ipAddressForms(forms.ModelForm):
-    class Meta():
-        model = IPAddress
-        fields = ('name', )
-        widgets = {'is_used': forms.HiddenInput()}
+# class ipAddressForms(forms.ModelForm):
+#     class Meta():
+#         model = IPAddress
+#         fields = ('name', )
+#         widgets = {'is_used': forms.HiddenInput()}
 
 class hardwareForms(forms.ModelForm):
     class Meta():
         model = Hardware
-        fields = ('name', 'quantity', 'hardware', )
+        fields = ('name', 'quantity_whs', 'hardware', )
 
 class ticketForms(forms.ModelForm):
     hardware = forms.ModelChoiceField(

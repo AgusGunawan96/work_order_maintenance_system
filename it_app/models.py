@@ -22,11 +22,11 @@ class HardwareType(models.Model):
         return self.name
     
 class Hardware(models.Model):
-    hardware    = models.ForeignKey(HardwareType, null=True, blank=True, on_delete=models.CASCADE)
-    name        = models.CharField(max_length=100)
-    quantity    = models.PositiveIntegerField(blank=True, default=0)
-    created_at  = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
-    updated_at  = models.DateTimeField('updated at', auto_now=True)
+    hardware        = models.ForeignKey(HardwareType, null=True, blank=True, on_delete=models.CASCADE)
+    name            = models.CharField(max_length=100)
+    quantity_whs    = models.PositiveIntegerField(blank=True, default=0)
+    created_at      = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
+    updated_at      = models.DateTimeField('updated at', auto_now=True)
 
     def __str__(self):
         return self.name
@@ -45,9 +45,7 @@ class HardwareInfo(models.Model):
 
 # IP ADDRESS START
 class IPAddress(models.Model):
-    hardware    = models.ForeignKey(Hardware, null=True, blank=True, on_delete=models.CASCADE)
     ip          = models.CharField(max_length=100, blank=True, null=True)
-    name        = models.CharField(max_length=100, blank=True, null=True)
     is_used     = models.BooleanField(default=False, blank=True, null=True )
     created_at  = models.DateTimeField('created at', auto_now_add=True, null=True, blank=True)
     updated_at  = models.DateTimeField('updated at', auto_now=True)
@@ -56,6 +54,47 @@ class IPAddress(models.Model):
         return self.ip
     
 # IP ADDRESS END
+
+# Jadi disini kita akan buat list comoputer
+
+# COMPUTER START
+
+class ListOs(models.TextChoices):
+    XP          = 'xp'
+    WINDOWS_7   = 'win7'
+    WINDOWS_8   = 'win8'
+    WINDOWS_10  = 'win10'
+    WINDOWS_11  = 'win11'
+
+class ListWindowsType(models.TextChoices):
+    OEM = 'oem'
+    OLP = 'olp'
+
+class ListOfficeType(models.TextChoices):
+    OFFICE_2007 = 'office07'
+    OFFICE_2010 = 'office10'
+    OFFICE_2016 = 'office16'
+
+class ListAntivirus(models.TextChoices):
+    McAfee = 'mc'
+    CYBER_REASON = 'cr'
+
+class PCTypeList(models.Model):
+    hardware    = models.ForeignKey(HardwareType, on_delete=models.CASCADE)
+    pc_type     = models.CharField(max_length=126)
+
+class ITComputerList(models.Model):
+    computer_user   = models.ForeignKey(User,null=True,blank=True,on_delete=models.CASCADE)
+    ip              = models.ForeignKey(IPAddress, on_delete=models.CASCADE)
+    pc_type         = models.ForeignKey(HardwareType, on_delete=models.CASCADE)
+    computer_name   = models.CharField(max_length=126)
+    os              = models.CharField(max_length=25, choices=ListOs.choices, null=True)
+    windows_type    = models.CharField(max_length=25, choices=ListWindowsType.choices, null=True)
+    office_type     = models.CharField(max_length=25, choices=ListOfficeType.choices, null=True)
+    antivirus       = models.CharField(max_length=25, choices=ListAntivirus.choices, null=True)
+    is_internet     = models.BooleanField(default=False)
+    
+# COMPUTER ENDX
 
 # TICKET START
 # Create your models here.

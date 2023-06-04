@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT, TicketAttachment, IPAddress, Hardware
 from django.contrib.auth.decorators import login_required
-from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms, ipAddressForms, hardwareForms
+from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms, hardwareForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse
 from django.db.models import Count, F, Value
@@ -18,43 +18,43 @@ def profile(request):
     return render(request, 'it_app/profile.html')
 
 # IP ADDRESS START
-@login_required
-def ipAddress_index(request):
-    ipAddress = IPAddress.objects.order_by('-id')
-    context = {
-        'ipAddresses'          : ipAddress, 
-        'form_ipAddress'       : ipAddressForms,
-        }
-    # return HttpResponse('IP Address Index')
-    return render(request, 'it_app/ipAddress_index.html', context)
+# @login_required
+# def ipAddress_index(request):
+#     ipAddress = IPAddress.objects.order_by('-id')
+#     context = {
+#         'ipAddresses'          : ipAddress, 
+#         'form_ipAddress'       : ipAddressForms,
+#         }
+#     # return HttpResponse('IP Address Index')
+#     return render(request, 'it_app/ipAddress_index.html', context)
 
 
-@login_required
-def ipAddress_add(request, ipAddress_id):
-    ipAddresses = IPAddress.objects.get(pk=ipAddress_id)
-    if request.method == "POST":
-        ipAddress_form = ipAddressForms(request.POST, instance=ipAddresses)
-        if ipAddress_form.is_valid():
-            ipAddress_register = ipAddress_form.save(commit=False)
-            ipAddress_register.is_used = True
-            ipAddress_register.save()
-    return redirect('it_app:ipAddress_index')
+# @login_required
+# def ipAddress_add(request, ipAddress_id):
+#     ipAddresses = IPAddress.objects.get(pk=ipAddress_id)
+#     if request.method == "POST":
+#         ipAddress_form = ipAddressForms(request.POST, instance=ipAddresses)
+#         if ipAddress_form.is_valid():
+#             ipAddress_register = ipAddress_form.save(commit=False)
+#             ipAddress_register.is_used = True
+#             ipAddress_register.save()
+#     return redirect('it_app:ipAddress_index')
 
-@login_required
-def ipAddress_unreg(request, ipAddress_id):
-    ipAddresses = IPAddress.objects.get(pk=ipAddress_id)
-    post = request.POST.copy() 
-    post.update({'is_used': False})
-    request.POST = post
-    if request.method == "POST":
-        ipAddress_form = ipAddressForms(request.POST, instance=ipAddresses)
-        if ipAddress_form.is_valid():
-            ipAddress_unregister = ipAddress_form.save(commit=False)
-            ipAddress_unregister.name = ""
-            ipAddress_unregister.is_used = False
-            ipAddress_unregister.save()
-    # return HttpResponse(str(ipAddress_id) + " test")
-    return redirect('it_app:ipAddress_index')
+# @login_required
+# def ipAddress_unreg(request, ipAddress_id):
+#     ipAddresses = IPAddress.objects.get(pk=ipAddress_id)
+#     post = request.POST.copy() 
+#     post.update({'is_used': False})
+#     request.POST = post
+#     if request.method == "POST":
+#         ipAddress_form = ipAddressForms(request.POST, instance=ipAddresses)
+#         if ipAddress_form.is_valid():
+#             ipAddress_unregister = ipAddress_form.save(commit=False)
+#             ipAddress_unregister.name = ""
+#             ipAddress_unregister.is_used = False
+#             ipAddress_unregister.save()
+#     # return HttpResponse(str(ipAddress_id) + " test")
+#     return redirect('it_app:ipAddress_index')
 # IP ADDRESS END
 
 # HARDWARE START
