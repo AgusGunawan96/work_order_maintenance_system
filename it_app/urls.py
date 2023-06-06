@@ -28,6 +28,11 @@ urlpatterns = [
     # path('ipAddress/unreg/<int:ipAddress_id>', views.ipAddress_unreg, name='ipAddress_unreg'),
     # IP ADDRESS END
 
+    # COMPUTER START
+    path('computer/', views.computer_index, name = 'computer_index'),
+    path('computer/add/', views.computer_add, name = 'computer_add'),
+     
+    # COMPUTER END 
     # HARDWARE START
     path('hardware/', views.hardware_index, name = 'hardware_index'),
     path('hardware/edit/', views.hardware_edit, name='hardware_edit'),

@@ -60,41 +60,40 @@ class IPAddress(models.Model):
 # COMPUTER START
 
 class ListOs(models.TextChoices):
-    XP          = 'xp'
-    WINDOWS_7   = 'win7'
-    WINDOWS_8   = 'win8'
-    WINDOWS_10  = 'win10'
-    WINDOWS_11  = 'win11'
+    XP          = 'Windows XP'
+    WINDOWS_7   = 'Windows 7'
+    WINDOWS_8   = 'Windows 8'
+    WINDOWS_10  = 'Windows 10'
+    WINDOWS_11  = 'Windows 11'
 
 class ListWindowsType(models.TextChoices):
-    OEM = 'oem'
-    OLP = 'olp'
-
-class ListOfficeType(models.TextChoices):
-    OFFICE_2007 = 'office07'
-    OFFICE_2010 = 'office10'
-    OFFICE_2016 = 'office16'
+    OEM = 'OEM'
+    OLP = 'OLP'
 
 class ListAntivirus(models.TextChoices):
-    McAfee = 'mc'
-    CYBER_REASON = 'cr'
+    McAfee = 'McAfee'
+    CYBER_REASON = 'Cyber Reason'
 
 class PCTypeList(models.Model):
     hardware    = models.ForeignKey(HardwareType, on_delete=models.CASCADE)
     pc_type     = models.CharField(max_length=126)
 
 class ITComputerList(models.Model):
-    computer_user   = models.ForeignKey(User,null=True,blank=True,on_delete=models.CASCADE)
+    computer_user   = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     ip              = models.ForeignKey(IPAddress, on_delete=models.CASCADE)
     pc_type         = models.ForeignKey(HardwareType, on_delete=models.CASCADE)
     computer_name   = models.CharField(max_length=126)
-    os              = models.CharField(max_length=25, choices=ListOs.choices, null=True)
-    windows_type    = models.CharField(max_length=25, choices=ListWindowsType.choices, null=True)
-    office_type     = models.CharField(max_length=25, choices=ListOfficeType.choices, null=True)
-    antivirus       = models.CharField(max_length=25, choices=ListAntivirus.choices, null=True)
-    is_internet     = models.BooleanField(default=False)
-    
-# COMPUTER ENDX
+    os              = models.CharField(max_length=126, choices=ListOs.choices, null=True)
+    windows_type    = models.CharField(max_length=126, choices=ListWindowsType.choices, null=True)
+    antivirus       = models.CharField(max_length=126, choices=ListAntivirus.choices, null=True)
+    is_internet     = models.BooleanField(default=False, null=True)
+    is_office_2007  = models.BooleanField(default=False, null=True)
+    is_office_2010  = models.BooleanField(default=False, null=True)
+    is_office_2016  = models.BooleanField(default=False, null=True)
+    created_at  = models.DateTimeField('created at', auto_now_add=True)
+    updated_at  = models.DateTimeField('updated at', auto_now=True)
+
+# COMPUTER END
 
 # TICKET START
 # Create your models here.

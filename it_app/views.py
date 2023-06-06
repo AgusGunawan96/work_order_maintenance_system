@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT, TicketAttachment, IPAddress, Hardware
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT, TicketAttachment, IPAddress, Hardware, ITComputerList
 from django.contrib.auth.decorators import login_required
-from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms, hardwareForms
+from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms, hardwareForms, computerListForms
 from django.contrib import messages
-from django.http import Http404, HttpResponse
+from django.contrib.auth.models import User
+from django.http import Http404, HttpResponse, QueryDict
 from django.db.models import Count, F, Value
 import datetime
+from django.db.models.functions import Concat
 
 # Create your views here.
 
@@ -57,6 +59,54 @@ def profile(request):
 #     return redirect('it_app:ipAddress_index')
 # IP ADDRESS END
 
+# COMPUTER LIST START 
+
+def ipaddress_register(ipAddress_id):
+    ipaddress = IPAddress.objects.filter(ip = ipAddress_id).first()
+    ipaddress.is_used = True
+    ipaddress.save()
+    return True
+
+@login_required
+def computer_index(request):
+    computer  = ITComputerList.objects.order_by('-created_at')
+    context = {
+        'computers' : computer,
+        'form_computer' : computerListForms,
+    }
+    return render(request, 'it_app/computer_index.html', context)
+
+@login_required
+def computer_add(request):
+    if request.method == "POST":
+        user = User.objects.annotate(full_name = Concat('first_name',Value(' '),'last_name')).filter(full_name__contains=request.POST.get('user_computer')).first()
+        # Create a mutable copy of request.POST
+        post_data = request.POST.copy()
+        post_data.pop('user_computer', None)
+        # Modify the value corresponding to 'my_key'
+        post_data['computer_user'] = user
+        # Replace the original request POST data with our updated version.
+        request.POST = post_data
+        computer_form = computerListForms(data=request.POST)
+        if computer_form.is_valid():
+            computer = computer_form.save(commit=False)
+            # Mengubah IP Address menjadi Is Used
+            ipaddress_register(computer.ip)
+            # Save Cmputer
+            computer.save()
+            return redirect('it_app:computer_index')
+        else:
+            print(computer_form.errors)
+    else:
+        computer_list_form = computerListForms()
+    context = {
+        'form_computer' : computer_list_form,
+    }
+    # return HttpResponse('Masuk kedalam menu add')
+    return render(request, 'it_app/computer_add.html', context)
+
+
+# COMPUTER LIST END
 # HARDWARE START
 @login_required
 def hardware_index(request):

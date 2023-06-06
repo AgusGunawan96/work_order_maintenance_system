@@ -1,0 +1,137 @@
+{% extends 'starter_kit/base.html' %}{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="col-sm-12 col-xl-12 xl-100">
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>Chart | {{request.user.first_name}} {{request.user.last_name}}</h5><span>Computer Chart List</span>
+            </div>
+            <div class="card-body btn-showcase">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message | safe }}
+                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- blok untuk menampilkan notifikasi pesan sukses -->
+                <div>
+                </div>
+            </div>
+
+            <div class="card-body">
+            </div>
+                
+        </div>
+
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>Computer List | {{request.user.first_name}} {{request.user.last_name}}</h5><span>Computer
+                    List</span>
+            </div>
+            <div class="card-body btn-showcase">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message | safe }}
+                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <!-- blok untuk menampilkan notifikasi pesan sukses -->
+                <div>
+                </div>
+                <a class="btn btn-success btn-lg" href="{% url 'it_app:computer_add' %}"> <span class="fa fa-plus"></span>Add Computer</a>
+            </div>
+            <div class="card-body">
+                <div class="tab-pane fade show active" id="top-ipAddress-unregistered" role="tabpanel" aria-labelledby="top-ipAddress-unregistered-tab">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="display" id="basic-1">
+                                        <thead>
+                                            <tr>
+                                                <th>IP</th>
+                                                <th>Computer Name</th>
+                                                <th>OS</th>
+                                                <th>Type</th>
+                                                <th>PC Model</th>
+                                                <th>Office</th>
+                                                <th>User</th>
+                                                <th>Section</th>
+                                                <th>Internet</th>
+                                                <th>Antivirus</th>
+                                        </thead>
+                                        <tbody>
+                                            {% for computer in computers %}
+                                            <tr>
+                                                <td>{{ computer.ip }}</td>
+                                                <td>{{ computer.computer_name }}</td>
+                                                <td>{{ computer.os }}</td>
+                                                <td>{{ computer.windows_type }}</td>
+                                                <td>{{ computer.pc_type }}</td>
+                                                <td>
+                                                {% if computer.is_office_2007 %}
+                                                Office 2007
+                                                {% endif %}
+                                                {% if computer.is_office_2010 %}
+                                                Office 2010
+                                                {% endif %}
+                                                {% if computer.is_office_2016 %}
+                                                Office 2016
+                                                {% endif %}
+                                                </td>
+                                                <td>{{ computer.computer_user.first_name }} {{ computer.computer_user.last_name }}</td>
+                                                <td>{{ computer.computer_user.userprofileinfo.department.department_name }}</td>
+                                                <td>{{ computer.is_internet }}</td>
+                                                <td>{{ computer.antivirus }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid starts-->
+    {% comment %} <div class="container-fluid">
+
+    </div> {% endcomment %}
+    <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<script>
+  $(document).ready(function() {
+      $('#id_computer_user').select2();
+      $('#id_ip').select2();
+  });
+</script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

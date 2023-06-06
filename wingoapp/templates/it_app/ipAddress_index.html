@@ -5,7 +5,7 @@
 <!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
-<!-- Plugins css Ends-->
+  <!-- Plugins css Ends-->
 {% endblock css %}
 {% block content %}
 <div class="page-body">
@@ -55,61 +55,60 @@
                                 <td><a class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ModalRegIP{{ ipAddress.id }}" data-whatever="@mdo">Register</a></td>
                             </tr>
                             {% endif %}
-                            <div class="modal fade" id="ModalRegIP{{ ipAddress.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLabel2">Register IP | {{ ipAddress.ip }}</h5>
-                                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <form action="{% url 'it_app:ipAddress_add' ipAddress.id %}" method="POST">
-                                  {% csrf_token %}
-                                <div class="modal-body">
-                                    {% for hidden in form_ipAddress.hidden_fields %}
-                                    {{ hidden }}
-                                     {% endfor %}
-                                    <!-- merender semua field form dari objek TaskForm -->
-                                    {% if form_ipAddress.non_field_errors %}
-                                      <div class="alert alert-danger" role="alert">
-                                        {% for error in form_ipAddress.non_field_errors %}
-                                          {{ error }}
-                                        {% endfor %}
-                                      </div>
-                                    {% endif %}
-                          
-                                    {% for field in form_ipAddress.visible_fields %}
-                                      <div class="form-group">
-                                        {{ field.label_tag }}
-                                        {% if form_ipAddress.is_bound %}
-                                          {% if field.errors %}
-                                            {% render_field field class="form-control is-invalid" %}
-                                            {% for error in field.errors %}
-                                              <div class="invalid-feedback">
-                                                {{ error }}
-                                              </div>
-                                            {% endfor %}
+                            <div class="modal fade" id="ModalRegIP{{ ipAddress.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel2">Register IP | {{ ipAddress.ip }}</h5>
+                                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <form action="{% url 'it_app:ipAddress_add' ipAddress.id %}" method="POST">
+                                    {% csrf_token %}
+                                  <div class="modal-body">
+                                      {% for hidden in form_ipAddress.hidden_fields %}
+                                      {{ hidden }}
+                                       {% endfor %}
+                                      <!-- merender semua field form dari objek TaskForm -->
+                                      {% if form_ipAddress.non_field_errors %}
+                                        <div class="alert alert-danger" role="alert">
+                                          {% for error in form_ipAddress.non_field_errors %}
+                                            {{ error }}
+                                          {% endfor %}
+                                        </div>
+                                      {% endif %}
+                                      
+                                      {% for field in form_ipAddress.visible_fields %}
+                                        <div class="form-group">
+                                          {{ field.label_tag }}
+                                          {% if form_ipAddress.is_bound %}
+                                            {% if field.errors %}
+                                              {% render_field field class="form-control is-invalid" %}
+                                              {% for error in field.errors %}
+                                                <div class="invalid-feedback">
+                                                  {{ error }}
+                                                </div>
+                                              {% endfor %}
+                                            {% else %}
+                                              {% render_field field class="form-control is-valid" %}
+                                            {% endif %}
                                           {% else %}
-                                            {% render_field field class="form-control is-valid" %}
+                                            {% render_field field class="form-control" %}
                                           {% endif %}
-                                        {% else %}
-                                          {% render_field field class="form-control" %}
-                                        {% endif %}
-                          
-                                        {% if field.help_text %}
-                                          <small class="form-text text-muted">{{ field.help_text }}</small>
-                                        {% endif %}
-                                      </div>
-                                    {% endfor %}
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary" type="submit">Submit</button>
-                                  </div>
-                              </form>
+                                              
+                                          {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                          {% endif %}
+                                        </div>
+                                      {% endfor %}
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                      <button class="btn btn-primary" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                                </div>
                               </div>
                             </div>
-                          </div>
                             {% endfor %}
                         </tbody>
                       </table>
