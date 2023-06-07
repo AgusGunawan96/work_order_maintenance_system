@@ -31,6 +31,25 @@
             </div>
 
             <div class="card-body">
+                <div class="card-header pb-0"></div>
+                <div class="row">
+                    <div class="col-sm-3">  
+                        <h5>Windows</h5>
+                        <div id="piechartt"></div>
+                    </div>
+                    <div class="col-sm-3">  
+                        <h5>Windows Type</h5>
+                        <div id="piecharttt"></div>
+                    </div>
+                    <div class="col-sm-3">  
+                        <h5>Antivirus</h5>
+                        <div id="piechartttt"></div>
+                    </div>
+                    <div class="col-sm-3">  
+                        <h5>Office</h5>
+                        <div id="piecharttttt"></div>
+                    </div>
+                </div>
             </div>
                 
         </div>
@@ -127,10 +146,105 @@
 <script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
 <script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
 <script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<script src="{% static 'assets/js/chart/apex-chart/apex-chart.js' %}"></script>
+<script src="{% static 'assets/js/chart/apex-chart/stock-prices.js' %}"></script>
+<script src="{% static 'assets/js/chart/apex-chart/chart-custom.js' %}"></script>
 <script>
   $(document).ready(function() {
       $('#id_computer_user').select2();
       $('#id_ip').select2();
+        var options = {
+          series: [{{ count_windows_xp }}, {{ count_windows_7 }}, {{ count_windows_8 }}, {{ count_windows_10 }}, {{ count_windows_11 }}],
+          chart: {
+          width: 380,
+          type: 'pie',
+        },
+        labels: ['Windows XP', 'Windows 7', 'Windows 8', 'Windows 10', 'Windows 11'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#piechartt"), options);
+        chart.render();
+
+        var options = {
+            series: [{{ count_oem }}, {{ count_olp }}],
+            chart: {
+            width: 380,
+            type: 'pie',
+          },
+          labels: ['OEM', 'OLP'],
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }]
+          };
+  
+          var chart = new ApexCharts(document.querySelector("#piecharttt"), options);
+          chart.render();
+
+          var options = {
+            series: [{{ count_mcafee }}, {{ count_cyber_reason }}],
+            chart: {
+            width: 380,
+            type: 'pie',
+          },
+          labels: ['McAfee', 'Cyber Reason'],
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }]
+          };
+  
+          var chart = new ApexCharts(document.querySelector("#piechartttt"), options);
+          chart.render();
+
+          var options = {
+            series: [{{ count_office_2007 }}, {{ count_office_2010 }}, {{ count_office_2016 }}],
+            chart: {
+            width: 380,
+            type: 'pie',
+          },
+          labels: ['Office 2007', 'Office 2010', 'Office 2016'],
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }]
+          };
+  
+          var chart = new ApexCharts(document.querySelector("#piecharttttt"), options);
+          chart.render();
+
   });
 </script>
 <!-- Plugins JS Ends-->

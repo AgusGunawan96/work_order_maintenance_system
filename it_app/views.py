@@ -70,9 +70,35 @@ def ipaddress_register(ipAddress_id):
 @login_required
 def computer_index(request):
     computer  = ITComputerList.objects.order_by('-created_at')
+    count_windows_xp   = ITComputerList.objects.filter(os = 'Windows XP').count()
+    count_windows_7    = ITComputerList.objects.filter(os = 'Windows 7').count()
+    count_windows_8    = ITComputerList.objects.filter(os = 'Windows 8').count()
+    count_windows_10   = ITComputerList.objects.filter(os = 'Windows 10').count()
+    count_windows_11   = ITComputerList.objects.filter(os = 'Windows 11').count()
+    count_oem          = ITComputerList.objects.filter(windows_type = 'OEM').count()  
+    count_olp          = ITComputerList.objects.filter(windows_type = 'OLP').count()
+    count_mcafee       = ITComputerList.objects.filter(antivirus = 'McAfee').count()
+    count_cyber_reason = ITComputerList.objects.filter(antivirus = 'Cyber Reason').count()
+    count_office_2007  = ITComputerList.objects.filter(is_office_2007 = True).count()
+    count_office_2010  = ITComputerList.objects.filter(is_office_2010 = True).count()
+    count_office_2016  = ITComputerList.objects.filter(is_office_2016 = True).count()
+
     context = {
-        'computers' : computer,
-        'form_computer' : computerListForms,
+        'computers'             : computer,
+        'form_computer'         : computerListForms,
+        'count_windows_xp'      : count_windows_xp,
+        'count_windows_7'       : count_windows_7,
+        'count_windows_8'       : count_windows_8,
+        'count_windows_10'      : count_windows_10,
+        'count_windows_11'      : count_windows_11,
+        'count_oem'             : count_oem,
+        'count_olp'             : count_olp,
+        'count_mcafee'          : count_mcafee,
+        'count_cyber_reason'    : count_cyber_reason,
+        'count_office_2007'     : count_office_2007,
+        'count_office_2010'     : count_office_2010,
+        'count_office_2016'     : count_office_2016,
+        
     }
     return render(request, 'it_app/computer_index.html', context)
 

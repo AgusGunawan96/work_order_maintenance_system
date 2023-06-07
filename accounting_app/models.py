@@ -54,6 +54,21 @@ class cashPayment (models.Model):
     description_12  = models.TextField(blank=True, null=True)
     rp_detail_12    = models.PositiveBigIntegerField(null=True, blank=True)
 
+class coaCode(models.Model):
+    account_code    = models.CharField(max_length=126, null=True, blank=True)
+    cost_centre     = models.CharField(max_length=126, null=True, blank=True)
+    description     = models.CharField(max_length=126, null=True, blank=True)
+    status          = models.CharField(max_length=126, null=True, blank=True)
+    structure_code  = models.CharField(max_length=126, null=True, blank=True)
+    created_at      = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at      = models.DateTimeField('updated_at', auto_now=True)
+
+class rel_cashPayment_coaCode(models.Model):
+    cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
+    coaCode     = models.ForeignKey(coaCode, on_delete=models.CASCADE, blank=True, null=True)
+    created_at  = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at  = models.DateTimeField('updated_at', auto_now=True)
+
 # ATTACHMENT START
 class cashPaymentAttachment(models.Model):
     cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)

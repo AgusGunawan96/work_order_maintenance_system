@@ -11,6 +11,7 @@ from master_app.models import UserProfileInfo, UserKeluargaInfo
 from it_app.models import IPAddress, Hardware
 from qc_app.models import rirMaterial, rirVendor
 from hrd_app.models import medicalApprovalList
+from accounting_app.models import coaCode
 from django.contrib.auth.decorators import user_passes_test
 import csv
 # Create your views here.
@@ -177,6 +178,18 @@ def CreateInfoKeluarga(request):
             data.append(InfoKeluarga)
         UserKeluargaInfo.objects.bulk_create(data)
     return JsonResponse('userkeluargainfo csv is now working', safe=False)
+
+@login_required
+def CreateCoaCode(request):
+    with open('templates/csv/coacode.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for account_code, cost_centre, description, status, structure_code,  *__ in csvf:
+            coacode = coaCode(account_code = account_code, cost_centre = cost_centre, description = description, status = status, structure_code = structure_code, )
+            data.append(coacode)
+        coaCode.objects.bulk_create(data)
+    return JsonResponse('coacode csv is now working', safe=False)
+
 # CREATE END
 
 # UPDATE START

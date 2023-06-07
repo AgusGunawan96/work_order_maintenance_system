@@ -6,6 +6,7 @@ app_name ='master_app'
 urlpatterns = [
     path('', views.index, name = 'index'),
     # path('CreateUserdata/', views.CreateUserdata, name='CreateUserdata'),
+    # path('CreateCoaCode/', views.CreateCoaCode, name= 'CreateCoaCode')
     # path('CreateUserInfoData/', views.CreateUserInfoData, name='CreateUserInfoData'),
     # path('CreateIPAddressUnRegistered/', views.CreateIPAddressUnRegistered, name='CreateIPAddressUnRegistered'),
     # path('CreateMaterial/', views.CreateMaterial, name='CreateMaterial'),
