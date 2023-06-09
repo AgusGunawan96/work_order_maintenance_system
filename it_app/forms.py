@@ -27,6 +27,10 @@ class computerListForms(forms.ModelForm):
         queryset=IPAddress.objects.all(),
         widget=Select2Widget
     )
+    is_office_2003 = forms.BooleanField(
+        label='Office 2003',
+        widget=forms.CheckboxInput(),
+        required=False)
     is_office_2007 = forms.BooleanField(
         label='Office 2007',
         widget=forms.CheckboxInput(),
@@ -45,7 +49,7 @@ class computerListForms(forms.ModelForm):
         required=False)
     class Meta():
         model = ITComputerList
-        fields = ( "ip", "computer_name", "os", "windows_type", "pc_type", "is_office_2007", "is_office_2010", "is_office_2016", "user_computer", "is_internet",  "antivirus", "computer_user")
+        fields = ( "ip", "computer_name", "os", "windows_type", "pc_type", "is_office_2003", "is_office_2007", "is_office_2010", "is_office_2016", "user_computer", "is_internet",  "antivirus", "computer_user")
         widgets = {'computer_user': forms.HiddenInput,}
         
 class ticketForms(forms.ModelForm):

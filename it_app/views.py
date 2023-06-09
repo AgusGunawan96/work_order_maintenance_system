@@ -79,6 +79,7 @@ def computer_index(request):
     count_olp          = ITComputerList.objects.filter(windows_type = 'OLP').count()
     count_mcafee       = ITComputerList.objects.filter(antivirus = 'McAfee').count()
     count_cyber_reason = ITComputerList.objects.filter(antivirus = 'Cyber Reason').count()
+    count_office_2003  = ITComputerList.objects.filter(is_office_2003 = True).count()
     count_office_2007  = ITComputerList.objects.filter(is_office_2007 = True).count()
     count_office_2010  = ITComputerList.objects.filter(is_office_2010 = True).count()
     count_office_2016  = ITComputerList.objects.filter(is_office_2016 = True).count()
@@ -95,6 +96,7 @@ def computer_index(request):
         'count_olp'             : count_olp,
         'count_mcafee'          : count_mcafee,
         'count_cyber_reason'    : count_cyber_reason,
+        'count_office_2003'     : count_office_2003,
         'count_office_2007'     : count_office_2007,
         'count_office_2010'     : count_office_2010,
         'count_office_2016'     : count_office_2016,

@@ -102,6 +102,9 @@
                                                 <td>{{ computer.windows_type }}</td>
                                                 <td>{{ computer.pc_type }}</td>
                                                 <td>
+                                                {% if computer.is_office_2003 %}
+                                                Office 2003
+                                                {% endif %}
                                                 {% if computer.is_office_2007 %}
                                                 Office 2007
                                                 {% endif %}
@@ -223,12 +226,12 @@
           chart.render();
 
           var options = {
-            series: [{{ count_office_2007 }}, {{ count_office_2010 }}, {{ count_office_2016 }}],
+            series: [{{ count_office_2003 }} ,{{ count_office_2007 }}, {{ count_office_2010 }}, {{ count_office_2016 }}],
             chart: {
             width: 380,
             type: 'pie',
           },
-          labels: ['Office 2007', 'Office 2010', 'Office 2016'],
+          labels: ['Office 2003', 'Office 2007', 'Office 2010', 'Office 2016'],
           responsive: [{
             breakpoint: 480,
             options: {

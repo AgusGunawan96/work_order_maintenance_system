@@ -87,6 +87,7 @@ class ITComputerList(models.Model):
     windows_type    = models.CharField(max_length=126, choices=ListWindowsType.choices, null=True)
     antivirus       = models.CharField(max_length=126, choices=ListAntivirus.choices, null=True)
     is_internet     = models.BooleanField(default=False, null=True)
+    is_office_2003  = models.BooleanField(default=False, null=True)
     is_office_2007  = models.BooleanField(default=False, null=True)
     is_office_2010  = models.BooleanField(default=False, null=True)
     is_office_2016  = models.BooleanField(default=False, null=True)
