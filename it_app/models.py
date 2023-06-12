@@ -85,7 +85,7 @@ class ITComputerList(models.Model):
     computer_name   = models.CharField(max_length=126)
     os              = models.CharField(max_length=126, choices=ListOs.choices, null=True)
     windows_type    = models.CharField(max_length=126, choices=ListWindowsType.choices, null=True)
-    antivirus       = models.CharField(max_length=126, choices=ListAntivirus.choices, null=True)
+    antivirus       = models.CharField(max_length=126, choices=ListAntivirus.choices, null=True, blank=True)
     is_internet     = models.BooleanField(default=False, null=True)
     is_genba        = models.BooleanField(default=False, null=True)
     is_office_2003  = models.BooleanField(default=False, null=True)
