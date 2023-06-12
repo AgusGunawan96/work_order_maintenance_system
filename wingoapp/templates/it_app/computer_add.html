@@ -53,6 +53,8 @@
                         {% else %}
                             {% if field.label == 'Internet' %}
                                 {% render_field field class="form-check-input" %}
+                            {% if field.label == 'Genba' %}
+                                {% render_field field class="form-check-input" %}
                             {% elif field.label == 'Office 2003' %}
                                 {% render_field field class="form-check-input" %}
                             {% elif field.label == 'Office 2007' %}
