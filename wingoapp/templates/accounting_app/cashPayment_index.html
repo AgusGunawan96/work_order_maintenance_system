@@ -652,7 +652,7 @@
               <div class="card">
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="display" id="basic-5">
+                    <table class="display" id="basic-6">
                       <thead>
                         <tr>
                         <th>Tanggal Aju</th>
@@ -666,22 +666,22 @@
                       </thead>
                       <tbody>
                         {% for cashier in cashiers %}
-                        {% if cashier.is_approve_cashier == True %}
-                        {% if cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.id == 521 %}
-                        <tr>
-                          <td><a href="{% url 'accounting_app:cashPayment_detail' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.created_at}}</td>
-                          <td>{{cashier.updated_at}}</td>
-                          <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.ticket_no}}</td>
-                          <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
-                          <td>Waiting cash From Cashier</td>
-                          <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.rp_total}}</td>
-                          <td>
-                            Transfered  <i class="icofont icofont-tick-mark"> 
-                            <a href="{% url 'accounting_app:accounting_cashPayment_report' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
-                          </td>
-                        </tr>
-                        {% endif %}
-                        {% endif %}
+                          {% if cashier.is_approve_cashier == True and cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.is_adv == False %}
+                              {% if cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.id == 521 %}
+                                <tr>
+                                  <td><a href="{% url 'accounting_app:cashPayment_detail' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.created_at}}</td>
+                                  <td>{{cashier.updated_at}}</td>
+                                  <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.ticket_no}}</td>
+                                  <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
+                                  <td>Waiting cash From Cashier</td>
+                                  <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.rp_total}}</td>
+                                  <td>
+                                    Transfered  <i class="icofont icofont-tick-mark"> 
+                                    <a href="{% url 'accounting_app:accounting_cashPayment_report' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                                  </td>
+                                </tr>
+                              {% endif %}
+                          {% endif %}
                         {% endfor %}
                       </tbody>
                     </table>
