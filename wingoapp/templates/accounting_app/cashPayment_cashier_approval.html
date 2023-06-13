@@ -1,0 +1,414 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+{% load widget_tweaks %}
+
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <div class="row starter-main">
+      <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>Cash Payment Voucher | User Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Pay To</label>
+                        <input class="form-control" type="text" value="{{ cashPayment.assignee.first_name }} {{cashPayment.assignee.last_name}}" readonly>
+                    </div>
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Nomor Karyawan</label>
+                        <input class="form-control" type="text" value="{{ cashPayment.assignee.username }}" readonly>
+                    </div>
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Department</label>
+                        <input class="form-control" type="text" value="{{ cashPayment.assignee.userprofileinfo.department.department_name }}" readonly>
+                    </div>
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Division</label>
+                        <input class="form-control" type="text" value="{{ cashPayment.assignee.userprofileinfo.division.division_name }}" readonly>
+                    </div>
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Section</label>
+                        <input class="form-control" type="text" value="{{ cashPayment.assignee.userprofileinfo.section.section_name }}" readonly>
+                    </div>
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Position</label>
+                        <input class="form-control" type="text" value="{{ cashPayment.assignee.userprofileinfo.position }}" readonly>
+                    </div>
+            </div>
+            </div>
+         </div>
+         <div class="card">
+            <div class="card-header pb-0">
+              <h5>Cash Payment Voucher | Voucher Detail</h5>
+            </div>
+            <hr class="mt-4 mb-2">
+            <div class="card-body">
+              <form class="theme-form mega-form">
+                <div class="col-md-12 col-lg-12 row">
+  
+                 <div class="mb-3 col-md-6 col-lg-6">
+                   <label class="col-form-label">Description</label>
+                   <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_1}}</textarea >
+                 </div>
+                 <div class="mb-3 col-md-6 col-lg-6">
+                   <label class="col-form-label">Harga</label>
+                   <div class="input-group"><span class="input-group-text">IDR  </span>
+                     <input name="rp_detail_1" class="form-control" type="text" value="{{ cashPayment.rp_detail_1 }}" readonly>
+                   </div>
+                 </div>
+                
+                 {% if cashPayment.description_2 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_2}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_2" class="form-control" type="text" value="{{ cashPayment.rp_detail_2 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+  
+                {% if cashPayment.description_3 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_3}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_3" class="form-control" type="text" value="{{ cashPayment.rp_detail_3 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_4 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_4}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_4" class="form-control" type="text" value="{{ cashPayment.rp_detail_4 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_5 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_5}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_5" class="form-control" type="text" value="{{ cashPayment.rp_detail_5 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_6 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_6}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_6" class="form-control" type="text" value="{{ cashPayment.rp_detail_6 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_7 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_7}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_7" class="form-control" type="text" value="{{ cashPayment.rp_detail_7 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_8 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_8}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_8" class="form-control" type="text" value="{{ cashPayment.rp_detail_8 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_9 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_9}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_9" class="form-control" type="text" value="{{ cashPayment.rp_detail_9 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_10 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_10}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_10" class="form-control" type="text" value="{{ cashPayment.rp_detail_10 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_11 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_11}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_11" class="form-control" type="text" value="{{ cashPayment.rp_detail_11 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                {% if cashPayment.description_12 %}
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.description_12}}</textarea >
+                </div>
+                <div class="mb-3 col-md-6 col-lg-6">
+                  <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment.rp_detail_12 }}" readonly>
+                  </div>
+                </div>
+                {% endif %}
+                <div class="mb-3 col-md-12 col-lg-12">
+                   <label class="col-form-label">Cash Total</label>
+                   <div class="input-group"><span class="input-group-text">IDR  </span>
+                    <input name="rp_detail_1" class="form-control" type="text" value="{{ cashPayment.rp_total }}" readonly>
+                  </div>
+                </div>
+                 </div>
+              {% if cashPayment.cashpaymentapprovalmanager.is_rejected_manager == True %}
+              <div class="mb-3">
+                <label class="col-form-label">Reject Reason by {{ cashPayment.cashpaymentapprovalmanager.manager.first_name }} {{ cashPayment.cashpaymentapprovalmanager.manager.last_name }} (Approval Manager)</label>
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.cashpaymentapprovalmanager.reject_reason_manager}}</textarea >
+              </div>
+              {% endif %}
+              {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.reject_reason_manager_accounting %}
+              <div class="mb-3">
+                <label class="col-form-label">Reject Reason by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.manager_accounting.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.manager_accounting.last_name }} (Approval IT)</label>
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.reject_reason_manager_accounting}}</textarea >
+              </div>
+              {% endif %}
+              {% if cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.reject_reason_president %}
+              <div class="mb-3">
+                <label class="col-form-label">Reject Reason by {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.president.first_name }} {{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.president.last_name }} (Approval IT)</label>
+                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.reject_reason_president}}</textarea >
+              </div>
+              {% endif %}
+              </form>
+            </div>
+          </div>
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>Cash Payment Voucher | Account Code</h5>
+            </div>
+            <div class="card-body">
+                {% comment %} CASHIER START {% endcomment %}
+                <form enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                      {% comment %} START ISI {% endcomment %}
+                        {% csrf_token %}
+                        {% for hidden in form_cashier_transfer.hidden_fields %}
+                        {{ hidden }}
+                        {% endfor %}
+                        <!-- merender semua field form dari objek TaskForm -->
+                        {% if form_cashier_transfer.non_field_errors %}
+                          <div class="alert alert-danger" role="alert">
+                            {% for error in form_cashier_transfer.non_field_errors %}
+                              {{ error }}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                        
+                        {% for field in form_cashier_transfer.visible_fields %}
+                          <div class="form-group">
+                            {{ field.label_tag }}
+                          
+                            {% if form_cashier_transfer.is_bound %}
+                              {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                  <div class="invalid-feedback">
+                                    {{ error }}
+                                  </div>
+                                {% endfor %}
+                              {% else %}
+                                {% render_field field class="form-control is-valid" %}
+                              {% endif %}
+                            {% else %}
+                              {% render_field field class="form-control" %}
+                            {% endif %}
+                                
+                            {% if field.help_text %}
+                              <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                          </div>
+                        {% endfor %}
+                        {% comment %} Account Code Start {% endcomment %}
+                          {% for subform in formset_account_code.forms %}
+                          <div class="form-group">
+                          <div class="col-md-12 position-relative">
+                              <label class="form-label" for="validationTooltip01">Account Code</label>
+                              <div class="sub-form">
+                                  {% render_field subform.account_code class+="form-control account_code-class" placeholder+="Account Code" %}
+                            </div>
+                        </div>
+                          </div>
+                          {% endfor %}
+                        {% comment %} Account Code End {% endcomment %}
+                        <div class="form-group row">
+                            <div class="col-md-12 position-relative">
+                                <label class="form-label" for="validationTooltip01">Upload Attachment</label>
+                                {% render_field form_cashier_attachment.attachment class="form-control" placeholder="" type="file" accept="application/pdf,application/vnd.ms-excel,image/png, image/jpeg" %}
+                            </div>
+                          </div>  
+  
+                          <div class="form-group row">
+                            <div class="col-md-12 position-relative">
+                              {% comment %} <video id="video" width="320" height="240" autoplay></video>
+                              <canvas id="canvas" width="320" height="240"></canvas> {% endcomment %}
+                              <video id="video" width="640" height="480" autoplay></video>
+                              <canvas id="canvas" width="640" height="480"></canvas>
+                              <div class="col-md-12 position-relative">
+                                <a id="captureButton" class="btn btn-primary">Capture Attachment</a>
+                              </div>
+                            </div>
+                          </div>
+  
+                        <div class="form-group row">
+                          <div class="col-md-12 position-relative">
+                              <label class="form-label" for="validationTooltip01">{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}} Password (If Transfer Cash)</label>
+                              <input class="form-control" type="password" value="" name="password" id="password">
+                          </div>
+                        </div>
+                    <input class="form-control" type="text" name='cashPayment_id' value="{{ cashPayment.id }}" hidden>
+                    <input class="form-control" type="text" name='cashier_id' value="{{ cashPayment.cashpaymentapprovalmanager.cashpaymentapprovalaccountingmanager.cashpaymentapprovalpresident.cashpaymentapprovalcashier.id }}" hidden>
+
+                        {% comment %} END ISI {% endcomment %}
+                        <div class="modal-footer">
+                          <button class="btn btn-success" type="submit">Approve</button>
+                        </div>
+                  </form>
+                {% comment %} CASHIER END {% endcomment %}
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+
+{% endblock content %}
+{% block scriptcontent %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{% static 'assets/js/jquery-3.5.1.min.js' %}"></script>
+{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/1.8.2/autoNumeric.js"></script> {% endcomment %}
+
+<script>
+    easyNumberSeparator({
+        selector: '#number-mask1',
+        separator: '.',
+        resultInput: '#number-separator1',
+    })
+</script>
+<script>
+    $(document).ready(function() {
+        $('#id_form-0-account_code').select2();
+    });
+    $(document).ready(function() {
+        $('#id_form-1-account_code').select2();
+    });
+    $(document).ready(function() {
+        $('#id_form-2-account_code').select2();
+    });
+    $(document).ready(function() {
+        $('#id_form-3-account_code').select2();
+    });
+    $(document).ready(function() {
+        $('#id_form-4-account_code').select2();
+    });
+  </script>
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('captureButton');
+    const form = document.getElementById('id_attachment');
+  
+    // Access the webcam stream
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((error) => {
+        console.error('Error accessing the webcam: ', error);
+      });
+  
+    // Capture attachment when the button is clicked
+    captureButton.addEventListener('click', () => {
+      // Draw the current frame of the video onto the canvas
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+  
+      // Convert the canvas content to a Data URL representing a PNG image
+      const attachmentDataUrl = canvas.toDataURL('image/png');
+  
+      // Create a File object from the Data URL
+      const attachmentFile = dataURLtoFile(attachmentDataUrl, 'buktitransaksi.png');
+  
+      // Create a new DataTransfer object
+      const dataTransfer = new DataTransfer();
+  
+      // Add the attachmentFile to the dataTransfer object
+      dataTransfer.items.add(attachmentFile);
+  
+      // Get the fileList from the dataTransfer object
+      const fileList = dataTransfer.files;
+  
+      // Create a new input element of type 'file'
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.name = 'attachment';
+      fileInput.id = 'id_attachment';
+  
+      // Set the files property of the input element to the FileList object
+      Object.defineProperty(fileInput, 'files', {
+        value: fileList,
+        writable: false
+      });
+  
+      // Replace the existing file input element with the new one
+      const existingFileInput = document.getElementById('id_attachment');
+      existingFileInput.parentNode.replaceChild(existingFileInput, existingFileInput);
+      existingFileInput.files = fileInput.files
+      //console.log(existingFileInput.files);
+    });
+  
+    // Helper function to convert Data URL to File object
+    function dataURLtoFile(dataUrl, fileName) {
+      const arr = dataUrl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], fileName, { type: mime });
+    }
+  </script>
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

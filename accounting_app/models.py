@@ -62,12 +62,15 @@ class coaCode(models.Model):
     structure_code  = models.CharField(max_length=126, null=True, blank=True)
     created_at      = models.DateTimeField('created_at', auto_now_add=True)
     updated_at      = models.DateTimeField('updated_at', auto_now=True)
+    def __str__(self):
+        return self.account_code +' ('+ self.description +') '
 
-class rel_cashPayment_coaCode(models.Model):
-    cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
-    coaCode     = models.ForeignKey(coaCode, on_delete=models.CASCADE, blank=True, null=True)
-    created_at  = models.DateTimeField('created_at', auto_now_add=True)
-    updated_at  = models.DateTimeField('updated_at', auto_now=True)
+class rel_cashPayment_accountcode(models.Model):
+    cashPayment   = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
+    account_code  = models.ForeignKey(coaCode, on_delete=models.CASCADE, blank=True, null=True)
+    created_at    = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at    = models.DateTimeField('updated_at', auto_now=True)
+
 
 # ATTACHMENT START
 class cashPaymentAttachment(models.Model):

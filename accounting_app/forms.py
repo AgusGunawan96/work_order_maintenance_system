@@ -1,7 +1,20 @@
 from django import forms
-from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentAttachment, cashPaymentBalance, cashierAttachment, advanceApprovalManager, advanceApprovalAccountingManager, advanceApprovalPresident, advanceApprovalCashier
-from django.forms import ClearableFileInput
+from accounting_app.models import cashPayment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentAttachment, cashPaymentBalance, cashierAttachment, advanceApprovalManager, advanceApprovalAccountingManager, advanceApprovalPresident, advanceApprovalCashier, rel_cashPayment_accountcode, coaCode
+from django.forms import ClearableFileInput, formset_factory
+from django_select2.forms import Select2Widget, ModelSelect2Widget
 
+
+
+class cashPaymentAccountForms(forms.ModelForm):
+    account_code = forms.ModelChoiceField(
+                    queryset=coaCode.objects.all(),
+                    widget=Select2Widget(attrs={'data-placeholder': 'Choose...'}),
+                    required=False,
+                    )
+    class Meta():
+            model = rel_cashPayment_accountcode # <-- Add this line!
+            fields = ('account_code','cashPayment',)
+            
 class cashPaymentForms(forms.ModelForm):
     class Meta():
         model = cashPayment

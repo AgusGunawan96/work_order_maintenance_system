@@ -83,6 +83,7 @@ class ITComputerList(models.Model):
     ip              = models.ForeignKey(IPAddress, null=True, blank=True, on_delete=models.CASCADE)
     pc_type         = models.ForeignKey(HardwareType, on_delete=models.CASCADE)
     computer_name   = models.CharField(max_length=126)
+    location        = models.CharField(max_length=126, null=True, blank=True)
     os              = models.CharField(max_length=126, choices=ListOs.choices, null=True)
     windows_type    = models.CharField(max_length=126, choices=ListWindowsType.choices, null=True)
     antivirus       = models.CharField(max_length=126, choices=ListAntivirus.choices, null=True, blank=True)

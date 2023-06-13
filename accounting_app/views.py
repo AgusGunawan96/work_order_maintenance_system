@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment, advAttachment, settleAttachment, advanceApprovalManager, advanceApprovalAccountingManager, advanceApprovalPresident, advanceApprovalCashier
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment, advAttachment, settleAttachment, advanceApprovalManager, advanceApprovalAccountingManager, advanceApprovalPresident, advanceApprovalCashier, rel_cashPayment_accountcode, coaCode
 from django.contrib.auth.decorators import login_required
-from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms, cashPaymentSettleAttachmentForms, cashPaymentAdvAttachmentForms, cashPaymentAdvForms, cashPaymentCashierForms, advanceApprovalManagerForms, advanceApprovalAccountingManagerForms, advanceApprovalPresidentForms, advanceApprovalCashierForms
+from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms, cashPaymentSettleAttachmentForms, cashPaymentAdvAttachmentForms, cashPaymentAdvForms, cashPaymentCashierForms, advanceApprovalManagerForms, advanceApprovalAccountingManagerForms, advanceApprovalPresidentForms, advanceApprovalCashierForms, cashPaymentAccountForms
 from django.contrib import messages
 from django.http import Http404, HttpResponse,JsonResponse
 import datetime
@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 import xlwt
 from csv import reader
+from django.forms import formset_factory
+
 
 # Create your views here.
 @login_required
@@ -489,31 +491,58 @@ def cashPayment_cashier_check(request, cashPayment_id):
         return redirect('accounting_app:cashPayment_index')
     except cashPaymentApprovalCashier.DoesNotExist:
          raise Http404("Cash Payment Error!")
-    
+
 @login_required
 def cashPayment_cashier_approval(request, cashPayment_id):
-    try:
+     cashPaymentAccountFormSet = formset_factory(cashPaymentAccountForms)
      if request.method == "POST":
         cashPayment_credit_form = cashPaymentCashierForms(data=request.POST)
-        cashier = cashPaymentApprovalCashier.objects.get(pk=cashPayment_id)
+        # return HttpResponse(request.POST['cashier_id'])
+        cashier = cashPaymentApprovalCashier.objects.get(pk=request.POST['cashier_id'])
         # cashPayment_balance = masterAccounting.objects.get(pk=1)
         cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
         balance_month = datetime.datetime.now().strftime('%Y%m')
         balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
         balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
-        if request.POST['password'] and request.POST['type'] == 'Transfer Cash':
+        if request.POST['type'] == 'Transfer Cash':
+            # Masukan fungsi Inisiasi
             identity = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee
             user = User.objects.get(username=identity)
             valid_password = check_password(request.POST['password'], user.password)
             if valid_password: #apabila password sudah benar
                 if cashPayment_credit_form.is_valid():
+                    # menginisiasi form kosong lalu di save 
+                    if request.POST['form-0-account_code']:
+                        accountCode1 = coaCode.objects.get(pk=request.POST['form-0-account_code'])
+                        cashPayment1 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode1, cashPayment = cashPayment1)
+
+                    if request.POST['form-1-account_code']:
+                        accountCode2 = coaCode.objects.get(pk=request.POST['form-1-account_code'])
+                        cashPayment2 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode2, cashPayment = cashPayment2)
+
+                    if request.POST['form-2-account_code']:
+                        accountCode3 = coaCode.objects.get(pk=request.POST['form-2-account_code'])
+                        cashPayment3 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode3, cashPayment = cashPayment3)
+
+                    if request.POST['form-3-account_code']:
+                        accountCode4 = coaCode.objects.get(pk=request.POST['form-3-account_code'])
+                        cashPayment4 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode4, cashPayment = cashPayment4)
+
+                    if request.POST['form-4-account_code']:
+                        accountCode5 = coaCode.objects.get(pk=request.POST['form-4-account_code'])
+                        cashPayment5 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode5, cashPayment = cashPayment5)
                     # Mengapprove
                     cashier.is_approve_cashier = True
                     cashier.cashier = request.user
                     # Menambahkan remark pada cashPayment
                     cashPayment_form = cashPayment_credit_form.save(commit=False)
                     cashPayment_id = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id
-                    cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
+                    cashPayment_credit = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
                     cashPayment_credit.remark = cashPayment_form.remark
                     cashPayment_credit.type   = cashPayment_form.type
                     # Mengurangi Balance pada Master Balance
@@ -544,19 +573,46 @@ def cashPayment_cashier_approval(request, cashPayment_id):
                     cashPayment_credit.save()
                     cashier.save()
                     messages.success(request, 'Transfer Succcesfully')
-            else:
-                messages.warning(request, 'Password yang dimasukan salah')
-                return redirect('accounting_app:cashPayment_index')
+                else:
+                    messages.warning(request, 'Password yang dimasukan salah')
+                    return redirect('accounting_app:cashPayment_index')
+                    # return redirect('accounting:cashPayment_cashier_approve', request.POST['cashPayment_id'])
+                    # return redirect('accounting_app:cashPayment_index')
             # mari kita buat Validasi password dari Assignee, apakah sudah sesuai apa belum
         else:
             if cashPayment_credit_form.is_valid():
+                # menginisiasi form kosong lalu di save 
+                if request.POST['form-0-account_code']:
+                    accountCode1 = coaCode.objects.get(pk=request.POST['form-0-account_code'])
+                    cashPayment1 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode1, cashPayment = cashPayment1)
+
+                if request.POST['form-1-account_code']:
+                    accountCode2 = coaCode.objects.get(pk=request.POST['form-1-account_code'])
+                    cashPayment2 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode2, cashPayment = cashPayment2)
+
+                if request.POST['form-2-account_code']:
+                    accountCode3 = coaCode.objects.get(pk=request.POST['form-2-account_code'])
+                    cashPayment3 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode3, cashPayment = cashPayment3)
+
+                if request.POST['form-3-account_code']:
+                    accountCode4 = coaCode.objects.get(pk=request.POST['form-3-account_code'])
+                    cashPayment4 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode4, cashPayment = cashPayment4)
+
+                if request.POST['form-4-account_code']:
+                    accountCode5 = coaCode.objects.get(pk=request.POST['form-4-account_code'])
+                    cashPayment5 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode5, cashPayment = cashPayment5)
                 # Mengapprove
                 cashier.is_approve_cashier = True
                 cashier.cashier = request.user
                 # Menambahkan remark pada cashPayment
                 cashPayment_form = cashPayment_credit_form.save(commit=False)
                 cashPayment_id = cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id
-                cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
+                cashPayment_credit = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
                 cashPayment_credit.remark = cashPayment_form.remark
                 cashPayment_credit.type   = cashPayment_form.type
                 # Mengurangi Balance pada Master Balance
@@ -588,8 +644,21 @@ def cashPayment_cashier_approval(request, cashPayment_id):
                 cashier.save()
                 messages.success(request, 'Transfer Succcesfully')
         return redirect('accounting_app:cashPayment_index')
-    except cashPaymentApprovalCashier.DoesNotExist:
-        raise Http404("Cash Payment Error!")
+     else:
+         initial_data = [{'account_code': None}, {'account_code': None}, {'account_code': None}, {'account_code': None}]
+         account_code_formset = cashPaymentAccountFormSet(initial=initial_data)
+         cashPayment_detail = cashPayment.objects.get(pk = cashPayment_id)
+         context = {
+         'cashPayment'              : cashPayment_detail,
+         'formset_account_code'     : account_code_formset,
+         'form_cashier_transfer'    : cashPaymentCashierForms,
+         'form_cashier_attachment'  : cashPaymentCashierAttachmentForms,
+         }
+         return render(request, 'accounting_app/cashPayment_cashier_approval.html', context)
+         return HttpResponse('masuk kedalam approval cashier')
+         
+    # except cashPaymentApprovalCashier.DoesNotExist:
+    #     raise Http404("Cash Payment Error!")
 
 @login_required
 def cashPayment_cashier_reject(request,cashPayment_id):
@@ -901,28 +970,53 @@ def advance_cashier_check(request, cashPayment_id):
 
 @login_required
 def advance_cashier_approval(request, cashPayment_id):
-    try:
-     if request.method == "POST":
+    cashPaymentAccountFormSet = formset_factory(cashPaymentAccountForms)
+    if request.method == "POST":
         cashPayment_credit_form = cashPaymentCashierForms(data=request.POST)
-        cashier = advanceApprovalCashier.objects.get(pk=cashPayment_id)
+        cashier = advanceApprovalCashier.objects.get(pk=request.POST['cashier_id'])
         # cashPayment_balance = masterAccounting.objects.get(pk=1)
         cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
         balance_month = datetime.datetime.now().strftime('%Y%m')
         balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
         balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
-        if request.POST['password'] and request.POST['type'] == 'Transfer Cash':
+        if request.POST['type'] == 'Transfer Cash':
             identity = cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.assignee
             user = User.objects.get(username=identity)
             valid_password = check_password(request.POST['password'], user.password)
             if valid_password: #apabila password sudah benar
                 if cashPayment_credit_form.is_valid():
+                    # menginisiasi form kosong lalu di save 
+                    if request.POST['form-0-account_code']:
+                        accountCode1 = coaCode.objects.get(pk=request.POST['form-0-account_code'])
+                        cashPayment1 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode1, cashPayment = cashPayment1)
+
+                    if request.POST['form-1-account_code']:
+                        accountCode2 = coaCode.objects.get(pk=request.POST['form-1-account_code'])
+                        cashPayment2 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode2, cashPayment = cashPayment2)
+
+                    if request.POST['form-2-account_code']:
+                        accountCode3 = coaCode.objects.get(pk=request.POST['form-2-account_code'])
+                        cashPayment3 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode3, cashPayment = cashPayment3)
+
+                    if request.POST['form-3-account_code']:
+                        accountCode4 = coaCode.objects.get(pk=request.POST['form-3-account_code'])
+                        cashPayment4 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode4, cashPayment = cashPayment4)
+
+                    if request.POST['form-4-account_code']:
+                        accountCode5 = coaCode.objects.get(pk=request.POST['form-4-account_code'])
+                        cashPayment5 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                        rel_cashPayment_accountcode.objects.create( account_code = accountCode5, cashPayment = cashPayment5)
                     # Mengapprove
                     cashier.is_approve_cashier = True
                     cashier.cashier = request.user
                     # Menambahkan remark pada cashPayment
                     cashPayment_form = cashPayment_credit_form.save(commit=False)
                     cashPayment_id = cashier.advance_approval_president.advance_approval_accounting_manager.advance_approval_manager.advance.id
-                    cashPayment_credit = cashPayment.objects.get(pk=cashPayment_id)
+                    cashPayment_credit = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
                     cashPayment_credit.adv = cashPayment_form.remark
                     cashPayment_credit.type   = cashPayment_form.type
                     # Mengurangi Balance pada Master Balance
@@ -959,6 +1053,27 @@ def advance_cashier_approval(request, cashPayment_id):
             # mari kita buat Validasi password dari Assignee, apakah sudah sesuai apa belum
         else:
             if cashPayment_credit_form.is_valid():
+                    # menginisiasi form kosong lalu di save 
+                if request.POST['form-0-account_code']:
+                    accountCode1 = coaCode.objects.get(pk=request.POST['form-0-account_code'])
+                    cashPayment1 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode1, cashPayment = cashPayment1)
+                if request.POST['form-1-account_code']:
+                    accountCode2 = coaCode.objects.get(pk=request.POST['form-1-account_code'])
+                    cashPayment2 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode2, cashPayment = cashPayment2)
+                if request.POST['form-2-account_code']:
+                    accountCode3 = coaCode.objects.get(pk=request.POST['form-2-account_code'])
+                    cashPayment3 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode3, cashPayment = cashPayment3)
+                if request.POST['form-3-account_code']:
+                    accountCode4 = coaCode.objects.get(pk=request.POST['form-3-account_code'])
+                    cashPayment4 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode4, cashPayment = cashPayment4)
+                if request.POST['form-4-account_code']:
+                    accountCode5 = coaCode.objects.get(pk=request.POST['form-4-account_code'])
+                    cashPayment5 = cashPayment.objects.get(pk=request.POST['cashPayment_id'])
+                    rel_cashPayment_accountcode.objects.create( account_code = accountCode5, cashPayment = cashPayment5)
                 # Mengapprove
                 cashier.is_approve_cashier = True
                 cashier.cashier = request.user
@@ -997,8 +1112,17 @@ def advance_cashier_approval(request, cashPayment_id):
                 cashier.save()
                 messages.success(request, 'Transfer Succcesfully')
         return redirect('accounting_app:advance_index')
-    except advanceApprovalCashier.DoesNotExist:
-        raise Http404("Advance Error!")
+    else:
+         initial_data = [{'account_code': None}, {'account_code': None}, {'account_code': None}, {'account_code': None}]
+         account_code_formset = cashPaymentAccountFormSet(initial=initial_data)
+         cashPayment_detail = cashPayment.objects.get(pk = cashPayment_id)
+         context = {
+         'cashPayment'              : cashPayment_detail,
+         'formset_account_code'     : account_code_formset,
+         'form_cashier_transfer'    : cashPaymentCashierForms,
+         'form_cashier_attachment'  : cashPaymentCashierAttachmentForms,
+         }
+         return render(request, 'accounting_app/advance_cashier_approval.html', context)
 
 @login_required
 def advance_cashier_reject(request,cashPayment_id):

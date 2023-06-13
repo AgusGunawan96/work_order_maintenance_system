@@ -50,7 +50,7 @@
                       <table class="display" id="basic-1">
                         <thead>
                          <tr>
-                           <th>Created</th>
+                           <th>Tanggal Aju.</th>
                            <th>Assignee</th>
                            <th>Total(RP.)</th>
                            <th>Status</th>
@@ -64,7 +64,7 @@
                          {% if manager.is_approve_manager == False and request.user.userprofileinfo.department_id == manager.cashPayment.assignee.userprofileinfo.department_id%}
                          {% if manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.is_manager == True %}
                          <tr>
-                           <td><a href="{% url 'accounting_app:cashPayment_detail' manager.cashPayment.id %}">{{manager.created_at}}</td>
+                           <td><a href="{% url 'accounting_app:cashPayment_detail' manager.cashPayment.id %}">{{manager.cashPayment.created_at}}</td>
                            <td>{{manager.cashPayment.assignee.first_name}} {{manager.cashPayment.assignee.last_name}}</td>
                            <td>Rp.{{manager.cashPayment.rp_total}}</td>
                            {% if manager.is_rejected_manager == True %}
@@ -218,7 +218,7 @@
                       <table class="display" id="basic-2">
                         <thead>
                           <tr>
-                            <th>Created</th>
+                            <th>Tanggal Aju.</th>
                             <th>Assignee</th>
                             <th>Total(RP.)</th>
                             <th>Status</th>
@@ -232,7 +232,7 @@
                           {% if managerAccounting.is_approve_manager_accounting == False %}
                           {% if managerAccounting.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.department_id == 7 %}
                           <tr>
-                            <td><a href="{% url 'accounting_app:cashPayment_detail' managerAccounting.cashPayment_approval_manager.cashPayment.id %}">{{managerAccounting.created_at}}</td>
+                            <td><a href="{% url 'accounting_app:cashPayment_detail' managerAccounting.cashPayment_approval_manager.cashPayment.id %}">{{managerAccounting.cashPayment_approval_manager.cashPayment.created_at}}</td>
                             <td>{{managerAccounting.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{managerAccounting.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
                             <td>Rp.{{managerAccounting.cashPayment_approval_manager.cashPayment.rp_total}}</td>
                             {% if managerAccounting.is_rejected_manager_accounting == True %}
@@ -385,7 +385,7 @@
                     <table class="display" id="basic-3">
                       <thead>
                         <tr>
-                          <th>Created</th>
+                          <th>Tanggal Aju.</th>
                           <th>Assignee</th>
                           <th>Total(RP.)</th>
                           <th>Status</th>
@@ -399,7 +399,7 @@
                         {% if president.is_approve_president == False %}
                         {% if president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or  request.user.userprofileinfo.id == 6 %}
                         <tr>
-                          <td><a href="{% url 'accounting_app:cashPayment_detail' president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{president.created_at}}</td>
+                          <td><a href="{% url 'accounting_app:cashPayment_detail' president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.created_at}}</td>
                           <td>{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
                           <td>Rp.{{president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.rp_total}}</td>
                           {% if president.is_rejected_president == True %}
@@ -553,7 +553,7 @@
                     <table class="display" id="basic-4">
                         <thead>
                           <tr>
-                          <th>Created</th>
+                          <th>Tanggal Aju.</th>
                           <th>Ticket No.</th>
                           <th>Assignee</th>
                           <th>Status</th>
@@ -568,7 +568,7 @@
                           {% if cashier.is_approve_cashier == False %}
                           {% if cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.id == 521 %}
                           <tr>
-                            <td><a href="{% url 'accounting_app:cashPayment_detail' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{cashier.created_at}}</td>
+                            <td><a href="{% url 'accounting_app:cashPayment_detail' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.created_at}}</td>
                             <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.ticket_no }}</td>
                             <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
                             <td>Waiting cash From Cashier</td>
@@ -578,7 +578,7 @@
 
                           {% if request.user.userprofileinfo.id == 521  %}
                           <td>
-                            <a data-bs-toggle="modal" data-bs-target="#ModalCashierApprove{{ cashier.id }}" data-whatever="@mdo" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
+                            <a href="{% url 'accounting_app:cashPayment_cashier_approve' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
                             <a href="{% url 'accounting_app:accounting_cashPayment_report' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
                           </td>
                           {% else %}
@@ -639,79 +639,6 @@
                             </div>
                           </div>
                          {% comment %} MODAL CHECKED END {% endcomment %}
-            {% comment %} MODAL ADD DEBIT START {% endcomment %}
-            <div class="modal fade" id="ModalCashierApprove{{ cashier.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel2">Add Remark Cash Payment Voucher</h5>
-                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{% url 'accounting_app:cashPayment_cashier_approve' cashier.id  %}" enctype="multipart/form-data" method="POST">
-                  {% csrf_token %}
-                <div class="modal-body">
-                  {% comment %} START ISI {% endcomment %}
-                    {% csrf_token %}
-                    {% for hidden in form_cashier_transfer.hidden_fields %}
-                    {{ hidden }}
-                    {% endfor %}
-                    <!-- merender semua field form dari objek TaskForm -->
-                    {% if form_cashier_transfer.non_field_errors %}
-                      <div class="alert alert-danger" role="alert">
-                        {% for error in form_cashier_transfer.non_field_errors %}
-                          {{ error }}
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-          
-                    {% for field in form_cashier_transfer.visible_fields %}
-                      <div class="form-group">
-                        {{ field.label_tag }}
-          
-                        {% if form_cashier_transfer.is_bound %}
-                          {% if field.errors %}
-                            {% render_field field class="form-control is-invalid" %}
-                            {% for error in field.errors %}
-                              <div class="invalid-feedback">
-                                {{ error }}
-                              </div>
-                            {% endfor %}
-                          {% else %}
-                            {% render_field field class="form-control is-valid" %}
-                          {% endif %}
-                        {% else %}
-                          {% render_field field class="form-control" %}
-                        {% endif %}
-          
-                        {% if field.help_text %}
-                          <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
-                      </div>
-                    {% endfor %}
-                    <div class="form-group row">
-                      <div class="col-md-12 position-relative">
-                          <label class="form-label" for="validationTooltip01">Upload Attachment</label>
-                          {% render_field form_cashier_attachment.attachment class="form-control" placeholder="" type="file" accept="application/pdf,application/vnd.ms-excel,image/png, image/jpeg" %}
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <div class="col-md-12 position-relative">
-                          <label class="form-label" for="validationTooltip01">{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}} Password (If Transfer Cash)</label>
-                          <input class="form-control" type="password" value="" name="password" id="password">
-                      </div>
-                    </div>
-                    {% comment %} END ISI {% endcomment %}
-              </div>
-              <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                <button class="btn btn-primary" type="submit">Add</button>
-              </div>
-          </form>
-          </div>
-        </div>
-      </div>
-     {% comment %} MODAL ADD DEBIT END {% endcomment %}
                           {% endfor %}
                         </tbody>
                     </table>
@@ -728,6 +655,7 @@
                     <table class="display" id="basic-5">
                       <thead>
                         <tr>
+                        <th>Tanggal Aju</th>
                         <th>Finished at</th>
                         <th>Ticket No.</th>
                         <th>Assignee</th>
@@ -741,7 +669,8 @@
                         {% if cashier.is_approve_cashier == True %}
                         {% if cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.id == request.user.id or request.user.userprofileinfo.id == 521 %}
                         <tr>
-                          <td><a href="{% url 'accounting_app:cashPayment_detail' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{cashier.updated_at}}</td>
+                          <td><a href="{% url 'accounting_app:cashPayment_detail' cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.id %}">{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.created_at}}</td>
+                          <td>{{cashier.updated_at}}</td>
                           <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.ticket_no}}</td>
                           <td>{{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.first_name}} {{cashier.cashPayment_approval_president.cashPayment_approval_accounting_manager.cashPayment_approval_manager.cashPayment.assignee.last_name}}</td>
                           <td>Waiting cash From Cashier</td>
@@ -1009,9 +938,25 @@ aria-hidden="true">
 {% block scriptcontent %}
 <!-- Plugins JS start-->
 <script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery-3.5.1.min.js' %}"></script>
 <script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
 <script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
 <script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+{% comment %} <script>
+  // Define some constants and variables
+  const formContainer = document.getElementById('forms-container');
+  const addButton = document.getElementById('add-sub-form');
+  
+  let subFormIndex = {{ form_account_code.total_form_count }};
+  
+  // Function to add a new sub-form
+  function addSubForm() {
+   
+   }
+
+
+</script> {% endcomment %}
+
 <!-- Plugins JS Ends-->
 {% endblock scriptcontent %}

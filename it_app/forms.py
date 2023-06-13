@@ -58,7 +58,7 @@ class computerListForms(forms.ModelForm):
         required=False)
     class Meta():
         model = ITComputerList
-        fields = ( "ip", "computer_name", "os", "windows_type", "pc_type", "is_office_2003", "is_office_2007", "is_office_2010", "is_office_2016", "user_computer", "is_internet",  "antivirus", "computer_user", "is_genba", "is_dhcp")
+        fields = ( "ip", "computer_name", "os", "windows_type", "location","pc_type", "is_office_2003", "is_office_2007", "is_office_2010", "is_office_2016", "user_computer", "is_internet",  "antivirus", "computer_user", "is_genba", "is_dhcp")
         widgets = {'computer_user': forms.HiddenInput,}
         
 class ticketForms(forms.ModelForm):
