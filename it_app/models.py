@@ -83,11 +83,18 @@ class ListLocation(models.Model):
     def __str__(self):
         return self.location_name
 
+class ListLocationDetail(models.Model):
+    location_header   = models.ForeignKey(ListLocation, null=True, blank=True, on_delete=models.CASCADE)
+    location_detail = models.CharField(max_length=126)
+    def __str__(self):
+        return self.location_detail
+
+
 class ITComputerList(models.Model):
     computer_user   = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     ip              = models.ForeignKey(IPAddress, null=True, blank=True, on_delete=models.CASCADE)
     pc_type         = models.ForeignKey(HardwareType, on_delete=models.CASCADE)
-    location        = models.ForeignKey(ListLocation,null=True, blank=True, on_delete=models.CASCADE)
+    location        = models.ForeignKey(ListLocationDetail,null=True, blank=True, on_delete=models.CASCADE)
     computer_name   = models.CharField(max_length=126)
     os              = models.CharField(max_length=126, choices=ListOs.choices, null=True)
     windows_type    = models.CharField(max_length=126, choices=ListWindowsType.choices, null=True)
