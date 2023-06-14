@@ -1487,10 +1487,10 @@ var options = {
 
 }
 
-var chart = new ApexCharts(
-    document.querySelector("#basic-apex"),
-    options
-);
+// var chart = new ApexCharts(
+//     document.querySelector("#basic-apex"),
+//     options
+// );
 
 chart.render();
 
@@ -1562,10 +1562,10 @@ var options2 = {
     colors:[ WingoAdminConfig.primary ]
 }
 
-var chart2 = new ApexCharts(
-    document.querySelector("#basic-bar"),
-    options2
-);
+// var chart2 = new ApexCharts(
+//     document.querySelector("#basic-bar"),
+//     options2
+// );
 
 chart2.render();
 
@@ -2276,10 +2276,10 @@ var options8 = {
     colors:[ WingoAdminConfig.primary , WingoAdminConfig.secondary , '#51bb25', '#a927f9', '#f8d62b']
 }
 
-var chart8 = new ApexCharts(
-    document.querySelector("#piechart"),
-    options8
-);
+// var chart8 = new ApexCharts(
+//     document.querySelector("#piechart"),
+//     options8
+// );
 
 chart8.render();
 
