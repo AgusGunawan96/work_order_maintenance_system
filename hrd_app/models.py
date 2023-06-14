@@ -52,6 +52,24 @@ class medicalStatus(models.TextChoices):
     KLAIM_TIDAK_LENGKAP = 'Klaim tidak lengkap'
     KLAIM_DITOLAK       = 'Klaim ditolak'
 
+class medicalMaritalStatus(models.TextChoices):
+    NONE            = '0'
+    K0              = 'K-0'
+    K1              = 'K-1'
+    K2              = 'K-2'
+    K3              = 'K-3'
+    T1              = 'T-1'
+    T2              = 'T-2'
+    TK              = 'TK'
+
+    
+class medicalRemain(models.Model):
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    marital_status  = models.CharField(max_length=25, choices=medicalMaritalStatus.choices, default=False, null=True, blank=True)
+    limit           = models.PositiveBigIntegerField(null=True, blank=True)
+    used            = models.PositiveBigIntegerField(null=True, blank=True)
+    remain          = models.PositiveBigIntegerField(null=True, blank=True)
+
 class medicalApprovalList(models.Model):
     user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     is_foreman      = models.BooleanField(default=False, blank=True, null=True)

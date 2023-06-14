@@ -10,7 +10,7 @@ from django.contrib.auth.models import User, Group
 from master_app.models import UserProfileInfo, UserKeluargaInfo
 from it_app.models import IPAddress, Hardware, ListLocation
 from qc_app.models import rirMaterial, rirVendor
-from hrd_app.models import medicalApprovalList
+from hrd_app.models import medicalApprovalList, medicalRemain
 from accounting_app.models import coaCode
 from django.contrib.auth.decorators import user_passes_test
 import csv
@@ -200,6 +200,20 @@ def CreateLocation(request):
             data.append(coacode)
         ListLocation.objects.bulk_create(data)
     return JsonResponse('Location csv is now working', safe=False)
+
+@login_required
+def CreateRemain(request):
+    with open('templates/csv/list_remain.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for user_id, marital_status, limit, used, remain,    *__ in csvf:
+            user_table_id = User.objects.filter(username = user_id).first()
+            medical_remain = medicalRemain(user = user_table_id, marital_status = marital_status, limit = limit, used = used, remain = remain,)
+            data.append(medical_remain)
+        medicalRemain.objects.bulk_create(data)
+    return JsonResponse('Remain csv is now working', safe=False)
+    return HttpResponse('jadi ini merupakan Create Remain')
+
 # CREATE END
 
 # UPDATE START
