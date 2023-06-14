@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponse
 from csv import reader
 from django.contrib.auth.models import User, Group
 from master_app.models import UserProfileInfo, UserKeluargaInfo
-from it_app.models import IPAddress, Hardware
+from it_app.models import IPAddress, Hardware, ListLocation
 from qc_app.models import rirMaterial, rirVendor
 from hrd_app.models import medicalApprovalList
 from accounting_app.models import coaCode
@@ -190,6 +190,16 @@ def CreateCoaCode(request):
         coaCode.objects.bulk_create(data)
     return JsonResponse('coacode csv is now working', safe=False)
 
+@login_required
+def CreateLocation(request):
+    with open('templates/csv/list_location.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for location_name,   *__ in csvf:
+            coacode = ListLocation(location_name = location_name,)
+            data.append(coacode)
+        ListLocation.objects.bulk_create(data)
+    return JsonResponse('Location csv is now working', safe=False)
 # CREATE END
 
 # UPDATE START

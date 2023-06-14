@@ -13,6 +13,7 @@ urlpatterns = [
     # path('CreateVendor/', views.CreateVendor, name='CreateVendor'),
     # path('CreateApprovalMedical/', views.CreateApprovalMedical, name='CreateApprovalMedical'),
     # path('CreateInfoKeluarga/', views.CreateInfoKeluarga, name='CreateInfoKeluarga'),
+    # path('CreateLocation/', views.CreateLocation, name='CreateLocation'),
     # path('UpdateUpdateUserProfileInfoGenderStatus/', views.UpdateUpdateUserProfileInfoGenderStatus, name='UpdateUpdateUserProfileInfoGenderStatus'),
     # path('UpdateUserProfileInfoTanggalLahir/', views.UpdateUserProfileInfoTanggalLahir, name='UpdateUserProfileInfoTanggalLahir'),
 ]

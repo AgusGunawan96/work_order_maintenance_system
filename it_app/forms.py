@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ClearableFileInput
 from django.contrib.auth.models import User
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, TicketAttachment, IPAddress, Hardware, ITComputerList
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, TicketAttachment, IPAddress, Hardware, ITComputerList, ListLocation
 from django_select2.forms import Select2Widget
 from django.db.models.functions import Concat
 
@@ -27,6 +27,11 @@ class computerListForms(forms.ModelForm):
         queryset=IPAddress.objects.all(),
         widget=Select2Widget,
         required=False
+    )
+    location = forms.ModelChoiceField(
+    queryset=ListLocation.objects.all(),
+    widget=Select2Widget,
+    required=False
     )
     is_office_2003 = forms.BooleanField(
         label='Office 2003',

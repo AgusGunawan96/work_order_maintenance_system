@@ -78,12 +78,17 @@ class PCTypeList(models.Model):
     hardware    = models.ForeignKey(HardwareType, on_delete=models.CASCADE)
     pc_type     = models.CharField(max_length=126)
 
+class ListLocation(models.Model):
+    location_name = models.CharField(max_length=126)
+    def __str__(self):
+        return self.location_name
+
 class ITComputerList(models.Model):
     computer_user   = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     ip              = models.ForeignKey(IPAddress, null=True, blank=True, on_delete=models.CASCADE)
     pc_type         = models.ForeignKey(HardwareType, on_delete=models.CASCADE)
+    location        = models.ForeignKey(ListLocation,null=True, blank=True, on_delete=models.CASCADE)
     computer_name   = models.CharField(max_length=126)
-    location        = models.CharField(max_length=126, null=True, blank=True)
     os              = models.CharField(max_length=126, choices=ListOs.choices, null=True)
     windows_type    = models.CharField(max_length=126, choices=ListWindowsType.choices, null=True)
     antivirus       = models.CharField(max_length=126, choices=ListAntivirus.choices, null=True, blank=True)
