@@ -4,9 +4,11 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.http import Http404, HttpResponse, JsonResponse
-import datetime
+from dateutil.parser import parse
+import datetime, calendar
 import csv
 import xlwt
+from django.db.models.functions import Substr
 from dateutil.relativedelta import relativedelta
 from csv import reader
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan
@@ -48,6 +50,19 @@ def medical_train_index(request):
     medical_approval_list       = medicalApprovalList.objects.filter(user_id = request.user).first()
     medical_header              = medicalHeader.objects.filter(user_id = request.user).order_by('-id')
     medical_modal               = medicalHeader.objects.order_by('-id')
+    medical_date = medicalHeader.objects.annotate(
+        year_month=Substr('medical_no', 4, 6)
+    ).values('year_month').distinct().all()
+
+    year_month_list = [entry['year_month'] for entry in medical_date]
+
+    yml = []
+    for year_month in year_month_list:
+        year = year_month[:4]
+        month_number = int(year_month[4:])
+        month_name = calendar.month_name[month_number]
+        yml.append(f"{month_name} {year}")
+
     if not medical_header:
         medical_header = None
     # Kondisi Approval 
@@ -103,6 +118,7 @@ def medical_train_index(request):
         'medical_approval_hr'                       : medical_approval_hr, 
         'medical_approval_list'                     : medical_approval_list,
         'medical_modal'                             : medical_modal,
+        'medical_date'                              : yml,
         'form_medical_approval_reason_foreman'      : medical_approval_reason_foreman ,
         'form_medical_approval_reason_supervisor'   : medical_approval_reason_supervisor ,
         'form_medical_approval_reason_manager'      : medical_approval_reason_manager ,
@@ -518,54 +534,6 @@ def medical_print_atasan(request, medical_id):
 
     return redirect('hrd_app:medical_train_index')
 
-
-# @login_required
-# def medical_print_atasan(request):
-#     # Replace with the vendor ID and product ID of your Epson TM-T82 printer
-#     vendor_id = 0x04B8
-#     product_id = 0x0E27
-
-#     # Find the USB device based on vendor ID and product ID
-#     device = usb.core.find(idVendor=vendor_id, idProduct=product_id)
-
-#     if device is None:
-#         return HttpResponse("USB device not found.")
-
-#     try:
-#         # Set the active configuration of the device
-#         device.set_configuration()
-        
-#         # Claim the interface
-#         usb.util.claim_interface(device, 0)
-
-#         # Set the printer properties (you may need to adjust these based on your printer's settings)
-#         # Note: These settings might not be applicable to the Epson TM-T82 printer, please adjust accordingly.
-#         device.write(1, b'\x1B\x40')  # Initialize printer
-#         device.write(1, b'\x1B\x61\x01')  # Center alignment
-#         device.write(1, b'\x1B\x21\x30')  # Set font size to double-width and double-height
-
-#         # Print the receipt content
-#         device.write(1, b'Sample Receipt\n')
-#         device.write(1, b'------------------------------\n')
-#         device.write(1, b'Item\t\tQty\tPrice\n')
-#         device.write(1, b'------------------------------\n')
-#         device.write(1, b'Item 1\t\t1\t$10.00\n')
-#         device.write(1, b'Item 2\t\t2\t$5.00\n')
-#         device.write(1, b'------------------------------\n')
-#         device.write(1, b'Total:\t\t\t$20.00\n')
-#         device.write(1, b'------------------------------\n')
-
-#         # Send the automatic cut command
-#         device.write(1, b'\x1D\x56\x41\x10')
-
-#         return HttpResponse("Receipt printed successfully.")
-#     except usb.core.USBError as e:
-#         return HttpResponse("Error printing receipt: {}".format(str(e)))
-#     finally:
-#         # Release the claimed interface and reset the active configuration
-#         usb.util.release_interface(device, 0)
-#         device.reset()
-
 @login_required
 def medical_train_download_report_excel(request):
     # kita akan panggil header dari medical 
@@ -695,4 +663,54 @@ def medical_train_download_report_excel(request):
     wb.save(response)
     return response
     return HttpResponse('ini adalah report yang akan diexcel')
+
+def convert_month_year_to_ym(month_year):
+    # Parse the input string as a date
+    date_obj = parse(month_year)
+    
+    # Format the date object to the desired output format
+    year_month = date_obj.strftime("%Y%m")
+    
+    return year_month
+
+@login_required
+def medical_train_download_accounting(request):
+    month_year = request.POST['id_yearmonth']
+    year_month = convert_month_year_to_ym(month_year)
+    # kita akan panggil header dari medical 
+    medical_header = medicalHeader.objects.filter(is_complete = True, medical_no__contains=year_month).all().values_list('id','medical_no','user__first_name','user__last_name','user__username','user__userprofileinfo__department__department_name','user__userprofileinfo__section__section_name')
+    # Memanggil RIR dari tahun awal sampai tahun akhir
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=MedicalTrainAccounting.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('MedicalTrainAccounting', cell_overwrite_ok=True) # this will make a sheet named Users Data
+    
+    # Dimulai dari Row 1
+    row_num = 1
+    font_style_bold = xlwt.XFStyle()
+    font_style_bold.font.bold = True
+    columns = ['Medical No','Nama','No. Karyawan','Department','Section']
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
+
+    # masuk kedalam body
+    font_style = xlwt.XFStyle()
+    # Body dari excel laporan yang akan dibuat
+    for body in medical_header:
+            # Kita akan panggil setiap model yang ada di HR
+            row_num += 1
+            row = [
+                body[1],
+                body[2] + " " +body[3],
+                body[4],
+                body[5],
+                body[6],
+
+            ]
+            for col_num in range(len(row)):
+                ws.write(row_num, col_num, row[col_num], font_style)
+        
+    wb.save(response)
+    return response
+    return HttpResponse('jadi ini pembuatan report untuk download Accounting')
 # MEDICAL TRAIN END

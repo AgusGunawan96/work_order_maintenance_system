@@ -30,6 +30,7 @@ urlpatterns = [
     path('medicalTrain/medical_train_detail/<int:medical_id>', views.medical_train_detail, name = 'medical_train_detail'),
     path('medicalTrain/medical_train_download_report/<int:medical_id>', views.medical_train_download_report, name = 'medical_train_download_report'),
     path('medicalTrain/medical_train_download_report_excel/', views.medical_train_download_report_excel, name = 'medical_train_download_report_excel'),
+    path('medicalTrain/medical_train_download_accounting/', views.medical_train_download_accounting, name = 'medical_train_download_accounting'),
     path('medicalTrain/medical_submit_atasan/<int:medical_id>/<str:is_approve>/<str:is_reject>', views.medical_submit_atasan, name = 'medical_submit_atasan'),
     path('medicalTrain/medical_submit_hr/<int:medical_id>/<str:is_approve>/<str:is_reject>', views.medical_submit_hr, name = 'medical_submit_hr'),
     path('medicalTrain/medical_print_atasan/<int:medical_id>', views.medical_print_atasan, name = 'medical_print_atasan'),
