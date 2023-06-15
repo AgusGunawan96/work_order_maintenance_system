@@ -4,7 +4,7 @@ from master_app.models import UserKeluargaInfo
 from django.forms import ClearableFileInput
 from django_select2.forms import Select2Widget
 from datetime import date
-
+from django.core.validators import RegexValidator
 # Function
 def get_current_year():
     return date.today().year
@@ -37,6 +37,7 @@ class medicalDataKeluargaForms(forms.ModelForm):
         fields = ('keluarga',)
 
 class medicalPemberiLayananForms(forms.ModelForm):
+    no_telp = forms.IntegerField()
     class Meta():
         model = medicalDetailDokter
         fields = ('nama_dokter','tempat_pelayanan','nama_tempat','alamat','no_telp')

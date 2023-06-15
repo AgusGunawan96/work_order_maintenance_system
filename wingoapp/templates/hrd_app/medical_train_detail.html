@@ -31,32 +31,31 @@
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Name</label>
-                                <input class="form-control" type="text"
-                                    value="{{medical_header.user.first_name}} {{medical_header.user.last_name}}" readonly>
+                                <input class="form-control" type="text" value="{{medical_header.user.first_name}} {{medical_header.user.last_name}}" readonly style="text-transform: uppercase;">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Nomor Karyawan</label>
-                                <input class="form-control" type="text" value="{{medical_header.user.username}}" readonly>
+                                <input class="form-control" type="text" value="{{medical_header.user.username}}" readonly style="text-transform: uppercase;">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Department</label>
-                                <input class="form-control" type="text"
-                                    value="{{medical_header.user.userprofileinfo.department.department_name}}" readonly>
+                                <input class="form-control" type="text" value="{{medical_header.user.userprofileinfo.department.department_name}}" readonly style="text-transform: uppercase;">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Division</label>
-                                <input class="form-control" type="text"
-                                    value="{{medical_header.user.userprofileinfo.division.division_name}}" readonly>
+                                <input class="form-control" type="text" value="{{medical_header.user.userprofileinfo.division.division_name}}" readonly style="text-transform: uppercase;">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Section</label>
-                                <input class="form-control" type="text"
-                                    value="{{medical_header.user.userprofileinfo.section.section_name}}" readonly>
+                                <input class="form-control" type="text" value="{{medical_header.user.userprofileinfo.section.section_name}}" readonly style="text-transform: uppercase;">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label class="col-form-label">Position</label>
-                                <input class="form-control" type="text"
-                                    value="{{medical_header.user.userprofileinfo.position}}" readonly>
+                                <input class="form-control" type="text" value="{{medical_header.user.userprofileinfo.position}}" readonly style="text-transform: uppercase;">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="col-form-label">Status Karyawan</label>
+                                <input class="form-control" type="text" value="{% if medical_header.user.userprofileinfo.is_contract %}Contract {% elif medical_header.user.userprofileinfo.is_permanent %}Permanent {% endif %}" readonly style="text-transform: uppercase;">
                             </div>
                         </div>
                     </div>
