@@ -11,13 +11,13 @@ from dateutil.relativedelta import relativedelta
 from csv import reader
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan
 from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms
-from escpos.printer import Usb
-from escpos.constants import *
-import usb1
+# from escpos.printer import Usb
+# from escpos.constants import *
+# import usb1
 import win32print
-import usb.core
-import usb.util
-import ctypes
+# import usb.core
+# import usb.util
+# import ctypes
 
 # Create your views here.
 def index(request):
