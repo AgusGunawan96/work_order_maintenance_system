@@ -10,6 +10,7 @@ import xlwt
 from dateutil.relativedelta import relativedelta
 from csv import reader
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan
+from master_app.models import UserProfileInfo
 from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms
 # from escpos.printer import Usb
 # from escpos.constants import *
@@ -18,7 +19,7 @@ import win32print
 # import usb.core
 # import usb.util
 # import ctypes
-
+import locale
 # Create your views here.
 def index(request):
     return render(request, 'hrd_app/index.html')
@@ -199,6 +200,8 @@ def medical_train_add(request):
             medical_approval_foreman.save()
             medical_approval_supervisor.save()
             medical_approval_manager.save()
+
+            medical_print_atasan(None, int(medical_header.id))
             messages.success(request, 'Medical Train Added')    
             return redirect('hrd_app:medical_train_index')
         
@@ -444,15 +447,15 @@ def medical_train_download_report(request, medical_id):
     }
     return render(request, 'hrd_app/medical_train_download_report.html', context)
 
-
-@login_required
-def medical_print_atasan(request):
- # Specify the printer name or provide the full printer path
-    #printer_name = "EPSON TM-T82 Receipt"
+def medical_print_atasan(request, medical_id):
+    # Specify the printer name or provide the full printer path
+    medical_header = medicalHeader.objects.get(pk=medical_id)
+    assignee = UserProfileInfo.objects.filter(id=medical_header.user.id).first()
     ip_address = "172.16.202.72"
     name = "EPSON TM-T82 Receipt"
 
-    printer_name = r"\\"+ip_address+"\\"+name
+    printer_name = r"\\" + ip_address + "\\" + name
+
     try:
         # Open a connection to the printer
         printer_handle = win32print.OpenPrinter(printer_name)
@@ -464,26 +467,43 @@ def medical_print_atasan(request):
             # Start the page
             win32print.StartPagePrinter(printer_handle)
 
+            # Set the font size
+            font_size_command = b'\x1B\x21\x08'  # Set font size to double-width and double-height
+            win32print.WritePrinter(printer_handle, font_size_command)
+
             # Print the receipt content
             content = "MY SEIWA Medical Train\n"
             content += "------------------------------\n"
-            content += "Item\t\tQty\tPrice\n"
+            content += medical_header.medical_no + "\n"
+            content += medical_header.created_at.strftime("%Y-%m-%d %H:%M") + "\n"
             content += "------------------------------\n"
-            content += "Item 1\t\t1\t$10.00\n"
-            content += "Item 2\t\t2\t$5.00\n"
-            content += "------------------------------\n"
-            content += "Total:\t\t\t$20.00\n"
+            content += "Name         : " + medical_header.user.first_name +" "+ medical_header.user.last_name + "\n"
+            content += "No. Karyawan : " + medical_header.user.username + "\n"
+            content += "Department   : " + assignee.department.department_name + "\n"
             content += "------------------------------\n"
 
-            win32print.WritePrinter(printer_handle, content.encode("utf-8"))
+            # Format the total as IDR manually
+            total_formatted = "IDR " + "{:,.2f}".format(medical_header.rp_total)
+            content += "Total        : " + total_formatted + "\n"
+
+            # Calculate the remaining space needed for justification
+            max_line_length = 48  # Maximum line length for your printer
+            lines = content.split('\n')
+            justified_content = ''
+            for line in lines:
+                remaining_space = max_line_length - len(line)
+                justified_line = line + ' ' * remaining_space
+                justified_content += justified_line + '\n'
+
+            win32print.WritePrinter(printer_handle, justified_content.encode("utf-8"))
 
             # Add some space
-            space_command = b'\n\n\n\n'  # Four line breaks
+            space_command = b'\n\n'  # Two line breaks
             win32print.WritePrinter(printer_handle, space_command)
+
             # Send the automatic cut command
             cut_command = b'\x1D\x56\x42\x00'  # Full cut command
             win32print.WritePrinter(printer_handle, cut_command)
-
 
             # End the page
             win32print.EndPagePrinter(printer_handle)
@@ -496,7 +516,7 @@ def medical_print_atasan(request):
         # Close the printer connection
         win32print.ClosePrinter(printer_handle)
 
-    return HttpResponse("Receipt printed successfully!")
+    return redirect('hrd_app:medical_train_index')
 
 
 # @login_required

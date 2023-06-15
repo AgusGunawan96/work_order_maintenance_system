@@ -77,8 +77,8 @@
                           {% endif %}
                           <td><a href="{% url 'hrd_app:medical_train_detail' medical.id %}"
                               class="btn btn-info btn-sm"><span class="icon-info"></span> Detail</a>
-                            | <a href="{% url 'hrd_app:medical_train_download_report' medical.id %}"
-                              class="btn btn-info btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
+                            | <a href="{% url 'hrd_app:medical_print_atasan' medical.id %}"
+                              class="btn btn-info btn-sm" ><span class="icon-printer"></span>Print</a>
                           </td>
                         </tr>
                         {% endfor %}

@@ -146,9 +146,7 @@ class medicalApprovalForeman(models.Model):
     reason     = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
-    
-    def __str__(self):
-        return self.foreman.user.first_name + " " + self.foreman.user.last_name
+
     
 class medicalApprovalSupervisor(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
@@ -159,8 +157,6 @@ class medicalApprovalSupervisor(models.Model):
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
 
-    def __str__(self):
-        return self.supervisor.user.first_name + " " + self.supervisor.user.last_name
     
 class medicalApprovalManager(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
@@ -171,8 +167,7 @@ class medicalApprovalManager(models.Model):
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
 
-    def __str__(self):
-        return self.manager.user.first_name + " " + self.manager.user.last_name
+
     
 class medicalApprovalHR(models.Model):
     medical    = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
@@ -183,8 +178,6 @@ class medicalApprovalHR(models.Model):
     created_at = models.DateTimeField('created at', auto_now_add = True)
     updated_at = models.DateTimeField('updated at', auto_now = True)
 
-    def __str__(self):
-        return self.hr.user.first_name + " " + self.hr.user.last_name
 
 # APPROVAL MEDICAL END
 
