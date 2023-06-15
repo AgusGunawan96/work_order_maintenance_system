@@ -153,7 +153,8 @@
                           {% else %}
                           <td>Klaim di tolak</td>
                           {% endif %}
-                          <td><a
+                          <td>
+                            <a
                               href="{% url 'hrd_app:medical_submit_atasan' medical_supervisor.medical.id True False %}"
                               class="btn btn-success btn-sm"><span class="icon-check"></span>Approve</a>
                             <a data-bs-toggle="modal"
@@ -166,7 +167,7 @@
                         {% endif %}
                         {% endfor %}
                         {% for medical_foreman in medical_approval_foreman %}
-                        {% if medical_foreman.medical.user.userprofileinfo.department == request.user.userprofileinfo.department %}
+                        {% if request.user.userprofileinfo.division.id == 17 %}
                         <tr>
                           <td><a
                               href="{% url 'hrd_app:medical_train_detail' medical_foreman.medical.id %}">{{medical_foreman.medical.medical_no}}
@@ -184,7 +185,7 @@
                           {% endif %}
                           <td>
                             <a href="{% url 'hrd_app:medical_submit_atasan' medical_foreman.medical.id True False%}"
-                              class="btn btn-success btn-sm"><span class="icon-check"></span>
+                              class="btn btn-success btn-sm"><span class="icon-check"></span>Approve</a>
                             <a data-bs-toggle="modal"
                               data-bs-target="#ModalMedicalReject{{ medical_foreman.medical.id }}" data-whatever="@mdo"
                               class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>

@@ -11,6 +11,14 @@ from dateutil.relativedelta import relativedelta
 from csv import reader
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan
 from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms
+from escpos.printer import Usb
+from escpos.constants import *
+import usb1
+import win32print
+import usb.core
+import usb.util
+import ctypes
+
 # Create your views here.
 def index(request):
     return render(request, 'hrd_app/index.html')
@@ -162,21 +170,35 @@ def medical_train_add(request):
                 attachment = medicalAttachment(attachment=f)
                 attachment.medical = medical_header
                 attachment.save()
+            # Pembuatan Approval Massal
+                # Nanti akan lanjut ke proses approval
+                # medical_approval_foreman = medicalReasonForemanForms().save(commit=False)
+                # medical_approval_supervisor = medicalReasonSupervisorForms().save(commit=False)
+                # medical_approval_manager = medicalReasonManagerForms().save(commit=False)
+                # medical_approval_hr = medicalReasonHRForms().save(commit=False)
+                # Memasukan Nilai medical ke masing masing approval
+                # medical_approval_foreman.medical = medical_header
+                # medical_approval_supervisor.medical = medical_header
+                # medical_approval_manager.medical = medical_header
+                # medical_approval_hr.medical = medical_header
+                # save nilai approval 
+                # medical_approval_foreman.save()
+                # medical_approval_supervisor.save()
+                # medical_approval_manager.save()
+                # medical_approval_hr.save()
+            # Pembuatan Approval Atasan
             # Nanti akan lanjut ke proses approval
             medical_approval_foreman = medicalReasonForemanForms().save(commit=False)
             medical_approval_supervisor = medicalReasonSupervisorForms().save(commit=False)
             medical_approval_manager = medicalReasonManagerForms().save(commit=False)
-            medical_approval_hr = medicalReasonHRForms().save(commit=False)
             # Memasukan Nilai medical ke masing masing approval
             medical_approval_foreman.medical = medical_header
             medical_approval_supervisor.medical = medical_header
             medical_approval_manager.medical = medical_header
-            medical_approval_hr.medical = medical_header
             # save nilai approval 
             medical_approval_foreman.save()
             medical_approval_supervisor.save()
             medical_approval_manager.save()
-            medical_approval_hr.save()
             messages.success(request, 'Medical Train Added')    
             return redirect('hrd_app:medical_train_index')
         
@@ -273,6 +295,13 @@ def medical_submit_atasan(request, medical_id, is_approve, is_reject):
             medical = medicalHeader.objects.get(pk=medical_id)
             medical.is_manager = True
             medical.save()
+
+        # Membuat Approval HR
+        medical_approval_hr = medicalReasonHRForms().save(commit=False)
+        medical = medicalHeader.objects.get(pk=medical_id)
+        medical_approval_hr.medical = medical
+        medical_approval_hr.save()
+
         messages.success(request, 'Medical Train Approved')    
         return redirect('hrd_app:medical_train_index')
     elif is_reject == 'True':
@@ -414,6 +443,108 @@ def medical_train_download_report(request, medical_id):
         'medical_hr'                        :   medical_hr,
     }
     return render(request, 'hrd_app/medical_train_download_report.html', context)
+
+
+@login_required
+def medical_print_atasan(request):
+ # Specify the printer name or provide the full printer path
+    #printer_name = "EPSON TM-T82 Receipt"
+    ip_address = "172.16.202.72"
+    name = "EPSON TM-T82 Receipt"
+
+    printer_name = r"\\"+ip_address+"\\"+name
+    try:
+        # Open a connection to the printer
+        printer_handle = win32print.OpenPrinter(printer_name)
+
+        # Create a new print job
+        win32print.StartDocPrinter(printer_handle, 1, ("Sample Receipt", None, "RAW"))
+
+        try:
+            # Start the page
+            win32print.StartPagePrinter(printer_handle)
+
+            # Print the receipt content
+            content = "MY SEIWA Medical Train\n"
+            content += "------------------------------\n"
+            content += "Item\t\tQty\tPrice\n"
+            content += "------------------------------\n"
+            content += "Item 1\t\t1\t$10.00\n"
+            content += "Item 2\t\t2\t$5.00\n"
+            content += "------------------------------\n"
+            content += "Total:\t\t\t$20.00\n"
+            content += "------------------------------\n"
+
+            win32print.WritePrinter(printer_handle, content.encode("utf-8"))
+
+            # Add some space
+            space_command = b'\n\n\n\n'  # Four line breaks
+            win32print.WritePrinter(printer_handle, space_command)
+            # Send the automatic cut command
+            cut_command = b'\x1D\x56\x42\x00'  # Full cut command
+            win32print.WritePrinter(printer_handle, cut_command)
+
+
+            # End the page
+            win32print.EndPagePrinter(printer_handle)
+        finally:
+            # End the print job
+            win32print.EndDocPrinter(printer_handle)
+    except Exception as e:
+        return HttpResponse("Error printing receipt: {}".format(str(e)))
+    finally:
+        # Close the printer connection
+        win32print.ClosePrinter(printer_handle)
+
+    return HttpResponse("Receipt printed successfully!")
+
+
+# @login_required
+# def medical_print_atasan(request):
+#     # Replace with the vendor ID and product ID of your Epson TM-T82 printer
+#     vendor_id = 0x04B8
+#     product_id = 0x0E27
+
+#     # Find the USB device based on vendor ID and product ID
+#     device = usb.core.find(idVendor=vendor_id, idProduct=product_id)
+
+#     if device is None:
+#         return HttpResponse("USB device not found.")
+
+#     try:
+#         # Set the active configuration of the device
+#         device.set_configuration()
+        
+#         # Claim the interface
+#         usb.util.claim_interface(device, 0)
+
+#         # Set the printer properties (you may need to adjust these based on your printer's settings)
+#         # Note: These settings might not be applicable to the Epson TM-T82 printer, please adjust accordingly.
+#         device.write(1, b'\x1B\x40')  # Initialize printer
+#         device.write(1, b'\x1B\x61\x01')  # Center alignment
+#         device.write(1, b'\x1B\x21\x30')  # Set font size to double-width and double-height
+
+#         # Print the receipt content
+#         device.write(1, b'Sample Receipt\n')
+#         device.write(1, b'------------------------------\n')
+#         device.write(1, b'Item\t\tQty\tPrice\n')
+#         device.write(1, b'------------------------------\n')
+#         device.write(1, b'Item 1\t\t1\t$10.00\n')
+#         device.write(1, b'Item 2\t\t2\t$5.00\n')
+#         device.write(1, b'------------------------------\n')
+#         device.write(1, b'Total:\t\t\t$20.00\n')
+#         device.write(1, b'------------------------------\n')
+
+#         # Send the automatic cut command
+#         device.write(1, b'\x1D\x56\x41\x10')
+
+#         return HttpResponse("Receipt printed successfully.")
+#     except usb.core.USBError as e:
+#         return HttpResponse("Error printing receipt: {}".format(str(e)))
+#     finally:
+#         # Release the claimed interface and reset the active configuration
+#         usb.util.release_interface(device, 0)
+#         device.reset()
 
 @login_required
 def medical_train_download_report_excel(request):

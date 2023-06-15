@@ -32,6 +32,7 @@ urlpatterns = [
     path('medicalTrain/medical_train_download_report_excel/', views.medical_train_download_report_excel, name = 'medical_train_download_report_excel'),
     path('medicalTrain/medical_submit_atasan/<int:medical_id>/<str:is_approve>/<str:is_reject>', views.medical_submit_atasan, name = 'medical_submit_atasan'),
     path('medicalTrain/medical_submit_hr/<int:medical_id>/<str:is_approve>/<str:is_reject>', views.medical_submit_hr, name = 'medical_submit_hr'),
+    path('medicalTrain/medical_print_atasan/', views.medical_print_atasan, name = 'medical_print_atasan'),
     # MEDICAL TRAIN END
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
