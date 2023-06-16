@@ -76,7 +76,7 @@ class cashPaymentAttachmentForms(forms.ModelForm):
         model = cashPaymentAttachment
         fields = ('attachment',)
         widgets = {
-            'attachment'    : ClearableFileInput(attrs={'multiple':True}),
+            'attachment': ClearableFileInput(attrs={'multiple': True, 'required': False}),
         }
 
 class cashPaymentCashierAttachmentForms(forms.ModelForm):

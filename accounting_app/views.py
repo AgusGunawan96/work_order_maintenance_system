@@ -319,10 +319,12 @@ def cashPayment_detail(request, cashPayment_id):
     cashPayment_account_code = rel_cashPayment_accountcode.objects.filter(cashPayment_id = cashPayment_detail.id).order_by('created_at')
     # return HttpResponse(cashPayment_account_code)
     attachment = cashPaymentAttachment.objects.filter(cashPayment = cashPayment_detail).values('attachment',)
+    cashier_attachment = cashierAttachment.objects.filter(cashPayment = cashPayment_detail).values('attachment',)
     context = {
          'cashPayment'  : cashPayment_detail,
          'account_codes' : cashPayment_account_code,
          'attachment'   : attachment,
+         'cashier_attachment'   : cashier_attachment,
     }
     return render(request, 'accounting_app/cashPayment_detail.html', context)
 
@@ -798,10 +800,12 @@ def advance_detail(request, cashPayment_id):
     advance_detail = cashPayment.objects.get(pk=cashPayment_id)
     cashPayment_account_code = rel_cashPayment_accountcode.objects.filter(cashPayment_id = advance_detail.id).order_by('created_at')
     attachment = advAttachment.objects.filter(cashPayment = advance_detail).values('attachment',)
+    cashier_attachment = cashierAttachment.objects.filter(cashPayment = advance_detail).values('attachment',)
     context = {
          'cashPayment'  : advance_detail,
          'account_codes': cashPayment_account_code,
          'attachment'   : attachment,
+         'cashier_attachment'   : cashier_attachment,
     }
     return render(request, 'accounting_app/advance_detail.html', context)
 

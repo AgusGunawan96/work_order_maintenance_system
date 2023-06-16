@@ -137,11 +137,11 @@
             <tr class="section-detail">
                 <td style="padding: 15px;">{{ medical_header.user.first_name }} {{ medical_header.user.last_name }}</td>
                 <td style="padding: 15px;">
-                    {% if medical_header.is_foreman %} {% if medical_foreman.is_reject %}{{ medical_foreman }}(Rejected){% else %}{{ medical_foreman }}{% endif %}{% endif %}
-                    {% if medical_header.is_supervisor %}{% if medical_supervisor.is_reject %}{{ medical_supervisor }}(Rejected){% else %}{{ medical_supervisor }}{% endif %} {% endif %}
-                    {% if medical_header.is_manager %}{% if medical_manager.is_reject %}{{ medical_manager }}(Rejected){% else %}{{ medical_manager }}{% endif %}{% endif %}
+                    {% if medical_header.is_foreman %} {% if medical_foreman.is_reject %}{{ medical_foreman.foreman.user.first_name }} {{ medical_foreman.foreman.user.last_name }}(Rejected){% else %}{{ medical_foreman.foreman.user.first_name }} {{ medical_foreman.foreman.user.last_name }}{% endif %}{% endif %}
+                    {% if medical_header.is_supervisor %}{% if medical_supervisor.is_reject %}{{ medical_supervisor.supervisor.user.first_name }} {{ medical_supervisor.supervisor.user.last_name }}(Rejected){% else %}{{ medical_supervisor.supervisor.user.first_name }} {{ medical_supervisor.supervisor.user.last_name }}{% endif %} {% endif %}
+                    {% if medical_header.is_manager %}{% if medical_manager.is_reject %}{{ medical_manager.manager.user.first_name }} {{ medical_manager.manager.user.last_name }}(Rejected){% else %}{{ medical_manager.manager.user.first_name }} {{ medical_manager.manager.user.last_name }}{% endif %}{% endif %}
                 </td>
-                <td style="padding: 15px;">{% if medical_hr.is_approve %} {{ medical_hr }} {% elif medical_hr.is_reject %} {{ medical_hr }}(Rejected) {% else %} -  {% endif %}</td>
+                <td style="padding: 15px;">{% if medical_hr.is_approve %} {{ medical_hr.hr.user.first_name }} {{ medical_hr.hr.user.last_name }} {% elif medical_hr.is_reject %} {{ medical_hr.hr.user.first_name }} {{ medical_hr.hr.user.last_name }}(Rejected) {% else %} -  {% endif %}</td>
             </tr>
         </tbody>
         </table>

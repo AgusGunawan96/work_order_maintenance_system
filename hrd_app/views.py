@@ -11,7 +11,7 @@ import xlwt
 from django.db.models.functions import Substr
 from dateutil.relativedelta import relativedelta
 from csv import reader
-from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan
+from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan, medicalRemain
 from master_app.models import UserProfileInfo
 from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms
 # from escpos.printer import Usb
@@ -467,6 +467,7 @@ def medical_print_atasan(request, medical_id):
     # Specify the printer name or provide the full printer path
     medical_header = medicalHeader.objects.get(pk=medical_id)
     assignee = UserProfileInfo.objects.filter(id=medical_header.user.id).first()
+    remain   = medicalRemain.objects.filter(user_id=medical_header.user.id).first()
     ip_address = "172.16.202.72"
     name = "EPSON TM-T82 Receipt"
 
@@ -500,7 +501,9 @@ def medical_print_atasan(request, medical_id):
 
             # Format the total as IDR manually
             total_formatted = "IDR " + "{:,.2f}".format(medical_header.rp_total)
-            content += "Total        : " + total_formatted + "\n"
+            total_formatted_remain = "IDR " + "{:,.2f}".format(remain.remain)
+            content += "Remain Berobat      : " + total_formatted_remain + "\n"
+            content += "Total biaya berobat : " + total_formatted + "\n"
 
             # Calculate the remaining space needed for justification
             max_line_length = 48  # Maximum line length for your printer
@@ -588,8 +591,11 @@ def medical_train_download_report_excel(request):
 
         
         # Membuat kondisi apabiula diketahui oleh HR
-        if not medical_hr.hr == None:
-            hr = medical_hr.hr.user.first_name +' '+medical_hr.hr.user.last_name
+        if medical_hr:
+            if not medical_hr.hr == None:
+                hr = medical_hr.hr.user.first_name +' '+medical_hr.hr.user.last_name
+            else:
+                hr = '-'
         else:
             hr = '-'
 
@@ -678,7 +684,7 @@ def medical_train_download_accounting(request):
     month_year = request.POST['id_yearmonth']
     year_month = convert_month_year_to_ym(month_year)
     # kita akan panggil header dari medical 
-    medical_header = medicalHeader.objects.filter(is_complete = True, medical_no__contains=year_month).all().values_list('id','medical_no','user__first_name','user__last_name','user__username','user__userprofileinfo__department__department_name','user__userprofileinfo__section__section_name')
+    medical_header = medicalHeader.objects.filter(is_complete = True, medical_no__contains=year_month).all().values_list('id','medical_no','user__first_name','user__last_name','user__username','user__userprofileinfo__department__department_name','user__userprofileinfo__section__section_name', 'rp_total')
     # Memanggil RIR dari tahun awal sampai tahun akhir
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename=MedicalTrainAccounting.xls'
@@ -689,10 +695,12 @@ def medical_train_download_accounting(request):
     row_num = 1
     font_style_bold = xlwt.XFStyle()
     font_style_bold.font.bold = True
-    columns = ['Medical No','Nama','No. Karyawan','Department','Section']
+    columns = ['Medical No','Nama','No. Karyawan','Department','Section','RP Total']
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
-
+    #Format Currency
+    currency_idr = xlwt.XFStyle()
+    currency_idr.num_format_str = f'#,##0.00'
     # masuk kedalam body
     font_style = xlwt.XFStyle()
     # Body dari excel laporan yang akan dibuat
@@ -705,10 +713,14 @@ def medical_train_download_accounting(request):
                 body[4],
                 body[5],
                 body[6],
+                body[7],
 
             ]
             for col_num in range(len(row)):
-                ws.write(row_num, col_num, row[col_num], font_style)
+                if col_num==5:
+                    ws.write(row_num, col_num, row[col_num], currency_idr)
+                else:
+                    ws.write(row_num, col_num, row[col_num], font_style)
         
     wb.save(response)
     return response

@@ -394,7 +394,7 @@
                           <th>Assignee</th>
                           <th>Total(RP.)</th>
                           <th>Status</th>
-                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 6  %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 786  %}
                           <th>Action</th>
                           {% endif %}
                         </tr>
@@ -402,7 +402,7 @@
                        <tbody>
                         {% for president in presidents %}
                         {% if president.is_approve_president == False %}
-                        {% if president.advance_approval_accounting_manager.advance_approval_manager.advance.assignee.id == request.user.id or  request.user.userprofileinfo.id == 6 %}
+                        {% if president.advance_approval_accounting_manager.advance_approval_manager.advance.assignee.id == request.user.id or  request.user.userprofileinfo.id == 786 %}
                         <tr>
                           <td><a href="{% url 'accounting_app:advance_detail' president.advance_approval_accounting_manager.advance_approval_manager.advance.id %}">{{president.advance_approval_accounting_manager.advance_approval_manager.advance.created_at}}</td>
                           <td>{{president.advance_approval_accounting_manager.advance_approval_manager.advance.assignee.first_name}} {{president.advance_approval_accounting_manager.advance_approval_manager.advance.assignee.last_name}}</td>
@@ -413,9 +413,9 @@
                           <td>Waiting for Approval President</td>
                          {% endif %}
                           {% comment %} CHECK ATTACHMENT START {% endcomment %}
-                          {% if president.is_checked_president and request.user.userprofileinfo.id == 6 %}
+                          {% if president.is_checked_president and request.user.userprofileinfo.id == 786 %}
 
-                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 6 and  president.is_rejected_president == False and president.is_approve_president == False %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 786 and  president.is_rejected_president == False and president.is_approve_president == False %}
                           <td>
                             <a href="{% url 'accounting_app:advance_president_approve' president.id %}" class="btn btn-success btn-sm"><span class="icon-check"></span> Approve</a>
                             <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ModalPresidentReject{{ president.id }}" data-whatever="@mdo"><span class="icon-close"></span> Reject</a>
@@ -430,7 +430,7 @@
 
                           {% else %}
 
-                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 6 and  president.is_rejected_president == False and president.is_approve_president == False %}
+                          {% if request.user.userprofileinfo.is_bod and request.user.userprofileinfo.id == 786 and  president.is_rejected_president == False and president.is_approve_president == False %}
                           <td>
                             <a class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ModalPresidentCheck{{ president.id }}" data-whatever="@mdo"><span class="icon-info"></span> Check Attachment</a>
                             <a href="{% url 'accounting_app:accounting_advance_report' president.advance_approval_accounting_manager.advance_approval_manager.advance.id %}" class="btn btn-primary btn-sm" target="_blank"><span class="icon-printer"></span>Print</a>
