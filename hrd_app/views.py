@@ -53,8 +53,8 @@ def medical_train_index(request):
     medical_date = medicalHeader.objects.annotate(
         year_month=Substr('medical_no', 4, 6)
     ).values('year_month').distinct().all()
-
     year_month_list = [entry['year_month'] for entry in medical_date]
+    medical_remain_user = medicalRemain.objects.filter(user = request.user).first()
 
     yml = []
     for year_month in year_month_list:
@@ -119,6 +119,7 @@ def medical_train_index(request):
         'medical_approval_list'                     : medical_approval_list,
         'medical_modal'                             : medical_modal,
         'medical_date'                              : yml,
+        'medical_remain_user'                       : medical_remain_user,
         'form_medical_approval_reason_foreman'      : medical_approval_reason_foreman ,
         'form_medical_approval_reason_supervisor'   : medical_approval_reason_supervisor ,
         'form_medical_approval_reason_manager'      : medical_approval_reason_manager ,
@@ -397,6 +398,12 @@ def medical_submit_hr(request, medical_id, is_approve, is_reject):
         if medical_header:
             medical_header.is_complete = True
             medical_header.save()
+        # Menambahkan used dan mengurangi remain 
+        medical_remain = medicalRemain.objects.filter(user = medical_header.user).first()
+        medical_remain.used += medical_header.rp_total
+        medical_remain.remain -= medical_header.rp_total
+        medical_remain.save()
+        
         messages.success(request, 'Medical Train Verified')
         return redirect('hrd_app:medical_train_index')
     elif is_reject == 'True':
