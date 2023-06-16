@@ -42,7 +42,11 @@
         </div>
         <a class="btn btn-primary btn-lg" href="{% url 'hrd_app:medical_train_add' %}"> <span
             class="fa fa-plus"></span>Add Medical Train</a>
+        {% if perms.hrd_app %}
         <a data-bs-toggle="modal" data-bs-target="#ModalDownloadAccounting" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-download"></span>Download for Accounting</a>
+        <a href="{% url 'hrd_app:medical_train_remain_download' %}" class="btn btn-primary btn-lg"><span class="fa fa-download"></span>Download for Cashback</a>
+        <a data-bs-toggle="modal" data-bs-target="#ModalResetRemain" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-reset"></span>Reset Remain and Used</a>
+        {% endif %}
 
             
       </div>
@@ -568,7 +572,7 @@
                   {% csrf_token %}
                   <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label" for="exampleFormControlSelect9">Example select</label>
+                        <label class="form-label" for="exampleFormControlSelect9">Month select</label>
                         <select class="form-select digits" id="yearMonthSelect" name="id_yearmonth">
                           {% for year_month in medical_date %}
                           <option value="{{ year_month }}">{{ year_month }}</option>
@@ -586,6 +590,33 @@
           </div>
         </div>
           {% comment %} MODAL DOWNLOAD ACCOUNTING END {% endcomment %}
+
+          {% comment %} MODAL RESET REMAIN AND USED START {% endcomment %}
+          <div class="modal fade" id="ModalResetRemain" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel2">{{medical.medical_no}}</h5>
+                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'hrd_app:medical_train_remain_reset' %}" method="POST">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="exampleFormControlSelect9"><h5>Apakah anda yakin ingin reset remain dan used?</h5> </label>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">RESET</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+          {% comment %} MODAL RESET REMAIN AND USED END {% endcomment %}
 
           {% comment %} MODAL HR COMPLETE START {% endcomment %}
           <div class="modal fade" id="ModalMedicalHRComplete{{ medical.id }}" tabindex="-1" role="dialog"

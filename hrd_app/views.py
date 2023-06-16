@@ -8,6 +8,7 @@ from dateutil.parser import parse
 import datetime, calendar
 import csv
 import xlwt
+from django.db.models import F
 from django.db.models.functions import Substr
 from dateutil.relativedelta import relativedelta
 from csv import reader
@@ -403,7 +404,7 @@ def medical_submit_hr(request, medical_id, is_approve, is_reject):
         medical_remain.used += medical_header.rp_total
         medical_remain.remain -= medical_header.rp_total
         medical_remain.save()
-        
+
         messages.success(request, 'Medical Train Verified')
         return redirect('hrd_app:medical_train_index')
     elif is_reject == 'True':
@@ -543,6 +544,62 @@ def medical_print_atasan(request, medical_id):
         win32print.ClosePrinter(printer_handle)
 
     return redirect('hrd_app:medical_train_index')
+
+@login_required
+def medical_train_remain_reset(request):
+    medical_remain = medicalRemain.objects.all()
+    # Update the values
+    medical_remain.update(remain=F('limit'), used=0)
+    # Optionally, you can fetch the updated medical_remain
+    updated_records = medical_remain.values()
+    # Return the updated records or any other response
+    return redirect('hrd_app:medical_train_index')
+
+@login_required
+def medical_train_remain_download(request):
+    # kita akan panggil remain dari medical 
+    medical_remain = medicalRemain.objects.filter(limit=F('remain')).all().values_list('id','user__username','marital_status','limit','used','remain')
+    # Memanggil RIR dari tahun awal sampai tahun akhir
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=MedicalTrainCashBack.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('MedicalTrainAccounting', cell_overwrite_ok=True) # this will make a sheet named Users Data
+    
+    # Dimulai dari Row 1
+    row_num = 1
+    font_style_bold = xlwt.XFStyle()
+    font_style_bold.font.bold = True
+    columns = ['No. Karyawan','Marital Status','Limit','Used','Remain']
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
+    #Format Currency
+    currency_idr = xlwt.XFStyle()
+    currency_idr.num_format_str = f'#,##0.00'
+    # masuk kedalam body
+    font_style = xlwt.XFStyle()
+    # Body dari excel laporan yang akan dibuat
+    for body in medical_remain:
+            # Kita akan panggil setiap model yang ada di HR
+            row_num += 1
+            row = [
+                body[1],
+                body[2],
+                body[3],
+                body[4],
+                body[5],
+
+
+            ]
+            for col_num in range(len(row)):
+                if col_num==2 or col_num==3 or col_num==4:
+                    ws.write(row_num, col_num, row[col_num], currency_idr)
+                else:
+                    ws.write(row_num, col_num, row[col_num], font_style)
+        
+    wb.save(response)
+    return response
+    return HttpResponse('jadi ini pembuatan report untuk download Accounting')
+
 
 @login_required
 def medical_train_download_report_excel(request):
