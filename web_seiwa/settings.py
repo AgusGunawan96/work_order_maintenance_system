@@ -19,6 +19,10 @@ TEMPLATE_DIR = BASE_DIR / 'templates'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-y+s9w_ntpwx6xg-fff#tldqzwg%xy2%h_y1dkw&qese@)-8d!2'
 
@@ -57,8 +61,8 @@ INSTALLED_APPS = [
     'timing_app',
     'wingoapp',
     'sass_processor',
-
-
+    # other apps
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
