@@ -248,7 +248,7 @@
         </div>
         <div class="card">
           <div class="card-header pb-0">
-            <h5>Cash Payment Voucher | Bukti Transaksi</h5>
+            <h5>Advance Voucher | Bukti Transaksi</h5>
           </div>
           <hr class="mt-4 mb-2">
           <div class="card-body">
@@ -266,6 +266,73 @@
             </form>
           </div>
         </div>
+        {% comment %} APPROVAL HISTORY START {% endcomment %}
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Advance Voucher | Approval History</h5>
+          </div>
+          <hr class="mt-4 mb-2">
+          <div class="card-body">
+            <form class="theme-form mega-form">
+              {% if advance_approval_manager %}
+                <label class="col-form-label"><h5>Approval Manager:</h5></label>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Check</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ advance_approval_manager.created_at }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Tanggal Approve</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ advance_approval_manager.updated_at }}" readonly>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if advance_approval_accounting_manager %}
+                <label class="col-form-label"><h5>Approval Accounting Manager:</h5></label>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Check</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ advance_approval_accounting_manager.created_at }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Tanggal Approve</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ advance_approval_accounting_manager.updated_at }}" readonly>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if advance_approval_president %}
+                <label class="col-form-label"><h5>Approval President:</h5></label>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Check</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ advance_approval_president.created_at }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Tanggal Approve</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ advance_approval_president.updated_at }}" readonly>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if advance_approval_cashier %}
+                <label class="col-form-label"><h5>Approval Cashier:</h5></label>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Check</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ advance_approval_cashier.created_at }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Tanggal Approve</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ advance_approval_cashier.updated_at }}" readonly>
+                  </div>
+                </div>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+          {% comment %} APPROVAL HISTORY END {% endcomment %}
       </div>
     </div>
   </div>

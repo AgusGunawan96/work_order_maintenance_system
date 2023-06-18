@@ -815,15 +815,24 @@ def advance_monitoring(request):
 
 @login_required
 def advance_detail(request, cashPayment_id):
-    advance_detail = cashPayment.objects.get(pk=cashPayment_id)
-    cashPayment_account_code = rel_cashPayment_accountcode.objects.filter(cashPayment_id = advance_detail.id).order_by('created_at')
-    attachment = advAttachment.objects.filter(cashPayment = advance_detail).values('attachment',)
-    cashier_attachment = cashierAttachment.objects.filter(cashPayment = advance_detail).values('attachment',)
+    advance_detail                      = cashPayment.objects.get(pk=cashPayment_id)
+    cashPayment_account_code            = rel_cashPayment_accountcode.objects.filter(cashPayment_id = advance_detail.id).order_by('created_at')
+    attachment                          = advAttachment.objects.filter(cashPayment = advance_detail).values('attachment',)
+    cashier_attachment                  = cashierAttachment.objects.filter(cashPayment = advance_detail).values('attachment',)
+    advance_approval_manager            = advanceApprovalManager.objects.filter(advance_id = advance_detail).first()
+    advance_approval_accounting_manager = advanceApprovalAccountingManager.objects.filter(advance_approval_manager_id = advance_approval_manager).first()
+    advance_approval_president          = advanceApprovalPresident.objects.filter(advance_approval_accounting_manager_id = advance_approval_accounting_manager).first()
+    advance_approval_cashier            = advanceApprovalCashier.objects.filter(advance_approval_president_id = advance_approval_president).first()
+
     context = {
-         'cashPayment'  : advance_detail,
-         'account_codes': cashPayment_account_code,
-         'attachment'   : attachment,
-         'cashier_attachment'   : cashier_attachment,
+         'cashPayment'                          : advance_detail,
+         'account_codes'                        : cashPayment_account_code,
+         'attachment'                           : attachment,
+         'cashier_attachment'                   : cashier_attachment,
+         'advance_approval_manager'             : advance_approval_manager,
+         'advance_approval_accounting_manager'  : advance_approval_accounting_manager,
+         'advance_approval_president'           : advance_approval_president,
+         'advance_approval_cashier'             : advance_approval_cashier,
     }
     return render(request, 'accounting_app/advance_detail.html', context)
 
