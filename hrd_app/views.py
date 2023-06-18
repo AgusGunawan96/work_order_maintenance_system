@@ -272,6 +272,20 @@ def medical_train_detail(request, medical_id):
     medical_detail_information      = medicalDetailInformation.objects.filter(medical_id = medical_header).first()
     medical_claim_status            = medicalClaimStatus.objects.filter(medical_id = medical_header).first()
     medical_attachment              = medicalAttachment.objects.filter(medical_id = medical_header).values('attachment')
+    medical_foreman                 = medicalApprovalForeman.objects.filter(medical_id = medical_header).first()
+    medical_supervisor              = medicalApprovalSupervisor.objects.filter(medical_id = medical_header).first()
+    medical_manager                 = medicalApprovalManager.objects.filter(medical_id = medical_header).first()
+    medical_hr                      = medicalApprovalHR.objects.filter(medical_id = medical_header).first()
+
+    if not medical_foreman:
+        medical_foreman = None
+    if not medical_supervisor:
+        medical_supervisor = None
+    if not medical_manager:
+        medical_manager = None
+    if not medical_hr:
+        medical_hr      = None
+
     context = {
         'medical_header'                    :   medical_header,
         'medical_detail_pasien_keluarga'    :   medical_detail_pasien_keluarga,
@@ -279,6 +293,10 @@ def medical_train_detail(request, medical_id):
         'medical_detail_information'        :   medical_detail_information,
         'medical_claim_status'              :   medical_claim_status,
         'medical_attachment'                :   medical_attachment,
+        'medical_foreman'                   :   medical_foreman,
+        'medical_supervisor'                :   medical_supervisor,
+        'medical_manager'                   :   medical_manager,
+        'medical_hr'                        :   medical_hr,
     }
     return render(request, 'hrd_app/medical_train_detail.html', context)
 
@@ -587,8 +605,6 @@ def medical_train_remain_download(request):
                 body[3],
                 body[4],
                 body[5],
-
-
             ]
             for col_num in range(len(row)):
                 if col_num==2 or col_num==3 or col_num==4:

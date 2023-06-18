@@ -231,6 +231,114 @@
                     </div>
                 </div>
 
+                {% comment %} APPROVAL HISTORY START {% endcomment %}
+                <div class="card">
+                    <div class="card-header pb-0">
+                      <h5>Medical Train | Approval History</h5>
+                    </div>
+                    <hr class="mt-4 mb-2">
+                    <div class="card-body">
+                      <form class="theme-form mega-form">
+                        {% if medical_foreman and medical_header.is_foreman %}
+                          <label class="col-form-label"><h5>Approval Atasan:</h5></label>
+                          <div class="mb-3">  
+                            <div class="input-group"><span class="input-group-text">Tanggal Check</span>
+                              <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_foreman.created_at }}" readonly>
+                            </div>
+                          </div>
+                         <div class="mb-3">  
+                           <div class="input-group"><span class="input-group-text">Check oleh</span>
+                             <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_foreman.foreman.user.first_name }} {{ medical_foreman.foreman.user.last_name }}" readonly>
+                           </div>
+                         </div>
+                          <div class="mb-3">  
+                            <div class="input-group"><span class="input-group-text">Tanggal Approve</span>
+                              <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_foreman.updated_at }}" readonly>
+                            </div>
+                          </div>
+                        <div class="mb-3">  
+                          <div class="input-group"><span class="input-group-text">Approve Oleh</span>
+                            <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_foreman.foreman.user.first_name }} {{ medical_foreman.foreman.user.last_name }}" readonly>
+                          </div>
+                        </div>
+                        {% endif %}
+                      
+                        {% if medical_supervisor and medical_header.is_supervisor %}
+                          <label class="col-form-label"><h5>Approval Atasan:</h5></label>
+                          <div class="mb-3">  
+                            <div class="input-group"><span class="input-group-text">Tanggal Check</span>
+                              <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_supervisor.created_at }}" readonly>
+                            </div>
+                          </div>
+                         <div class="mb-3">  
+                           <div class="input-group"><span class="input-group-text">Check oleh</span>
+                             <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_supervisor.supervisor.user.first_name }} {{ medical_supervisor.supervisor.user.last_name }}" readonly>
+                           </div>
+                         </div>
+                          <div class="mb-3">  
+                            <div class="input-group"><span class="input-group-text">Tanggal Approve</span>
+                              <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_supervisor.updated_at }}" readonly>
+                            </div>
+                          </div>
+                        <div class="mb-3">  
+                          <div class="input-group"><span class="input-group-text">Approve Oleh</span>
+                            <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_supervisor.supervisor.user.first_name }} {{ medical_supervisor.supervisor.user.last_name }}" readonly>
+                          </div>
+                        </div>
+                        {% endif %}
+                      
+                        {% if medical_manager and medical_header.is_manager %}
+                          <label class="col-form-label"><h5>Approval Atasan:</h5></label>
+                          <div class="mb-3">  
+                            <div class="input-group"><span class="input-group-text">Tanggal Check</span>
+                              <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_manager.created_at }}" readonly>
+                            </div>
+                          </div>
+                         <div class="mb-3">  
+                           <div class="input-group"><span class="input-group-text">Check oleh</span>
+                             <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_manager.manager.user.first_name }} {{ medical_manager.manager.user.last_name }}" readonly>
+                           </div>
+                         </div>
+                          <div class="mb-3">  
+                            <div class="input-group"><span class="input-group-text">Tanggal Approve</span>
+                              <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_manager.updated_at }}" readonly>
+                            </div>
+                          </div>
+                        <div class="mb-3">  
+                          <div class="input-group"><span class="input-group-text">Approve Oleh</span>
+                            <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_manager.manager.user.first_name }} {{ medical_manager.manager.user.last_name }}" readonly>
+                          </div>
+                        </div>
+                        {% endif %}
+                      
+                        {% if medical_hr and medical_hr.is_approve %}
+                          <label class="col-form-label"><h5>Approval HR:</h5></label>
+                          <div class="mb-3">  
+                            <div class="input-group"><span class="input-group-text">Tanggal Check</span>
+                              <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_hr.created_at }}" readonly>
+                            </div>
+                          </div>
+                         <div class="mb-3">  
+                           <div class="input-group"><span class="input-group-text">Check oleh</span>
+                             <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_hr.hr.user.first_name }} {{ medical_hr.hr.user.last_name }}" readonly>
+                           </div>
+                         </div>
+                          <div class="mb-3">  
+                            <div class="input-group"><span class="input-group-text">Tanggal Approve</span>
+                              <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_hr.updated_at }}" readonly>
+                            </div>
+                          </div>
+                         <div class="mb-3">  
+                          <div class="input-group"><span class="input-group-text">Approve Oleh</span>
+                            <input name="rp_detail_12" class="form-control" type="text" value="{{ medical_hr.hr.user.first_name }} {{ medical_hr.hr.user.last_name }}" readonly>
+                          </div>
+                        </div>                         
+                        {% endif %}
+                      </form>
+                    </div>
+                  </div>
+                 {% comment %} APPROVAL HISTORY END {% endcomment %}
+
             </div>
         </div>
     </div>

@@ -288,8 +288,18 @@
                   </div>
                 </div>
                 <div class="mb-3">  
-                  <div class="input-group"><span class="input-group-text">Tanggal Tanggal Approve</span>
+                  <div class="input-group"><span class="input-group-text">Check oleh</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_manager.manager.first_name }} {{ cashPayment_approval_manager.manager.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Approve</span>
                     <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_manager.updated_at }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Approve Oleh</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_manager.manager.first_name }} {{ cashPayment_approval_manager.manager.last_name }}" readonly>
                   </div>
                 </div>
               {% endif %}
@@ -302,8 +312,18 @@
                   </div>
                 </div>
                 <div class="mb-3">  
-                  <div class="input-group"><span class="input-group-text">Tanggal Tanggal Approve</span>
+                  <div class="input-group"><span class="input-group-text">Check Oleh</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_accounting_manager.manager_accounting.first_name }} {{ cashPayment_approval_accounting_manager.manager_accounting.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Approve</span>
                     <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_accounting_manager.updated_at }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Approve Oleh</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_accounting_manager.manager_accounting.first_name }} {{ cashPayment_approval_accounting_manager.manager_accounting.last_name }}" readonly>
                   </div>
                 </div>
               {% endif %}
@@ -316,8 +336,18 @@
                   </div>
                 </div>
                 <div class="mb-3">  
-                  <div class="input-group"><span class="input-group-text">Tanggal Tanggal Approve</span>
+                  <div class="input-group"><span class="input-group-text">Check Oleh</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_president.president.first_name }} {{ cashPayment_approval_president.president.last_name }}" readonly>
+                  </div>
+                </div>  
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Approve</span>
                     <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_president.updated_at }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Approve Oleh</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_president.president.first_name }} {{ cashPayment_approval_president.president.last_name }}" readonly>
                   </div>
                 </div>
               {% endif %}
@@ -330,8 +360,18 @@
                   </div>
                 </div>
                 <div class="mb-3">  
-                  <div class="input-group"><span class="input-group-text">Tanggal Tanggal Approve</span>
+                  <div class="input-group"><span class="input-group-text">Check Oleh</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_cashier.cashier.first_name }} {{ cashPayment_approval_cashier.cashier.last_name }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Tanggal Approve</span>
                     <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_cashier.updated_at }}" readonly>
+                  </div>
+                </div>
+                <div class="mb-3">  
+                  <div class="input-group"><span class="input-group-text">Approve Oleh</span>
+                    <input name="rp_detail_12" class="form-control" type="text" value="{{ cashPayment_approval_cashier.cashier.first_name }} {{ cashPayment_approval_cashier.cashier.last_name }}" readonly>
                   </div>
                 </div>
               {% endif %}
