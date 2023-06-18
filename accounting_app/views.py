@@ -315,16 +315,34 @@ def cashPayment_add(request):
 # CASH PAYMENT START
 @login_required
 def cashPayment_detail(request, cashPayment_id):
-    cashPayment_detail = cashPayment.objects.get(pk=cashPayment_id)
-    cashPayment_account_code = rel_cashPayment_accountcode.objects.filter(cashPayment_id = cashPayment_detail.id).order_by('created_at')
+    cashPayment_detail                      = cashPayment.objects.get(pk=cashPayment_id)
+    cashPayment_account_code                = rel_cashPayment_accountcode.objects.filter(cashPayment_id = cashPayment_detail.id).order_by('created_at')
+    cashPayment_approval_manager            = cashPaymentApprovalManager.objects.filter(cashPayment_id = cashPayment_detail).first()
+    cashPayment_approval_accounting_manager = cashPaymentApprovalAccountingManager.objects.filter(cashPayment_approval_manager_id = cashPayment_approval_manager).first()
+    cashPayment_approval_president          = cashPaymentApprovalPresident.objects.filter(cashPayment_approval_accounting_manager_id = cashPayment_approval_accounting_manager).first()
+    cashPayment_approval_cashier            = cashPaymentApprovalCashier.objects.filter(cashPayment_approval_president_id = cashPayment_approval_president).first()
+    
+    if not cashPayment_approval_manager:
+        cashPayment_approval_manager = None
+    if not cashPayment_approval_accounting_manager:
+        cashPayment_approval_accounting_manager = None
+    if not cashPayment_approval_president:
+        cashPayment_approval_president = None
+    if not cashPayment_approval_cashier:
+        cashPayment_approval_cashier = None
+
     # return HttpResponse(cashPayment_account_code)
     attachment = cashPaymentAttachment.objects.filter(cashPayment = cashPayment_detail).values('attachment',)
     cashier_attachment = cashierAttachment.objects.filter(cashPayment = cashPayment_detail).values('attachment',)
     context = {
-         'cashPayment'  : cashPayment_detail,
-         'account_codes' : cashPayment_account_code,
-         'attachment'   : attachment,
-         'cashier_attachment'   : cashier_attachment,
+         'cashPayment'                              : cashPayment_detail,
+         'account_codes'                            : cashPayment_account_code,
+         'attachment'                               : attachment,
+         'cashier_attachment'                       : cashier_attachment,
+         'cashPayment_approval_manager'             : cashPayment_approval_manager,
+         'cashPayment_approval_accounting_manager'  : cashPayment_approval_accounting_manager,
+         'cashPayment_approval_president'           : cashPayment_approval_president,
+         'cashPayment_approval_cashier'             : cashPayment_approval_cashier,
     }
     return render(request, 'accounting_app/cashPayment_detail.html', context)
 
