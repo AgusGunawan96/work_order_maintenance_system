@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.http import Http404, HttpResponse, JsonResponse
 from dateutil.parser import parse
+from datetime import datetime as dt, timedelta
 import datetime, calendar
 import csv
 import xlwt
@@ -758,6 +759,58 @@ def convert_month_year_to_ym(month_year):
     year_month = date_obj.strftime("%Y%m")
     
     return year_month
+
+@login_required 
+def medical_train_download_daterange_accounting(request):
+    start_date = request.POST['id_startdate']
+    end_date   = request.POST['id_enddate']
+    if start_date and end_date:
+        start_datetime = dt.strptime(start_date, '%m/%d/%Y')
+        end_datetime = dt.strptime(end_date, '%m/%d/%Y') + timedelta(days=1)
+        medical_header = medicalHeader.objects.filter(is_complete = True, updated_at__range=[start_datetime, end_datetime]).all().values_list('id','medical_no','user__first_name','user__last_name','user__username','user__userprofileinfo__department__department_name','user__userprofileinfo__section__section_name', 'rp_total')
+    else:
+        medical_header = medicalHeader.objects.all()
+    # Memanggil RIR dari tahun awal sampai tahun akhir
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=MedicalTrainAccounting.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('MedicalTrainAccounting', cell_overwrite_ok=True) # this will make a sheet named Users Data
+    
+    # Dimulai dari Row 1
+    row_num = 1
+    font_style_bold = xlwt.XFStyle()
+    font_style_bold.font.bold = True
+    columns = ['Medical No','Nama','No. Karyawan','Department','Section','RP Total']
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
+    #Format Currency
+    currency_idr = xlwt.XFStyle()
+    currency_idr.num_format_str = f'#,##0.00'
+    # masuk kedalam body
+    font_style = xlwt.XFStyle()
+    # Body dari excel laporan yang akan dibuat
+    for body in medical_header:
+            # Kita akan panggil setiap model yang ada di HR
+            row_num += 1
+            row = [
+                body[1],
+                body[2] + " " +body[3],
+                body[4],
+                body[5],
+                body[6],
+                body[7],
+
+            ]
+            for col_num in range(len(row)):
+                if col_num==5:
+                    ws.write(row_num, col_num, row[col_num], currency_idr)
+                else:
+                    ws.write(row_num, col_num, row[col_num], font_style)
+        
+    wb.save(response)
+    return response
+    return HttpResponse('jadi ini pembuatan report untuk download Accounting')
+    return HttpResponse(request.POST['id_enddate'])
 
 @login_required
 def medical_train_download_accounting(request):
