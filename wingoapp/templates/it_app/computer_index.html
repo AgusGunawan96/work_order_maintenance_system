@@ -85,13 +85,14 @@
                                                 <th>IP</th>
                                                 <th>Computer Name</th>
                                                 <th>OS</th>
-                                                <th>Type</th>
+                                                {% comment %} <th>Type</th> {% endcomment %}
                                                 <th>PC Model</th>
                                                 <th>Office</th>
                                                 <th>User</th>
                                                 <th>Section</th>
                                                 <th>Internet</th>
                                                 <th>Antivirus</th>
+                                                <th>Location</th>
                                         </thead>
                                         <tbody>
                                             {% for computer in computers %}
@@ -99,7 +100,7 @@
                                                 <td>{{ computer.ip }}</td>
                                                 <td>{{ computer.computer_name }}</td>
                                                 <td>{{ computer.os }}</td>
-                                                <td>{{ computer.windows_type }}</td>
+                                                {% comment %} <td>{{ computer.windows_type }}</td> {% endcomment %}
                                                 <td>{{ computer.pc_type }}</td>
                                                 <td>
                                                 {% if computer.is_office_2003 %}
@@ -119,6 +120,7 @@
                                                 <td>{{ computer.computer_user.userprofileinfo.department.department_name }}</td>
                                                 <td>{{ computer.is_internet }}</td>
                                                 <td>{{ computer.antivirus }}</td>
+                                                <td>{{ computer.location.location_detail }}</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
