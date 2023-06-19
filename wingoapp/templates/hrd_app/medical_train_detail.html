@@ -338,6 +338,331 @@
                     </div>
                   </div>
                  {% comment %} APPROVAL HISTORY END {% endcomment %}
+                 {% comment %} Approval START {% endcomment %}
+                 <div class="card">
+                  <div class="card-header pb-0">
+                    <h5>Medical Train | Approval Action</h5>
+                  </div>
+                  <hr class="mt-4 mb-2">
+                  <div class="card-body">
+                    {% if medical_approval_manager %}
+                    <label class="col-form-label"><h5>Approval Atasan:</h5></label>
+                    <a href="{% url 'hrd_app:medical_submit_atasan' medical_approval_manager.medical.id True False%}"
+                    class="btn btn-success btn-sm"><span class="icon-check">Approve</span></a>
+                  <a data-bs-toggle="modal"
+                    data-bs-target="#ModalMedicalReject{{ medical_approval_manager.medical.id }}" data-whatever="@mdo"
+                    class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>
+                    {% endif %}
+                    {% if medical_approval_supervisor %}
+                    <label class="col-form-label"><h5>Approval Atasan:</h5></label>
+                    <a href="{% url 'hrd_app:medical_submit_atasan' medical_approval_supervisor.medical.id True False%}"
+                    class="btn btn-success btn-sm"><span class="icon-check">Approve</span></a>
+                  <a data-bs-toggle="modal"
+                    data-bs-target="#ModalMedicalReject{{ medical_approval_supervisor.medical.id }}" data-whatever="@mdo"
+                    class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>
+                    {% endif %}
+                    {% if medical_approval_foreman %}
+                    <label class="col-form-label"><h5>Approval Atasan:</h5></label>
+                    <a href="{% url 'hrd_app:medical_submit_atasan' medical_approval_foreman.medical.id True False%}"
+                    class="btn btn-success btn-sm"><span class="icon-check">Approve</span></a>
+                    <a data-bs-toggle="modal"
+                    data-bs-target="#ModalMedicalReject{{ medical_approval_foreman.medical.id }}" data-whatever="@mdo"
+                    class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>
+                    {% endif %}
+                    {% if medical_approval_hr %}
+                    <label class="col-form-label"><h5>Approval HR:</h5></label>
+                    <a data-bs-toggle="modal" data-bs-target="#ModalMedicalHRApprove{{ medical_hr.medical.id }}"
+                    data-whatever="@mdo" class="btn btn-success btn-sm"></span>Approve</a>
+                    <a data-bs-toggle="modal" data-bs-target="#ModalMedicalHRReject{{ medical_hr.medical.id }}"
+                    data-whatever="@mdo" class="btn btn-secondary btn-sm"><span class="icon-trash"></span>Reject</a>
+                    {% endif %}
+                  </div>
+                 </div>
+                 {% comment %} APPROVAL END {% endcomment %}
+                    {% comment %} MODAL REJECT START {% endcomment %}
+                    <div class="modal fade" id="ModalMedicalReject{{ medical_header.id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel2">{{medical_header.medical_no}}</h5>
+                          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{% url 'hrd_app:medical_submit_atasan' medical_header.id False True %}" method="POST">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <div class="mb-3">
+                              <label class="col-form-label" for="recipient-name">Assignee:</label>
+                              <input class="form-control" type="text"
+                                value="{{medical_header.user.first_name}} {{medical_header.user.last_name}}" readonly>
+                            </div>
+                            {% comment %} REASON APABILA FOREMAN {% endcomment %}
+                            {% if form_medical_approval_reason_foreman %}
+                                {% for hidden in form_medical_approval_reason_foreman.hidden_fields %}
+                                {{ hidden }}
+                                {% endfor %}
+                                <!-- merender semua field form dari objek TaskForm -->
+                                {% if form_medical_approval_reason_foreman.non_field_errors %}
+                                <div class="alert alert-danger" role="alert">
+                                  {% for error in form_medical_approval_reason_foreman.non_field_errors %}
+                                  {{ error }}
+                                  {% endfor %}
+                                </div>
+                                {% endif %}
+                              
+                                {% for field in form_medical_approval_reason_foreman.visible_fields %}
+                                <div class="form-group">
+                                  {{ field.label_tag }}
+                                  {% if form_medical_approval_reason_foreman.is_bound %}
+                                  {% if field.errors %}
+                                  {% render_field field class="form-control is-invalid" %}
+                                  {% for error in field.errors %}
+                                  <div class="invalid-feedback">
+                                    {{ error }}
+                                  </div>
+                                  {% endfor %}
+                                  {% else %}
+                                  {% render_field field class="form-control is-valid" %}
+                                  {% endif %}
+                                  {% else %}
+                                  {% render_field field class="form-control" %}
+                                  {% endif %}
+                                
+                                  {% if field.help_text %}
+                                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                                  {% endif %}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            
+                            {% comment %} REASON APABILA SUPERVISOR {% endcomment %}
+                            {% if form_medical_approval_reason_supervisor %}
+                            {% for hidden in form_medical_approval_reason_supervisor.hidden_fields %}
+                            {{ hidden }}
+                            {% endfor %}
+                            <!-- merender semua field form dari objek TaskForm -->
+                            {% if form_medical_approval_reason_supervisor.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {% for error in form_medical_approval_reason_supervisor.non_field_errors %}
+                              {{ error }}
+                              {% endfor %}
+                            </div>
+                            {% endif %}
+                          
+                            {% for field in form_medical_approval_reason_supervisor.visible_fields %}
+                            <div class="form-group">
+                              {{ field.label_tag }}
+                              {% if form_medical_approval_reason_supervisor.is_bound %}
+                              {% if field.errors %}
+                              {% render_field field class="form-control is-invalid" %}
+                              {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                              {% endfor %}
+                              {% else %}
+                              {% render_field field class="form-control is-valid" %}
+                              {% endif %}
+                              {% else %}
+                              {% render_field field class="form-control" %}
+                              {% endif %}
+                            
+                              {% if field.help_text %}
+                              <small class="form-text text-muted">{{ field.help_text }}</small>
+                              {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                            {% comment %} REASON APABILA MANAGER {% endcomment %}
+                            {% if form_medical_approval_reason_manager %}
+                            {% for hidden in form_medical_approval_reason_manager.hidden_fields %}
+                            {{ hidden }}
+                            {% endfor %}
+                            <!-- merender semua field form dari objek TaskForm -->
+                            {% if form_medical_approval_reason_manager.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {% for error in form_medical_approval_reason_manager.non_field_errors %}
+                              {{ error }}
+                              {% endfor %}
+                            </div>
+                            {% endif %}
+                          
+                            {% for field in form_medical_approval_reason_manager.visible_fields %}
+                            <div class="form-group">
+                              {{ field.label_tag }}
+                              {% if form_medical_approval_reason_manager.is_bound %}
+                              {% if field.errors %}
+                              {% render_field field class="form-control is-invalid" %}
+                              {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                              {% endfor %}
+                              {% else %}
+                              {% render_field field class="form-control is-valid" %}
+                              {% endif %}
+                              {% else %}
+                              {% render_field field class="form-control" %}
+                              {% endif %}
+                            
+                              {% if field.help_text %}
+                              <small class="form-text text-muted">{{ field.help_text }}</small>
+                              {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                          </div>
+                          <div class="modal-footer">
+                            <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-secondary" type="submit">Reject</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  {% comment %} MODAL REJECT END {% endcomment %}
+          {% comment %} MODAL HR REJECT START {% endcomment %}
+          <div class="modal fade" id="ModalMedicalHRReject{{ medical_header.id }}" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">{{medical_header.medical_no}}</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="{% url 'hrd_app:medical_submit_hr' medical_header.id False True %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="col-form-label" for="recipient-name">Assignee:</label>
+                    <input class="form-control" type="text"
+                      value="{{medical_header.user.first_name}} {{medical_header.user.last_name}}" readonly>
+                  </div>
+                  {% if form_medical_reject_klaim_status %}
+                      {% for hidden in form_medical_reject_klaim_status.hidden_fields %}
+                      {{ hidden }}
+                      {% endfor %}
+                      <!-- merender semua field form dari objek TaskForm -->
+                      {% if form_medical_reject_klaim_status.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in form_medical_reject_klaim_status.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                      </div>
+                      {% endif %}
+                    
+                      {% for field in form_medical_reject_klaim_status.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+                        {% if form_medical_reject_klaim_status.is_bound %}
+                        {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" %}
+                        {% for error in field.errors %}
+                        <div class="invalid-feedback">
+                          {{ error }}
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        {% render_field field class="form-control is-valid" %}
+                        {% endif %}
+                        {% else %}
+                        {% render_field field class="form-control" %}
+                        {% endif %}
+                      
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                      {% endfor %}
+                  {% endif %}
+                  {% if form_medical_approval_reason_hr %}
+                    {% for hidden in form_medical_approval_reason_hr.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if form_medical_approval_reason_hr.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_medical_approval_reason_hr.non_field_errors %}
+                      {{ error }}
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% for field in form_medical_approval_reason_hr.visible_fields %}
+                    <div class="form-group">
+                      {{ field.label_tag }}
+                      {% if form_medical_approval_reason_hr.is_bound %}
+                      {% if field.errors %}
+                      {% render_field field class="form-control is-invalid" %}
+                      {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                      {% endfor %}
+                      {% else %}
+                      {% render_field field class="form-control is-valid" %}
+                      {% endif %}
+                      {% else %}
+                      {% render_field field class="form-control" %}
+                      {% endif %}
+
+                      {% if field.help_text %}
+                      <small class="form-text text-muted">{{ field.help_text }}</small>
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+                  {% endif %}
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
+                  <button class="btn btn-secondary" type="submit">Reject</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% comment %} MODAL HR REJECT END {% endcomment %}
+
+        {% comment %} MODAL HR APPROVE START {% endcomment %}
+        <div class="modal fade" id="ModalMedicalHRApprove{{ medical_header.id }}" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">{{medical_header.medical_no}}</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="{% url 'hrd_app:medical_submit_hr' medical_header.id True False %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="col-form-label" for="recipient-name">Assignee:</label>
+                    <input class="form-control" type="text"
+                      value="{{medical_header.user.first_name}} {{medical_header.user.last_name}}" readonly>
+                  </div>
+                  {% if form_medical_klaim_status %}
+                  {% for hidden in form_medical_klaim_status.hidden_fields %}
+                  {{ hidden }}
+                  {% endfor %}
+                  <!-- merender semua field form dari objek TaskForm -->
+                    {% if form_medical_klaim_status.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in form_medical_klaim_status.non_field_errors %}
+                      {{ error }}
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                  {% endif %}
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Close</button>
+                  <button class="btn btn-success" type="submit">Approve</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% comment %} MODAL HR APPROVE END {% endcomment %}
 
             </div>
         </div>

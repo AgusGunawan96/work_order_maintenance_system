@@ -20,6 +20,16 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header pb-0">
+              <h5>Medical Train | Remaining</h5><span>Remaining</span>
+          </div>
+          <div class="card-body">
+            <h3><span style = "display: inline-block; min-width: 220px;">LIMIT</span>: {{ medical_remain_user.limit }} </h3>
+            <h3><span style = "display: inline-block; min-width: 220px;">USED</span>: {{ medical_remain_user.used }} </h3>
+            <h3><span style = "display: inline-block; min-width: 220px;">REMAIN</span>: {{ medical_remain_user.remain }} </h3>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header pb-0">
               <h5>Medical Train Add | DATA KARYAWAN / KELUARGA</h5><span>1. Formulir ini harus diisi dengan lengkap, benar dan jelas.<br>2. Klaim dapat diproses, apabila formulir telah diisi dan semua dokumen pengajuan klaim telah dilampirkan dengan lengkap. <br>&nbsp &nbsp a. Nama, alamat, no.telepon tempat berobat (Rumah sakit, Poliklinik, praktek dokter, dsb) <br>&nbsp &nbsp b. Stempel dan tanda tangan dokter <br>&nbsp &nbsp c. Diagnosa, resep obat-obatan, dan hasil laboratorium</span>
           </div>
          
@@ -51,11 +61,11 @@
               </div>
               <div class="mb-3 col-md-6">
                 <label class="col-form-label">Position</label>
-                <input class="form-control" type="text" value="{{medical_header.user.userprofileinfo.position}}" readonly style="text-transform: uppercase;">
+                <input class="form-control" type="text" value="{{request.user.userprofileinfo.position}}" readonly style="text-transform: uppercase;">
             </div>
             <div class="mb-3 col-md-6">
                 <label class="col-form-label">Status Karyawan</label>
-                <input class="form-control" type="text" value="{% if medical_header.user.userprofileinfo.is_contract %}Contract {% elif medical_header.user.userprofileinfo.is_permanent %}Permanent {% endif %}" readonly style="text-transform: uppercase;">
+                <input class="form-control" type="text" value="{% if request.user.userprofileinfo.is_contract %}Contract {% elif request.user.userprofileinfo.is_permanent %}Permanent {% endif %}" readonly style="text-transform: uppercase;">
             </div>
             </div>
           </div>
@@ -236,11 +246,10 @@
                     <div class="form-group row">
                       <div class="col-md-12">
                           <div class="input-group"><span class="input-group-text">IDR  </span>
-                              <input  class="form-control" id="number-mask1" type="text" required>
-                            </div>
+                              <input  class="form-control" id="id_number-mask1" type="text" required >
+                          </div>
                       </div>
-                  </div>
-
+                    </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
@@ -269,11 +278,26 @@
   });
 </script>
 <script>
+  const selector = '#id_number-mask1';
+  const resultSelector = '#id_rp_total';
+
   easyNumberSeparator({
-      selector: '#number-mask1',
+      selector,
       separator: '.',
-      resultInput: '#id_rp_total',
-  })
+      resultInput: resultSelector,
+  });
+
+  document.querySelector(selector).addEventListener('input', function() {
+    let inputValue = parseFloat(this.value.replace(/\./g, '').replace(',', '.')); // Parse input as float and replace commas with dots (if necessary)
+    const maxAllowedValue = '{{ value_without_commas }}'; // Set the maximum allowed value to one thousand
+    console.log(maxAllowedValue)
+    if (inputValue > maxAllowedValue) {
+        inputValue = maxAllowedValue;
+        this.value = new Intl.NumberFormat('en-US', {maximumFractionDigits:0}).format(inputValue).replace(/,/g,'.'); // Use Intl.NumberFormat() to format number back into string format with separators
+    }
+
+    document.querySelector(resultSelector).value = inputValue;
+ });
 </script>
 <script>
   $(document).ready(function() {

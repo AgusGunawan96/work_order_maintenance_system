@@ -70,21 +70,21 @@ def medical_train_index(request):
     # Kondisi Approval 
     if medical_approval_list:
         if medical_approval_list.is_foreman:
-            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_foreman = medicalReasonForemanForms()
         else:
             medical_approval_foreman = None
             medical_approval_reason_foreman = None
 
         if medical_approval_list.is_supervisor:
-            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(medical__is_foreman = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_supervisor = medicalReasonSupervisorForms()
         else:
             medical_approval_supervisor = None
             medical_approval_reason_supervisor = None
 
         if medical_approval_list.is_manager:
-            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_manager = medicalReasonManagerForms()
         else:
             medical_approval_manager = None
@@ -159,6 +159,7 @@ def medical_train_add(request):
         medical_pelayanan_kesehatan_form    = medicalPelayananKesehatanForms(data=request.POST, user=curr_user)
         medical_status_claim_form           = medicalStatusKlaimForms(data=request.POST)
         medical_attachment_form             = medicalAttachmentForms(data=request.POST)
+
         if medical_header_form.is_valid() and medical_pemberi_layanan_form.is_valid() and medical_pelayanan_kesehatan_form.is_valid() and medical_status_claim_form.is_valid() and medical_attachment_form.is_valid():
             #Save apa yang sudah di post
             medical_header = medical_header_form.save(commit=False)
@@ -236,6 +237,8 @@ def medical_train_add(request):
         medical_pelayanan_kesehatan = medicalPelayananKesehatanForms(request.POST or None, user=curr_user)
         medical_status_claim        = medicalStatusKlaimForms()
         medical_attachment          = medicalAttachmentForms()
+        medical_remain_user         = medicalRemain.objects.filter(user = request.user).first()
+        value_without_commas        = str( medical_remain_user.remain).replace(',', '')
     context = {
         'medical_header_form'               :   medical_header ,
         'medical_data_keluarga_form'        :   medical_data_keluarga ,
@@ -243,6 +246,8 @@ def medical_train_add(request):
         'medical_pelayanan_kesehatan_form'  :   medical_pelayanan_kesehatan ,
         'medical_status_claim_form'         :   medical_status_claim ,
         'medical_attachment_form'           :   medical_attachment ,
+        'value_without_commas'              :   value_without_commas,
+        'medical_remain_user'               :   medical_remain_user,
     }
     return render(request, 'hrd_app/medical_train_add.html', context)
 
@@ -267,6 +272,7 @@ def medical_train_delete(request, medical_id):
 
 @login_required
 def medical_train_detail(request, medical_id):
+    medical_approval_list       = medicalApprovalList.objects.filter(user_id = request.user).first()
     medical_header                  = medicalHeader.objects.get(pk=medical_id)
     medical_detail_pasien_keluarga  = medicalDetailPasienKeluarga.objects.filter(medical_id=medical_header).first()
     medical_dokter                  = medicalDetailDokter.objects.filter(medical_id = medical_header).first()
@@ -287,17 +293,72 @@ def medical_train_detail(request, medical_id):
     if not medical_hr:
         medical_hr      = None
 
+    if medical_approval_list:
+        if medical_approval_list.is_foreman:
+            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).filter(medical_id = medical_header.id).first()
+            medical_approval_reason_foreman = medicalReasonForemanForms()
+        else:
+            medical_approval_foreman = None
+            medical_approval_reason_foreman = None
+
+        if medical_approval_list.is_supervisor:
+            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(medical__is_foreman = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).filter(medical_id = medical_header.id).first()
+            medical_approval_reason_supervisor = medicalReasonSupervisorForms()
+        else:
+            medical_approval_supervisor = None
+            medical_approval_reason_supervisor = None
+
+        if medical_approval_list.is_manager:
+            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).filter(medical_id = medical_header.id).first()
+            medical_approval_reason_manager = medicalReasonManagerForms()
+        else:
+            medical_approval_manager = None
+            medical_approval_reason_manager = None
+
+        if medical_approval_list.is_hr:
+            medical_approval_hr         = medicalApprovalHR.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).filter(medical_id = medical_header.id).first()
+            medical_approval_reason_hr  = medicalReasonHRForms()
+            medical_klaim_status        = medicalStatusKlaimForms()
+            medical_reject_klaim_status = medicalRejectStatusKlaimForms()
+        else:
+            medical_approval_hr         = None
+            medical_approval_reason_hr  = None
+            medical_klaim_status        = None
+            medical_reject_klaim_status = None
+    else:
+        medical_approval_foreman            = None
+        medical_approval_supervisor         = None
+        medical_approval_manager            = None
+        medical_approval_hr                 = None
+        medical_approval_reason_foreman     = None
+        medical_approval_reason_supervisor  = None
+        medical_approval_reason_manager     = None
+        medical_approval_reason_hr          = None
+        medical_klaim_status                = None
+        medical_reject_klaim_status         = None
+
     context = {
-        'medical_header'                    :   medical_header,
-        'medical_detail_pasien_keluarga'    :   medical_detail_pasien_keluarga,
-        'medical_dokter'                    :   medical_dokter,
-        'medical_detail_information'        :   medical_detail_information,
-        'medical_claim_status'              :   medical_claim_status,
-        'medical_attachment'                :   medical_attachment,
-        'medical_foreman'                   :   medical_foreman,
-        'medical_supervisor'                :   medical_supervisor,
-        'medical_manager'                   :   medical_manager,
-        'medical_hr'                        :   medical_hr,
+        'medical_header'                            :   medical_header,
+        'medical_detail_pasien_keluarga'            :   medical_detail_pasien_keluarga,
+        'medical_dokter'                            :   medical_dokter,
+        'medical_detail_information'                :   medical_detail_information,
+        'medical_claim_status'                      :   medical_claim_status,
+        'medical_attachment'                        :   medical_attachment,
+        'medical_foreman'                           :   medical_foreman,
+        'medical_supervisor'                        :   medical_supervisor,
+        'medical_manager'                           :   medical_manager,
+        'medical_hr'                                :   medical_hr,
+        'form_medical_approval_reason_hr'           :   medical_approval_reason_hr ,
+        'form_medical_klaim_status'                 :   medical_klaim_status ,
+        'form_medical_reject_klaim_status'          :   medical_reject_klaim_status,
+        'medical_approval_foreman'                  :   medical_approval_foreman, 
+        'medical_approval_supervisor'               :   medical_approval_supervisor, 
+        'medical_approval_manager'                  :   medical_approval_manager, 
+        'medical_approval_hr'                       :   medical_approval_hr, 
+        'medical_approval_list'                     :   medical_approval_list,
+        'form_medical_approval_reason_foreman'      :   medical_approval_reason_foreman ,
+        'form_medical_approval_reason_supervisor'   :   medical_approval_reason_supervisor ,
+        'form_medical_approval_reason_manager'      :   medical_approval_reason_manager ,
     }
     return render(request, 'hrd_app/medical_train_detail.html', context)
 
