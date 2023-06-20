@@ -19,7 +19,14 @@ from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalSta
 # from escpos.printer import Usb
 # from escpos.constants import *
 # import usb1
+from PIL import Image, ImageWin, ImageDraw
 import win32print
+import win32print
+import win32ui
+import win32con
+import barcode
+from barcode.writer import ImageWriter
+
 # import usb.core
 # import usb.util
 # import ctypes
@@ -551,6 +558,7 @@ def medical_train_download_report(request, medical_id):
     }
     return render(request, 'hrd_app/medical_train_download_report.html', context)
 
+
 def medical_print_atasan(request, medical_id):
     # Specify the printer name or provide the full printer path
     medical_header = medicalHeader.objects.get(pk=medical_id)
@@ -602,15 +610,24 @@ def medical_print_atasan(request, medical_id):
                 justified_line = line + ' ' * remaining_space
                 justified_content += justified_line + '\n'
 
-            win32print.WritePrinter(printer_handle, justified_content.encode("utf-8"))
+            # Print the justified content
+            win32print.WritePrinter(printer_handle, justified_content.encode("ascii"))
+
+            # # Generate and print the barcode
+            barcode_data = medical_header.medical_no
+            barcode_image = barcode.Code128(barcode_data, writer=ImageWriter())
+            barcode_image.save('barcode')
+
+            # printer_name = win32print.GetDefaultPrinter ()
+            file_name = "barcode.png"
 
             # Add some space
-            space_command = b'\n\n'  # Two line breaks
-            win32print.WritePrinter(printer_handle, space_command)
+            # space_command = b'\n\n'  # Two line breaks
+            # win32print.WritePrinter(printer_handle, space_command)
 
             # Send the automatic cut command
-            cut_command = b'\x1D\x56\x42\x00'  # Full cut command
-            win32print.WritePrinter(printer_handle, cut_command)
+            # cut_command = b'\x1D\x56\x42\x00'  # Full cut command
+            # win32print.WritePrinter(printer_handle, cut_command)
 
             # End the page
             win32print.EndPagePrinter(printer_handle)
@@ -621,9 +638,25 @@ def medical_print_atasan(request, medical_id):
         return HttpResponse("Error printing receipt: {}".format(str(e)))
     finally:
         # Close the printer connection
+        print_barcode(file_name, printer_name)
         win32print.ClosePrinter(printer_handle)
 
     return redirect('hrd_app:medical_train_index')
+
+def print_barcode(file_name, printer_name):
+    hDC = win32ui.CreateDC ()
+    hDC.CreatePrinterDC (printer_name)
+    # printer_size = hDC.GetDeviceCaps (PHYSICALWIDTH), hDC.GetDeviceCaps (PHYSICALHEIGHT)
+    bmp = Image.open (file_name)
+    if bmp.size[0] < bmp.size[1]:
+      bmp = bmp.rotate (90)
+    hDC.StartDoc (file_name)
+    hDC.StartPage ()
+    dib = ImageWin.Dib (bmp)
+    dib.draw (hDC.GetHandleOutput (), (0,0,bmp.size[0],bmp.size[1]))
+    hDC.EndPage ()
+    hDC.EndDoc ()
+    hDC.DeleteDC ()
 
 @login_required
 def medical_train_remain_reset(request):
