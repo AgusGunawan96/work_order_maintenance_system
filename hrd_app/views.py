@@ -638,28 +638,48 @@ def medical_print_atasan(request, medical_id):
         return HttpResponse("Error printing receipt: {}".format(str(e)))
     finally:
         # Close the printer connection
-        print_barcode(file_name)
+        Flag = print_barcode(file_name)
+        if Flag == False:
+            # Open a connection to the printer
+            printer_handle = win32print.OpenPrinter(printer_name)
+
+            # Create a new print job
+            win32print.StartDocPrinter(printer_handle, 1, ("Sample Receipt", None, "RAW"))
+            win32print.StartPagePrinter(printer_handle)
+            # Add some space
+            space_command = b'\n\n'  # Two line breaks
+            win32print.WritePrinter(printer_handle, space_command)
+
+            # Send the automatic cut command
+            cut_command = b'\x1D\x56\x42\x00'  # Full cut command
+            win32print.WritePrinter(printer_handle, cut_command)
+            win32print.EndDocPrinter(printer_handle)
+
         win32print.ClosePrinter(printer_handle)
 
     return redirect('hrd_app:medical_train_index')
 
 def print_barcode(file_name):
-    ip_address = "172.16.202.72"
-    name = "EPSON TM-T82 Receipt"
-    printer_name = r"\\{0}\{1}".format(ip_address, name)
-    hDC = win32ui.CreateDC ()
-    hDC.CreatePrinterDC(printer_name)
-    # printer_size = hDC.GetDeviceCaps (PHYSICALWIDTH), hDC.GetDeviceCaps (PHYSICALHEIGHT)
-    bmp = Image.open (file_name)
-    if bmp.size[0] < bmp.size[1]:
-      bmp = bmp.rotate (90)
-    hDC.StartDoc (file_name)
-    hDC.StartPage ()
-    dib = ImageWin.Dib (bmp)
-    dib.draw (hDC.GetHandleOutput (), (0,0,bmp.size[0],bmp.size[1]))
-    hDC.EndPage ()
-    hDC.EndDoc ()
-    hDC.DeleteDC ()
+    try:
+        ip_address = "172.16.202.72"
+        name = "EPSON TM-T82 Receipt"
+        printer_name = r"\\{0}\{1}".format(ip_address, name)
+        hDC = win32ui.CreateDC ()
+        hDC.CreatePrinterDC(printer_name)
+        # printer_size = hDC.GetDeviceCaps (PHYSICALWIDTH), hDC.GetDeviceCaps (PHYSICALHEIGHT)
+        bmp = Image.open (file_name)
+        if bmp.size[0] < bmp.size[1]:
+          bmp = bmp.rotate (90)
+        hDC.StartDoc (file_name)
+        hDC.StartPage ()
+        dib = ImageWin.Dib (bmp)
+        dib.draw (hDC.GetHandleOutput (), (0,0,bmp.size[0],bmp.size[1]))
+        hDC.EndPage ()
+        hDC.EndDoc ()
+        hDC.DeleteDC ()
+        return True
+    except Exception as e:
+        return False
 
 @login_required
 def medical_train_remain_reset(request):
