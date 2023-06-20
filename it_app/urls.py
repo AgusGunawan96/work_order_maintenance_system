@@ -31,6 +31,7 @@ urlpatterns = [
     # COMPUTER START
     path('computer/', views.computer_index, name = 'computer_index'),
     path('computer/add/', views.computer_add, name = 'computer_add'),
+    path('computer/computer_download/', views.computer_download, name = 'computer_download'),
      
     # COMPUTER END 
     # HARDWARE START

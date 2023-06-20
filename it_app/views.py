@@ -8,6 +8,7 @@ from django.http import Http404, HttpResponse, QueryDict
 from django.db.models import Count, F, Value
 import datetime
 from django.db.models.functions import Concat
+import xlwt
 
 # Create your views here.
 
@@ -133,7 +134,66 @@ def computer_add(request):
     # return HttpResponse('Masuk kedalam menu add')
     return render(request, 'it_app/computer_add.html', context)
 
+@login_required
+def computer_download(request):
+    # Kita akan panggil Computer
+    computer = ITComputerList.objects.all().values_list('ip__ip', 'computer_name', 'os', 'windows_type', 'pc_type__name', 'is_office_2003', 'is_office_2007', 'is_office_2010', 'is_office_2016', 'computer_user__first_name', 'computer_user__last_name', 'computer_user__userprofileinfo__department__department_name', 'is_internet', 'antivirus', 'is_genba')
+    # Memanggil RIR dari tahun awal sampai tahun akhir
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=ITListComputer.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('ITListComputer', cell_overwrite_ok=True) # this will make a sheet named Users Data
+    # Dimulai dari Row 1
+    row_num = 1
+    font_style_bold = xlwt.XFStyle()
+    font_style_bold.font.bold = True
+    columns = ['IP Address','Name Computer','OS','Type OEM/OLM','Type PC','Office','User','Department','Internet','Antivirus','Genba']
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style_bold) # at 0 row 0 column 
+    # masuk kedalam body
+    font_style = xlwt.XFStyle()
+    # Body dari excel laporan yang akan dibuat
+    for body in computer:
+            # Kita akan kondisikan apabila dia office 2003, 2007, 2010, dan 2016
+            if body[5]:
+                office_2003 = '2003'
+            else:
+                office_2003 = ''
+            if body[6]:
+                office_2006 = '2006'
+            else:
+                office_2006 = ''
+            if body[7]:
+                office_2010 = '2010'
+            else:
+                office_2010 = ''
+            if body[8]:
+                office_2016 = '2016'
+            else:
+                office_2016 = ''
+            
+            office = office_2003 + ' ' + office_2006 + ' ' + office_2010+ ' ' + office_2016
+            # Kita akan panggil setiap model yang ada di HR
+            row_num += 1
+            row = [
+                body[0],
+                body[1],
+                body[2],
+                body[3],
+                body[4],
+                office,
+                body[9] +" "+ body[10],
+                body[11],
+                body[12],
+                body[13],
+                body[14],
 
+            ]
+            for col_num in range(len(row)):
+                ws.write(row_num, col_num, row[col_num], font_style)
+        
+    wb.save(response)
+    return response
 # COMPUTER LIST END
 # HARDWARE START
 @login_required

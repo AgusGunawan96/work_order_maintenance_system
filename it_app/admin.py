@@ -7,8 +7,7 @@ class TicketAdmin(admin.ModelAdmin):
     search_fields = ['title','description']
 
 class ITComputerListAdmin(admin.ModelAdmin):
-    list_display = ('ip', 'computer_name', 'location', 'is_dhcp')
-    search_fields = ['ip','computer_name','location']
+    list_display = ('ip', 'computer_name', 'location', 'is_dhcp', 'antivirus')
 
 # class IPAddressAdmin(admin.ModelAdmin):
 #     date_hierarchy = 'created_at'
