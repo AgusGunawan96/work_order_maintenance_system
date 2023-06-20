@@ -638,14 +638,17 @@ def medical_print_atasan(request, medical_id):
         return HttpResponse("Error printing receipt: {}".format(str(e)))
     finally:
         # Close the printer connection
-        print_barcode(file_name, printer_name)
+        print_barcode(file_name)
         win32print.ClosePrinter(printer_handle)
 
     return redirect('hrd_app:medical_train_index')
 
-def print_barcode(file_name, printer_name):
+def print_barcode(file_name):
+    ip_address = "172.16.202.72"
+    name = "EPSON TM-T82 Receipt"
+    printer_name = r"\\{0}\{1}".format(ip_address, name)
     hDC = win32ui.CreateDC ()
-    hDC.CreatePrinterDC (printer_name)
+    hDC.CreatePrinterDC(printer_name)
     # printer_size = hDC.GetDeviceCaps (PHYSICALWIDTH), hDC.GetDeviceCaps (PHYSICALHEIGHT)
     bmp = Image.open (file_name)
     if bmp.size[0] < bmp.size[1]:
