@@ -661,9 +661,7 @@ def medical_print_atasan(request, medical_id):
 
 def print_barcode(file_name):
     try:
-        ip_address = "172.16.202.72"
-        name = "EPSON TM-T82 Receipt"
-        printer_name = r"\\{0}\{1}".format(ip_address, name)
+        printer_name = win32print.GetDefaultPrinter()
         hDC = win32ui.CreateDC ()
         hDC.CreatePrinterDC(printer_name)
         # printer_size = hDC.GetDeviceCaps (PHYSICALWIDTH), hDC.GetDeviceCaps (PHYSICALHEIGHT)
