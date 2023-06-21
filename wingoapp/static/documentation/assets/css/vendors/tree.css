@@ -48,7 +48,7 @@
   background-repeat: no-repeat;
   background-color: transparent;
   color: #333;
-  background-image: url(..//wingo/wingoapp/static/assets/images/tree/32px.png);
+  background-image: url(..//wingoapp/static/assets/images/tree/32px.png);
   color: #777; }
 
 .jstree-default > .jstree-wholerow-ul .jstree-hovered, .jstree-default > .jstree-wholerow-ul .jstree-clicked {
@@ -58,17 +58,17 @@
   border-radius: 0; }
 
 #jstree-dnd.jstree-default .jstree-ok, #jstree-dnd.jstree-default .jstree-er {
-  background-image: url(..//wingo/wingoapp/static/assets/images/tree/32px.png);
+  background-image: url(..//wingoapp/static/assets/images/tree/32px.png);
   background-repeat: no-repeat;
   background-color: transparent; }
 
 #jstree-dnd.jstree-default-small .jstree-ok, #jstree-dnd.jstree-default-small .jstree-er {
-  background-image: url(..//wingo/wingoapp/static/assets/images/tree/32px.png);
+  background-image: url(..//wingoapp/static/assets/images/tree/32px.png);
   background-repeat: no-repeat;
   background-color: transparent; }
 
 #jstree-dnd.jstree-default-large .jstree-ok, #jstree-dnd.jstree-default-large .jstree-er {
-  background-image: url(..//wingo/wingoapp/static/assets/images/tree/32px.png);
+  background-image: url(..//wingoapp/static/assets/images/tree/32px.png);
   background-repeat: no-repeat;
   background-color: transparent; }
 
@@ -434,7 +434,7 @@
   background-position: -4px -4px; }
 
 .jstree-default > .jstree-container-ul .jstree-loading > .jstree-ocl {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/throbber.gif) center center no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/throbber.gif) center center no-repeat; }
 
 .jstree-default > .jstree-container-ul > .jstree-node {
   margin-left: 0;
@@ -502,10 +502,10 @@
   background-position: 0 0; }
 
 .jstree-default .jstree-file {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/32px.png) -100px -68px no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/32px.png) -100px -68px no-repeat; }
 
 .jstree-default .jstree-folder {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/32px.png) -260px -4px no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/32px.png) -260px -4px no-repeat; }
 
 .jstree-default .jstree-no-icons .jstree-anchor > .jstree-themeicon {
   display: none; }
@@ -539,7 +539,7 @@
   min-width: 18px;
   background-position: -295px -7px;
   background-repeat: repeat-y;
-  background-image: url(..//wingo/wingoapp/static/assets/images/tree/32px.png); }
+  background-image: url(..//wingoapp/static/assets/images/tree/32px.png); }
 
 .jstree-default-small .jstree-anchor {
   line-height: 18px;
@@ -553,7 +553,7 @@
   width: 18px;
   height: 18px;
   line-height: 18px;
-  background-image: url(..//wingo/wingoapp/static/assets/images/tree/32px.png); }
+  background-image: url(..//wingoapp/static/assets/images/tree/32px.png); }
   .jstree-default-small .jstree-icon:empty {
     width: 18px;
     height: 18px;
@@ -615,7 +615,7 @@
   background-size: auto 36px; }
 
 .jstree-default-small > .jstree-container-ul .jstree-loading > .jstree-ocl {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/throbber.gif) center center no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/throbber.gif) center center no-repeat; }
 
 .jstree-default-small > .jstree-container-ul > .jstree-node {
   margin-left: 0;
@@ -646,10 +646,10 @@
   background-position: 0 0; }
 
 .jstree-default-small .jstree-file {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/32px.png) -103px -71px no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/32px.png) -103px -71px no-repeat; }
 
 .jstree-default-small .jstree-folder {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/32px.png) -263px -7px no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/32px.png) -263px -7px no-repeat; }
 
 .jstree-default-small .jstree-open > .jstree-ocl {
   background-position: -135px -7px; }
@@ -677,7 +677,7 @@
   min-width: 32px;
   background-position: -288px 0;
   background-repeat: repeat-y;
-  background-image: url(..//wingo/wingoapp/static/assets/images/tree/32px.png); }
+  background-image: url(..//wingoapp/static/assets/images/tree/32px.png); }
 
 .jstree-default-large .jstree-anchor {
   line-height: 32px;
@@ -691,7 +691,7 @@
   width: 32px;
   height: 32px;
   line-height: 32px;
-  background-image: url(..//wingo/wingoapp/static/assets/images/tree/32px.png); }
+  background-image: url(..//wingoapp/static/assets/images/tree/32px.png); }
   .jstree-default-large .jstree-icon:empty {
     width: 32px;
     height: 32px;
@@ -753,7 +753,7 @@
   background-size: auto 64px; }
 
 .jstree-default-large > .jstree-container-ul .jstree-loading > .jstree-ocl {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/throbber.gif) center center no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/throbber.gif) center center no-repeat; }
 
 .jstree-default-large > .jstree-container-ul > .jstree-node {
   margin-left: 0;
@@ -784,10 +784,10 @@
   background-position: 0 0; }
 
 .jstree-default-large .jstree-file {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/32px.png) -96px -64px no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/32px.png) -96px -64px no-repeat; }
 
 .jstree-default-large .jstree-folder {
-  background: url(..//wingo/wingoapp/static/assets/images/tree/32px.png) -256px 0 no-repeat; }
+  background: url(..//wingoapp/static/assets/images/tree/32px.png) -256px 0 no-repeat; }
 
 .jstree-default-large .jstree-open > .jstree-ocl {
   background-position: -128px 0; }
@@ -810,11 +810,11 @@
 
 @media (max-width: 768px) {
   .jstree-default-responsive .jstree-icon {
-    background-image: url(..//wingo/wingoapp/static/assets/images/tree/40px.png);
+    background-image: url(..//wingoapp/static/assets/images/tree/40px.png);
     width: 40px;
     height: 40px;
     line-height: 40px;
-    background-image: url(..//wingo/wingoapp/static/assets/images/tree/40px.png);
+    background-image: url(..//wingoapp/static/assets/images/tree/40px.png);
     background-size: 120px 240px; }
     .jstree-default-responsive .jstree-icon:empty {
       width: 40px;
@@ -829,10 +829,10 @@
     white-space: nowrap;
     background-position: -80px 0;
     background-repeat: repeat-y;
-    background-image: url(..//wingo/wingoapp/static/assets/images/tree/40px.png);
+    background-image: url(..//wingoapp/static/assets/images/tree/40px.png);
     background-size: 120px 240px; }
     .jstree-default-responsive .jstree-node > .jstree-ocl {
-      background-image: url(..//wingo/wingoapp/static/assets/images/tree/40px.png);
+      background-image: url(..//wingoapp/static/assets/images/tree/40px.png);
       background-size: 120px 240px; }
   .jstree-default-responsive .jstree-anchor {
     line-height: 40px;
@@ -861,12 +861,12 @@
   .jstree-default-responsive .jstree-themeicon {
     background-size: 120px 240px;
     background-position: -40px -40px;
-    background-image: url(..//wingo/wingoapp/static/assets/images/tree/40px.png);
+    background-image: url(..//wingoapp/static/assets/images/tree/40px.png);
     background-size: 120px 240px; }
   .jstree-default-responsive .jstree-checkbox {
     background-size: 120px 240px;
     background-position: -40px -80px;
-    background-image: url(..//wingo/wingoapp/static/assets/images/tree/40px.png);
+    background-image: url(..//wingoapp/static/assets/images/tree/40px.png);
     background-size: 120px 240px; }
     .jstree-default-responsive .jstree-checkbox:hover {
       background-position: -40px -80px; }
@@ -898,10 +898,10 @@
     background-image: none;
     background-position: 0 0; }
   .jstree-default-responsive .jstree-file {
-    background: url(..//wingo/wingoapp/static/assets/images/tree/40px.png) 0 -160px no-repeat;
+    background: url(..//wingoapp/static/assets/images/tree/40px.png) 0 -160px no-repeat;
     background-size: 120px 240px; }
   .jstree-default-responsive .jstree-folder {
-    background: url(..//wingo/wingoapp/static/assets/images/tree/40px.png) -40px -40px no-repeat;
+    background: url(..//wingoapp/static/assets/images/tree/40px.png) -40px -40px no-repeat;
     background-size: 120px 240px; }
   .jstree-default-responsive .jstree-leaf > .jstree-ocl {
     background: transparent;
@@ -929,11 +929,11 @@
       width: 40px;
       height: 40px; }
     #jstree-dnd.jstree-dnd-responsive > .jstree-ok {
-      background-image: url(..//wingo/wingoapp/static/assets/images/tree/40px.png);
+      background-image: url(..//wingoapp/static/assets/images/tree/40px.png);
       background-position: 0 -200px;
       background-size: 120px 240px; }
     #jstree-dnd.jstree-dnd-responsive > .jstree-er {
-      background-image: url(..//wingo/wingoapp/static/assets/images/tree/40px.png);
+      background-image: url(..//wingoapp/static/assets/images/tree/40px.png);
       background-position: -40px -200px;
       background-size: 120px 240px; }
   #jstree-marker.jstree-dnd-responsive {

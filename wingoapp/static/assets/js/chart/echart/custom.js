@@ -4494,7 +4494,7 @@ require([
     if (!env.browser.ie || env.browser.ie.version > 8) {
       var scr = document.createElement("script");
       scr.src =
-        "/wingo/wingoapp/static/assets/js/chart/echart/lib/dat.gui.min.js";
+        "/wingoapp/static/assets/js/chart/echart/lib/dat.gui.min.js";
       scr.onload = function () {
         var gui = new dat.GUI();
         var config = {

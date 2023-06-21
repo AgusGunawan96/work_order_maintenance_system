@@ -1937,21 +1937,21 @@ input[type='checkbox'].tui-full-calendar-checkbox-round {
     font-size: 10px;
     font-weight: normal; }
   .calendar-basic .img-bi {
-    background: url("/wingo/wingoapp/static/assets/images/calender/img-bi.png") no-repeat;
+    background: url("/wingoapp/static/assets/images/calender/img-bi.png") no-repeat;
     width: 215px;
     height: 16px; }
   .calendar-basic .ic_view_month {
-    background: url("/wingo/wingoapp/static/assets/images/calender/ic-view-month.png") no-repeat; }
+    background: url("/wingoapp/static/assets/images/calender/ic-view-month.png") no-repeat; }
   .calendar-basic .ic_view_week {
-    background: url("/wingo/wingoapp/static/assets/images/calender/ic-view-week.png") no-repeat; }
+    background: url("/wingoapp/static/assets/images/calender/ic-view-week.png") no-repeat; }
   .calendar-basic .ic_view_day {
-    background: url("/wingo/wingoapp/static/assets/images/calender/ic-view-day.png") no-repeat; }
+    background: url("/wingoapp/static/assets/images/calender/ic-view-day.png") no-repeat; }
   .calendar-basic .ic-arrow-line-left {
-    background: url("/wingo/wingoapp/static/assets/images/calender/ic-arrow-line-left.png") no-repeat; }
+    background: url("/wingoapp/static/assets/images/calender/ic-arrow-line-left.png") no-repeat; }
   .calendar-basic .ic-arrow-line-right {
-    background: url("/wingo/wingoapp/static/assets/images/calender/ic-arrow-line-right.png") no-repeat; }
+    background: url("/wingoapp/static/assets/images/calender/ic-arrow-line-right.png") no-repeat; }
   .calendar-basic .ic-travel-time {
-    background: url("/wingo/wingoapp/static/assets/images/calender/ic-traveltime-w.png") no-repeat; }
+    background: url("/wingoapp/static/assets/images/calender/ic-traveltime-w.png") no-repeat; }
   .calendar-basic .ic-location-b:before {
     content: '\e900'; }
   .calendar-basic .ic-lock-b:before {

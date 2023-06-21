@@ -175,7 +175,7 @@ var options4 = {
       hollow: {
         margin: 20,
         size: "65%",
-        image: "/wingo/wingoapp/static/assets/images/dashboard/impossible.png",
+        image: "/wingoapp/static/assets/images/dashboard/impossible.png",
         imageWidth: 80,
         imageHeight: 80,
         imageClipped: false,

@@ -9,7 +9,7 @@
   text-align: center;
   background-color:$white;
   &.maintenance-bg {
-    background-image: url(/wingo/wingoapp/static/assets/images/other-images/maintenance-bg.jpg);
+    background-image: url(/wingoapp/static/assets/images/other-images/maintenance-bg.jpg);
     background-color: rgba(255, 255, 255, 0.6);
     background-blend-mode: overlay;
   }

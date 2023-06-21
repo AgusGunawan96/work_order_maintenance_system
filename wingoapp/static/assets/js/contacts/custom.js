@@ -13,7 +13,7 @@ function submitContact() {
       index_var +
       ')" href="#v-pills-user" role="tab" aria-controls="v-pills-user" aria-selected="true" data-original-title="" title="">\
 			                <div class="media">\
-				                <img class="img-50 img-fluid m-r-20 rounded-circle update_img_0" src="/wingo/wingoapp/static/assets/images/user/user.png" alt="" data-original-title="" title="">\
+				                <img class="img-50 img-fluid m-r-20 rounded-circle update_img_0" src="/wingoapp/static/assets/images/user/user.png" alt="" data-original-title="" title="">\
 				                <div class="media-body">\
 				                    <h6>\
 					                    <span class="first_name_' +
@@ -40,7 +40,7 @@ function submitContact() {
       ' tab-content-child fade show active" id="v-pills-user" role="tabpanel" aria-labelledby="v-pills-user-tab">\
 		                <div class="profile-mail">\
 		                  <div class="media">\
-		                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_0" src="/wingo/wingoapp/static/assets/images/user/user.png" alt="" data-original-title="" title="">\
+		                  <img class="img-100 img-fluid m-r-20 rounded-circle update_img_0" src="/wingoapp/static/assets/images/user/user.png" alt="" data-original-title="" title="">\
 		                    <input class="updateimg" type="file" name="img" onchange="readURL(this,0)" data-original-title="" title="">\
 		                    <div class="media-body mt-0">\
 		                      <h5>\

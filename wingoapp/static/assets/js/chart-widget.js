@@ -368,7 +368,7 @@ var options = {
         margin: 15,
         size: "70%",
         image:
-          "/wingo/wingoapp/static/assets/images/email-template/success.png",
+          "/wingoapp/static/assets/images/email-template/success.png",
         imageWidth: 64,
         imageHeight: 64,
         imageClipped: false,
@@ -390,7 +390,7 @@ var options = {
   fill: {
     type: "image",
     image: {
-      src: ["/wingo/wingoapp/static/assets/images/user-card/5.jpg"],
+      src: ["/wingoapp/static/assets/images/user-card/5.jpg"],
     },
   },
   stroke: {

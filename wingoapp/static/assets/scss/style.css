@@ -2,7 +2,7 @@
 /*! -----------------------------------------------------------------------------------
 
     Template Name: Wingo Admin
-    Template URI: http://admin.pixelstrap.com/wingo/theme
+    Template URI: http://admin.pixelstrap.com/theme
     Description: This is Admin theme
     Author: Pixelstrap
     Author URI: https://themeforest.net/user/pixelstrap
@@ -3159,7 +3159,7 @@ strong {
     left: 0;
     width: 150px;
     height: 150px;
-    background: url(/wingo/wingoapp/static/assets/images/button_builder/colorpicker_overlay.png); }
+    background: url(/wingoapp/static/assets/images/button_builder/colorpicker_overlay.png); }
     .button-builder .colorpicker-color div div {
       position: absolute;
       top: 0;
@@ -3167,7 +3167,7 @@ strong {
       width: 11px;
       height: 11px;
       overflow: hidden;
-      background: url(/wingo/wingoapp/static/assets/images/button_builder/colorpicker_select.gif);
+      background: url(/wingoapp/static/assets/images/button_builder/colorpicker_select.gif);
       margin: -5px 0 0 -5px; }
 
 .button-builder .colorpicker-hue {
@@ -3308,7 +3308,7 @@ strong {
     width: 33px;
     transform: scale(1.4);
     z-index: 1;
-    background: url(/wingo/wingoapp/static/assets/images/button_builder/select.png) repeat scroll 0 0 rgba(0, 0, 0, 0); }
+    background: url(/wingoapp/static/assets/images/button_builder/select.png) repeat scroll 0 0 rgba(0, 0, 0, 0); }
 
 .button-builder .custom-radio {
   width: 16px;
@@ -3339,7 +3339,7 @@ strong {
   position: relative;
   z-index: 1;
   top: 3px;
-  background: url(/wingo/wingoapp/static/assets/images/button_builder/checkbox-sprite.png) no-repeat 0 0 transparent; }
+  background: url(/wingoapp/static/assets/images/button_builder/checkbox-sprite.png) no-repeat 0 0 transparent; }
   .button-builder .custom-checkbox:hover {
     background-position: 0 -16px; }
   .button-builder .custom-checkbox.selected {
@@ -3354,7 +3354,7 @@ strong {
     filter: alpha(opacity=0); }
 
 .button-builder .colorpicker-hex {
-  background: url(/wingo/wingoapp/static/assets/images/button_builder/hex_bg.gif) no-repeat scroll right center rgba(0, 0, 0, 0);
+  background: url(/wingoapp/static/assets/images/button_builder/hex_bg.gif) no-repeat scroll right center rgba(0, 0, 0, 0);
   left: 220px;
   padding-left: 15px;
   position: absolute;
@@ -3380,7 +3380,7 @@ strong {
     box-sizing: content-box; }
 
 .button-builder .colorpicker-hue {
-  background: url(/wingo/wingoapp/static/assets/images/button_builder/rainbow.png) no-repeat scroll center center rgba(0, 0, 0, 0);
+  background: url(/wingoapp/static/assets/images/button_builder/rainbow.png) no-repeat scroll center center rgba(0, 0, 0, 0);
   cursor: default;
   height: 150px;
   left: 171px;
@@ -3388,7 +3388,7 @@ strong {
   top: 13px;
   width: 35px; }
   .button-builder .colorpicker-hue div {
-    background: url(/wingo/wingoapp/static/assets/images/button_builder/scroll.png) no-repeat scroll left top rgba(0, 0, 0, 0);
+    background: url(/wingoapp/static/assets/images/button_builder/scroll.png) no-repeat scroll left top rgba(0, 0, 0, 0);
     height: 16px;
     left: 0;
     margin-top: -8px;
@@ -5882,11 +5882,11 @@ td.highlight {
   background-color: #ecf3fa !important; }
 
 td.details-control {
-  background: url("/wingo/wingoapp/static/assets/images/details_open.png") no-repeat center center;
+  background: url("/wingoapp/static/assets/images/details_open.png") no-repeat center center;
   cursor: pointer; }
 
 tr.shown td.details-control {
-  background: url("/wingo/wingoapp/static/assets/images/details_close.png") no-repeat center center; }
+  background: url("/wingoapp/static/assets/images/details_close.png") no-repeat center center; }
 
 .dataTables_scroll ~ .dataTables_paginate {
   margin-top: 20px !important; }
@@ -12299,7 +12299,7 @@ p.data-attributes svg {
      27. Coming Soon CSS Start
 ==========================**/
 .comingsoon-bgimg {
-  background: url(/wingo/wingoapp/static/assets/images/other-images/coming-soon-bg.jpg);
+  background: url(/wingoapp/static/assets/images/other-images/coming-soon-bg.jpg);
   background-position: bottom;
   background-size: cover; }
 
@@ -12830,7 +12830,7 @@ p.data-attributes svg {
 
 .payment-sec-main {
   position: relative;
-  background-image: url("/wingo/wingoapp/static/assets/images/dashboard-2/help.jpg");
+  background-image: url("/wingoapp/static/assets/images/dashboard-2/help.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover !important;
@@ -13479,7 +13479,7 @@ p.data-attributes svg {
 ==========================**/
 .congrats-sec {
   position: relative;
-  background-image: url("/wingo/wingoapp/static/assets/images/dashboard-3/Welcome.png");
+  background-image: url("/wingoapp/static/assets/images/dashboard-3/Welcome.png");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover !important;
@@ -16575,7 +16575,7 @@ ul.rating-pro li {
   text-align: center;
   background-color: #fff; }
   .error-wrapper.maintenance-bg {
-    background-image: url(/wingo/wingoapp/static/assets/images/other-images/maintenance-bg.jpg);
+    background-image: url(/wingoapp/static/assets/images/other-images/maintenance-bg.jpg);
     background-color: rgba(255, 255, 255, 0.6);
     background-blend-mode: overlay; }
   .error-wrapper .maintenance-icons li i {
@@ -18185,7 +18185,7 @@ footer {
   background-color: #fff;
   position: relative;
   overflow: hidden;
-  background-image: url(/wingo/wingoapp/static/assets/images/landing/landing-home/home-bg.jpg);
+  background-image: url(/wingoapp/static/assets/images/landing/landing-home/home-bg.jpg);
   background-size: cover;
   background-position: center center;
   display: block;

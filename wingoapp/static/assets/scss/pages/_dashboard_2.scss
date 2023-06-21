@@ -320,7 +320,7 @@
 }
 // payment-section css
 .payment-sec-main{
-  @include back-img (url("/wingo/wingoapp/static/assets/images/dashboard-2/help.jpg"));
+  @include back-img (url("/wingoapp/static/assets/images/dashboard-2/help.jpg"));
   color: $white; 
     #sync1 {
       margin-bottom:35px;

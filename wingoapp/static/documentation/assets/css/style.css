@@ -2,7 +2,7 @@
 /*! -----------------------------------------------------------------------------------
 
     Template Name: Wingo Admin
-    Template URI: http://admin.pixelstrap.com/wingo/theme
+    Template URI: http://admin.pixelstrap.com/theme
     Description: This is Admin theme
     Author: Pixelstrap
     Author URI: https://themeforest.net/user/pixelstrap
@@ -2112,7 +2112,7 @@ ul.list-style {
   -webkit-text-fill-color: transparent;
   background: -o-linear-gradient(transparent, transparent);
   -webkit-background-clip: text;
-  background-image: -webkit-linear-gradient(transparent, transparent), url(/wingo/wingoapp/static/assets/images/2.gif);
+  background-image: -webkit-linear-gradient(transparent, transparent), url(/wingoapp/static/assets/images/2.gif);
   background-position: left;
   background-size: 125%; }
 
