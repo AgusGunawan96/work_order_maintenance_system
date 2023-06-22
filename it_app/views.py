@@ -9,8 +9,15 @@ from django.db.models import Count, F, Value
 import datetime
 from django.db.models.functions import Concat
 import xlwt
-
+from seiwa.models import TabelPemasukan
+from POSEIWA.models import TPo
 # Create your views here.
+
+# def seiwa(request):
+#     # pemasukan = TabelPemasukan.objects.using('seiwa_db').all()
+#     # return HttpResponse(pemasukan)
+#     tpo = TPo.objects.using('poseiwa_db').filter(status = 'k').all().values('kode_barang')
+#     return HttpResponse(tpo)
 
 @login_required
 def dashboard(request):

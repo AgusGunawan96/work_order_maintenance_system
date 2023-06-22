@@ -584,25 +584,26 @@
                     <button class="btn btn-primary" type="submit">Download</button>
                   </div>
                 </form>
+                <hr>
                 <form action="{% url 'hrd_app:medical_train_download_daterange_accounting' %}" method="POST">
                   {% csrf_token %}
                   <div class="modal-body">
                     <div class="mb-3">
                       <div class="form-group row">
-                        <label class="col-sm-3 col-form-label text-end">Start Date</label>
-                        <div class="col-xl-5 col-sm-12">
+                        <label class="col-sm-12 col-form-label ">Start Date</label>
+                        <div class="col-xl-12 col-sm-12">
                           <div class="input-group">
-                            <input class="datepicker-here form-control digits" name="id_startdate" type="text" data-language="en">
+                            <input class="datepicker-here form-control digits" name="id_startdate" type="text" data-language="en" autocomplete="off">
                           </div>
                         </div>
                       </div>
                     </div>
                      <div class="mb-3">
                       <div class="form-group row">
-                        <label class="col-sm-3 col-form-label text-end">End Date</label>
-                        <div class="col-xl-5 col-sm-12">
+                        <label class="col-sm-12 col-form-label ">End Date</label>
+                        <div class="col-xl-12 col-sm-12">
                           <div class="input-group">
-                            <input class="datepicker-here form-control digits" name="id_enddate" type="text" data-language="en">
+                            <input class="datepicker-here form-control digits" name="id_enddate" type="text" data-language="en" autocomplete="off">
                           </div>
                         </div>
                       </div>

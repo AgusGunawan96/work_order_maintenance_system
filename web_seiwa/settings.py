@@ -59,6 +59,8 @@ INSTALLED_APPS = [
     'it_app',
     'master_app',
     'timing_app',
+    'POSEIWA',
+    'seiwa',
     'wingoapp',
     'sass_processor',
     # other apps
@@ -101,10 +103,6 @@ WSGI_APPLICATION = 'web_seiwa.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'web_seiwa',
@@ -113,15 +111,25 @@ DATABASES = {
         'HOST': '172.16.202.237\SEIBSC02',
         'PORT': '',
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
+    },
+    'poseiwa_db': {
+    'ENGINE': 'mssql',
+    'NAME': 'DB_POSEIWA',
+    'USER': 'sa',
+    'PASSWORD': 'loginS@EDP',
+    'HOST': '172.16.202.234',
+    'PORT': '',
+    'OPTIONS': {},  # Additional options for the second database
+    },
+    'seiwa_db': {
+    'ENGINE': 'mssql',
+    'NAME': 'seiwa',
+    'USER': 'sa',
+    'PASSWORD': 'loginS@EDP',
+    'HOST': '172.16.202.234',
+    'PORT': '',
+    'OPTIONS': {},  # Additional options for the second database
     }
-    #     'default': {
-    #     'ENGINE': 'sql',
-    #     'NAME': 'web_seiwa',
-    #     'USER': 'root',
-    #     'PASSWORD': False,
-    #     'HOST': 'localhost',
-    #     'PORT': '3306',
-    # }
 }
 
 
