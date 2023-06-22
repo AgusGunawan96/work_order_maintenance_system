@@ -59,7 +59,6 @@ class medicalPelayananKesehatanForms(forms.ModelForm):
         if validate >= 1:
             if user.userprofileinfo.is_contract:
                 self.fields['jenis_pelayanan'].choices = medicalJenisPelayananSetahun.choices
-
             elif user.userprofileinfo.is_permanent:
                 self.fields['jenis_pelayanan'].choices = medicalJenisPelayananKartapSetahun.choices
         else:

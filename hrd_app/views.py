@@ -469,6 +469,9 @@ def medical_submit_atasan(request, medical_id, is_approve, is_reject):
 @login_required
 def medical_submit_hr(request, medical_id, is_approve, is_reject):
     medical_approval = medicalApprovalList.objects.filter(user = request.user).first()
+    medical_header = medicalHeader.objects.get(pk = medical_id)
+    medical_info = medicalDetailInformation.objects.filter(medical_id = medical_header.id).first()
+
     if is_approve == 'True':
         # Approve HR
         hr = medicalApprovalHR.objects.filter(medical_id = medical_id).first()
@@ -486,11 +489,12 @@ def medical_submit_hr(request, medical_id, is_approve, is_reject):
         if medical_header:
             medical_header.is_complete = True
             medical_header.save()
-        # Menambahkan used dan mengurangi remain 
-        medical_remain = medicalRemain.objects.filter(user = medical_header.user).first()
-        medical_remain.used += medical_header.rp_total
-        medical_remain.remain -= medical_header.rp_total
-        medical_remain.save()
+        # Menambahkan used dan mengurangi remain dan menambahkan kondisi apabila rawat jalan 
+        if medical_info.jenis_pelayanan == 'Rawat Jalan' and medical_info.jenis_pelayanan == 'Rawat Inap':
+            medical_remain = medicalRemain.objects.filter(user = medical_header.user).first()
+            medical_remain.used += medical_header.rp_total
+            medical_remain.remain -= medical_header.rp_total
+            medical_remain.save()
 
         messages.success(request, 'Medical Train Verified')
         return redirect('hrd_app:medical_train_index')
