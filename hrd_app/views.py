@@ -490,7 +490,7 @@ def medical_submit_hr(request, medical_id, is_approve, is_reject):
             medical_header.is_complete = True
             medical_header.save()
         # Menambahkan used dan mengurangi remain dan menambahkan kondisi apabila rawat jalan 
-        if medical_info.jenis_pelayanan == 'Rawat Jalan' and medical_info.jenis_pelayanan == 'Rawat Inap':
+        if medical_info.jenis_pelayanan == 'Rawat Jalan':
             medical_remain = medicalRemain.objects.filter(user = medical_header.user).first()
             medical_remain.used += medical_header.rp_total
             medical_remain.remain -= medical_header.rp_total
