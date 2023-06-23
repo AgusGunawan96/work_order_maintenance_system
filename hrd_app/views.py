@@ -64,7 +64,7 @@ def medical_train_index(request):
     ).values('year_month').distinct().all()
     year_month_list = [entry['year_month'] for entry in medical_date]
     medical_remain_user = medicalRemain.objects.filter(user = request.user).first()
-
+    medical_atasan = False
     yml = []
     for year_month in year_month_list:
         year = year_month[:4]
@@ -79,6 +79,7 @@ def medical_train_index(request):
         if medical_approval_list.is_foreman:
             medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_foreman = medicalReasonForemanForms()
+            medical_atasan = True
         else:
             medical_approval_foreman = None
             medical_approval_reason_foreman = None
@@ -86,6 +87,7 @@ def medical_train_index(request):
         if medical_approval_list.is_supervisor:
             medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(medical__is_foreman = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_supervisor = medicalReasonSupervisorForms()
+            medical_atasan = True
         else:
             medical_approval_supervisor = None
             medical_approval_reason_supervisor = None
@@ -93,6 +95,7 @@ def medical_train_index(request):
         if medical_approval_list.is_manager:
             medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
             medical_approval_reason_manager = medicalReasonManagerForms()
+            medical_atasan = True
         else:
             medical_approval_manager = None
             medical_approval_reason_manager = None
@@ -102,6 +105,7 @@ def medical_train_index(request):
             medical_approval_reason_hr  = medicalReasonHRForms()
             medical_klaim_status        = medicalStatusKlaimForms()
             medical_reject_klaim_status = medicalRejectStatusKlaimForms()
+            medical_atasan = True
         else:
             medical_approval_hr         = None
             medical_approval_reason_hr  = None
@@ -128,6 +132,7 @@ def medical_train_index(request):
         'medical_approval_list'                     : medical_approval_list,
         'medical_modal'                             : medical_modal,
         'medical_date'                              : yml,
+        'medical_atasan'                            : medical_atasan,
         'medical_remain_user'                       : medical_remain_user,
         'form_medical_approval_reason_foreman'      : medical_approval_reason_foreman ,
         'form_medical_approval_reason_supervisor'   : medical_approval_reason_supervisor ,
