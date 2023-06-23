@@ -562,7 +562,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel2">{{medical.medical_no}}</h5>
+                  <h5 class="modal-title" id="exampleModalLabel2">Download for Accounting</h5>
                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{% url 'hrd_app:medical_train_download_accounting' %}" method="POST">
@@ -576,15 +576,13 @@
                           {% endfor %}
                         </select>
                       </div>
-                  </div>
                   <div class="modal-footer">
-                    <button class="btn btn-primary" type="submit">Download</button>
+                    <button class="btn btn-primary" type="submit">Download Month</button>
                   </div>
                 </form>
                 <hr>
                 <form action="{% url 'hrd_app:medical_train_download_daterange_accounting' %}" method="POST">
                   {% csrf_token %}
-                  <div class="modal-body">
                     <div class="mb-3">
                       <div class="form-group row">
                         <label class="col-sm-12 col-form-label ">Start Date</label>
@@ -608,8 +606,18 @@
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="submit">Download</button>
+                    <button class="btn btn-primary" type="submit">Download Periode</button>
                   </div>
+                  <label for="">Last Download Periode for Accounting:</label>
+                  <div class="row my-gallery gallery" id="aniimated-thumbnials" itemscope="">
+                    <div class="mb-3">
+                      <div class="form-group">
+                        <ul> <!-- Add ul tag here -->
+                          <li>{{ log.created_at }}  : {{ log.start_date|date:"M d Y" }} to {{ log.end_date|date:"M d Y" }} by {{ log.user.first_name }} {{ log.user.last_name }}</li> <!-- Wrap text inside li tags -->
+                        </ul> <!-- Close ul tag here -->
+                      </div>
+                    </div>
+                    </div>
                 </form>
               </div>
             </div>

@@ -13,7 +13,7 @@ from django.db.models import F
 from django.db.models.functions import Substr
 from dateutil.relativedelta import relativedelta
 from csv import reader
-from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan, medicalRemain
+from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan, medicalRemain, medicalLogDownloadAccounting
 from master_app.models import UserProfileInfo
 from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms
 # from escpos.printer import Usb
@@ -26,6 +26,7 @@ import win32ui
 import win32con
 import barcode
 from barcode.writer import ImageWriter
+from django.utils.dateparse import parse_date
 
 # import usb.core
 # import usb.util
@@ -59,6 +60,7 @@ def medical_train_index(request):
     medical_approval_list       = medicalApprovalList.objects.filter(user_id = request.user).first()
     medical_header              = medicalHeader.objects.filter(user_id = request.user).order_by('-id')
     medical_modal               = medicalHeader.objects.order_by('-id')
+    medical_log_accounting      = medicalLogDownloadAccounting.objects.order_by('-id').first()
     medical_date = medicalHeader.objects.annotate(
         year_month=Substr('medical_no', 4, 6)
     ).values('year_month').distinct().all()
@@ -134,6 +136,7 @@ def medical_train_index(request):
         'medical_date'                              : yml,
         'medical_atasan'                            : medical_atasan,
         'medical_remain_user'                       : medical_remain_user,
+        'log'                                       : medical_log_accounting,
         'form_medical_approval_reason_foreman'      : medical_approval_reason_foreman ,
         'form_medical_approval_reason_supervisor'   : medical_approval_reason_supervisor ,
         'form_medical_approval_reason_manager'      : medical_approval_reason_manager ,
@@ -886,6 +889,32 @@ def convert_month_year_to_ym(month_year):
 
 @login_required 
 def medical_train_download_daterange_accounting(request):
+    start_date_str = request.POST.get('id_startdate')
+    end_date_str = request.POST.get('id_enddate')
+    # Check if either start or end date is empty:
+
+    date_format = '%m/%d/%Y'
+
+    
+    if not (start_date_str and end_date_str):
+        raise ValueError("Both 'start_date' and 'end_date' must be provided.")
+
+    # Parse dates into datetime objects:
+    start_datetime = dt.strptime(start_date_str, date_format).date()
+    end_datetime = dt.strptime(end_date_str, date_format).date()
+
+   # Check if either date could not be parsed correctly:
+    if not (start_datetime and end_datetime):
+       raise ValueError("Invalid format for one of the input datetimes.")
+
+    log_obj = medicalLogDownloadAccounting(
+        start_date=start_datetime,
+        end_date=end_datetime,
+        user=request.user
+    )
+    
+    log_obj.save()
+
     start_date = request.POST['id_startdate']
     end_date   = request.POST['id_enddate']
     if start_date and end_date:

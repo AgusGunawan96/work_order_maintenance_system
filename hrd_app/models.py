@@ -135,6 +135,13 @@ class medicalAttachment(models.Model):
     medical         = models.ForeignKey(medicalHeader, on_delete=models.CASCADE, blank=True, null=True)
     attachment      = models.FileField(upload_to='MedicalAttachment/', null=False, blank=True)
 
+class medicalLogDownloadAccounting(models.Model):
+    user            = models.ForeignKey(User,on_delete=models.CASCADE, null=True, blank=True)
+    start_date      = models.DateTimeField()
+    end_date        = models.DateTimeField()
+    created_at      = models.DateTimeField('created at', auto_now_add = True)
+    updated_at      = models.DateTimeField('updated at', auto_now = True) 
+    
 # APPROVAL MEDICAL START
 
     
