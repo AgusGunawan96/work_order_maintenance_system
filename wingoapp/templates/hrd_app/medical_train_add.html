@@ -246,7 +246,7 @@
                     <div class="form-group row">
                       <div class="col-md-12">
                           <div class="input-group"><span class="input-group-text">IDR  </span>
-                              <input  class="form-control" id="id_number-mask1" type="number" required >
+                              <input  class="form-control" id="id_number-mask1" type="text" required >
                           </div>
                       </div>
                     </div>
@@ -270,6 +270,23 @@
 <script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
 {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/1.8.2/autoNumeric.js"></script> {% endcomment %}
 <script>
+  const inputField = document.getElementById('id_number-mask1');
+  
+  inputField.addEventListener('keydown', function(event) {
+    // Get the key code of the pressed key
+    const keyCode = event.keyCode || event.which;
+    
+    // Allow numeric keys (0-9)
+    if ((keyCode >= 48 && keyCode <= 57) || keyCode === 8) {
+      return true;
+    }
+    
+    // Prevent input for alphabetic characters (A-Z)
+    event.preventDefault();
+    return false;
+  });
+</script>
+<script>
   $(document).ready(function() {
       $('#id_incoming_type').select2();
       $('#id_category').select2();
@@ -290,7 +307,6 @@
   document.querySelector(selector).addEventListener('input', function() {
     let inputValue = parseFloat(this.value.replace(/\./g, '').replace(',', '.')); // Parse input as float and replace commas with dots (if necessary)
     const maxAllowedValue = '{{ value_without_commas }}'; // Set the maximum allowed value to one thousand
-    console.log(maxAllowedValue)
     if (inputValue > maxAllowedValue) {
         inputValue = maxAllowedValue;
         this.value = new Intl.NumberFormat('en-US', {maximumFractionDigits:0}).format(inputValue).replace(/,/g,'.'); // Use Intl.NumberFormat() to format number back into string format with separators
