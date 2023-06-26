@@ -28,6 +28,8 @@
                 <!-- blok untuk menampilkan notifikasi pesan sukses -->
                 <div>
                 </div>
+            <a data-bs-toggle="modal" data-bs-target="#ModalDownloadReportRIR" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-download"></span>Download Month Report</a>
+
             </div>
             <div class="card-body">
                 <div class="col-sm-12">
@@ -117,6 +119,35 @@
                     </div>
                 </div>
             </div>
+            {% comment %} MODAL DOWNLOAD ACCOUNTING START {% endcomment %}
+          <div class="modal fade" id="ModalDownloadReportRIR" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Download Month Report</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="{% url 'qc_app:rir_download_report_excel' %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <div class="mb-3">
+                      <label class="form-label" for="exampleFormControlSelect9">Month select</label>
+                      <select class="form-select digits" id="yearMonthSelect" name="id_yearmonth">
+                        {% for year_month in rir_date %}
+                        <option value="{{ year_month }}">{{ year_month }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                <div class="modal-footer">
+                  <button class="btn btn-primary" type="submit">Download Month</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+        {% comment %} MODAL DOWNLOAD ACCOUNTING END {% endcomment %}
         </div>
     </div>
     <!-- Container-fluid starts-->

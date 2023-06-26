@@ -4,7 +4,9 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.http import Http404, HttpResponse, JsonResponse
-import datetime
+from django.db.models.functions import Substr
+import datetime, calendar
+from dateutil.parser import parse
 import csv
 import xlwt
 from dateutil.relativedelta import relativedelta
@@ -670,8 +672,20 @@ def rir_list_return_index(request):
 def rir_list_complete_index(request):
     # RIR yang sudah complete dan bisa di print
     rir = rirHeader.objects.filter(is_complete = True).filter(is_special_judgement = False).filter(is_return = False).filter(is_sa = False).filter(is_delete = False).order_by('-id')
+    rir_date = rirHeader.objects.annotate(
+        year_month=Substr('rir_no', 4, 6)
+    ).values('year_month').distinct().all()
+    year_month_list = [entry['year_month'] for entry in rir_date]
+    yml = []
+    for year_month in year_month_list:
+        year = year_month[:4]
+        month_number = int(year_month[4:])
+        month_name = calendar.month_name[month_number]
+        yml.append(f"{month_name} {year}")
+
     context = {
         'list_complete_rir' : rir,
+        'rir_date'          : yml,
     }
     return render(request, 'qc_app/rir_list_complete_index.html', context)
 
@@ -840,15 +854,27 @@ def rir_download_report(request, rir_id):
 
     return render(request, 'qc_app/rir_download_report.html', context)
 
+def convert_month_year_to_ym(month_year):
+    # Parse the input string as a date
+    date_obj = parse(month_year)
+    
+    # Format the date object to the desired output format
+    year_month = date_obj.strftime("%Y%m")
+    
+    return year_month
+
+
 @login_required
 def rir_download_report_excel(request):
+    month_year = request.POST['id_yearmonth']
+    year_month = convert_month_year_to_ym(month_year)
     # Test Distinct
-    rir_header = rirHeader.objects.all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement', 'id', 'is_complete').order_by('-rir_no')
+    rir_header = rirHeader.objects.filter(rir_no__contains=year_month).all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement', 'id', 'is_complete').order_by('-rir_no')
     # Memanggil RIR dari tahun awal sampai tahun akhir
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=RIR.xls'
+    response['Content-Disposition'] = 'attachment; filename=RIR '+year_month+'.xls'
     wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('RIR', cell_overwrite_ok=True) # this will make a sheet named Users Data
+    ws = wb.add_sheet(year_month, cell_overwrite_ok=True) # this will make a sheet named Users Data
 
 # Dimulai dari Row 1
     row_num = 1

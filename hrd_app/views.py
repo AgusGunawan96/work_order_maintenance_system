@@ -61,12 +61,12 @@ def medical_train_index(request):
     medical_header              = medicalHeader.objects.filter(user_id = request.user).order_by('-id')
     medical_modal               = medicalHeader.objects.order_by('-id')
     medical_log_accounting      = medicalLogDownloadAccounting.objects.order_by('-id').first()
+    medical_remain_user = medicalRemain.objects.filter(user = request.user).first()
+    medical_atasan = False
     medical_date = medicalHeader.objects.annotate(
         year_month=Substr('medical_no', 4, 6)
     ).values('year_month').distinct().all()
     year_month_list = [entry['year_month'] for entry in medical_date]
-    medical_remain_user = medicalRemain.objects.filter(user = request.user).first()
-    medical_atasan = False
     yml = []
     for year_month in year_month_list:
         year = year_month[:4]
