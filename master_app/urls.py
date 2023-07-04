@@ -15,6 +15,13 @@ urlpatterns = [
     # path('CreateInfoKeluarga/', views.CreateInfoKeluarga, name='CreateInfoKeluarga'),
     # path('CreateLocation/', views.CreateLocation, name='CreateLocation'),
     # path('CreateRemain/', views.CreateRemain, name='CreateRemain'),
+    # path('CreateProvince/', views.CreateProvince, name='CreateProvince'),
+    # path('CreateRegency/', views.CreateRegency, name='CreateRegency'),
+    # path('CreateDistrict/', views.CreateDistrict, name='CreateDistrict'),
+    # path('CreateVillage/', views.CreateVillage, name='CreateVillage'),
+
+
+    # path('UpdateRemain/', views.UpdateRemain, name='UpdateRemain'),
     # path('UpdateUpdateUserProfileInfoGenderStatus/', views.UpdateUpdateUserProfileInfoGenderStatus, name='UpdateUpdateUserProfileInfoGenderStatus'),
     # path('UpdateUserProfileInfoTanggalLahir/', views.UpdateUserProfileInfoTanggalLahir, name='UpdateUserProfileInfoTanggalLahir'),
 ]

@@ -1,0 +1,597 @@
+
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+{% load widget_tweaks %}
+
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <div class="row starter-main">
+      <div class="col-sm-12">
+
+        <div class="card">
+          <div class="card-header pb-0">
+              <h5>Empoloyee Add | DATA KARYAWAN</h5>
+          </div>
+          <div class="card-body">
+            {% comment %}  {% endcomment %}
+            <div class="row">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="mb-3 col-md-6">  
+                            <label for="{{ user_form.first_name.first_name }}" class="custom-label">First Name</label>
+                            {% render_field user_form.first_name class+="form-control" placeholder="Masukan Nama Depan" %}
+                        </div>
+                    
+                        <div class="mb-3 col-md-6">  
+                            <label for="{{ user_form.last_name.last_name }}" class="custom-label">Last Name</label>
+                            {% render_field user_form.last_name class+="form-control" placeholder="Masukan Nama Belakang" %}
+                        </div>
+                        <div class="mb-3 col-md-6">  
+                            <label for="{{ user_form.username.username }}" class="custom-label">No. Karyawan</label>
+                            {% render_field user_form.username class+="form-control" placeholder="Masukan Nomor Karyawan" %}
+                        </div>
+                    
+                        <div class="mb-3 col-md-6">  
+                            <div class="col">   
+                                {{ userprofileinfo_form.status_karyawan.label_tag }}
+                                <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                                    {% for choice in userprofileinfo_form.status_karyawan %}
+                                        <div class="radio radio-primary">
+                                            <input type="radio" id="{{ choice.id_for_label }}" name="{{ userprofileinfo_form.status_karyawan.name }}"
+                                                   value="{{ choice.choice_value }}" >
+                                            <label class="mb-0" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+                        <div class="mb-3 col-md-4">  
+                            <label for="{{ userprofileinfo_form.tempat.tempat }}" class="custom-label">Tempat</label>
+                            {% render_field userprofileinfo_form.tempat class+="form-control" placeholder="Masukan Tempat Lahir" %}
+                        </div>
+                        <div class="mb-3 col-md-6">  
+                            <label for="{{ userprofileinfo_form.tanggal_lahir.id_for_label }}" class="custom-label">Tanggal Lahir</label>
+                            {{ userprofileinfo_form.tanggal_lahir }}
+                        </div>
+                    </div>
+
+
+                <div class="row">
+                    <div class="mb-3 col-md-12">  
+                        <div class="mb-3 col-md-12">  
+                            <div class="col">   
+                                {{ userprofileinfo_form.gender.label_tag }}
+                                <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                                    {% for choice in userprofileinfo_form.gender %}
+                                        <div class="radio radio-primary">
+                                            <input type="radio" id="{{ choice.id_for_label }}" name="{{ userprofileinfo_form.gender.name }}"
+                                                   value="{{ choice.choice_value }}" >
+                                            <label class="mb-0" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label for="{{ UserProfileInfo.noktp.noktp }}" class="custom-label">No. KTP / NIK</label>
+                        {% render_field userprofileinfo_form.noktp class+="form-control" placeholder="Masukan Nomor KTP" %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label for="{{ UserProfileInfo.notelp.notelp }}" class="custom-label">No.Telepon</label>
+                        {% render_field userprofileinfo_form.no_telepon class+="form-control" placeholder="Masukan Nomor Telepon" %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-5 col-md-6">  
+                        <label for="{{ UserProfileInfo.notelp2.notelp2 }}" class="custom-label">No.Telepon (2)</label>
+                        {% render_field userprofileinfo_form.no_telepon2 class+="form-control" placeholder="Masukan Nomor Telepon hubungan" %}
+                        <div class="col">   
+                            {{ userprofileinfo_form.no_telp2_hubungan.label_tag }}
+                            <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                                {% for choice in userprofileinfo_form.no_telp2_hubungan %}
+                                    <div class="radio radio-primary">
+                                        <input type="radio" id="{{ choice.id_for_label }}" name="{{ userprofileinfo_form.no_telp2_hubungan.name }}"
+                                               value="{{ choice.choice_value }}" >
+                                        <label class="mb-0" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label for="{{ user_form.email.email }}" class="custom-label">Email</label>
+                        {% render_field user_form.email class+="form-control" placeholder="Masukan Email" %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-12">  
+                        <div class="col">   
+                            {{ userprofileinfo_form.pendidikan_terakhir.label_tag }}
+                            <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                                {% for choice in userprofileinfo_form.pendidikan_terakhir %}
+                                    <div class="radio radio-primary">
+                                        <input type="radio" id="{{ choice.id_for_label }}" name="{{ userprofileinfo_form.pendidikan_terakhir.name }}"
+                                               value="{{ choice.choice_value }}" >
+                                        <label class="mb-0" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Lainnya(Pendidikan Terakhir)</label>
+                        {% render_field userprofileinfo_form.pendidikan_terakhir_others class+="form-control" placeholder="Masukan RT" %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label for="{{ ktp_form.alamat_ktp.alamat_ktp }}" class="custom-label">Alamat Sesuai KTP</label>
+                        {% render_field ktp_form.alamat_ktp class+="form-control" placeholder="Masukan Alamat Sesuai KTP" %}
+                    </div>
+                    <div class="mb-3 col-md-3">  
+                        <label class="col-form-label">RT</label>
+                        {% render_field ktp_form.rt_ktp class+="form-control" placeholder="Masukan RT" %}
+                    </div>
+                    <div class="mb-3 col-md-3">  
+                        <label class="col-form-label">RW</label>
+                        {% render_field ktp_form.rw_ktp class+="form-control" placeholder="Masukan RW" %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <div class="col">   
+                            {{ ktp_form.surat_menyurat_ktp.label_tag }}
+                            <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                                {% for choice in ktp_form.surat_menyurat_ktp %}
+                                    <div class="radio radio-primary">
+                                        <input type="radio" id="{{ choice.id_for_label }}" name="{{ ktp_form.surat_menyurat_ktp.name }}"
+                                               value="{{ choice.choice_value }}" >
+                                        <label class="mb-0" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Provinsi</label>
+                        {% render_field ktp_form.provinsi_ktp class+="form-control" placeholder="Masukan Provinsi" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Kota / Kabupaten</label>
+                        {% render_field ktp_form.kota_ktp class+="form-control" placeholder="Masukan Kota / Kabupaten" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Kecamatan</label>
+                        {% render_field ktp_form.kecamatan_ktp class+="form-control" placeholder="Masukan Kecamatan" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Kelurahan / Desa</label>
+                        {% render_field ktp_form.kelurahan_ktp class+="form-control" placeholder="Masukan Kelurahan" %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-12">  
+                        <div class="col">   
+                            {{ ktp_form.alamat_tempat_saat_ini.label_tag }}
+                            <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                                {% for choice in ktp_form.alamat_tempat_saat_ini %}
+                                    <div class="radio radio-primary">
+                                        <input type="radio" id="{{ choice.id_for_label }}" name="{{ ktp_form.alamat_tempat_saat_ini.name }}"
+                                               value="{{ choice.choice_value }}" >
+                                        <label class="mb-0" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label for="{{ ktpnow_form.alamat_now.alamat_now }}" class="custom-label">Alamat Tempat Tinggal</label>
+                        {% render_field ktpnow_form.alamat_now class+="form-control" placeholder="Masukan Alamat Tempat Tinggal" %}
+                    </div>
+                    <div class="mb-3 col-md-3">  
+                        <label class="col-form-label">RT</label>
+                        {% render_field ktpnow_form.rt_now class+="form-control" placeholder="Masukan RT" %}
+                    </div>
+                    <div class="mb-3 col-md-3">  
+                        <label class="col-form-label">RW</label>
+                        {% render_field ktpnow_form.rw_now class+="form-control" placeholder="Masukan RW" %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <div class="col">   
+                            {{ ktpnow_form.surat_menyurat_now.label_tag }}
+                            <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                                {% for choice in ktpnow_form.surat_menyurat_now %}
+                                    <div class="radio radio-primary">
+                                        <input type="radio" id="{{ choice.id_for_label }}" name="{{ ktpnow_form.surat_menyurat_now.name }}"
+                                               value="{{ choice.choice_value }}" >
+                                        <label class="mb-0" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Provinsi</label>
+                        {% render_field ktpnow_form.provinsi_now class+="form-control" placeholder="Masukan Provinsi" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Kota / Kabupaten</label>
+                        {% render_field ktpnow_form.kota_now class+="form-control" placeholder="Masukan Kota / Kabupaten" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Kecamatan</label>
+                        {% render_field ktpnow_form.kecamatan_now class+="form-control" placeholder="Masukan Kecamatan" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Kelurahan / Desa</label>
+                        {% render_field ktpnow_form.kelurahan_now class+="form-control" placeholder="Masukan Kelurahan" %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <div class="col">   
+                            {{ ktpnow_form.alamat_tempat_saat_ini.label_tag }}
+                            <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                                {% for choice in ktpnow_form.alamat_tempat_saat_ini %}
+                                    <div class="radio radio-primary">
+                                        <input type="radio" id="{{ choice.id_for_label }}" name="{{ ktpnow_form.alamat_tempat_saat_ini.name }}"
+                                               value="{{ choice.choice_value }}" >
+                                        <label class="mb-0" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Lainnya(Status Tempat Tinggal)</label>
+                        <input class="form-control" type="text" name="id_status_tempat_tinggal_lainnya" value="" placeholder="Masukan Lainnya">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">Nama Pemilik</label>
+                        {% render_field ktpnow_form.nama_pemilik class+="form-control" placeholder="Masukan Nama Pemilik" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">  
+                        <label class="col-form-label">No Telepon</label>
+                        {% render_field ktpnow_form.no_telp_pemilik class+="form-control" placeholder="Masukan No Telepon" %}
+                    </div>
+                </div>
+            </div>
+            {% comment %}  {% endcomment %}
+          </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header pb-0">
+                <h5>Empoloyee Add | DATA KELUARGA</h5>
+            </div>
+            <div class="card-body">
+              {% comment %}  {% endcomment %}
+              <div class="row">
+                <div class="row">
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-sm-12 col-form-label pb-0">Status Perkawinan</label>
+                        <div class="col">
+                            <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                              <div class="radio radio-primary">
+                                <input id="radioinline1" type="radio" name="radio1" value="option1">
+                                <label class="mb-0" for="radioinline1">Lajang</label>
+                              </div>
+                              <div class="radio radio-primary">
+                                <input id="radioinline2" type="radio" name="radio1" value="option1">
+                                <label class="mb-0" for="radioinline2">K-0</label>
+                              </div>
+                              <div class="radio radio-primary">
+                                <input id="radioinline3" type="radio" name="radio1" value="option1">
+                                <label class="mb-0" for="radioinline3">K-1</label>
+                              </div>
+                              <div class="radio radio-primary">
+                                <input id="radioinline4" type="radio" name="radio1" value="option1">
+                                <label class="mb-0" for="radioinline4">K-2</label>
+                              </div>
+                              <div class="radio radio-primary">
+                                <input id="radioinline5" type="radio" name="radio1" value="option1">
+                                <label class="mb-0" for="radioinline5">K-3</label>
+                              </div>
+                              <div class="radio radio-primary">
+                                <input id="radioinline6" type="radio" name="radio1" value="option1">
+                                <label class="mb-0" for="radioinline5">TK-1</label>
+                              </div>
+                              <div class="radio radio-primary">
+                                <input id="radioinline7" type="radio" name="radio1" value="option1">
+                                <label class="mb-0" for="radioinline5">TK-2</label>
+                              </div>
+                              <div class="radio radio-primary">
+                                <input id="radioinline8" type="radio" name="radio1" value="option1">
+                                <label class="mb-0" for="radioinline5">TK-3</label>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                  <div class="mb-3 col-md-12">  
+                      <label class="col-form-label">No. Kartu Keluarga</label>
+                      <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                  </div>
+                {% comment %} CUMAN BISA SINGLE INI MERUPAKAN BAGIAN A {% endcomment %}
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-form-label">Nama Suami/Istri</label>
+                        <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                    </div>
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-form-label">Tempat/Tanggal Lahir</label>
+                        <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                    </div>
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-form-label">Jenis Kelamin</label>
+                        <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                    </div>
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-form-label">No. KTP / NIK</label>
+                        <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                    </div>
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-form-label">Pekerjaan</label>
+                        <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                    </div>
+                  {% comment %} BISA MULTIPLE DAN INI MERUPAKAN BAGIAN B{% endcomment %}
+                <div class="mb-3 col-md-12">  
+                    <label class="col-form-label">Nama Suami/Istri</label>
+                    <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                </div>
+                <div class="mb-3 col-md-12">  
+                    <label class="col-form-label">Tempat/Tanggal Lahir</label>
+                    <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                </div>
+                <div class="mb-3 col-md-12">  
+                    <label class="col-form-label">Jenis Kelamin</label>
+                    <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                </div>
+                <div class="mb-3 col-md-12">  
+                    <label class="col-form-label">No. KTP / NIK</label>
+                    <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                </div>
+                <div class="mb-3 col-md-12">  
+                    <label class="col-form-label">Pekerjaan</label>
+                    <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                </div> 
+              </div>
+              {% comment %}  {% endcomment %}
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header pb-0">
+                <h5>Empoloyee Add | AHLI WARIS</h5>
+            </div>
+            <div class="card-body">
+              {% comment %}  {% endcomment %}
+              <div class="row">
+  
+                  <div class="mb-3 col-md-12">  
+                      <label class="col-form-label">Nama</label>
+                      <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                  </div>
+                {% comment %} Ini merupakan bagian Ahli waris nanti bisa di looping {% endcomment %}
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-form-label">Tempat/Tanggal Lahir</label>
+                        <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                    </div>
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-form-label">No. KTP/NIK</label>
+                        <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                    </div>
+                    <div class="mb-3 col-md-12">  
+                        <label class="col-form-label">Hubungan</label>
+                        <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                    </div>
+              </div>
+              {% comment %}  {% endcomment %}
+            </div>
+          </div>
+
+            <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Empoloyee Add | ATTACHMENT</h5>
+                    </div>
+                    <div class="card-body">
+                      {% comment %}  {% endcomment %}
+                      <div class="row">
+
+                          <div class="mb-3 col-md-12">  
+                              <label class="col-form-label">UPLOAD ATTACHMENT KK</label>
+                              <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                          </div>
+                        {% comment %} Ini merupakan bagian Ahli waris nanti bisa di looping {% endcomment %}
+                            <div class="mb-3 col-md-12">  
+                                <label class="col-form-label">UPLOAD ATTACHMENT IJAZAH</label>
+                                <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                            </div>
+                      </div>
+                      {% comment %}  {% endcomment %}
+                    </div>
+            </div>
+
+                <div class="card">
+                      <div class="card-header pb-0">
+                          <h5>Empoloyee Add | PERNYATAAN</h5>
+                      </div>
+                      <div class="card-body">
+                        {% comment %}  {% endcomment %}
+                          <div class="row">
+                              <div class="mb-3 col-md-12">  
+                                  <label class="col-form-label">LENGKAP/TIDAK LENGKAP</label>
+                                  <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                              </div>
+                                {% comment %} Ini merupakan bagian Ahli waris nanti bisa di looping {% endcomment %}
+                              <div class="mb-3 col-md-12">  
+                                  <label class="col-form-label">BENAR/TIDAK BENAR</label>
+                                  <input class="form-control" type="text" value="" style="text-transform: uppercase;">
+                              </div>
+                          </div>
+                        {% comment %}  {% endcomment %}
+                      </div>
+                      <button type="submit">Register</button>
+      
+                  </form>
+                </div>
+
+
+        </div>
+    </div>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/1.8.2/autoNumeric.js"></script> {% endcomment %}
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<script>
+  $(document).ready(function() {
+      $('#id_tempat').select2();
+  });
+</script>
+<script>
+  $(document).ready(function() {
+      $('#id_keluarga').select2();
+      $('#id_kelurahan_ktp').select2();
+      $('#id_kecamatan_ktp').select2();
+      $('#id_provinsi_ktp').select2();
+      $('#id_kota_ktp').select2();
+  });
+</script>
+<script>
+    
+    $(document).ready(function() {
+
+            // Function to update kecamatan_ktp field based on selected kota_ktp value
+            $('#id_provinsi_ktp').change(function() {
+                var provinsi_id = $(this).val();
+                // Make an AJAX request to fetch filtered kecamatan options
+                $.ajax({
+                    url: '/hrd_app/get_kota_options/',
+                    method: 'GET',
+                    data: {province_id: provinsi_id},
+                    success: function(response) {
+                        // Update kecamatan options with the fetched data
+                        $('#id_kota_ktp').html(response);
+                        $('#id_kecamatan_ktp').html('<option value="">---------</option>');
+                        $('#id_kelurahan_ktp').html('<option value="">---------</option>');
+                        
+                        // Clear kelurahan options since it depends on kecamatan selection too
+                    },
+                    error: function(xhr, status, error){
+                        console.error(error);
+                    }
+                });
+            });
+
+        // Function to update kecamatan_ktp field based on selected kota_ktp value
+        $('#id_kota_ktp').change(function() {
+            var kota_id = $(this).val();
+            // Make an AJAX request to fetch filtered kecamatan options
+            $.ajax({
+                url: '/hrd_app/get_kecamatan_options/',
+                method: 'GET',
+                data: {regency_id: kota_id},
+                success: function(response) {
+                    // Update kecamatan options with the fetched data
+                    $('#id_kecamatan_ktp').html(response);
+                    
+                    // Clear kelurahan options since it depends on kecamatan selection too
+                    $('#id_kelurahan_ktp').html('<option value="">---------</option>');
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        });
+    
+    // Function to update kelurahan field based on selected kecamtan value
+    $('#id_kecamatan_ktp').change(function() {
+        var kecId = $(this).val();
+
+         // Make an AJAX request to fetch filtered kelurahan options 
+        $.ajax({
+          url:'/hrd_app/get_kelurahan_options/',
+          method:'GET',
+          data:{district_id : kecId},
+          success:function(response)
+             {  
+            console.log(response);
+            $('#id_kelurahan_ktp').html(response);
+              
+             }});
+      });
+
+       });
+</script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

@@ -14,8 +14,8 @@ from django.db.models.functions import Substr
 from dateutil.relativedelta import relativedelta
 from csv import reader
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan, medicalRemain, medicalLogDownloadAccounting
-from master_app.models import UserProfileInfo
-from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms
+from master_app.models import UserProfileInfo, Village, Regency, District
+from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms, RegistrationForm, EditProfileForm, RegistrationUserProfileInfo, RegistrationUserKtp, RegistrationUserKtpNow
 # from escpos.printer import Usb
 # from escpos.constants import *
 # import usb1
@@ -27,6 +27,7 @@ import win32con
 import barcode
 from barcode.writer import ImageWriter
 from django.utils.dateparse import parse_date
+from django.contrib.auth import get_user_model
 
 # import usb.core
 # import usb.util
@@ -39,7 +40,72 @@ def index(request):
 # BIODATA START
 @login_required
 def biodata_index(request):
-    return HttpResponse('Biodata Index')
+    biodata_user    = User.objects.all()
+    context = {
+        'biodata_user'  : biodata_user,
+    }
+        
+    return render(request, 'hrd_app/biodata_index.html', context)
+
+@login_required
+def biodata_detail(request, user_id):
+    biodata_user_detail = User.objects.get(pk=user_id)
+    context = {
+        'user_detail'   : biodata_user_detail
+    }
+    return render(request, 'hrd_app/biodata_detail.html', context)
+    return HttpResponse('ini merupakan user Detail')
+
+@login_required
+def biodata_add(request):
+    User = get_user_model()
+    if request.method == "POST":
+        return HttpResponse('ini merupakan POST')
+    else:
+        context = {
+            'user_form'             : RegistrationForm(),
+            'userprofileinfo_form'  : RegistrationUserProfileInfo(),
+            'ktp_form'              : RegistrationUserKtp(),
+            'ktpnow_form'           : RegistrationUserKtpNow(),
+
+        }
+        return render(request, 'hrd_app/biodata_add.html', context)
+        return HttpResponse('ini merupakan add yang bukan detail')
+
+def get_kota_options(request):
+    provinsi_id = request.GET.get('province_id')
+    # Filter kota options based on selected kota_ktp value
+    kotas = Regency.objects.filter(province_id=provinsi_id)
+    # Generate HTML for options
+    options = '<option value="">---------</option>'
+    for kota in kotas:
+        options += f'<option value="{kota.id}">{kota.regency_name}</option>'
+        
+    return JsonResponse(options, safe=False)
+
+def get_kecamatan_options(request):
+    kota_id = request.GET.get('regency_id')
+    # Filter kecamatan options based on selected kota_ktp value
+    kecamatans = District.objects.filter(regency=kota_id)
+    
+    # Generate HTML for options
+    options = '<option value="">---------</option>'
+    for kecamatan in kecamatans:
+        options += f'<option value="{kecamatan.id}">{kecamatan.district_name}</option>'
+        
+    return JsonResponse(options, safe=False)
+
+def get_kelurahan_options(request):
+    kecamatan_id = request.GET.get('district_id')
+    # Filter kelurahan options based on selected kecamatan_ktp value
+    kelurahans = Village.objects.filter(district=kecamatan_id)
+    
+    # Generate HTML for options
+    options = '<option value="">---------</option>'
+    for kelurahan in kelurahans:
+        options += f'<option value="{kelurahan.id}">{kelurahan.village_name}</option>'
+        
+    return JsonResponse(options, safe=False)
 # BIODATA END
 
 # CUTI START
@@ -1011,4 +1077,5 @@ def medical_train_download_accounting(request):
     wb.save(response)
     return response
     return HttpResponse('jadi ini pembuatan report untuk download Accounting')
+
 # MEDICAL TRAIN END

@@ -4,8 +4,7 @@ from master_app.models import GenderField, UserKeluargaInfo
 from django.utils import timezone
 # Create your models here.
 
-# BIODATA START
-# BIODATA END
+
 
 # CUTI START
 # CUTI END
@@ -189,3 +188,29 @@ class medicalApprovalHR(models.Model):
 # APPROVAL MEDICAL END
 
 # MEDICAL TRAIN END
+
+
+# BIODATA START
+class BiodataVerificationHeader(models.Model):
+    is_lengkap        = models.BooleanField(default=False, blank=True, null=True)
+    is_tidak_lengkap  = models.BooleanField(default=False, blank=True, null=True)
+    is_benar          = models.BooleanField(default=False, blank=True, null=True)
+    is_tidak_benar    = models.BooleanField(default=False, blank=True, null=True)
+    is_diketahui      = models.BooleanField(default=False, blank=True, null=True)
+    diketahui         = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True)
+
+class BiodataVerificationDetail(models.Model):
+    biodata_header    = models.ForeignKey(BiodataVerificationHeader, on_delete=models.CASCADE, blank=True, null=True)
+    diperiksa         = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    created_at        = models.DateTimeField('created at', auto_now_add = True)
+    updated_at        = models.DateTimeField('updated at', auto_now = True)
+
+class BiodataKKAttachment(models.Model):
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    attachment      = models.FileField(upload_to='BiodataKKAttachment/', null=False, blank=True)
+
+class BiodataIjazahAttachment(models.Model):
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    attachment      = models.FileField(upload_to='BiodataIjazahAttachment/', null=False, blank=True)
+
+# BIODATA END

@@ -7,7 +7,7 @@ from django.urls import path, reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from csv import reader
 from django.contrib.auth.models import User, Group
-from master_app.models import UserProfileInfo, UserKeluargaInfo
+from master_app.models import UserProfileInfo, UserKeluargaInfo, Province, Regency, District, Village
 from it_app.models import IPAddress, Hardware, ListLocation
 from qc_app.models import rirMaterial, rirVendor
 from hrd_app.models import medicalApprovalList, medicalRemain
@@ -214,9 +214,73 @@ def CreateRemain(request):
     return JsonResponse('Remain csv is now working', safe=False)
     return HttpResponse('jadi ini merupakan Create Remain')
 
+@login_required
+def CreateProvince(request):
+    with open('templates/csv/list_province.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for id, province_name,   *__ in csvf:
+            province = Province(id = id, province_name = province_name,)
+            data.append(province)
+        Province.objects.bulk_create(data)
+    return JsonResponse('Province csv is now working', safe=False)
+
+@login_required
+def CreateRegency(request):
+    with open('templates/csv/list_regency.csv', 'r') as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for id, province_id, regency_name,   *__ in csvf:
+            regency = Regency(id = id, province_id = province_id, regency_name = regency_name,)
+            data.append(regency)
+        Regency.objects.bulk_create(data)
+    return JsonResponse('Regency csv is now working', safe=False)
+
+@login_required
+def CreateDistrict(request):
+    with open('templates/csv/list_district.csv', 'r', encoding="utf-8") as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for id, regency_id ,district_name,   *__ in csvf:
+            district = District(id = id, regency_id = regency_id, district_name = district_name,)
+            data.append(district) 
+        District.objects.bulk_create(data)
+    return JsonResponse('District csv is now working', safe=False)
+
+@login_required
+def CreateVillage(request):
+    with open('templates/csv/list_village.csv', 'r', encoding="utf-8") as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for id, district_id, village_name,   *__ in csvf:
+            village = Village(id = id, district_id = district_id, village_name = village_name,)
+            data.append(village)
+        Village.objects.bulk_create(data)
+    return JsonResponse('Village csv is now working', safe=False)
+
 # CREATE END
 
 # UPDATE START
+
+@login_required
+def UpdateRemain(request):
+    # Read CSV File
+    with open('templates/csv/updateremain.csv') as f:
+        reader = csv.reader(f)
+        next(reader) # Skip header row
+        data = list(reader)
+    # Extract IDs from CSV data
+    ids = [row[0] for row in data]
+    # Retrieve objects from database and update fields
+    objects = medicalRemain.objects.filter(user__username__in=ids)
+    # Return the response object
+    for obj, row in zip(objects, data):
+        obj.marital_status = row[1]
+        obj.limit          = row[2]
+        obj.used           = row[3]
+        obj.remain         = row[4]
+    medicalRemain.objects.bulk_update(objects, ['marital_status', 'limit', 'used', 'remain',])
+    return JsonResponse('updateremain csv is now working', safe=False)
 
 @login_required
 def UpdateUpdateUserProfileInfoGenderStatus(request):

@@ -91,6 +91,7 @@ def computer_index(request):
     count_office_2007  = ITComputerList.objects.filter(is_office_2007 = True).count()
     count_office_2010  = ITComputerList.objects.filter(is_office_2010 = True).count()
     count_office_2016  = ITComputerList.objects.filter(is_office_2016 = True).count()
+    count_office_2019  = ITComputerList.objects.filter(is_office_2019 = True).count()
 
     context = {
         'computers'             : computer,
@@ -108,6 +109,7 @@ def computer_index(request):
         'count_office_2007'     : count_office_2007,
         'count_office_2010'     : count_office_2010,
         'count_office_2016'     : count_office_2016,
+        'count_office_2019'     : count_office_2019,
         
     }
     return render(request, 'it_app/computer_index.html', context)

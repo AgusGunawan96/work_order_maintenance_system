@@ -105,6 +105,7 @@ class ITComputerList(models.Model):
     is_office_2007  = models.BooleanField(default=False, null=True)
     is_office_2010  = models.BooleanField(default=False, null=True)
     is_office_2016  = models.BooleanField(default=False, null=True)
+    is_office_2019  = models.BooleanField(default=False, null=True)
     is_dhcp         = models.BooleanField(default=False, null=True)
     created_at      = models.DateTimeField('created at', auto_now_add=True)
     updated_at      = models.DateTimeField('updated at', auto_now=True)

@@ -11,6 +11,11 @@ urlpatterns = [
     
     # BIODATA START
     path('biodata/biodata_index/', views.biodata_index, name = 'biodata_index'),
+    path('biodata/biodata_add/', views.biodata_add, name = 'biodata_add'),
+    path('biodata/biodata_detail/<int:user_id>', views.biodata_detail, name = 'biodata_detail'),
+    path('get_kota_options/', views.get_kota_options, name='get_kota_options'),
+    path('get_kecamatan_options/', views.get_kecamatan_options, name='get_kecamatan_options'),
+    path('get_kelurahan_options/', views.get_kelurahan_options, name='get_kelurahan_options'),
     # BIODATA END
 
     # CUTI START
