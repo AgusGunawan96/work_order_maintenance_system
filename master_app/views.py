@@ -267,19 +267,16 @@ def UpdateRemain(request):
     # Read CSV File
     with open('templates/csv/updateremain.csv') as f:
         reader = csv.reader(f)
-        next(reader) # Skip header row
         data = list(reader)
-    # Extract IDs from CSV data
-    ids = [row[0] for row in data]
     # Retrieve objects from database and update fields
-    objects = medicalRemain.objects.filter(user__username__in=ids)
+    updates = []
     # Return the response object
-    for obj, row in zip(objects, data):
-        obj.marital_status = row[1]
-        obj.limit          = row[2]
-        obj.used           = row[3]
-        obj.remain         = row[4]
-    medicalRemain.objects.bulk_update(objects, ['marital_status', 'limit', 'used', 'remain',])
+    # for obj, row in zip(objects, data):
+    #     obj.marital_status = row[1]
+    #     obj.limit          = row[2]
+    #     obj.used           = row[3]
+    #     obj.remain         = row[4]
+    # medicalRemain.objects.bulk_update(objects, ['marital_status', 'limit', 'used', 'remain',])
     return JsonResponse('updateremain csv is now working', safe=False)
 
 @login_required
@@ -287,18 +284,20 @@ def UpdateUpdateUserProfileInfoGenderStatus(request):
     # Read CSV file
     with open('templates/csv/updateuserprofileinfogenderandstatus.csv') as f:
         reader = csv.reader(f)
-        next(reader)  # Skip header row
         data = list(reader)
-    # Extract IDs from CSV data
-    ids = [row[0] for row in data]
     # Retrieve objects from database and update fields
-    objects = UserProfileInfo.objects.filter(user__username__in=ids)
+    updates = []
     # Return the response object
-    for obj, row in zip(objects, data):
-        obj.is_contract = row[1]
-        obj.is_permanent = row[2]
-        obj.gender = row[3]
-    UserProfileInfo.objects.bulk_update(objects, ['is_contract', 'is_permanent', 'gender'])
+    for username_row,contract_row,is_permanent_row,gender_row in data:
+        user = UserProfileInfo.objects.filter(user__username=username_row).first()
+        if user:
+            id_value = user.id
+            is_contract_value   = contract_row
+            is_permanent_value  = is_permanent_row
+            gender_value    = gender_row
+            updates.append(UserProfileInfo(id=id_value, is_contract   = is_contract_value, is_permanent  = is_permanent_value, gender = gender_value))
+
+    UserProfileInfo.objects.bulk_update(updates, ['is_contract', 'is_permanent', 'gender'])
     return JsonResponse('updateuserprofileinfogenderandstatus csv is now working', safe=False)
 
 @login_required
@@ -306,16 +305,18 @@ def UpdateUserProfileInfoTanggalLahir(request):
     # Read CSV File
     with open('templates/csv/userprofileinfoupdatetanggallahir.csv') as f:
         reader = csv.reader(f)
-        next(reader) # Skip header row
         data = list(reader)
-    # Extract IDs from CSV data
-    ids = [row[0] for row in data]
     # Retrieve objects from database and update fields
-    objects = UserProfileInfo.objects.filter(user__username__in=ids)
+    updates = []
     # Return the response object
-    for obj, row in zip(objects, data):
-        obj.tanggal_lahir = row[1]
-    UserProfileInfo.objects.bulk_update(objects, ['tanggal_lahir',])
+    for username_row, tanggal_lahir in data:
+            user = UserProfileInfo.objects.filter(user__username=username_row).first()
+            if user:
+                id_value = user.id
+                tanggal_lahir_value = tanggal_lahir
+                updates.append(UserProfileInfo(id=id_value, tanggal_lahir=tanggal_lahir_value))
+    # return HttpResponse(updates, content_type="application/json")
+    UserProfileInfo.objects.bulk_update(updates, ['tanggal_lahir',])
     return JsonResponse('userprofileinfoupdatetanggallahir csv is now working', safe=False)
 
 # UPDATE END

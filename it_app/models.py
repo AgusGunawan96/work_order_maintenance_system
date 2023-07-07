@@ -210,4 +210,12 @@ class TicketProgressIT(models.Model):
 # TICKET END
 
 
+# IT REPORT START
+
+class Report(models.Model):
+    created_at          = models.DateTimeField(auto_now_add=True)
+    updated_at          = models.DateTimeField(auto_now=True)
+
+# IT REPORT END
+
     
