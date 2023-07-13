@@ -45,6 +45,7 @@
         <a data-bs-toggle="modal" data-bs-target="#ModalDownloadAccounting" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-download"></span>Download for Accounting</a>
         <a href="{% url 'hrd_app:medical_train_remain_download' %}" class="btn btn-primary btn-lg"><span class="fa fa-download"></span>Download for Cashback</a>
         <a data-bs-toggle="modal" data-bs-target="#ModalResetRemain" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-reset"></span>Reset Remain and Used</a>
+        <a data-bs-toggle="modal" data-bs-target="#ModalUpdateRemain" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-upload"></span>Update Remain and Used</a>
         {% endif %}
 
             
@@ -631,7 +632,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel2">{{medical.medical_no}}</h5>
+                  <h5 class="modal-title" id="exampleModalLabel2">Medical Train Reset Remain and Used</h5>
                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{% url 'hrd_app:medical_train_remain_reset' %}" method="POST">
@@ -650,7 +651,29 @@
             </div>
           </div>
         </div>
-          {% comment %} MODAL RESET REMAIN AND USED END {% endcomment %}
+          {% comment %} MODAL UPDATE REMAIN AND USED END {% endcomment %}
+
+                    {% comment %} MODAL UPDATE REMAIN AND USED START {% endcomment %}
+                    <div class="modal fade" id="ModalUpdateRemain" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel2">Medical Train Update Remain and Used</h5>
+                          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{% url 'hrd_app:medical_train_remain_update' %}" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                        
+                          <input type="file" name="file" accept=".csv" required>
+                        
+                          <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  {% comment %} MODAL UPDATE REMAIN AND USED END {% endcomment %}
 
           {% comment %} MODAL HR COMPLETE START {% endcomment %}
           <div class="modal fade" id="ModalMedicalHRComplete{{ medical.id }}" tabindex="-1" role="dialog"

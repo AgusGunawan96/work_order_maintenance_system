@@ -281,6 +281,20 @@ class medicalAttachmentForms(forms.ModelForm):
             'attachment'    : ClearableFileInput(attrs={'multiple':True}),
         }
 
+class FileUploadRemainResetForm(forms.Form):
+    file = forms.FileField(
+        label='Select a CSV file',
+        help_text='File should be in CSV format.'
+    )
+
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        if file:
+            # Check if the file extension is .csv
+            if not file.name.endswith('.csv'):
+                raise forms.ValidationError('Only CSV files are allowed.')
+        return file
+
 class medicalReasonForemanForms(forms.ModelForm):
     class Meta():
         model = medicalApprovalForeman

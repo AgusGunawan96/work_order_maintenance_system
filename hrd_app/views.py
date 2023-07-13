@@ -15,7 +15,8 @@ from dateutil.relativedelta import relativedelta
 from csv import reader
 from hrd_app.models import medicalApprovalForeman, medicalApprovalHR, medicalApprovalList, medicalApprovalManager, medicalApprovalSupervisor, medicalAttachment, medicalClaimStatus, medicalDetailDokter, medicalDetailInformation, medicalDetailPasienKeluarga, medicalHeader, medicalHubungan, medicalJenisMelahirkan, medicalJenisPelayanan, medicalTempatPelayanan, medicalRemain, medicalLogDownloadAccounting
 from master_app.models import UserProfileInfo, Village, Regency, District
-from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms, RegistrationForm, EditProfileForm, RegistrationUserProfileInfo, RegistrationUserKtp, RegistrationUserKtpNow
+from hrd_app.forms import medicalHeaderForms, medicalAttachmentForms, medicalStatusKlaimForms, medicalDataKeluargaForms, medicalPemberiLayananForms, medicalPelayananKesehatanForms, medicalReasonForemanForms, medicalReasonHRForms, medicalReasonManagerForms, medicalReasonSupervisorForms, medicalRejectStatusKlaimForms, RegistrationForm, EditProfileForm, RegistrationUserProfileInfo, RegistrationUserKtp, RegistrationUserKtpNow, FileUploadRemainResetForm
+from master_app.views import UpdateRemain
 # from escpos.printer import Usb
 # from escpos.constants import *
 # import usb1
@@ -28,6 +29,8 @@ import barcode
 from barcode.writer import ImageWriter
 from django.utils.dateparse import parse_date
 from django.contrib.auth import get_user_model
+import os
+from django.conf import settings
 
 # import usb.core
 # import usb.util
@@ -190,6 +193,8 @@ def medical_train_index(request):
         medical_approval_reason_hr          = None
         medical_klaim_status                = None
         medical_reject_klaim_status         = None
+    
+    medical_update_remain                   = FileUploadRemainResetForm()
 
     context = {
         'medical_header'                            : medical_header,
@@ -209,6 +214,7 @@ def medical_train_index(request):
         'form_medical_approval_reason_hr'           : medical_approval_reason_hr ,
         'form_medical_klaim_status'                 : medical_klaim_status ,
         'form_medical_reject_klaim_status'          : medical_reject_klaim_status,
+        'form_medical_update_remain'          : medical_update_remain,
     }
         
     return render(request, 'hrd_app/medical_train_index.html', context)
@@ -766,6 +772,39 @@ def medical_train_remain_reset(request):
     updated_records = medical_remain.values()
     # Return the updated records or any other response
     return redirect('hrd_app:medical_train_index')
+
+def handle_uploaded_medicalAttachment_file(file):
+    # Specify the destination folder within your Django project's directory structure
+    destination_folder = os.path.join(os.path.dirname(__file__), 'templates', 'csv')
+    # Create the destination folder if it doesn't exist
+    os.makedirs(destination_folder, exist_ok=True)
+    
+    # Rename the file to a custom name
+    custom_name = 'updateremain.csv'  # Provide your desired custom name here
+    
+    # Construct the file path where the uploaded file will be saved with the custom name
+    file_path = os.path.join(destination_folder, custom_name)
+    
+    # Open the destination file in write-binary mode
+    with open(file_path, 'wb') as destination:
+        # Iterate over chunks of the uploaded file and write them to the destination file
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+@login_required
+def medical_train_remain_update(request):
+    file = request.FILES.get('file')
+    if file:
+        # Save the file to the 'MedicalAttachment' folder within the media folder
+            # Specify the destination folder within your Django project's directory structure
+        handle_uploaded_medicalAttachment_file(file)
+        
+        # Process the file or perform any other necessary operations
+        UpdateRemain(request)
+        return redirect('hrd_app:medical_train_index')
+        
+    
+    return HttpResponse('No file found.')
 
 @login_required
 def medical_train_remain_download(request):

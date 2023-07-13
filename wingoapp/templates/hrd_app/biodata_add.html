@@ -525,10 +525,13 @@
       $('#id_kecamatan_ktp').select2();
       $('#id_provinsi_ktp').select2();
       $('#id_kota_ktp').select2();
+      $('#id_kelurahan_now').select2();
+      $('#id_kecamatan_now').select2();
+      $('#id_provinsi_now').select2();
+      $('#id_kota_now').select2();
   });
 </script>
 <script>
-    
     $(document).ready(function() {
 
             // Function to update kecamatan_ktp field based on selected kota_ktp value
@@ -587,6 +590,71 @@
              {  
             console.log(response);
             $('#id_kelurahan_ktp').html(response);
+              
+             }});
+      });
+
+       });
+</script>
+<script>
+    $(document).ready(function() {
+
+            // Function to update kecamatan_now field based on selected kota_now value
+            $('#id_provinsi_now').change(function() {
+                var provinsi_id = $(this).val();
+                // Make an AJAX request to fetch filtered kecamatan options
+                $.ajax({
+                    url: '/hrd_app/get_kota_options/',
+                    method: 'GET',
+                    data: {province_id: provinsi_id},
+                    success: function(response) {
+                        // Update kecamatan options with the fetched data
+                        $('#id_kota_now').html(response);
+                        $('#id_kecamatan_now').html('<option value="">---------</option>');
+                        $('#id_kelurahan_now').html('<option value="">---------</option>');
+                        
+                        // Clear kelurahan options since it depends on kecamatan selection too
+                    },
+                    error: function(xhr, status, error){
+                        console.error(error);
+                    }
+                });
+            });
+
+        // Function to update kecamatan_now field based on selected kota_now value
+        $('#id_kota_now').change(function() {
+            var kota_id = $(this).val();
+            // Make an AJAX request to fetch filtered kecamatan options
+            $.ajax({
+                url: '/hrd_app/get_kecamatan_options/',
+                method: 'GET',
+                data: {regency_id: kota_id},
+                success: function(response) {
+                    // Update kecamatan options with the fetched data
+                    $('#id_kecamatan_now').html(response);
+                    
+                    // Clear kelurahan options since it depends on kecamatan selection too
+                    $('#id_kelurahan_now').html('<option value="">---------</option>');
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        });
+    
+    // Function to update kelurahan field based on selected kecamtan value
+    $('#id_kecamatan_now').change(function() {
+        var kecId = $(this).val();
+
+         // Make an AJAX request to fetch filtered kelurahan options 
+        $.ajax({
+          url:'/hrd_app/get_kelurahan_options/',
+          method:'GET',
+          data:{district_id : kecId},
+          success:function(response)
+             {  
+            console.log(response);
+            $('#id_kelurahan_now').html(response);
               
              }});
       });

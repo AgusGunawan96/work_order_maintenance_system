@@ -15,7 +15,7 @@ from accounting_app.models import coaCode
 from django.contrib.auth.decorators import user_passes_test
 import csv
 # Create your views here.
-
+from django.contrib.auth.hashers import check_password
 from datetime import datetime
 
 
@@ -78,6 +78,13 @@ def index(request):
 
     # return render(request,'it_app/index.html')
 
+def pocvl_check_user(request, Username, Password):
+    user = User.objects.filter(username = Username).first()
+    password_check = check_password(Password, user.password)
+    if password_check:
+        return HttpResponse('True')
+    else:
+        return HttpResponse('False')
 
 # CREATE START
 @login_required
@@ -262,21 +269,66 @@ def CreateVillage(request):
 
 # UPDATE START
 
+# def UpdateRemain(request):
+#     # Read CSV File
+#     with open('hrd_app/templates/csv/updateremain.csv') as f:
+#         reader = csv.reader(f)
+#         data = list(reader)
+        
+#     # Retrieve objects from the database and update fields
+#     updates = []
+#     invalid_rows = []
+    
+#     for row in data:
+#         if len(row) != 5:
+#             invalid_rows.append(row)
+#             continue
+        
+#         username_row, marital_status_row, limit_row, used_row, remain_row = row
+        
+#         user = UserProfileInfo.objects.filter(user__username=username_row).first()
+#         medical = medicalRemain.objects.filter(user=user).first()
+        
+#         if medical:
+#             id_value = medical.id
+#             marital_status_value = marital_status_row
+#             limit_value = limit_row
+#             used_value = used_row
+#             remain_value = remain_row
+#             updates.append(medicalRemain(id=id_value, marital_status=marital_status_value, limit=limit_value, used=used_value, remain=remain_value))
+    
+#     # Perform bulk update
+#     medicalRemain.objects.bulk_update(updates, ['marital_status', 'limit', 'used', 'remain'])
+    
+#     # Prepare the response
+#     response_data = {
+#         'message': 'updateremain csv is now working',
+#         'invalid_rows': invalid_rows,
+#     }
+    
+#     return JsonResponse(response_data, safe=False)
+
 @login_required
 def UpdateRemain(request):
     # Read CSV File
-    with open('templates/csv/updateremain.csv') as f:
+    with open('hrd_app/templates/csv/updateremain.csv') as f:
         reader = csv.reader(f)
         data = list(reader)
     # Retrieve objects from database and update fields
-    updates = []
+        updates = []
     # Return the response object
-    # for obj, row in zip(objects, data):
-    #     obj.marital_status = row[1]
-    #     obj.limit          = row[2]
-    #     obj.used           = row[3]
-    #     obj.remain         = row[4]
-    # medicalRemain.objects.bulk_update(objects, ['marital_status', 'limit', 'used', 'remain',])
+        for username_row,marital_status_row,limit_row,used_row,remain_row , *__ in data:
+            user = UserProfileInfo.objects.filter(user__username__contains=username_row).first()
+            if user:
+                medical = medicalRemain.objects.filter(user = user.id ).first()
+                if medical:
+                    id_value= medical.id 
+                    marital_status_value = marital_status_row
+                    limit_value =limit_row
+                    used_value = used_row
+                    remain_value = remain_row
+                    updates.append(medicalRemain(id = id_value, marital_status = marital_status_value, limit = limit_value, used = used_value, remain = remain_value))
+        medicalRemain.objects.bulk_update(updates, ['marital_status','limit','used','remain'])
     return JsonResponse('updateremain csv is now working', safe=False)
 
 @login_required
