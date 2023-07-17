@@ -139,16 +139,17 @@ class TicketOrder(models.TextChoices):
     PROBLEM                 = 'Problem'
 
 class Ticket(models.Model):
-    assignee    = models.ForeignKey(User, null=True, blank = True, on_delete=models.CASCADE)
-    hardware    = models.ForeignKey(Hardware, on_delete=models.CASCADE, blank=True, null=True)
-    software    = models.ForeignKey(Software, on_delete=models.CASCADE, blank=True, null=True)
-    title       = models.CharField(max_length=100)
-    type        = models.CharField(max_length=25, choices=TicketType.choices, null=True)
-    order       = models.CharField(max_length=25, choices=TicketOrder.choices, null=True)
-    description = models.TextField()
-    quantity    = models.PositiveIntegerField(blank=True, default=0)
-    created_at  = models.DateTimeField('created at', auto_now_add=True)
-    updated_at  = models.DateTimeField('updated at', auto_now=True)
+    assignee                    = models.ForeignKey(User, null=True, blank = True, on_delete=models.CASCADE)
+    hardware                    = models.ForeignKey(Hardware, on_delete=models.CASCADE, blank=True, null=True)
+    software                    = models.ForeignKey(Software, on_delete=models.CASCADE, blank=True, null=True)
+    title                       = models.CharField(max_length=100)
+    type                        = models.CharField(max_length=25, choices=TicketType.choices, null=True)
+    order                       = models.CharField(max_length=25, choices=TicketOrder.choices, null=True)
+    description                 = models.TextField()
+    quantity                    = models.PositiveIntegerField(blank=True, default=0)
+    created_at                  = models.DateTimeField('created at', auto_now_add=True)
+    updated_at                  = models.DateTimeField('updated at', auto_now=True)
+    is_pending                  = models.BooleanField(default=True, blank=True, null=True )
 
     def __str__(self):
         return self.title
@@ -195,6 +196,8 @@ class TicketApprovalIT(models.Model):
 
 class TicketProgressIT(models.Model):
     ticket_approval_it  = models.OneToOneField(TicketApprovalIT, on_delete=models.CASCADE, null=True, blank=True)
+    ticket              = models.OneToOneField(Ticket, on_delete=models.CASCADE, null=True, blank=True)
+    pic                 = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     ticket_no           = models.CharField(max_length=128, null=True, blank=True)
     status              = models.CharField(max_length=25, choices=TicketStatus.choices, default=TicketStatus.IN_PROGRESS)
     priority            = models.CharField(max_length=25, choices=TicketPriority.choices, default=TicketPriority.LOW)
@@ -205,6 +208,7 @@ class TicketProgressIT(models.Model):
     created_at          = models.DateTimeField(auto_now_add=True)
     updated_at          = models.DateTimeField(auto_now=True)
     
+
     def __str__(self):
         return self.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.title
 # TICKET END

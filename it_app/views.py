@@ -264,6 +264,7 @@ def ticket_add(request):
             # Save IT Ticket
             ticket = ticket_form.save(commit=False)
             ticket.assignee = request.user
+            ticket.is_pending = True
             ticket.save()
             # Save attachment
             files = request.FILES.getlist('attachment')
@@ -410,6 +411,9 @@ def ticket_it_approve(request,ticket_id):
         it = approval_it_forms.save(commit=False)
         it.ticket_approval_it = its
         it.ticket_no = ticket_no
+        ticket = Ticket.objects.filter(id = it.ticket_approval_it.ticket_approval_manager.ticket_approval_supervisor.ticket.id).first()
+        ticket.is_pending = False
+        ticket.save()
         it.save()
         # mengeset pesan sukses dan redirect ke halaman daftar task
         messages.success(request, 'Approved Successfully')

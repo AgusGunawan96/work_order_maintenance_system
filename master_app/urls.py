@@ -6,9 +6,10 @@ app_name ='master_app'
 urlpatterns = [
     path('', views.index, name = 'index'),
 
-    # CHECK START
+    # VISUAL BASIC START
     path('pocvl_check_user/<str:Username>/<str:Password>', views.pocvl_check_user, name='pocvl_check_user'),
-    # CHECK END
+    path('getFullName/<str:Username>', views.getFullName, name='getFullName'),
+    # VISUAL BASIC END
 
     # path('CreateUserdata/', views.CreateUserdata, name='CreateUserdata'),
     # path('CreateCoaCode/', views.CreateCoaCode, name= 'CreateCoaCode')
