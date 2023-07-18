@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     'it_app',
     'master_app',
     'timing_app',
+    'production_app',
     'POSEIWA',
+    'sfc_2',
     'seiwa',
     'wingoapp',
     'sass_processor',
@@ -127,6 +129,15 @@ DATABASES = {
     'USER': 'sa',
     'PASSWORD': 'loginS@EDP',
     'HOST': '172.16.202.234',
+    'PORT': '',
+    'OPTIONS': {},  # Additional options for the second database
+    },
+    'sfc_db': {
+    'ENGINE': 'mssql',
+    'NAME': 'SFC_2',
+    'USER': 'sa',
+    'PASSWORD': 'loginS@EDP',
+    'HOST': '172.16.202.237\SEIBSC01',
     'PORT': '',
     'OPTIONS': {},  # Additional options for the second database
     }
