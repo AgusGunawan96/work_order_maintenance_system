@@ -12,6 +12,7 @@ from it_app.models import IPAddress, Hardware, ListLocation
 from qc_app.models import rirMaterial, rirVendor
 from hrd_app.models import medicalApprovalList, medicalRemain
 from accounting_app.models import coaCode
+from production_app.models import masterTagVL
 from django.contrib.auth.decorators import user_passes_test
 import csv
 # Create your views here.
@@ -272,6 +273,28 @@ def CreateVillage(request):
         Village.objects.bulk_create(data)
     return JsonResponse('Village csv is now working', safe=False)
 
+
+# @login_required
+# def CreateMasterTagVL(request):
+#     with open('templates/csv/list_master_tag.csv', 'r', encoding="utf-8") as csv_file:
+#         csvf = reader(csv_file)
+#         data = []
+#         for item_no, item_desc, spec,poc,poc_lower,poc_upper,vib,run_out,ro_low,ro_upper,tipe_pulley,pulley_diameter,weight_kg,weight_n,top_width,top_width_plus,top_width_minus,thickness,thickness_plus,thickness_minus,tipe_belt,   *__ in csvf:
+#             master_tag = masterTagVL(item_no = item_no, item_desc = item_desc, spec = spec, poc = poc, poc_lower = poc_lower,poc_upper = poc_upper,vib = vib,run_out = run_out,ro_low = ro_low,ro_upper = ro_upper,tipe_pulley = tipe_pulley,pulley_diameter = pulley_diameter,weight_kg = weight_kg,weight_n = weight_n,top_width = top_width,top_width_plus = top_width_plus,top_width_minus = top_width_minus,thickness = thickness,thickness_plus = thickness_plus,thickness_minus = thickness_minus,tipe_belt = tipe_belt)
+#             data.append(master_tag)
+#         masterTagVL.objects.bulk_create(data)
+#     return JsonResponse('Master Tag VL CSV is now Working', safe=False)
+
+@login_required
+def CreateMasterTagVL(request):
+    with open('templates/csv/list_mastertag.csv', 'r', encoding="utf-8") as csv_file:
+        csvf = reader(csv_file)
+        data = []
+        for item_no, item_desc, spec,poc,poc_lower,poc_upper,vib,run_out,tipe_pulley,pulley_diameter,weight_kg,weight_n,top_width,top_width_plus,top_width_minus,thickness,thickness_plus,thickness_minus,tipe_belt,   *__ in csvf:
+            master_tag = masterTagVL(item_no = item_no, item_desc = item_desc, spec = spec, poc = poc, poc_lower = poc_lower,poc_upper = poc_upper,vib = vib,run_out = run_out, tipe_pulley = tipe_pulley,pulley_diameter = pulley_diameter,weight_kg = weight_kg,weight_n = weight_n,top_width = top_width,top_width_plus = top_width_plus,top_width_minus = top_width_minus,thickness = thickness,thickness_plus = thickness_plus,thickness_minus = thickness_minus,tipe_belt = tipe_belt)
+            data.append(master_tag)
+        masterTagVL.objects.bulk_create(data)
+    return JsonResponse('Master Tag VL CSV is now Working', safe=False)
 # CREATE END
 
 # UPDATE START

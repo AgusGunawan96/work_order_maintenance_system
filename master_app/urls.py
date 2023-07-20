@@ -25,7 +25,7 @@ urlpatterns = [
     # path('CreateRegency/', views.CreateRegency, name='CreateRegency'),
     # path('CreateDistrict/', views.CreateDistrict, name='CreateDistrict'),
     # path('CreateVillage/', views.CreateVillage, name='CreateVillage'),
-
+    # path('CreateMasterTagVL/', views.CreateMasterTagVL, name='CreateMasterTagVL'),
 
     path('UpdateRemain/', views.UpdateRemain, name='UpdateRemain'),
     # path('UpdateUpdateUserProfileInfoGenderStatus/', views.UpdateUpdateUserProfileInfoGenderStatus, name='UpdateUpdateUserProfileInfoGenderStatus'),
