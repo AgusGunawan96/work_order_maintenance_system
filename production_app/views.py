@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponse, JsonResponse
 from django.db import connections
+from django.contrib.auth.models import User, Group
+from production_app.models import POCVLRecord, masterTagVL
 # Create your views here.
 
 
@@ -21,4 +23,26 @@ def index(request):
     }
 
     return render(request, 'production_app/index.html', context)
+
+def insert_plc_database(request, Username, soNo, itemNo, poc, pocStatus, vib, vibStatus, runOut, runOutStatus, weightKg, weightN, centerDistance):
+    user = User.objects.filter(username = Username).first()
+    item_desc = masterTagVL.objects.filter(item_no = itemNo).first()
+    data_to_insert = {
+        'user'              : user,
+        'so_no'             : soNo,
+        'item_no'           : itemNo,
+        'item_desc'         : item_desc.item_desc,
+        'poc'               : poc,
+        'poc_status'        : pocStatus,
+        'vib'               : vib,
+        'vib_status'        : vibStatus,
+        'run_out'           : runOut,
+        'run_out_status'    : runOutStatus,
+        'weight_kg'         : weightKg,
+        'weight_n'          : weightN,
+        'center_distance'   : centerDistance,
+    }
+    object_record = POCVLRecord(**data_to_insert)
+    object_record.save()
+    return HttpResponse('True')
 
