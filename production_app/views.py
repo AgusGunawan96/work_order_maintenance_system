@@ -24,7 +24,7 @@ def index(request):
 
     return render(request, 'production_app/index.html', context)
 
-def insert_plc_database(request, Username, soNo, itemNo, poc, pocStatus, vib, vibStatus, runOut, runOutStatus, weightKg, weightN, centerDistance):
+def insert_plc_database(request, Username, soNo, itemNo, poc, pocStatus, vib, vibStatus, runOut, runOutStatus, weightKg, weightN, centerDistance, topWidth, thickness, widthStatus, thicknessStatus, shift):
     user = User.objects.filter(username = Username).first()
     item_desc = masterTagVL.objects.filter(item_no = itemNo).first()
     data_to_insert = {
@@ -41,6 +41,11 @@ def insert_plc_database(request, Username, soNo, itemNo, poc, pocStatus, vib, vi
         'weight_kg'         : weightKg,
         'weight_n'          : weightN,
         'center_distance'   : centerDistance,
+        'top_width'         : topWidth,
+        'thickness'         : thickness,
+        'top_width_status'  : widthStatus,
+        'thickness_status'  : thicknessStatus,
+        'shift'             : shift,
     }
     object_record = POCVLRecord(**data_to_insert)
     object_record.save()
