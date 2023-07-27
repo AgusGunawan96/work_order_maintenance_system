@@ -50,4 +50,9 @@ class POCVLRecord(models.Model):
     updated_at          = models.DateTimeField('updated at', auto_now=True)
     # ro_low         = models.FloatField(max_length=128, null=True, blank=True)
     # ro_upper       = models.FloatField(max_length=128, null=True, blank=True)
+
+class POCVLPermission(models.Model):
+    user                = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    created_at          = models.DateTimeField('created at', auto_now_add=True)
+    updated_at          = models.DateTimeField('updated at', auto_now=True)
 # POC VL END
