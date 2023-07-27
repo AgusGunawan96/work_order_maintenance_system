@@ -55,4 +55,6 @@ class POCVLPermission(models.Model):
     user                = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     created_at          = models.DateTimeField('created at', auto_now_add=True)
     updated_at          = models.DateTimeField('updated at', auto_now=True)
+    def __str__(self):
+        return self.user.first_name + " " + self.user.last_name
 # POC VL END
