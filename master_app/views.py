@@ -401,4 +401,185 @@ def UpdateUserProfileInfoTanggalLahir(request):
     UserProfileInfo.objects.bulk_update(updates, ['tanggal_lahir',])
     return JsonResponse('userprofileinfoupdatetanggallahir csv is now working', safe=False)
 
+def UpdateMasterVL(request):
+    # Check if a file was uploaded
+    if 'file' not in request.FILES:
+        return None, None
+
+    # Get the uploaded file
+    file = request.FILES['file']
+
+    # Read CSV File
+    csv_data = []
+    try:
+        for line in file:
+            csv_data.append(line.decode('utf-8'))  # Decode bytes to string
+    except UnicodeDecodeError:
+        return None, None
+
+    # Parse CSV data
+    reader = csv.reader(csv_data)
+    data = list(reader)
+
+    updates = []  # For updating existing records
+    creates = []  # For creating new records
+
+    for item_no_row, item_desc_row, spec_row, poc_row, poc_lower_row, poc_upper_row, vib_row, run_out_row, tipe_pulley_row, pulley_diameter_row, weight_kg_row, weight_n_row, top_width_row, top_width_plus_row, top_width_minus_row, thickness_row, thickness_plus_row, thickness_minus_row, tipe_belt_row, *__ in data:
+        item = masterTagVL.objects.filter(item_no=item_no_row).first()
+        if tipe_belt_row == 'FALSE':
+            tipe_belt_row = 'False'
+        elif tipe_belt_row == 'TRUE':
+            tipe_belt_row = 'True'
+        else:
+            tipe_belt_row = 'False'
+
+        if item:
+            # If the record exists, check if any field has changed
+            if (
+                item.item_desc != item_desc_row or
+                item.spec != spec_row or
+                item.poc != poc_row or
+                item.poc_lower != poc_lower_row or
+                item.poc_upper != poc_upper_row or
+                item.vib != vib_row or
+                item.run_out != run_out_row or
+                item.tipe_pulley != tipe_pulley_row or
+                item.pulley_diameter != pulley_diameter_row or
+                item.weight_kg != weight_kg_row or
+                item.weight_n != weight_n_row or
+                item.top_width != top_width_row or
+                item.top_width_plus != top_width_plus_row or
+                item.top_width_minus != top_width_minus_row or
+                item.thickness != thickness_row or
+                item.thickness_plus != thickness_plus_row or
+                item.thickness_minus != thickness_minus_row
+            ):
+                # If any field has changed, update its fields
+                item.item_desc = item_desc_row
+                item.spec = spec_row
+                item.poc = poc_row
+                item.poc_lower = poc_lower_row
+                item.poc_upper = poc_upper_row
+                item.vib = vib_row
+                item.run_out = run_out_row
+                item.tipe_pulley = tipe_pulley_row
+                item.pulley_diameter = pulley_diameter_row
+                item.weight_kg = weight_kg_row
+                item.weight_n = weight_n_row
+                item.top_width = top_width_row
+                item.top_width_plus = top_width_plus_row
+                item.top_width_minus = top_width_minus_row
+                item.thickness = thickness_row
+                item.thickness_plus = thickness_plus_row
+                item.thickness_minus = thickness_minus_row
+                item.tipe_belt = tipe_belt_row
+
+                updates.append(item)
+        else:
+            # If the record does not exist, check if the item already exists in the creates list
+            item_exists_in_creates = any(item.item_no == item_no_row for item in creates)
+            if not item_exists_in_creates:
+                # If the item does not exist in the creates list, append it
+                creates.append(masterTagVL(
+                    item_no=item_no_row,
+                    item_desc=item_desc_row,
+                    spec=spec_row,
+                    poc=poc_row,
+                    poc_lower=poc_lower_row,
+                    poc_upper=poc_upper_row,
+                    vib=vib_row,
+                    run_out=run_out_row,
+                    tipe_pulley=tipe_pulley_row,
+                    pulley_diameter=pulley_diameter_row,
+                    weight_kg=weight_kg_row,
+                    weight_n=weight_n_row,
+                    top_width=top_width_row,
+                    top_width_plus=top_width_plus_row,
+                    top_width_minus=top_width_minus_row,
+                    thickness=thickness_row,
+                    thickness_plus=thickness_plus_row,
+                    thickness_minus=thickness_minus_row,
+                    tipe_belt=tipe_belt_row,
+                ))
+
+    # Bulk update existing records
+    if updates:
+        masterTagVL.objects.bulk_update(updates, [
+            'item_desc', 'spec', 'poc', 'poc_lower', 'poc_upper', 'vib',
+            'run_out', 'tipe_pulley', 'pulley_diameter', 'weight_kg',
+            'weight_n', 'top_width', 'top_width_plus', 'top_width_minus',
+            'thickness', 'thickness_plus', 'thickness_minus', 'tipe_belt',
+        ])
+
+    # Bulk create new records
+    if creates:
+        masterTagVL.objects.bulk_create(creates)
+
+    return updates, creates
 # UPDATE END
+
+import os
+
+# UPLOAD START
+def handle_uploaded_medicalAttachment_file(file):
+    # Specify the destination folder within your Django project's directory structure
+    destination_folder = os.path.join(os.path.dirname(__file__), 'templates', 'csv')
+    # Create the destination folder if it doesn't exist
+    os.makedirs(destination_folder, exist_ok=True)
+    
+    # Rename the file to a custom name
+    custom_name = 'updateMasterVL.csv'  # Provide your desired custom name here
+    
+    # Construct the file path where the uploaded file will be saved with the custom name
+    file_path = os.path.join(destination_folder, custom_name)
+    
+    # Open the destination file in write-binary mode
+    with open(file_path, 'wb') as destination:
+        # Iterate over chunks of the uploaded file and write them to the destination file
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+def UploadMasterVL(request):
+    if request.method == 'POST':
+        file = request.FILES.get('file')
+        if file:
+            handle_uploaded_medicalAttachment_file(file)
+            updates, creates = UpdateMasterVL(request)
+            list_mastertag = masterTagVL.objects.all
+            context = {
+                'list_mastertags' : list_mastertag,
+                'updated_items': updates,
+                'created_items': creates,
+            }
+            return render(request, 'master_app/UploadMasterVL.html', context)
+    else:
+        list_mastertag = masterTagVL.objects.all
+        context = {
+            'list_mastertags' : list_mastertag
+        }
+        return render(request, 'master_app/UploadMasterVL.html', context)
+    
+# UPLOAD END
+
+# DOWNLOAD START
+def download_csv_mastervl(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="master_tags.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['id', 'item_no', 'item_desc', 'spec', 'poc', 'poc_lower', 'poc_upper', 'vib',
+                     'run_out', 'tipe_pulley', 'pulley_diameter', 'weight_kg', 'weight_n', 'top_width',
+                     'top_width_plus', 'top_width_minus', 'thickness', 'thickness_plus', 'thickness_minus',
+                     'tipe_belt'])
+
+    # Replace `YourModel` with the actual model name you are using for Master Tags
+    master_tags = masterTagVL.objects.all()
+
+    for tag in master_tags:
+        writer.writerow([tag.id, tag.item_no, tag.item_desc, tag.spec, tag.poc, tag.poc_lower, tag.poc_upper,
+                         tag.vib, tag.run_out, tag.tipe_pulley, tag.pulley_diameter, tag.weight_kg,
+                         tag.weight_n, tag.top_width, tag.top_width_plus, tag.top_width_minus, tag.thickness,
+                         tag.thickness_plus, tag.thickness_minus, tag.tipe_belt])
+
+    return response
+# DOWNLOAD END

@@ -13,8 +13,6 @@ class masterTagVL(models.Model):
     poc_upper       = models.FloatField(max_length=128, null=True, blank=True)
     vib             = models.FloatField(max_length=128, null=True, blank=True)
     run_out         = models.FloatField(max_length=128, null=True, blank=True)
-    # ro_low          = models.FloatField(max_length=128, null=True, blank=True)
-    # ro_upper        = models.FloatField(max_length=128, null=True, blank=True)
     tipe_pulley     = models.CharField(max_length=128, null=True, blank=True)
     pulley_diameter = models.FloatField(max_length=128, null=True, blank=True)
     weight_kg       = models.PositiveBigIntegerField(null=True, blank=True)

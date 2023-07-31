@@ -27,7 +27,10 @@ urlpatterns = [
     # path('CreateVillage/', views.CreateVillage, name='CreateVillage'),
     # path('CreateMasterTagVL/', views.CreateMasterTagVL, name='CreateMasterTagVL'),
 
+    path('UpdateMasterVL/', views.UpdateMasterVL, name='UpdateMasterVL'),
     path('UpdateRemain/', views.UpdateRemain, name='UpdateRemain'),
+    path('UploadMasterVL/', views.UploadMasterVL, name='UploadMasterVL'),
+    path('download_csv_mastervl/', views.download_csv_mastervl, name='download_csv_mastervl'),
     # path('UpdateUpdateUserProfileInfoGenderStatus/', views.UpdateUpdateUserProfileInfoGenderStatus, name='UpdateUpdateUserProfileInfoGenderStatus'),
     # path('UpdateUserProfileInfoTanggalLahir/', views.UpdateUserProfileInfoTanggalLahir, name='UpdateUserProfileInfoTanggalLahir'),
 ]
