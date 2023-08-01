@@ -555,7 +555,7 @@ def UploadMasterVL(request):
     else:
         list_mastertag = masterTagVL.objects.all
         context = {
-            'list_mastertags' : list_mastertag
+            'list_mastertags' : list_mastertag,
         }
         return render(request, 'master_app/UploadMasterVL.html', context)
     
