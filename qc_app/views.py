@@ -866,10 +866,15 @@ def convert_month_year_to_ym(month_year):
 
 @login_required
 def rir_download_report_excel(request):
-    month_year = request.POST['id_yearmonth']
-    year_month = convert_month_year_to_ym(month_year)
+    if request.method == 'POST':
+        month_year = request.POST['id_yearmonth']
+        year_month = convert_month_year_to_ym(month_year)
+        rir_header = rirHeader.objects.filter(rir_no__contains=year_month).all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement', 'id', 'is_complete').order_by('-rir_no')
+    else:
+        rir_header = rirHeader.objects.all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement', 'id', 'is_complete').order_by('-rir_no')
+        year_month = 'All'
+        
     # Test Distinct
-    rir_header = rirHeader.objects.filter(rir_no__contains=year_month).all().values_list('rir_no','incoming_type','category__name','material__name','po_number','vendor','lot_no','quantity','quantity_actual','incoming_at','incoming_at_external','created_at','is_special_judgement','is_return','is_sa','is_special_judgement', 'id', 'is_complete').order_by('-rir_no')
     # Memanggil RIR dari tahun awal sampai tahun akhir
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename=RIR '+year_month+'.xls'
