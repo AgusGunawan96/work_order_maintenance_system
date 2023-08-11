@@ -39,4 +39,15 @@ urlpatterns = [
     path('hardware/edit/', views.hardware_edit, name='hardware_edit'),
     # HARDWARE END
     
+    # IT REPORT START
+    path('report_it/', views.report_it_index, name = 'report_it_index'),
+    path('report_it/detail/<int:report_id>', views.report_it_detail, name = 'report_it_detail'),
+    path('report_it/create_project', views.report_it_create_project, name = 'report_it_create_project'),
+    path('report_it/create_task/<int:report_id>', views.report_it_create_task, name = 'report_it_create_task'),
+    path('report_it/edit_task/<int:report_id>', views.report_it_edit_task, name = 'report_it_edit_task'),
+    path('report_it/complete_project/<int:report_id>', views.report_it_complete_project, name = 'report_it_complete_project'),
+    path('report_it/confirmed_task/<int:report_id>', views.report_it_confirmed_task, name = 'report_it_confirmed_task'),
+    path('report_it/verified_project/<int:report_id>', views.report_it_verified_project, name = 'report_it_verified_project'),
+
+    # IT REPORT END
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

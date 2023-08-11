@@ -1,9 +1,10 @@
 from django import forms
 from django.forms import ClearableFileInput
 from django.contrib.auth.models import User
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, TicketAttachment, IPAddress, Hardware, ITComputerList, ListLocation, ListLocationDetail
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, TicketAttachment, IPAddress, Hardware, ITComputerList, ListLocation, ListLocationDetail, ITApprovalList, ITReportD, ITReportDAttachment, ITReportH
 from django_select2.forms import Select2Widget
 from django.db.models.functions import Concat
+from master_app.models import UserProfileInfo
 
 from django.db.models import CharField, Value
 # class ipAddressForms(forms.ModelForm):
@@ -108,3 +109,41 @@ class progressITForms(forms.ModelForm):
         model = TicketProgressIT
         fields = ('status', 'priority', 'review_description', 'ticket_no', 'ticket_approval_it')
         widgets = {'ticket_approval_it' : forms.HiddenInput, 'ticket_no' : forms.HiddenInput}
+
+class ITCreateProjectForms(forms.ModelForm):
+    assignedto = forms.ModelChoiceField(
+        queryset=User.objects.filter(userprofileinfo__division_id__division_name='IT').annotate(full_name=Concat('first_name', Value(' '), 'last_name')).values_list('full_name', flat=True),
+        widget=Select2Widget,
+        required=False,
+        label='Assigned to'  # Set the label for the field
+    )
+    start_at = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
+    plan_end_at = forms.DateTimeField(widget=forms.TextInput(attrs={'type': 'date'}))
+    class Meta:
+        model = ITReportH
+        fields = ('project_name','project_description','project_priority', 'start_at', 'plan_end_at', 'assignedto', 'assigned_to')
+        widgets = {'assigned_to': forms.HiddenInput,}
+
+class ITCreateTaskForms(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['smartFactory_H'].label = 'Project Name'
+        self.fields['smartFactory_H'].widget.attrs['disabled'] = True
+
+    class Meta:
+        model = ITReportD
+        fields = ('smartFactory_H', 'status', 'task_priority', 'is_confirmed', 'is_complete', 'task')
+        widgets = {'is_confirmed': forms.HiddenInput, 'is_complete': forms.HiddenInput, 'pic': forms.HiddenInput, 'confirmed_by': forms.HiddenInput}
+
+
+class ITReportAttachmentForms(forms.ModelForm):
+    class Meta():
+        model = ITReportDAttachment
+        fields = ('attachment',)
+        widgets = {
+            'attachment'    : ClearableFileInput(attrs={'multiple':True}),
+        }
+
+
+
+        

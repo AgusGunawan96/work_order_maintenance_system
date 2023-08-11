@@ -1,0 +1,443 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <div class="col-sm-12 col-xl-12 xl-100">
+    <div class="card">
+      <div class="card-header pb-0">
+        <h5>Smart Factory Report| {{request.user.first_name}} {{request.user.last_name}}</h5><span>List Report</span>
+      </div>
+      <div class="card-body btn-showcase">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message | safe }}
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+        <!-- blok untuk menampilkan notifikasi pesan sukses -->
+<div>
+  </div>
+  <a class="btn btn-success btn-lg" href="{% url 'it_app:report_it_create_project' %}"> <span class="fa fa-plus"></span>Add Project</a>
+  {% comment %} <a class="btn btn-success btn-lg" href="{% url 'it_app:report_it_create_task' %}"> <span class="fa fa-plus"></span>Add Task</a> {% endcomment %}
+      </div>
+        <div class="card-body">
+            {% comment %} INI MERUPAKAN ISI DARI BODY {% endcomment %}
+            <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
+                <li class="nav-item"><a class="nav-link active" id="top-Unverified-project-tab" data-bs-toggle="tab" href="#top-Unverified-project" role="tab" aria-controls="top-Unverified-project" aria-selected="true"><i class="icofont icofont-hard-disk"></i>Unverified Project</a></li>
+                <li class="nav-item"><a class="nav-link " id="top-Ongoing-project-tab" data-bs-toggle="tab" href="#top-Ongoing-project" role="tab" aria-controls="top-Ongoing-project" aria-selected="true"><i class="icofont icofont-hard-disk"></i>Ongoing Project</a></li>
+                <li class="nav-item"><a class="nav-link " id="top-Complete-project-tab" data-bs-toggle="tab" href="#top-Complete-project" role="tab" aria-controls="top-Complete-project" aria-selected="true"><i class="icofont icofont-hard-disk"></i>Complete Project</a></li>
+              </ul>
+              <div class="tab-content" id="top-tabContent">
+
+                {% comment %} UNVERIFIED PROJECT START {% endcomment %}
+                <div class="tab-pane fade show active" id="top-Unverified-project" role="tabpanel" aria-labelledby="top-Unverified-project-tab">
+                  <div class="col-sm-12">
+                          <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Project Name</th>
+                                  <th>Priority</th>  
+                                  <th>Start At</th>  
+                                  <th>Plan End At</th>    
+                                  <th>Assign To</th>    
+                                  <th>Action</th>    
+                              </thead>
+                              <tbody>
+                                  {% for projunverified in project_unverified %}
+                                  <tr>
+                                      <td>{{ projunverified.project_name }}</td>
+                                      <td>{{ projunverified.project_priority }}</td>  
+                                      <td>{{ projunverified.start_at|date:"M. d, Y" }}</td>  
+                                      <td>{{ projunverified.plan_end_at|date:"M. d, Y" }}</td>  
+                                      <td>{{ projunverified.assigned_to.first_name }} {{ projunverified.assigned_to.last_name }}</td>  
+                                      <td>
+                                        <a class="btn btn-info btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalUnverifiedDetail{{ projunverified.id }}" data-whatever="@mdo"><span class="icon-info"></span>Information</a>
+                                      </td>
+                                  </tr>
+                                {% comment %} MODAL DELETE START {% endcomment %}
+                                <div class="modal fade" id="ModalUnverifiedDetail{{ projunverified.id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLabel2">{{projunverified.project_name}}</h5>
+                                          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{% url 'it_app:report_it_verified_project' projunverified.id %}" method="POST">
+                                          {% csrf_token %}
+                                          <div class="modal-body">
+                                            <div class="mb-3">
+                                              <label class="col-form-label" for="recipient-name">Project Name:</label>
+                                              <input class="form-control" type="text" value="{{projunverified.project_name}}" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                              <label class="col-form-label" for="recipient-name">Project Description:</label>
+                                              <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{projunverified.project_description}}</textarea >
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Project Priority:</label>
+                                                <input class="form-control" type="text" value="{{projunverified.project_priority}}" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                              <label class="col-form-label" for="recipient-name">Start at:</label>
+                                              <input class="form-control" type="text" value="{{projunverified.start_at|date:'F j, Y'}}" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Plan End at:</label>
+                                                <input class="form-control" type="text" value="{{projunverified.plan_end_at|date:'F j, Y'}}" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Assigned to:</label>
+                                                <input class="form-control" type="text" value="{{projunverified.assigned_to.first_name}} {{projunverified.assigned_to.last_name}}" readonly>
+                                            </div>
+                                          </div>
+                                          <div class="modal-footer">
+                                            {% if supervisor %}
+                                            <button class="btn btn-success" type="submit">Verify</button>
+                                            {% endif %}
+                                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                            {% comment %} <button class="btn btn-secondary" type="submit">Delete</button> {% endcomment %}
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                </div>
+                                {% comment %} MODAL DELETE END {% endcomment %}
+                                  {% endfor %}
+                              </tbody>
+                            </table>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination pagination-primary">
+                                  {% if project_unverified.has_previous %}
+                                    <li class="page-item">
+                                      <a class="page-link" href="?page=1" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                      </a>
+                                    </li>
+                                    <li class="page-item">
+                                      <a class="page-link" href="?page={{ project_unverified.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                              
+                                  {% for page_num in project_unverified.paginator.page_range %}
+                                    <li class="page-item {% if page_num == project_unverified.number %}active{% endif %}">
+                                      <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                    </li>
+                                  {% endfor %}
+                                  {% if project_unverified.has_next %}
+                                    <li class="page-item">
+                                      <a class="page-link" href="?page={{ project_unverified.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                      </a>
+                                    </li>
+                                    <li class="page-item">
+                                      <a class="page-link" href="?page={{ project_unverified.paginator.num_pages }}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                                </ul>
+                            </nav>
+                  </div>
+                </div>
+            </div>
+                {% comment %} UNVERIFIED PROJECT END {% endcomment %}
+
+                {% comment %} ON GOING PROJECT START {% endcomment %}
+                <div class="tab-pane fade show " id="top-Ongoing-project" role="tabpanel" aria-labelledby="top-Ongoing-project-tab">
+                    <div class="col-sm-12">
+                            <div class="table-responsive">
+                              <table class="table" >
+                                <thead>
+                                  <tr>
+                                    <th>Project Name</th>
+                                    <th>Priority</th>  
+                                    <th>Start At</th>  
+                                    <th>Plan End At</th>    
+                                    <th>Assign To</th>    
+                                    <th>Action</th>    
+                                </thead>
+                                <tbody>
+                                    {% for projectongoing in project_ongoing %}
+                                    <tr>
+                                        <td>{{ projectongoing.project_name }}</td>
+                                        <td>{{ projectongoing.project_priority }}</td>  
+                                        <td>{{ projectongoing.start_at|date:"M. d, Y" }}</td>  
+                                        <td>{{ projectongoing.plan_end_at|date:"M. d, Y" }}</td>  
+                                        <td>{{ projectongoing.assigned_to.first_name }} {{ projectongoing.assigned_to.last_name }}</td>  
+                                        <td>
+                                          <a class="btn btn-info btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalOngoingDetail{{ projectongoing.id }}" data-whatever="@mdo"><span class="icon-info"></span>Information</a> | 
+                                          <a class="btn btn-success btn-sm" type="button" href="{% url 'it_app:report_it_create_task' projectongoing.id %}" ><span class="fa fa-plus"></span>Add Task</a> |
+                                          <a class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" href="#collapse{{ projectongoing.id }}" role="button" aria-expanded="false" aria-controls="collapse{{ projectongoing.id }}"><span class="icon-info"></span>List Task</a>
+                                        </td>
+                                    </tr>
+                                    <div class="collapse" id="collapse{{ projectongoing.id }}">
+                                    <tr>
+                                    <td>
+                                      <div class="collapse" id="collapse{{ projectongoing.id }}">
+                                        {{ forloop.counter }}
+                                      </div>
+                                    </td>
+                                    <td colspan="5">
+                                        <div class="collapse" id="collapse{{ projectongoing.id }}">
+                                            {% comment %} Nnanti disini ada looping dari judul task nya  {% endcomment %}
+                                              <a href="">jadi ini merupakan A</a>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                    <td>
+                                      <div class="collapse" id="collapse{{ projectongoing.id }}">
+                                        {{ forloop.counter }}
+                                      </div>
+                                    </td>
+                                    <td colspan="5">
+                                        <div class="collapse" id="collapse{{ projectongoing.id }}">
+                                            {% comment %} Nnanti disini ada looping dari judul task nya  {% endcomment %}
+                                              <a href="">jadi ini merupakan B</a>
+                                          </div>
+                                      </td>
+                                    </tr>
+                                  </div>
+                                  {% comment %} MODAL DELETE START {% endcomment %}
+                                  <div class="modal fade" id="ModalOngoingDetail{{ projectongoing.id }}" tabindex="-1" role="dialog"
+                                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel2">{{projectongoing.project_name}}</h5>
+                                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <form action="{% url 'it_app:report_it_verified_project' projectongoing.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                              <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Project Name:</label>
+                                                <input class="form-control" type="text" value="{{projectongoing.project_name}}" readonly>
+                                              </div>
+                                              <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Project Description:</label>
+                                                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{projectongoing.project_description}}</textarea >
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label class="col-form-label" for="recipient-name">Project Priority:</label>
+                                                  <input class="form-control" type="text" value="{{projectongoing.project_priority}}" readonly>
+                                              </div>
+                                              <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Start at:</label>
+                                                <input class="form-control" type="text" value="{{projectongoing.start_at|date:'F j, Y'}}" readonly>
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label class="col-form-label" for="recipient-name">Plan End at:</label>
+                                                  <input class="form-control" type="text" value="{{projectongoing.plan_end_at|date:'F j, Y'}}" readonly>
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label class="col-form-label" for="recipient-name">Assigned to:</label>
+                                                  <input class="form-control" type="text" value="{{projectongoing.assigned_to.first_name}} {{projectongoing.assigned_to.last_name}}" readonly>
+                                              </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button class="btn btn-success" type="submit">Complete</button>
+                                              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                              {% comment %} <button class="btn btn-secondary" type="submit">Delete</button> {% endcomment %}
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  {% comment %} MODAL DELETE END {% endcomment %}
+                                    {% endfor %}
+                                </tbody>
+                              </table>
+                              <nav aria-label="Page navigation example">
+                                  <ul class="pagination pagination-primary">
+                                    {% if project_unverified.has_previous %}
+                                      <li class="page-item">
+                                        <a class="page-link" href="?page=1" aria-label="First">
+                                          <span aria-hidden="true">&laquo;&laquo;</span>
+                                        </a>
+                                      </li>
+                                      <li class="page-item">
+                                        <a class="page-link" href="?page={{ project_unverified.previous_page_number }}" aria-label="Previous">
+                                          <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                      </li>
+                                    {% endif %}
+                                
+                                    {% for page_num in project_unverified.paginator.page_range %}
+                                      <li class="page-item {% if page_num == project_unverified.number %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                      </li>
+                                    {% endfor %}
+                                    {% if project_unverified.has_next %}
+                                      <li class="page-item">
+                                        <a class="page-link" href="?page={{ project_unverified.next_page_number }}" aria-label="Next">
+                                          <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                      </li>
+                                      <li class="page-item">
+                                        <a class="page-link" href="?page={{ project_unverified.paginator.num_pages }}" aria-label="Last">
+                                          <span aria-hidden="true">&raquo;&raquo;</span>
+                                        </a>
+                                      </li>
+                                    {% endif %}
+                                  </ul>
+                              </nav>
+                    </div>
+                </div>
+            </div>
+                  {% comment %} ON GOING PROJECT END {% endcomment %}
+
+                {% comment %} COMPELTE PROJECT START {% endcomment %}
+                <div class="tab-pane fade show " id="top-Complete-project" role="tabpanel" aria-labelledby="top-Complete-project-tab">
+                    <div class="col-sm-12">
+                            <div class="table-responsive">
+                              <table class="table" hidden>
+                                <thead>
+                                  <tr>
+                                    <th>Project Nameee</th>
+                                    <th>Priority</th>  
+                                    <th>Start At</th>  
+                                    <th>Plan End At</th>    
+                                    <th>Assign To</th>    
+                                    <th>Action</th>    
+                                </thead>
+                                <tbody>
+                                    {% for projunverified in project_unverified %}
+                                    <tr>
+                                        <td>{{ projunverified.project_name }}</td>
+                                        <td>{{ projunverified.project_priority }}</td>  
+                                        <td>{{ projunverified.start_at|date:"M. d, Y" }}</td>  
+                                        <td>{{ projunverified.plan_end_at|date:"M. d, Y" }}</td>  
+                                        <td>{{ projunverified.assigned_to.first_name }} {{ projunverified.assigned_to.last_name }}</td>  
+                                        <td>
+                                          <a class="btn btn-info btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalCompleteDetail{{ projunverified.id }}" data-whatever="@mdo"><span class="icon-info"></span>Information</a>
+                                        </td>
+                                    </tr>
+                                  {% comment %} MODAL DELETE START {% endcomment %}
+                                  <div class="modal fade" id="ModalCompleteDetail{{ projunverified.id }}" tabindex="-1" role="dialog"
+                                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel2">{{projunverified.project_name}}</h5>
+                                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <form action="{% url 'it_app:report_it_verified_project' projunverified.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                              <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Project Name:</label>
+                                                <input class="form-control" type="text" value="{{projunverified.project_name}}" readonly>
+                                              </div>
+                                              <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Project Description:</label>
+                                                <textarea class="form-control" rows="5" cols="5" placeholder="Default textarea" readonly>{{projunverified.project_description}}</textarea >
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label class="col-form-label" for="recipient-name">Project Priority:</label>
+                                                  <input class="form-control" type="text" value="{{projunverified.project_priority}}" readonly>
+                                              </div>
+                                              <div class="mb-3">
+                                                <label class="col-form-label" for="recipient-name">Start at:</label>
+                                                <input class="form-control" type="text" value="{{projunverified.start_at|date:'F j, Y'}}" readonly>
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label class="col-form-label" for="recipient-name">Plan End at:</label>
+                                                  <input class="form-control" type="text" value="{{projunverified.plan_end_at|date:'F j, Y'}}" readonly>
+                                              </div>
+                                              <div class="mb-3">
+                                                  <label class="col-form-label" for="recipient-name">Assigned to:</label>
+                                                  <input class="form-control" type="text" value="{{projunverified.assigned_to.first_name}} {{projunverified.assigned_to.last_name}}" readonly>
+                                              </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button class="btn btn-success" type="submit">Verify</button>
+                                              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                              {% comment %} <button class="btn btn-secondary" type="submit">Delete</button> {% endcomment %}
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  {% comment %} MODAL DELETE END {% endcomment %}
+                                    {% endfor %}
+                                </tbody>
+                              </table>
+                              <nav aria-label="Page navigation example">
+                                  <ul class="pagination pagination-primary">
+                                    {% if project_unverified.has_previous %}
+                                      <li class="page-item">
+                                        <a class="page-link" href="?page=1" aria-label="First">
+                                          <span aria-hidden="true">&laquo;&laquo;</span>
+                                        </a>
+                                      </li>
+                                      <li class="page-item">
+                                        <a class="page-link" href="?page={{ project_unverified.previous_page_number }}" aria-label="Previous">
+                                          <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                      </li>
+                                    {% endif %}
+                                
+                                    {% for page_num in project_unverified.paginator.page_range %}
+                                      <li class="page-item {% if page_num == project_unverified.number %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                      </li>
+                                    {% endfor %}
+                                    {% if project_unverified.has_next %}
+                                      <li class="page-item">
+                                        <a class="page-link" href="?page={{ project_unverified.next_page_number }}" aria-label="Next">
+                                          <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                      </li>
+                                      <li class="page-item">
+                                        <a class="page-link" href="?page={{ project_unverified.paginator.num_pages }}" aria-label="Last">
+                                          <span aria-hidden="true">&raquo;&raquo;</span>
+                                        </a>
+                                      </li>
+                                    {% endif %}
+                                  </ul>
+                              </nav>
+                    </div>
+                </div>
+            </div>
+                  {% comment %} COMPELTE PROJECT END {% endcomment %}
+
+              </div>
+            {% comment %} ISI SELESAI DARI BODY {% endcomment %}
+            
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Container-fluid starts-->
+  {% comment %} <div class="container-fluid">
+   
+  </div> {% endcomment %}
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

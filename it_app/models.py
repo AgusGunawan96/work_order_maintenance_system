@@ -214,12 +214,61 @@ class TicketProgressIT(models.Model):
 # TICKET END
 
 
-# IT REPORT START
+# IT SMARTFACTORY START
+class workStatus(models.TextChoices):
+    PENDING     = 'Pending'
+    IN_PROGRESS = 'In Progress'
+    DONE        = 'Complete'
 
-class Report(models.Model):
+class workPriority(models.TextChoices):
+    LOW     = 'Low'
+    MEDIUM  = 'Medium'
+    HIGH    = 'High'
+
+class ITApprovalList(models.Model):
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    is_supervisor   = models.BooleanField(default=False, blank=True, null=True)
+    is_staff        = models.BooleanField(default=False, blank=True, null=True)
+    created_at      = models.DateTimeField('created at', auto_now_add = True)
+    updated_at      = models.DateTimeField('updated at', auto_now = True)
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name
+
+class ITReportH(models.Model):
+    verified_by         = models.ForeignKey(ITApprovalList, on_delete=models.CASCADE, null=True, blank=True)        
+    assigned_to         = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)        
+    project_name        = models.CharField(max_length=192)    
+    project_description = models.TextField()
+    project_priority    = models.CharField(max_length=25, choices=workPriority.choices, default='-', null=True, blank=True)
+    is_complete         = models.BooleanField(default=False)
+    is_verified         = models.BooleanField(default=False)    
+    start_at            = models.DateTimeField(null=True, blank=True)
+    plan_end_at         = models.DateTimeField(null=True, blank=True)
+    plan_actual_end_at  = models.DateTimeField(null=True, blank=True)
+    created_at          = models.DateTimeField(auto_now_add=True)
+    updated_at          = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.project_name
+    
+class ITReportD(models.Model):
+    smartFactory_H      = models.ForeignKey(ITReportH, on_delete=models.CASCADE, null=True, blank=True)
+    pic                 = models.ForeignKey(ITApprovalList, on_delete=models.CASCADE, null=True, blank=True, related_name='pic_approvals')
+    confirmed_by        = models.ForeignKey(ITApprovalList, on_delete=models.CASCADE, null=True, blank=True, related_name='confirmed_by_approvals')
+    status              = models.CharField(max_length=25, choices=workStatus.choices, default='-', null=True, blank=True)
+    task_priority       = models.CharField(max_length=25, choices=workPriority.choices, default='-', null=True, blank=True)
+    is_confirmed        = models.BooleanField(default=False, null=True, blank=True)
+    is_complete         = models.BooleanField(default=False, null=True, blank=True)
+    task                = models.TextField()
     created_at          = models.DateTimeField(auto_now_add=True)
     updated_at          = models.DateTimeField(auto_now=True)
 
-# IT REPORT END
+    def __str__(self):
+        return self.task
+    
+class ITReportDAttachment(models.Model):
+    task            = models.ForeignKey(ITReportD, on_delete=models.CASCADE, blank=True, null=True)
+    attachment      = models.FileField(upload_to='ReportDAttachment/', null=False, blank=True)
+
+# IT SMARTFACTORY END
 
     

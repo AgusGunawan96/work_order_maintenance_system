@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT, TicketAttachment, IPAddress, Hardware, ITComputerList
+from it_app.models import Ticket, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketPriority, TicketStatus, TicketProgressIT, TicketAttachment, IPAddress, Hardware, ITComputerList, ITApprovalList, ITReportH, ITReportD, ITReportDAttachment
 from django.contrib.auth.decorators import login_required
-from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms, hardwareForms, computerListForms
+from it_app.forms import ticketForms, approvalSupervisorForms, approvalManagerForms, approvalITForms, progressITForms, ticketAttachmentForms, hardwareForms, computerListForms, ITCreateProjectForms, ITCreateTaskForms, ITReportAttachmentForms
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import Http404, HttpResponse, QueryDict
@@ -11,6 +11,9 @@ from django.db.models.functions import Concat
 import xlwt
 from seiwa.models import TabelPemasukan
 from POSEIWA.models import TPo
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
+from .models import ITReportH
 # Create your views here.
 
 # def seiwa(request):
@@ -439,3 +442,148 @@ def ticket_it_reject(request,ticket_id):
             return redirect('it_app:ticket_index')
         return HttpResponse(approval_it_form)
 #TICKET END
+
+#IT REPORT START
+
+@login_required
+def report_it_index(request):
+    # Get all unverified ITReportH objects
+    list_project_unverified = ITReportH.objects.filter(is_verified=False)
+    list_project_ongoing = ITReportH.objects.filter(is_verified=True, is_complete=False)
+    list_project_complete = ITReportH.objects.filter(is_verified=True, is_complete=True)
+
+    # Set the number of items to display per page
+    items_per_page = 10
+
+    # Create a Paginator instance for each queryset
+    paginator_unverified = Paginator(list_project_unverified, items_per_page)
+    paginator_ongoing = Paginator(list_project_ongoing, items_per_page)
+    paginator_complete = Paginator(list_project_complete, items_per_page)
+
+    # Get the current page number from the request's GET parameters
+    page = request.GET.get('page')
+
+    try:
+        # Get the paginated data for the current page for each queryset
+        paginated_project_unverified = paginator_unverified.get_page(page)
+        paginated_project_ongoing = paginator_ongoing.get_page(page)
+        paginated_project_complete = paginator_complete.get_page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver the first page
+        paginated_project_unverified = paginator_unverified.get_page(1)
+        paginated_project_ongoing = paginator_ongoing.get_page(1)
+        paginated_project_complete = paginator_complete.get_page(1)
+    except EmptyPage:
+        # If page is out of range, deliver the last page
+        paginated_project_unverified = paginator_unverified.get_page(paginator_unverified.num_pages)
+        paginated_project_ongoing = paginator_ongoing.get_page(paginator_ongoing.num_pages)
+        paginated_project_complete = paginator_complete.get_page(paginator_complete.num_pages)
+
+# SEKARANG KITA AKAN BIKIN VARIABLE APPROVE 
+    supervisor_report = ITApprovalList.objects.filter(is_supervisor = True).filter(user_id = request.user.id).all()
+    context = {
+        'project_unverified': paginated_project_unverified,
+        'project_ongoing': paginated_project_ongoing,
+        'project_complete': paginated_project_complete,
+        'supervisor': supervisor_report,
+    }
+
+    return render(request, 'it_app/report_it_index.html', context)
+
+@login_required
+def report_it_detail(request,report_id):
+    return HttpResponse("jadi ini merupakan detail dari report yang di assign")
+    return render(request, 'it_app/report_it_index.html', context)
+
+@login_required
+def report_it_create_project(request):
+    if request.method == "POST":
+        user = User.objects.annotate(full_name = Concat('first_name',Value(' '),'last_name')).filter(full_name__contains=request.POST.get('assignedto')).first()
+        # Create a mutable copy of request.POST
+        post_data = request.POST.copy()
+        post_data.pop('assignedto', None)
+        # Modify the value corresponding to 'my_key'
+        post_data['assigned_to'] = user
+        # Replace the original request POST data with our updated version.
+        request.POST = post_data
+        project_form = ITCreateProjectForms(data=request.POST)
+        if project_form.is_valid():
+
+            project = project_form.save(commit=False)
+            # Save Cmputer
+            project.save()
+            return redirect('it_app:report_it_index')
+        else:
+            print(project_form.errors)
+        return redirect('it_app:report_it_index')
+    else:
+        report_it_create_project_form = ITCreateProjectForms()
+    context = {
+        'form_report_it_create_project' : report_it_create_project_form,
+    }
+    return render(request, 'it_app/report_it_create_project.html', context)
+    return HttpResponse("jadi ini merupakan create dari project")
+
+@login_required
+def report_it_create_task(request,report_id):
+    report = ITReportH.objects.get(pk=report_id)
+    pic_it = ITApprovalList.objects.filter(user = request.user).first()
+
+    if request.method == "POST":
+        task_form = ITCreateTaskForms(data=request.POST)
+        it_attachment_form = ITReportAttachmentForms(data=request.POST)
+        if task_form.is_valid():
+            task = task_form.save(commit=False)
+            task.smartFactory_H = report
+            task.pic = pic_it
+            # Save Cmputer
+            task.save()
+
+            # Save attachment
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                 attachment = ITReportDAttachment(attachment=f)
+                 attachment.task = task
+                 attachment.save()
+
+            return redirect('it_app:report_it_index')
+        else:
+            print(task_form.errors)
+        return redirect('it_app:report_it_index')
+    else:
+        report_it_create_task_form = ITCreateTaskForms(initial={'smartFactory_H': report})
+        report_it_attachment_form = ITReportAttachmentForms()
+    context = {
+        'form_report_it_create_task' : report_it_create_task_form,
+        'form_report_it_attachment_task' : report_it_attachment_form,
+    }
+    return render(request, 'it_app/report_it_create_task.html', context)
+    return HttpResponse("jadi ini pembuatan create task")
+
+@login_required
+def report_it_edit_task(request, report_id):
+    # jadi ini nanti dapetin report idnya terus kita edit
+    return HttpResponse("jadi ini untuk edit task berdasarkan status, apabila sudah Complete maka nanti di konfirmasi")
+    return render(request, 'it_app/report_it_index.html', context)
+
+@login_required
+def report_it_complete_project(request,report_id):
+    return HttpResponse("jadi ini untuk confirm kalau complete")
+    return render(request, 'it_app/report_it_index.html', context)
+
+@login_required
+def report_it_confirmed_task(request, report_id):
+    return HttpResponse("jadi ini merupakan konfirmasi task oleh supervisor nantinya is_completenya jadi 1")
+    return render(request, 'it_app/report_it_index.html', context)
+
+@login_required
+def report_it_verified_project(request, report_id):
+    it_supervisor = ITApprovalList.objects.filter(user = request.user).filter(is_supervisor = True).first()
+    report_header = ITReportH.objects.get(pk = report_id)
+    report_header.is_verified = True
+    report_header.verified_by = it_supervisor
+    report_header.save()
+    return redirect('it_app:report_it_index')
+
+
+#IT REPORT END

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from it_app.models import Ticket, Hardware, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, HardwareInfo, HardwareType, IPAddress, ITComputerList, ListLocation, ListLocationDetail
+from it_app.models import Ticket, Hardware, TicketApprovalSupervisor, TicketApprovalManager, TicketApprovalIT, TicketProgressIT, HardwareInfo, HardwareType, IPAddress, ITComputerList, ListLocation, ListLocationDetail, ITApprovalList, ITReportH, ITReportD
 # Register your models here.
 class TicketAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
@@ -28,5 +28,8 @@ admin.site.register(TicketProgressIT)
 admin.site.register(ITComputerList, ITComputerListAdmin)
 admin.site.register(ListLocation)
 admin.site.register(ListLocationDetail)
+admin.site.register(ITApprovalList)
+admin.site.register(ITReportH) 
+admin.site.register(ITReportD) 
 
 # admin.site.register(IPAddress, IPAddressAdmin)
