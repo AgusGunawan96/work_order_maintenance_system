@@ -1,0 +1,376 @@
+{% extends 'starter_kit/other-base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<style>
+    .status-ok {
+        color: green;
+    }
+    
+    .status-ng {
+        color: red;
+    }
+</style>
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="row">
+
+    <div class="card-body col-xl-4">
+        <div class="card manage-invoice-sec">
+            <div class="card-header pb-0">
+                <h3 class="text-center">FILTERING</h3>
+                <hr>
+            </div>
+            <div class="card-body ">
+                <div class="card-header pb-0"></div>
+                <div class="row">
+                    {% comment %} NANTI DISINI FORM START  {% endcomment %}
+
+                    <div class="col-sm-12"><h4>Date</h4></div>
+                    <div class="mb-3 col-xl-6 row">
+                        <label class="col-sm-3 col-form-label">Start Date</label>
+                        <div class="col-sm-9">
+                            <input id="start-date" class="form-control digits" type="date" >
+                        </div>
+                    </div>
+                    <div class="mb-3 col-xl-6 row">
+                        <label class="col-sm-3 col-form-label">End Date</label>
+                        <div class="col-sm-9">
+                            <input id="end-date" class="form-control digits" type="date" >
+                        </div>
+                    </div>
+                    <div class=""><hr></div>
+                    <div class="col-sm-12"><h4>Shift</h4></div>
+                    <div class="mb-3 col-xl-6 row">
+                        <label class="col-sm-3 col-form-label">Shift 1</label>
+                        <div class="col-sm-9">
+                            <input id="shift-1" class="form-check-input" type="checkbox" value="1">
+                        </div>
+                    </div>
+                    <div class="mb-3 col-xl-6 row">
+                        <label class="col-sm-3 col-form-label">Shift 3</label>
+                        <div class="col-sm-9">
+                            <input id="shift-3" class="form-check-input" type="checkbox" value="2">
+                        </div>
+                    </div>
+                    
+                    {% comment %} FILTERING SO NUMBER START {% endcomment %}
+                    <div class="col-sm-12"><h4>SO NUMBER</h4></div>
+                    <div class="mb-3 col-xl-12 row">
+                        <label class="col-sm-3 col-form-label">Search SO Number</label>
+                        <div class="col-sm-9">
+                            <input id="so-number-search" class="form-control" type="text" placeholder="Enter SO Number">
+                        </div>
+                    </div>
+                    <div class=""><hr></div>
+                    {% comment %} FILTERING SO NUMBER END {% endcomment %}
+
+                    {% comment %} <button id="filter-button" class="btn-primary submit col-sm-4" type="button">Filtering</button> {% endcomment %}
+                    
+
+
+                    {% comment %} <button class="btn-primary submit col-sm-4" type="submit">Download Excel</button> {% endcomment %}
+
+                    {% comment %} NANTI DISINI FORM END  {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body col-xl-8">
+        <div class="card manage-invoice-sec">
+            <div class="card-header pb-0">
+                <h3 class="text-center">Statistic POC VL</h3>
+                <hr>
+            </div>
+            <div class="card-body">
+                <div class="card-header pb-0"></div>
+                <div class="row">
+                  <div class="col-sm-6">  
+
+                    <div class="col-sm-12 col-xl-12 box-col-12">
+
+                          <div class="card-body">
+                            <div id="column-chartT"></div>
+                          </div>
+                    </div>
+
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="card-body col-xl-12">
+        <div class="card manage-invoice-sec">
+            <div class="card-header pb-0">
+                <h3 class="text-center">Report POC VL</h3>
+                <hr>
+            </div>
+            <div class="card-body">
+                <div class="manage-invoice-table">
+                    <div class="item">
+                        <div class="table-responsive">
+                            <table class="table-bordered table-xs table-striped" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>created at</th>
+                                        <th>Shift</th>
+                                        <th>No.Kar </th>
+                                        <th>Nama</th>
+                                        <th>SO</th>
+                                        <th>Item No</th>
+                                        <th>Item Desc</th>
+                                        <th>POC</th>
+                                        <th>POC Status</th>
+                                        <th>VIB</th>
+                                        <th>VIB Status</th>
+                                        <th>RUNOUT</th>
+                                        <th>RUNOUT Status</th>
+                                        <th>Thickness</th>
+                                        <th>Thickness Status</th>
+                                        <th>Top Width</th>
+                                        <th>Top Width status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination">
+                            <button id="prev-page">Previous</button>
+                            <span id="page-number">Page {{ currentPageNumber }}</span>
+                            <button id="next-page">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+{% comment %}
+<script>
+    document.getElementById('id_username').value = 'test'
+    document.getElementById('id_password').value = 'testing@123'
+</script> {% endcomment %}
+<!-- Plugins JS Ends-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<script src="{% static 'assets/js/chart/apex-chart/apex-chart.js' %}"></script>
+<script src="{% static 'assets/js/chart/apex-chart/stock-prices.js' %}"></script>
+<script src="{% static 'assets/js/chart/apex-chart/chart-custom.js' %}"></script>
+<script>
+  $(document).ready(function() {
+      $('#id_computer_user').select2();
+      $('#id_ip').select2();
+
+ // column chart
+ var options3 = {
+    chart: {
+        height: 350,
+        width: 1000,
+        type: 'bar',
+        toolbar:{
+          show: false
+        }
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,
+            endingShape: 'rounded',
+            columnWidth: '55%',
+        },
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+    },
+    series: [{
+        name: 'Akumulasi / Bulan',
+        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    }, {
+        name: 'QTY / Day',
+        data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+    }],
+    xaxis: {
+        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+    },
+    yaxis: {
+        title: {
+            text: 'Akumulasi & Total'
+        }
+    },
+    fill: {
+        opacity: 1
+
+    },
+    tooltip: {
+        y: {
+            formatter: function (val) {
+                return " " + val + " Belt"
+            }
+        }
+    },
+    colors:[ WingoAdminConfig.primary , WingoAdminConfig.secondary , '#51bb25']
+}
+
+var chart3 = new ApexCharts(
+    document.querySelector("#column-chartT"),
+    options3
+);
+
+chart3.render();
+
+
+function formatDate(date) {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        return new Date(date).toLocaleDateString('en-GB', options).replace(/\//g, '-');
+    }
+
+    var currentPageNumber = 1; // Initialize with the first page
+    var hasNextPage = true;    // Initially assuming there's a next page
+
+//jadi ini akan menjadi function ajax yang akan dibuat 
+$('#filter-button').on('click', function() {
+    var startDate = $('#start-date').val();
+    var endDate = $('#end-date').val();
+    var shift1 = $('#shift-1').is(':checked');
+    var shift3 = $('#shift-3').is(':checked');
+    var soNumber = $('#so-number-search').val(); // Get the SO number input value
+
+    filterTable(startDate, endDate, shift1, shift3, soNumber, currentPageNumber);
+});
+
+function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
+    $.ajax({
+        url: '{% url "production_app:report_poc_vl_filter_table_data_ajax" %}',
+        data: {
+            start_date: startDate,
+            end_date: endDate,
+            shift_1: shift1,
+            shift_2: shift3,
+            so_number: soNumber,
+            page: pageNumber,
+        },
+        success: function(response) {
+            var tableBody = $('#table-body');
+            tableBody.empty(); // Clear the current table content
+
+            $.each(response.data, function(index, item) {
+                // Format the created_at date
+                var formattedDate = formatDate(item.created_at);
+                // Extract the part of the SO number before the hyphen
+                var soNumber = item.sono.split('-')[0];
+                // Define the classes for "OK" and "NG" status
+                var okClass = 'status-ok';
+                var ngClass = 'status-ng';
+                // Define a function to generate the status cell HTML
+                function getStatusCell(status) {
+                    return '<td class="' + (status ? okClass : ngClass) + '">' + (status ? 'OK' : 'NG') + '</td>';
+                }
+                // Append each row to the table body
+                var row = '<tr>' +
+                    '<td>' + formattedDate + '</td>' +
+                    '<td>' + item.shift + '</td>' +
+                    '<td>' + item.nokar + '</td>' +
+                    '<td>' + item.nama + '</td>' +
+                    '<td>' + soNumber + '</td>' +
+                    '<td>' + item.itemno + '</td>' +
+                    '<td>' + item.itemdesc + '</td>' +
+                    '<td>' + item.poc + '</td>' +
+                    getStatusCell(item.pocStatus) +
+                    '<td>' + item.vib + '</td>' +
+                    getStatusCell(item.vibStatus) +
+                    '<td>' + item.runout + '</td>' +
+                    getStatusCell(item.runoutStatus) +
+                    '<td>' + item.thickness + '</td>' +
+                    getStatusCell(item.thicknessStatus) +
+                    '<td>' + item.topWidth + '</td>' +
+                    getStatusCell(item.topWidthStatus) +
+                    '</tr>';
+                tableBody.append(row);
+            });
+
+            // Update pagination controls based on response.has_next
+        }
+    });
+    // console.log(shift3)
+}
+
+    // Automatically update table content every 5 seconds
+    setInterval(function () {
+        var startDate = $('#start-date').val();
+        var endDate = $('#end-date').val();
+        var shift1 = $('#shift-1').is(':checked') ? true : false;
+        var shift3 = $('#shift-3').is(':checked') ? true : false;
+        var soNumber = $('#so-number-search').val(); // Get the SO number input value
+        // console.log(shift3)
+        filterTable(startDate, endDate, shift1, shift3, soNumber, currentPageNumber);
+    }, 1000);
+
+
+// Event listener for updating the table periodically
+// $('#update-button').on('click', function() {
+//     // Call updateTable to refresh the table content without filtering
+//     updateTable(currentPageNumber);
+// });
+//ini end dari fungsi ajax yang akan dibuat
+    // Event listener for previous page button
+    $('#prev-page').on('click', function() {
+        if (currentPageNumber > 1) {
+            currentPageNumber--;
+        var startDate = $('#start-date').val();
+        var endDate = $('#end-date').val();
+        var shift1 = $('#shift-1').is(':checked');
+        var shift3 = $('#shift-3').is(':checked');
+        var soNumber = $('#so-number-search').val(); // Get the SO number input value
+        filterTable(startDate, endDate, shift1, shift3, soNumber, currentPageNumber);
+        }
+    });
+
+    // Event listener for next page button
+    $('#next-page').on('click', function() {
+        if (hasNextPage) {
+        currentPageNumber++;
+        var startDate = $('#start-date').val();
+        var endDate = $('#end-date').val();
+        var shift1 = $('#shift-1').is(':checked');
+        var shift3 = $('#shift-3').is(':checked');
+        var soNumber = $('#so-number-search').val(); // Get the SO number input value
+        filterTable(startDate, endDate, shift1, shift3, soNumber,currentPageNumber);
+        }
+    });
+  });
+
+  
+
+//===========================================================================================================================
+ 
+//===========================================================================================================================
+
+//===========================================================================================================================
+</script>
+<script>
+// Add event listeners for page numbers here
+</script>
+
+
+
+{% endblock scriptcontent %}

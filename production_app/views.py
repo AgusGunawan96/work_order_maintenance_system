@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.db import connections
 from django.contrib.auth.models import User, Group
 from production_app.models import POCVLRecord, masterTagVL
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -51,3 +52,116 @@ def insert_plc_database(request, Username, soNo, itemNo, poc, pocStatus, vib, vi
     object_record.save()
     return HttpResponse('True')
 
+def report_poc_vl_index(request):
+    reports_poc_vl = POCVLRecord.objects.all()
+    context = {
+        'reports'              : reports_poc_vl,
+    }
+    return render(request, 'production_app/pocvl_report_index.html', context )
+
+def report_poc_vl_filter_table_data_ajax(request):
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    shift1 = request.GET.get('shift_1')
+    shift3 = request.GET.get('shift_2')
+    so_number = request.GET.get('so_number') # Get the SO number parameter
+    # Log the values of shift1 and shift3
+    # Modify your queryset based on the filtering parameters
+    queryset = POCVLRecord.objects.order_by('-created_at')
+
+    if start_date:
+        queryset = queryset.filter(created_at__gte=start_date)
+        print("created_at__gte:", start_date)
+    if end_date:
+        queryset = queryset.filter(created_at__lte=end_date)
+    if shift1 == "true":
+        queryset = queryset.filter(shift=1)
+        print("Shift1:", shift1)
+    if shift3 == "true":
+        queryset = queryset.filter(shift=3)
+        print("Shift3:", shift3)
+
+    if so_number: # Apply the SO number filter if provided
+        queryset = queryset.filter(so_no__icontains=so_number)
+
+    page_number = request.GET.get('page')
+    item_per_page = 10 # ini untuk mengetahui berapa banyak yang akan kita akan paginate 
+    paginator = Paginator(queryset,item_per_page)
+    page_obj = paginator.get_page(page_number)
+
+
+    data = [{'shift': item.shift, 
+             'nokar': item.user.username, 
+             'nama': item.user.first_name +" "+ item.user.last_name, 
+             'sono': item.so_no, 
+             'itemno': item.item_no, 
+             'itemdesc': item.item_desc, 
+             'poc': item.poc, 
+             'pocStatus': item.poc_status, 
+             'vib': item.vib, 
+             'vibStatus': item.vib_status, 
+             'runout': item.run_out, 
+             'runoutStatus': item.run_out_status, 
+             'thickness': item.thickness, 
+             'thicknessStatus': item.thickness_status, 
+             'topWidth': item.top_width, 
+             'topWidthStatus': item.top_width_status, 
+             'created_at': item.created_at} for item in page_obj]
+    return JsonResponse({'data': data, 'has_next': page_obj.has_next()})
+
+# def report_poc_vl_get_table_data_ajax(request):
+#     page_number = request.GET.get('page')
+#     item_per_page = 10 # ini untuk mengetahui berapa banyak yang akan kita akan paginate 
+#     queryset = POCVLRecord.objects.order_by('-created_at')
+#     paginator = Paginator(queryset,item_per_page)
+#     page_obj = paginator.get_page(page_number)
+
+
+#     data = [{'shift': item.shift, 
+#              'nokar': item.user.username, 
+#              'nama': item.user.first_name +" "+ item.user.last_name, 
+#              'sono': item.so_no, 
+#              'itemno': item.item_no, 
+#              'itemdesc': item.item_desc, 
+#              'poc': item.poc, 
+#              'pocStatus': item.poc_status, 
+#              'vib': item.vib, 
+#              'vibStatus': item.vib_status, 
+#              'runout': item.run_out, 
+#              'runoutStatus': item.run_out_status, 
+#              'thickness': item.thickness, 
+#              'thicknessStatus': item.thickness_status, 
+#              'topWidth': item.top_width, 
+#              'topWidthStatus': item.top_width_status, 
+#              'created_at': item.created_at} for item in page_obj]
+#     return JsonResponse({'data': data, 'has_next': page_obj.has_next()})
+
+
+
+# Shift 
+# No. Kar 
+
+
+
+
+# so_no
+# center_distance
+# weight_kg
+# weight_n
+# shift
+
+# Nama
+# SO
+# Item No 
+# Item Desc 
+# POC 
+# POC Status 
+# VIB 
+# VIB Status 
+# RUNOUT 
+# RUNOUT Status 
+# Thickness 
+# Thickness Status
+# Top Width 
+# Top Width status 
+# created at 
