@@ -90,14 +90,30 @@
                 <div class="card-header pb-0"></div>
                 <div class="row">
                   <div class="col-sm-6">  
-
                     <div class="col-sm-12 col-xl-12 box-col-12">
-
                           <div class="card-body">
                             <div id="column-chartT"></div>
                           </div>
                     </div>
+                  </div>
+                  <div class="col-sm-6">  
+                    <div class="col-sm-12 col-xl-12 box-col-12">
+                          <div class="card-body">
+                            <table class="table-bordered table-xs table-striped" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Item No</th>
+                                        <th>Qty. So </th>
+                                        <th>QTY. PCS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body-summary">
 
+                                </tbody>
+                            </table>
+                          </div>
+                    </div>
                   </div>
                 </div>
             </div>
@@ -258,7 +274,9 @@ function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
         },
         success: function(response) {
             var tableBody = $('#table-body');
+            var tableBodySummary = $('#table-body-summary')
             tableBody.empty(); // Clear the current table content
+            tableBodySummary.empty();
 
             $.each(response.data, function(index, item) {
                 // Format the created_at date
@@ -296,6 +314,46 @@ function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
                 
             });
 
+            var tableBodySummary = $('#table-body-summary');
+
+// Create an array of objects containing the summarized data
+var summaryData = response.data.reduce(function(acc, item) {
+    var user = item.nama;
+    var itemNo = item.itemno;
+    var soNumber = item.sono.split('-')[0];
+    
+    var existingItem = acc.find(function(summaryItem) {
+        return summaryItem.item_nama === user && summaryItem.Item_No === itemNo;
+    });
+
+    if (existingItem) {
+        existingItem.countSO.add(soNumber);
+        existingItem.countQty++;
+    } else {
+        acc.push({
+            item_nama: user,
+            Item_No: itemNo,
+            countSO: new Set([soNumber]),
+            countQty: 1
+        });
+    }
+
+    return acc;
+}, []);
+
+// Populate the summarized table
+tableBodySummary.empty(); // Clear the current table content
+
+summaryData.forEach(function(item) {
+    var row = '<tr>' +
+        '<td>' + item.item_nama + '</td>' +
+        '<td>' + item.Item_No + '</td>' +
+        '<td>' + item.countSO.size + '</td>' +
+        '<td>' + item.countQty + '</td>' +
+        '</tr>';
+    tableBodySummary.append(row);
+});
+
             var uniqueCategoryCounts = new Map(); // Create a map to store counts of unique categories
             var uniqueSoNumberCounts = new Map(); // Create a map to store counts of unique SO numbers
             var userCounts = new Map(); // Create a map to store user counts
@@ -318,17 +376,16 @@ function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
                 }
             
                 // Update the user count
-                var user = item.user; // Replace 'user' with the actual property name
+                var user = item.nama; // Replace 'user' with the actual property name
                 if (userCounts.has(user)) {
                     userCounts.set(user, userCounts.get(user) + 1);
                 } else {
                     userCounts.set(user, 1);
                 }
-
-                
             });
             var distinctCategories = Array.from(uniqueCategoryCounts.keys());
-            // console.log(distinctCategories[0])
+            // var distinctItemNo = Array.from(itemNoCounts.keys());
+            
             
             var seriesDataSO = distinctCategories.map(function(category) {
                 var soNumber = category.split('-')[0];
@@ -338,11 +395,19 @@ function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
             var seriesDataQTY = distinctCategories.map(function(category) {
                 return uniqueCategoryCounts.get(category) || 0;
             });
+
             
+
+
             // Create an array of objects containing quantity and distinct SO count
             var quantitySoCounts = seriesDataQTY.map(function(qtyCount, index) {
                 var uniqueSoNumbers = new Set(); // Use a Set to store unique SO numbers for each user
                 var user = distinctCategories[index]; // Assuming the user is stored in response.data
+                // jadi disini akan ada fungsi tablenya 
+                                // Append each row to the table body
+
+            
+                // disini akan selesai fungsi untuk menambahakn tablenya
                 response.data.forEach(function(item) {
                 if (item.nama === user) {
                     var soNumber = item.sono.split('-')[0];
@@ -359,7 +424,6 @@ function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
             });
 
 
-            
             // Modify the series configuration to include the quantitySoCounts data
             var seriesConfiguration = [
                 {
@@ -383,7 +447,7 @@ function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
             var options3 = {
                 chart: {
                     height: 350,
-                    width: 700,
+                    width: 500,
                     type: 'bar',
                     toolbar:{
                       show: true
@@ -478,13 +542,6 @@ $('#start-date').on('change', function() {
     }
 });
 
-
-
-// Event listener for updating the table periodically
-// $('#update-button').on('click', function() {
-//     // Call updateTable to refresh the table content without filtering
-//     updateTable(currentPageNumber);
-// });
 //ini end dari fungsi ajax yang akan dibuat
     // Event listener for previous page button
     $('#prev-page').on('click', function() {
