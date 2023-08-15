@@ -85,7 +85,7 @@ def report_poc_vl_filter_table_data_ajax(request):
         queryset = queryset.filter(so_no__icontains=so_number)
 
     page_number = request.GET.get('page')
-    item_per_page = 10 # ini untuk mengetahui berapa banyak yang akan kita akan paginate 
+    item_per_page = 9999999 # ini untuk mengetahui berapa banyak yang akan kita akan paginate 
     paginator = Paginator(queryset,item_per_page)
     page_obj = paginator.get_page(page_number)
 

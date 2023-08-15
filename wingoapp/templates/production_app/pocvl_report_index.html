@@ -19,7 +19,6 @@
 {% endblock css %}
 {% block content %}
 <div class="row">
-
     <div class="card-body col-xl-4">
         <div class="card manage-invoice-sec">
             <div class="card-header pb-0">
@@ -30,7 +29,6 @@
                 <div class="card-header pb-0"></div>
                 <div class="row">
                     {% comment %} NANTI DISINI FORM START  {% endcomment %}
-
                     <div class="col-sm-12"><h4>Date</h4></div>
                     <div class="mb-3 col-xl-6 row">
                         <label class="col-sm-3 col-form-label">Start Date</label>
@@ -74,7 +72,7 @@
                     
 
 
-                    {% comment %} <button class="btn-primary submit col-sm-4" type="submit">Download Excel</button> {% endcomment %}
+                    <button id="export-csv-button" class="btn-primary submit col-sm-4" type="submit">Download Excel</button>
 
                     {% comment %} NANTI DISINI FORM END  {% endcomment %}
                 </div>
@@ -106,6 +104,7 @@
         </div>
     </div>
 </div>
+
     <div class="card-body col-xl-12">
         <div class="card manage-invoice-sec">
             <div class="card-header pb-0">
@@ -143,11 +142,11 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="pagination">
+                        <!-- <div class="pagination">
                             <button id="prev-page">Previous</button>
                             <span id="page-number">Page {{ currentPageNumber }}</span>
                             <button id="next-page">Next</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -173,70 +172,58 @@
 <script src="{% static 'assets/js/chart/apex-chart/stock-prices.js' %}"></script>
 <script src="{% static 'assets/js/chart/apex-chart/chart-custom.js' %}"></script>
 <script>
+   function exportToCSV() {
+    // Retrieve the table data
+    var table = document.querySelector('.table-bordered');
+    var csvContent = '';
+    
+    // Get the table header row
+    var headerRow = table.querySelector('thead tr');
+    var headerData = [];
+    var headerColumns = headerRow.querySelectorAll('th');
+    headerColumns.forEach(function(headerColumn) {
+        headerData.push('"' + headerColumn.textContent.trim() + '"');
+    });
+    csvContent += headerData.join(',') + '\n';
+
+    // Get the table body rows
+    var rows = table.querySelectorAll('tbody tr');
+    rows.forEach(function(row) {
+        var rowData = [];
+        var columns = row.querySelectorAll('td');
+        columns.forEach(function(column) {
+            rowData.push('"' + column.textContent.trim() + '"');
+        });
+        csvContent += rowData.join(',') + '\n';
+    });
+
+    // Create a Blob with the CSV content
+    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    // Save the CSV file
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'table_data.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+
+</script>
+<script>
   $(document).ready(function() {
       $('#id_computer_user').select2();
       $('#id_ip').select2();
-
+      $('#export-csv-button').on('click', function() {
+        exportToCSV();
+    });
+    $('#shift-1').prop('disabled', true);
+        $('#shift-3').prop('disabled', true);
+        $('#export-csv-button').prop('disabled', true);
+        $('#so-number-search').prop('disabled', true);
  // column chart
- var options3 = {
-    chart: {
-        height: 350,
-        width: 1000,
-        type: 'bar',
-        toolbar:{
-          show: false
-        }
-    },
-    plotOptions: {
-        bar: {
-            horizontal: false,
-            endingShape: 'rounded',
-            columnWidth: '55%',
-        },
-    },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent']
-    },
-    series: [{
-        name: 'Akumulasi / Bulan',
-        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-    }, {
-        name: 'QTY / Day',
-        data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-    }],
-    xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-    },
-    yaxis: {
-        title: {
-            text: 'Akumulasi & Total'
-        }
-    },
-    fill: {
-        opacity: 1
 
-    },
-    tooltip: {
-        y: {
-            formatter: function (val) {
-                return " " + val + " Belt"
-            }
-        }
-    },
-    colors:[ WingoAdminConfig.primary , WingoAdminConfig.secondary , '#51bb25']
-}
-
-var chart3 = new ApexCharts(
-    document.querySelector("#column-chartT"),
-    options3
-);
-
-chart3.render();
 
 
 function formatDate(date) {
@@ -306,24 +293,191 @@ function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
                     getStatusCell(item.topWidthStatus) +
                     '</tr>';
                 tableBody.append(row);
+                
             });
 
+            var uniqueCategoryCounts = new Map(); // Create a map to store counts of unique categories
+            var uniqueSoNumberCounts = new Map(); // Create a map to store counts of unique SO numbers
+            var userCounts = new Map(); // Create a map to store user counts
+
+            response.data.forEach(function(item) {
+                // Update the count for this category ('nama')
+                var category = item.nama;
+                if (uniqueCategoryCounts.has(category)) {
+                    uniqueCategoryCounts.set(category, uniqueCategoryCounts.get(category) + 1);
+                } else {
+                    uniqueCategoryCounts.set(category, 1);
+                }
+            
+                // Update the count for this SO number
+                var soNumber = item.sono.split('-')[0];
+                if (uniqueSoNumberCounts.has(soNumber)) {
+                    uniqueSoNumberCounts.set(soNumber, uniqueSoNumberCounts.get(soNumber) + 1);
+                } else {
+                    uniqueSoNumberCounts.set(soNumber, 1);
+                }
+            
+                // Update the user count
+                var user = item.user; // Replace 'user' with the actual property name
+                if (userCounts.has(user)) {
+                    userCounts.set(user, userCounts.get(user) + 1);
+                } else {
+                    userCounts.set(user, 1);
+                }
+
+                
+            });
+            var distinctCategories = Array.from(uniqueCategoryCounts.keys());
+            // console.log(distinctCategories[0])
+            
+            var seriesDataSO = distinctCategories.map(function(category) {
+                var soNumber = category.split('-')[0];
+                var soCount = uniqueSoNumberCounts.get(soNumber) || 0;
+                return soCount;
+            });
+            var seriesDataQTY = distinctCategories.map(function(category) {
+                return uniqueCategoryCounts.get(category) || 0;
+            });
+            
+            // Create an array of objects containing quantity and distinct SO count
+            var quantitySoCounts = seriesDataQTY.map(function(qtyCount, index) {
+                var uniqueSoNumbers = new Set(); // Use a Set to store unique SO numbers for each user
+                var user = distinctCategories[index]; // Assuming the user is stored in response.data
+                response.data.forEach(function(item) {
+                if (item.nama === user) {
+                    var soNumber = item.sono.split('-')[0];
+                    if (!uniqueSoNumbers.has(soNumber)) {
+                        uniqueSoNumbers.add(soNumber);
+                    }
+                }
+            });
+
+                return {
+                    qtyCount: qtyCount,
+                    soCount: uniqueSoNumbers.size // Use the Set's size as the distinct SO count
+                };
+            });
+
+
+            
+            // Modify the series configuration to include the quantitySoCounts data
+            var seriesConfiguration = [
+                {
+                    name: 'SO',
+                    data: quantitySoCounts.map(function(item) {
+                        return item.soCount;
+                    })
+                },
+                {
+                    name: 'QTY',
+                    data: quantitySoCounts.map(function(item) {
+                        return item.qtyCount;
+                    })
+                }
+            ];
+
+            // console.log(quantitySoCounts); // This will contain the combined data of quantity and distinct SO count
+
+
             // Update pagination controls based on response.has_next
+            var options3 = {
+                chart: {
+                    height: 350,
+                    width: 700,
+                    type: 'bar',
+                    toolbar:{
+                      show: true
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        endingShape: 'rounded',
+                        columnWidth: '55%',
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                series: seriesConfiguration,
+                xaxis: {
+                    categories: distinctCategories,
+                },
+                yaxis: {
+                    title: {
+                        text: 'Jumlah'
+                    }
+                },
+                fill: {
+                    opacity: 1
+            
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return " " + val + " "
+                        }
+                    }
+                },
+                colors:[ WingoAdminConfig.primary , WingoAdminConfig.secondary , '#51bb25']
+            }
+
+            $("#column-chartT").empty();
+
+            var chart3 = new ApexCharts(
+                document.querySelector("#column-chartT"),
+                options3
+            );
+            
+
+
+
+            chart3.render();
         }
     });
     // console.log(shift3)
 }
 
-    // Automatically update table content every 5 seconds
-    setInterval(function () {
-        var startDate = $('#start-date').val();
+var intervalId; // Store the interval ID
+
+// Event listener for the start date input change
+$('#start-date').on('change', function() {
+    var startDate = $(this).val();
+    
+    // Clear the previous interval if it exists
+    clearInterval(intervalId);
+    
+    // Start the interval only if the start date is not empty
+    if (startDate) {
+        $('#shift-1').prop('disabled', false);
+        $('#shift-3').prop('disabled', false);
+        $('#export-csv-button').prop('disabled', false);
+        $('#so-number-search').prop('disabled', false);
         var endDate = $('#end-date').val();
-        var shift1 = $('#shift-1').is(':checked') ? true : false;
-        var shift3 = $('#shift-3').is(':checked') ? true : false;
-        var soNumber = $('#so-number-search').val(); // Get the SO number input value
-        // console.log(shift3)
-        filterTable(startDate, endDate, shift1, shift3, soNumber, currentPageNumber);
-    }, 1000);
+            var shift1 = $('#shift-1').is(':checked') ? true : false;
+            var shift3 = $('#shift-3').is(':checked') ? true : false;
+            var soNumber = $('#so-number-search').val(); // Get the SO number input value
+            filterTable(startDate, endDate, shift1, shift3, soNumber, currentPageNumber);
+        intervalId = setInterval(function () {
+            var endDate = $('#end-date').val();
+            var shift1 = $('#shift-1').is(':checked') ? true : false;
+            var shift3 = $('#shift-3').is(':checked') ? true : false;
+            var soNumber = $('#so-number-search').val(); // Get the SO number input value
+            filterTable(startDate, endDate, shift1, shift3, soNumber, currentPageNumber);
+        }, 5000);
+    }else{
+        $('#shift-1').prop('disabled', true);
+        $('#shift-3').prop('disabled', true);
+        $('#export-csv-button').prop('disabled', true);
+        $('#so-number-search').prop('disabled', true);
+    }
+});
+
 
 
 // Event listener for updating the table periodically
