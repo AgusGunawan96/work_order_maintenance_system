@@ -4,6 +4,8 @@ from django.db import connections
 from django.contrib.auth.models import User, Group
 from production_app.models import POCVLRecord, masterTagVL
 from django.core.paginator import Paginator
+from django.db.models import F, OuterRef, Subquery, Value, CharField, Case, When, Value, IntegerField
+from django.db.models.functions import Length
 # Create your views here.
 
 
@@ -64,50 +66,123 @@ def report_poc_vl_filter_table_data_ajax(request):
     end_date = request.GET.get('end_date')
     shift1 = request.GET.get('shift_1')
     shift3 = request.GET.get('shift_2')
-    so_number = request.GET.get('so_number') # Get the SO number parameter
-    # Log the values of shift1 and shift3
-    # Modify your queryset based on the filtering parameters
+    so_number = request.GET.get('so_number')
+
     queryset = POCVLRecord.objects.order_by('-created_at')
 
     if start_date:
         queryset = queryset.filter(created_at__gte=start_date)
-        print("created_at__gte:", start_date)
     if end_date:
         queryset = queryset.filter(created_at__lte=end_date)
     if shift1 == "true":
         queryset = queryset.filter(shift=1)
-        print("Shift1:", shift1)
     if shift3 == "true":
         queryset = queryset.filter(shift=3)
-        print("Shift3:", shift3)
-
-    if so_number: # Apply the SO number filter if provided
+    
+    if so_number:
         queryset = queryset.filter(so_no__icontains=so_number)
+    
+    # Calculate item_length using Subquery and annotate it
+    queryset = queryset.annotate(
+        item_length=F('poc') - Subquery(
+            masterTagVL.objects.filter(item_no=OuterRef('item_no')).values('poc')[:1]
+        )
+    )
+
+    # Define the actualLength calculation using Case and When expressions
+    actual_length_calculation = Case(
+        When(item_length__range=[-17.49, -12.5], then=Value(-15)),
+        When(item_length__range=[-12.49, -7.5], then=Value(-10)),
+        When(item_length__range=[-7.49, -2.5], then=Value(-5)),
+        When(item_length__range=[-2.49, 2.5], then=Value(0)),
+        When(item_length__range=[2.51, 7.5], then=Value(5)),
+        When(item_length__range=[7.51, 12.5], then=Value(10)),
+        When(item_length__range=[12.51, 17.5], then=Value(15)),
+        default=Value(0),  # Default value if none of the conditions match
+        output_field=IntegerField()
+    )
+    
+    # Apply the actualLength calculation to the queryset
+    queryset = queryset.annotate(
+        item_length=actual_length_calculation
+    )
 
     page_number = request.GET.get('page')
-    item_per_page = 9999999 # ini untuk mengetahui berapa banyak yang akan kita akan paginate 
-    paginator = Paginator(queryset,item_per_page)
+    items_per_page = 9999999
+    paginator = Paginator(queryset, items_per_page)
     page_obj = paginator.get_page(page_number)
 
-
-    data = [{'shift': item.shift, 
-             'nokar': item.user.username, 
-             'nama': item.user.first_name +" "+ item.user.last_name, 
-             'sono': item.so_no, 
-             'itemno': item.item_no, 
-             'itemdesc': item.item_desc, 
-             'poc': item.poc, 
-             'pocStatus': item.poc_status, 
-             'vib': item.vib, 
-             'vibStatus': item.vib_status, 
-             'runout': item.run_out, 
-             'runoutStatus': item.run_out_status, 
-             'thickness': item.thickness, 
-             'thicknessStatus': item.thickness_status, 
-             'topWidth': item.top_width, 
-             'topWidthStatus': item.top_width_status, 
+    data = [{'shift': item.shift,
+             'nokar': item.user.username,
+             'nama': item.user.first_name + " " + item.user.last_name,
+             'sono': item.so_no,
+             'itemno': item.item_no,
+             'itemdesc': item.item_desc,
+             'poc': item.poc,  # Use the original value of poc
+             'pocStatus': item.poc_status,
+             'vib': item.vib,
+             'vibStatus': item.vib_status,
+             'runout': item.run_out,
+             'runoutStatus': item.run_out_status,
+             'thickness': item.thickness,
+             'thicknessStatus': item.thickness_status,
+             'topWidth': item.top_width,
+             'topWidthStatus': item.top_width_status,
+             'length': item.item_length,  # Use the calculated item_length field
              'created_at': item.created_at} for item in page_obj]
+
     return JsonResponse({'data': data, 'has_next': page_obj.has_next()})
+
+
+# def report_poc_vl_filter_table_data_ajax(request):
+#     start_date = request.GET.get('start_date')
+#     end_date = request.GET.get('end_date')
+#     shift1 = request.GET.get('shift_1')
+#     shift3 = request.GET.get('shift_2')
+#     so_number = request.GET.get('so_number') # Get the SO number parameter
+#     # Log the values of shift1 and shift3
+#     # Modify your queryset based on the filtering parameters
+#     queryset = POCVLRecord.objects.order_by('-created_at')
+
+#     if start_date:
+#         queryset = queryset.filter(created_at__gte=start_date)
+#         print("created_at__gte:", start_date)
+#     if end_date:
+#         queryset = queryset.filter(created_at__lte=end_date)
+#     if shift1 == "true":
+#         queryset = queryset.filter(shift=1)
+#         print("Shift1:", shift1)
+#     if shift3 == "true":
+#         queryset = queryset.filter(shift=3)
+#         print("Shift3:", shift3)
+
+#     if so_number: # Apply the SO number filter if provided
+#         queryset = queryset.filter(so_no__icontains=so_number)
+
+#     page_number = request.GET.get('page')
+#     item_per_page = 9999999 # ini untuk mengetahui berapa banyak yang akan kita akan paginate 
+#     paginator = Paginator(queryset,item_per_page)
+#     page_obj = paginator.get_page(page_number)
+
+
+#     data = [{'shift': item.shift, 
+#              'nokar': item.user.username, 
+#              'nama': item.user.first_name +" "+ item.user.last_name, 
+#              'sono': item.so_no, 
+#              'itemno': item.item_no, 
+#              'itemdesc': item.item_desc, 
+#              'poc': item.poc, 
+#              'pocStatus': item.poc_status, 
+#              'vib': item.vib, 
+#              'vibStatus': item.vib_status, 
+#              'runout': item.run_out, 
+#              'runoutStatus': item.run_out_status, 
+#              'thickness': item.thickness, 
+#              'thicknessStatus': item.thickness_status, 
+#              'topWidth': item.top_width, 
+#              'topWidthStatus': item.top_width_status, 
+#              'created_at': item.created_at} for item in page_obj]
+#     return JsonResponse({'data': data, 'has_next': page_obj.has_next()})
 
 # def report_poc_vl_get_table_data_ajax(request):
 #     page_number = request.GET.get('page')

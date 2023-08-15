@@ -99,7 +99,7 @@
                   <div class="col-sm-6">  
                     <div class="col-sm-12 col-xl-12 box-col-12">
                           <div class="card-body">
-                            <table class="table-bordered table-xs table-striped" style="width: 100%;">
+                            <table id="table-kedua" class="table-bordered table-xs table-striped" style="width: 100%;">
                                 <thead>
                                     <tr>
                                         <th>Nama</th>
@@ -131,7 +131,7 @@
                 <div class="manage-invoice-table">
                     <div class="item">
                         <div class="table-responsive">
-                            <table class="table-bordered table-xs table-striped" style="width: 100%;">
+                            <table id="table-utama" class="table-bordered table-xs table-striped" style="width: 100%;">
                                 <thead>
                                     <tr>
                                         <th>created at</th>
@@ -151,6 +151,7 @@
                                         <th>Thickness Status</th>
                                         <th>Top Width</th>
                                         <th>Top Width status</th>
+                                        <th>length</th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-body">
@@ -188,42 +189,51 @@
 <script src="{% static 'assets/js/chart/apex-chart/stock-prices.js' %}"></script>
 <script src="{% static 'assets/js/chart/apex-chart/chart-custom.js' %}"></script>
 <script>
-   function exportToCSV() {
-    // Retrieve the table data
-    var table = document.querySelector('.table-bordered');
-    var csvContent = '';
-    
-    // Get the table header row
-    var headerRow = table.querySelector('thead tr');
-    var headerData = [];
-    var headerColumns = headerRow.querySelectorAll('th');
-    headerColumns.forEach(function(headerColumn) {
-        headerData.push('"' + headerColumn.textContent.trim() + '"');
-    });
-    csvContent += headerData.join(',') + '\n';
+function exportToCSV() {
+    // Define the tables and their IDs
+    var tables = [
+        { id: 'table-utama', sheetName: 'Sheet1' },
+    ];
 
-    // Get the table body rows
-    var rows = table.querySelectorAll('tbody tr');
-    rows.forEach(function(row) {
-        var rowData = [];
-        var columns = row.querySelectorAll('td');
-        columns.forEach(function(column) {
-            rowData.push('"' + column.textContent.trim() + '"');
+    // Create a Blob for each table's CSV content
+    var blobs = tables.map(function(tableInfo) {
+        var table = document.querySelector('#' + tableInfo.id);
+        var csvContent = '';
+
+        var headerRow = table.querySelector('thead tr');
+        var headerData = [];
+        var headerColumns = headerRow.querySelectorAll('th');
+        headerColumns.forEach(function(headerColumn) {
+            headerData.push('"' + headerColumn.textContent.trim() + '"');
         });
-        csvContent += rowData.join(',') + '\n';
+        csvContent += headerData.join(',') + '\n';
+
+        var rows = table.querySelectorAll('tbody tr');
+        rows.forEach(function(row) {
+            var rowData = [];
+            var columns = row.querySelectorAll('td');
+            columns.forEach(function(column) {
+                rowData.push('"' + column.textContent.trim() + '"');
+            });
+            csvContent += rowData.join(',') + '\n';
+        });
+
+        return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     });
 
-    // Create a Blob with the CSV content
-    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-
-    // Save the CSV file
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'table_data.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    // Create an anchor element for each Blob and trigger download
+    blobs.forEach(function(blob, index) {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'pocVLRecord' + (index + 1) + '.csv';
+        a.setAttribute('data-sheetname', tables[index].sheetName);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
 }
+
+
 
 
 </script>
@@ -309,6 +319,7 @@ function filterTable(startDate, endDate, shift1, shift3, soNumber, pageNumber) {
                     getStatusCell(item.thicknessStatus) +
                     '<td>' + item.topWidth + '</td>' +
                     getStatusCell(item.topWidthStatus) +
+                    '<td>' + item.length + '</td>' +
                     '</tr>';
                 tableBody.append(row);
                 
