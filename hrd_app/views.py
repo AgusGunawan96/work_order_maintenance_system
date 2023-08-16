@@ -651,7 +651,8 @@ def medical_print_atasan(request, medical_id):
     ip_address = "172.16.202.72"
     name = "EPSON TM-T82 Receipt"
 
-    printer_name = r"\\" + ip_address + "\\" + name
+    # printer_name = r"\\" + ip_address + "\\" + name
+    printer_name = name
 
     try:
         # Open a connection to the printer
