@@ -516,12 +516,79 @@ def UpdateMasterVL(request):
         masterTagVL.objects.bulk_create(creates)
 
     return updates, creates
+
+def UpdateMasterMedical(request):
+    # mari kita check apakah Filesnya di upload atau tidak
+    if 'file' not in request.FILES:
+        return None, None
+    
+    # mari kita dapatkan Upload File  dari yang form sudah ada
+    file = request.FILES['file']
+
+    # Mari kita baca csv file yang sudah ada
+    csv_data = []
+    try:
+        for line in file:
+            csv_data.append(line.decode('utf-8')) 
+    except UnicodeDecodeError:
+        return None, None
+    
+    # Mari kita parse CSV Data
+    reader = csv.reader(csv_data)
+    data = list(reader)
+
+    updates = [] # jadi ini file file yang akan masuk kedalam Update
+    creates = [] # jadi ini file fiel yang akan ke create 
+
+    for username_row, marital_status_row, limit_row, used_row, remain_row, *__ in data:
+        user_row = User.objects.filter(username__icontains=username_row).first()
+        medical = medicalRemain.objects.filter(user=user_row).first()
+        if medical:
+            if(
+            medical.user.username != username_row or
+            medical.marital_status != marital_status_row or
+            medical.limit != limit_row or
+            medical.used != used_row or
+            medical.remain != remain_row ):
+                medical.user = user_row 
+                medical.marital_status = marital_status_row
+                medical.limit = limit_row
+                medical.used = used_row
+                medical.remain = remain_row
+                updates.append(medical)
+        else:
+            # If the record does not exist, check if the item already exists in the creates list
+            item_exists_in_creates = any(medical.user == user_row for medical in creates)
+            if not item_exists_in_creates:
+                # If the item does not exist in the creates list, append it
+                creates.append(medicalRemain(
+                    user=user_row,
+                    marital_status=marital_status_row,
+                    limit=limit_row,
+                    used=used_row,
+                    remain=remain_row,
+ 
+                ))
+        # Bulk update existing records
+    if updates:
+        medicalRemain.objects.bulk_update(updates, [
+            'marital_status', 'limit', 'used', 'remain',
+        ])
+
+    # Bulk create new records
+    if creates:
+        medicalRemain.objects.bulk_create(creates)
+
+    return updates,creates
+
 # UPDATE END
 
 import os
 
+# VL START 
+
 # UPLOAD START
-def handle_uploaded_medicalAttachment_file(file):
+def handle_uploaded_vlAttachment_file(file):
     # Specify the destination folder within your Django project's directory structure
     destination_folder = os.path.join(os.path.dirname(__file__), 'templates', 'csv')
     # Create the destination folder if it doesn't exist
@@ -543,7 +610,7 @@ def UploadMasterVL(request):
     if request.method == 'POST':
         file = request.FILES.get('file')
         if file:
-            handle_uploaded_medicalAttachment_file(file)
+            handle_uploaded_vlAttachment_file(file)
             updates, creates = UpdateMasterVL(request)
             list_mastertag = masterTagVL.objects.all
             context = {
@@ -583,3 +650,67 @@ def download_csv_mastervl(request):
 
     return response
 # DOWNLOAD END
+
+# VL END 
+
+# MEDICAL START
+
+# UPLOAD START
+def handle_uploaded_medicalAttachment_file(file):
+    # Specify the destination folder within your Django project's directory structure
+    destination_folder = os.path.join(os.path.dirname(__file__), 'templates', 'csv')
+    # Create the destination folder if it doesn't exist
+    os.makedirs(destination_folder, exist_ok=True)
+    
+    # Rename the file to a custom name
+    custom_name = 'updateMasterMedical.csv'  # Provide your desired custom name here
+    
+    # Construct the file path where the uploaded file will be saved with the custom name
+    file_path = os.path.join(destination_folder, custom_name)
+    
+    # Open the destination file in write-binary mode
+    with open(file_path, 'wb') as destination:
+        # Iterate over chunks of the uploaded file and write them to the destination file
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+def UploadMasterMedical(request):
+    if request.method == 'POST':
+        file = request.FILES.get('file')
+        if file:
+            handle_uploaded_medicalAttachment_file(file)
+            updates, creates = UpdateMasterMedical(request)
+            list_mastermedical = medicalRemain.objects.all
+            context = {
+                'list_mastermedicals' : list_mastermedical,
+                'updated_items': updates,
+                'created_items': creates,
+            }
+            return render(request, 'master_app/UploadMasterMedical.html', context)
+    else:
+        list_mastermedical = medicalRemain.objects.all
+        context = {
+            'list_mastermedicals' : list_mastermedical,
+        }
+        return render(request, 'master_app/UploadMasterMedical.html', context)
+    
+# UPLOAD END
+
+# DOWNLOAD START
+def download_csv_mastermedical(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="master_medicals.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['id', 'username', 'marital_status', 'limit', 'used', 'remain'])
+
+    # Replace `YourModel` with the actual model name you are using for Master Tags
+    master_medicals = medicalRemain.objects.all()
+    for tag in master_medicals:
+        if tag.user:
+            writer.writerow([tag.id, tag.user.username, tag.marital_status, tag.limit, tag.used, tag.remain])
+
+    return response
+# DOWNLOAD END
+
+# MEDICAL END

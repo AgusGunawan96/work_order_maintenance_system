@@ -1,0 +1,75 @@
+{% block content %}
+<div class="card-body">
+    <div class="card manage-invoice-sec">
+        <div class="card-header pb-0">
+            <hr>
+            <h1 style="text-align: center;">Master Medical Reimbursement</h1>
+            <form id="uploadForm" action="{% url 'master_app:UploadMasterMedical' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input id="fileInput" type="file" name="file" accept=".csv" required>
+                <button type="submit" value="Upload" class="btn btn-primary">Update</button>
+              </form>
+              <a href="{% url 'master_app:download_csv_mastermedical' %}" class="btn btn-primary">Download CSV</a>
+            <hr>
+            <h2>Updated Items:</h2>
+            <ul>
+                {% for item in updated_items %}
+                <li>{{ item.user.username }} - {{ item.user.first_name }} {{ item.user.last_name }}</li>
+                {% endfor %}
+            </ul>
+            
+            <h2>Created Items:</h2>
+            <ul>
+                {% for item in created_items %}
+                <li>{{ item.user.username }} - {{ item.user.first_name }} {{ item.user.last_name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- Progress bar to show the percentage progress -->
+        <div id="progressBar" style="width: 0%;"></div>
+        <div class="card-body">
+            <div class="manage-invoice-table">
+                <div class="item">
+                    <div class="table-responsive manage-invoice">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">id</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">No. Karyawan</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">name</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">marital_status</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">limit</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">used</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">remain</th>
+                                    <!-- Add inline styles for other table headers -->
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for tag in list_mastermedicals  %}
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ forloop.counter }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.user.username }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.user.first_name }} {{ tag.user.last_name }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.marital_status }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.limit }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.used }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.remain }}</td>
+
+                                    <!-- Add inline styles for other table cells -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<!-- Add this JavaScript to your template -->
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

@@ -45,7 +45,8 @@
         <a data-bs-toggle="modal" data-bs-target="#ModalDownloadAccounting" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-download"></span>Download for Accounting</a>
         <a href="{% url 'hrd_app:medical_train_remain_download' %}" class="btn btn-primary btn-lg"><span class="fa fa-download"></span>Download for Cashback</a>
         <a data-bs-toggle="modal" data-bs-target="#ModalResetRemain" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-reset"></span>Reset Remain and Used</a>
-        <a data-bs-toggle="modal" data-bs-target="#ModalUpdateRemain" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-upload"></span>Update Remain and Used</a>
+        <a href="{% url 'master_app:UploadMasterMedical' %}" class="btn btn-primary btn-lg"><span class="fa fa-upload"></span>Update Remain and Used</a>
+        {% comment %} <a data-bs-toggle="modal" data-bs-target="#ModalUpdateRemain" data-whatever="@mdo" class="btn btn-primary btn-lg"><span class="fa fa-upload"></span>Update Remain and Used</a> {% endcomment %}
         {% endif %}
 
             

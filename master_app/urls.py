@@ -30,7 +30,9 @@ urlpatterns = [
     path('UpdateMasterVL/', views.UpdateMasterVL, name='UpdateMasterVL'),
     path('UpdateRemain/', views.UpdateRemain, name='UpdateRemain'),
     path('UploadMasterVL/', views.UploadMasterVL, name='UploadMasterVL'),
+    path('UploadMasterMedical/', views.UploadMasterMedical, name='UploadMasterMedical'),
     path('download_csv_mastervl/', views.download_csv_mastervl, name='download_csv_mastervl'),
+    path('download_csv_mastermedical/', views.download_csv_mastermedical, name='download_csv_mastermedical'),
     # path('UpdateUpdateUserProfileInfoGenderStatus/', views.UpdateUpdateUserProfileInfoGenderStatus, name='UpdateUpdateUserProfileInfoGenderStatus'),
     # path('UpdateUserProfileInfoTanggalLahir/', views.UpdateUserProfileInfoTanggalLahir, name='UpdateUserProfileInfoTanggalLahir'),
 ]
