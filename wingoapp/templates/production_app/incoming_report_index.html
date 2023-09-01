@@ -1,0 +1,90 @@
+
+{% extends 'starter_kit/other-base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Incoming </title>
+</head>
+<body>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.start_date.label_tag }} {{ form.start_date }}
+    {{ form.end_date.label_tag }} {{ form.end_date }}
+    <button type="submit">Filter</button>
+</form>
+
+<button id="download-csv">Download CSV</button>
+
+<table>
+    <thead>
+      <tr>
+        <th>Prodline</th>
+        <th>No. Pallet</th>
+        <th>Qty Inc</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row.0 }}</td>
+        <td>{{ row.1 }}</td>
+        <td>{{ row.2 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+    
+</body>
+</html>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+{% comment %} <script>
+    document.getElementById('id_username').value = 'test'
+    document.getElementById('id_password').value = 'testing@123'
+</script> {% endcomment %}
+<!-- Plugins JS Ends-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('download-csv').addEventListener('click', function () {
+      // Select the table and iterate through its rows to collect data
+      var table = document.querySelector('table');
+      var rows = table.querySelectorAll('tr');
+      var csvData = [];
+
+      // Iterate through the rows and cells to collect data
+      rows.forEach(function (row) {
+        var rowData = [];
+        var cells = row.querySelectorAll('td');
+        cells.forEach(function (cell) {
+          rowData.push(cell.textContent.trim());
+        });
+        csvData.push(rowData.join(','));
+      });
+
+      // Create a CSV blob and trigger the download
+      var csvContent = csvData.join('\n');
+      var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+      saveAs(blob, 'data.csv');
+    });
+  });
+</script>
+{% endblock scriptcontent %}
+
+
+
+
+
+
+  

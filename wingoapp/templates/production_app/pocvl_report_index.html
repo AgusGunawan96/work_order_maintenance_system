@@ -189,54 +189,57 @@
 <script src="{% static 'assets/js/chart/apex-chart/stock-prices.js' %}"></script>
 <script src="{% static 'assets/js/chart/apex-chart/chart-custom.js' %}"></script>
 <script>
-function exportToCSV() {
-    // Define the tables and their IDs
-    var tables = [
-        { id: 'table-utama', sheetName: 'Sheet1' },
-    ];
-
-    // Create a Blob for each table's CSV content
-    var blobs = tables.map(function(tableInfo) {
-        var table = document.querySelector('#' + tableInfo.id);
-        var csvContent = '';
-
-        var headerRow = table.querySelector('thead tr');
-        var headerData = [];
-        var headerColumns = headerRow.querySelectorAll('th');
-        headerColumns.forEach(function(headerColumn) {
-            headerData.push('"' + headerColumn.textContent.trim() + '"');
-        });
-        csvContent += headerData.join(',') + '\n';
-
-        var rows = table.querySelectorAll('tbody tr');
-        rows.forEach(function(row) {
-            var rowData = [];
-            var columns = row.querySelectorAll('td');
-            columns.forEach(function(column) {
-                rowData.push('"' + column.textContent.trim() + '"');
+    function exportToCSV() {
+        // Define the tables and their IDs
+        var tables = [
+            { id: 'table-utama', sheetName: 'Sheet1' },
+        ];
+    
+        // Create a Blob for each table's CSV content
+        var blobs = tables.map(function(tableInfo) {
+            var table = document.querySelector('#' + tableInfo.id);
+            var csvContent = '';
+    
+            var headerRow = table.querySelector('thead tr');
+            var headerData = [];
+            var headerColumns = headerRow.querySelectorAll('th');
+            headerColumns.forEach(function(headerColumn) {
+                headerData.push('"' + headerColumn.textContent.trim() + '"');
             });
-            csvContent += rowData.join(',') + '\n';
+            csvContent += headerData.join(',') + '\n';
+    
+            var rows = table.querySelectorAll('tbody tr');
+            rows.forEach(function(row) {
+                var rowData = [];
+                var columns = row.querySelectorAll('td');
+                columns.forEach(function(column) {
+                    rowData.push('"' + column.textContent.trim() + '"');
+                });
+                csvContent += rowData.join(',') + '\n';
+            });
+    
+            // Add a custom column value (e.g., "Custom Value") to the last row
+            var customValue = 'FM.QF.VL-78, Eff. Date 27 Maret 2023';
+            var customRowData = [customValue];
+            csvContent += customRowData.join(',') + '\n';
+    
+            return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         });
-
-        return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    });
-
-    // Create an anchor element for each Blob and trigger download
-    blobs.forEach(function(blob, index) {
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'pocVLRecord' + (index + 1) + '.csv';
-        a.setAttribute('data-sheetname', tables[index].sheetName);
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    });
-}
-
-
-
-
-</script>
+    
+        // Create an anchor element for each Blob and trigger download
+        blobs.forEach(function(blob, index) {
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'pocVLRecord' + (index + 1) + '.csv';
+            a.setAttribute('data-sheetname', tables[index].sheetName);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    }
+    </script>
+    
+    
 <script>
   $(document).ready(function() {
       $('#id_computer_user').select2();
