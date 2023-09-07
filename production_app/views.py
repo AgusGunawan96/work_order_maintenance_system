@@ -6,6 +6,13 @@ from production_app.models import POCVLRecord, masterTagVL
 from django.core.paginator import Paginator
 from django.db.models import F, OuterRef, Subquery, Value, CharField, Case, When, Value, IntegerField
 from django.db.models.functions import Length
+from production_app.forms import DateRangeForm
+import jwt
+import time
+from django.template.loader import render_to_string
+from datetime import datetime, timedelta
+from datetime import date
+
 # Create your views here.
 
 
@@ -52,7 +59,7 @@ def insert_plc_database(request, Username, soNo, itemNo, poc, pocStatus, vib, vi
     }
     object_record = POCVLRecord(**data_to_insert)
     object_record.save()
-    return HttpResponse('True')
+    return JsonResponse('True', safe=False)
 
 def report_poc_vl_index(request):
     reports_poc_vl = POCVLRecord.objects.all()
@@ -61,9 +68,6 @@ def report_poc_vl_index(request):
     }
     return render(request, 'production_app/pocvl_report_index.html', context )
 
-import jwt
-import time
-from django.template.loader import render_to_string
 
 def report_finishing_index(request):
     METABASE_SITE_URL = "http://172.16.202.225:3000"
@@ -157,6 +161,102 @@ def report_poc_vl_filter_table_data_ajax(request):
 
     return JsonResponse({'data': data, 'has_next': page_obj.has_next()})
 
+def convert_date_to_custom_format(input_date):
+    # Define a mapping of month numbers to characters
+    month_mapping = {
+        '01': 'V',
+        '02': 'U',
+        '03': 'L',
+        '04': 'C',
+        '05': 'A',
+        '06': 'N',
+        '07': 'I',
+        '08': 'Z',
+        '09': 'E',
+        '10': 'R',
+        '11': 'M',
+        '12': 'B',
+    }
+
+    # Convert the input date to a string in the format 'dd-MM-yyyy'
+    input_date_str = input_date.strftime('%d-%m-%Y')
+
+    # Split the input date string into day, month, and year
+    day, month, year = input_date_str.split('-')
+
+    # Convert the month to the corresponding character
+    month_char = month_mapping.get(month, '')
+
+    # Construct the custom format: day + month_char + last two digits of year
+    custom_date = f"{year[-2:]}{month_char}{day}"
+
+    return custom_date
+
+def convert_date_to_custom_date(input_date):
+
+    # Convert the input date to a string in the format 'dd-MM-yyyy'
+    input_date_str = input_date.strftime('%d-%m-%Y')
+
+    # Split the input date string into day, month, and year
+    day, month, year = input_date_str.split('-')
+
+    # Convert the month to the corresponding character
+    custom_date = f"{year[-2:]}{month}{day}"
+    return custom_date
+
+def report_incoming_index(request):
+    database_alias = 'sfc_db'  # Replace with the alias of the desired database
+    connection = connections[database_alias]
+    rows = []
+
+    # Default date range values (you can adjust as needed)
+    form = DateRangeForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            start_date  = form.cleaned_data['start_date']
+            end_date    = form.cleaned_data['end_date']
+        # Valid range for pallet_number, adjust as needed
+        pallet_numbers = []
+        pallet_numbers_original = []
+        current_date = start_date
+        cprodline = request.POST.get('cprodline') if request.POST.get('cprodline') else ""
+        while current_date <= end_date:
+            custom_date = convert_date_to_custom_format(current_date)
+            custom_date_original = convert_date_to_custom_date(current_date)
+            pallet_numbers.append(custom_date)
+            pallet_numbers_original.append(custom_date_original)
+            # Increment the date by one day
+            current_date += timedelta(days=1)
+        with connection.cursor() as cursor:
+            for pallet_number, pallet_number_original in zip(pallet_numbers, pallet_numbers_original):
+                cursor.execute("""
+                    SELECT A.cprodline, A.cpalet, SUM(A.nqtypcs * B.nqtypcsfg) AS qtyInc
+                    FROM x_trans_pack A
+                    LEFT JOIN (
+                        SELECT *
+                        FROM WIPItem
+                        WHERE Cprocess LIKE %s
+                    ) B ON A.Citemno = B.Citemno 
+                    WHERE A.cprodline LIKE CONCAT('%%', %s, '%%')
+                    AND (A.cpalet LIKE CONCAT('%%', %s, '%%') OR A.cpalet LIKE CONCAT('%%', %s, '%%'))
+                    GROUP BY A.cprodline, A.cpalet
+                """, ['%Inspection%', cprodline,pallet_number, pallet_number_original])
+                rows.extend(cursor.fetchall())
+    unique_cprodlines = set(row[0] for row in rows)
+    context = {
+        'rows': rows,
+        'form': form,
+        'unique_cprodlines': unique_cprodlines,
+    }
+
+    return render(request, 'production_app/incoming_report_index.html', context)
+
+
+
+
+
+    return HttpResponse("ini merupakan report dari Incoming")
 
 # def report_poc_vl_filter_table_data_ajax(request):
 #     start_date = request.GET.get('start_date')

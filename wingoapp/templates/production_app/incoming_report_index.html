@@ -19,6 +19,13 @@
     {% csrf_token %}
     {{ form.start_date.label_tag }} {{ form.start_date }}
     {{ form.end_date.label_tag }} {{ form.end_date }}
+    <label for="cprodline">Select cprodline:</label>
+    <select name="cprodline" id="cprodline">
+        <option value="">All</option>
+        {% for cprodline in unique_cprodlines %}
+            <option value="{{ cprodline }}">{{ cprodline }}</option>
+        {% endfor %}
+    </select>
     <button type="submit">Filter</button>
 </form>
 
