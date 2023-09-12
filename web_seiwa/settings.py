@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'master_app',
     'timing_app',
     'production_app',
+    'gatepass_app',
     'POSEIWA',
     'sfc_2',
     'seiwa',
