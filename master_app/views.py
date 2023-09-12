@@ -93,6 +93,20 @@ def getFullName(request, Username):
     fullname = user.first_name +' '+ user.last_name
     return HttpResponse(fullname)
 
+# INI UNTUK GATEPASS SYSTEM 
+def gatepass_check_user(request, Username, Password):
+    user = User.objects.filter(username = Username).first()
+    password_check = check_password(Password, user.password)
+    if password_check:
+        return HttpResponse('True')
+    else:
+        return HttpResponse('False')
+    
+def getSecurityName(request, Username):
+    user = User.objects.filter(username__contains = Username).first()
+    fullname = user.first_name +' '+ user.last_name
+    return HttpResponse(fullname)
+
 # VISUALBASIC END
 # CREATE START
 @login_required

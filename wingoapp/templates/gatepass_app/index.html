@@ -1,0 +1,75 @@
+{% extends 'starter_kit/other-base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<style>
+.demo-section {
+  display: grid;
+  place-items: center; /* This centers the content both horizontally and vertically */
+  height: 100vh; /* This sets the section height to 100% of the viewport height */
+}
+</style>
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GATEPASS SYSTEM</title>
+</head>
+<body>
+
+  <div class="card-body">
+    <div class="card-header pb-0">
+      <h2 class="text-center" >GATEPASS SYSTEM | PT SEIWA INDONESIA</h2>
+    </div>
+      <section class="demo-section section-py-space mt-5 justify-content-center align-items-center" id="Applications">
+        <div class="container-fluid apps text-center">
+          <div class="row demo-block">
+            <div class="col-xl-4 col-lg-4 col-sm-6 wow pulse">
+              <div class="demo-box"><a href="{% url 'gatepass_app:tamu_index' %}">
+                  <div class="img-wrraper"><img class="img-fluid" src="{% static 'assets/images/landing/application/istockphoto-1284419710-612x612.jpg' %}" alt=""></div>
+                  <div class="demo-detail">                       
+                    <div class="demo-title">
+                      <h3>TAMU</h3>
+                    </div>
+                  </div></a></div>
+              </div>
+            <div class="col-xl-4 col-lg-4 col-sm-6 wow pulse">
+              <div class="demo-box"><a href="{% url 'gatepass_app:kirim_barang_menu' %}">
+                  <div class="img-wrraper"><img class="img-fluid" src="{% static 'assets/images/landing/application/istockphoto-1284419710-612x612.jpg' %}" alt=""></div>
+                  <div class="demo-detail">                       
+                    <div class="demo-title">
+                      <h3>KIRIM BARANG</h3>
+                    </div>
+                  </div></a></div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-sm-6 wow pulse">
+              <div class="demo-box"><a href="{% url 'gatepass_app:ambil_barang_index' %}">
+                  <div class="img-wrraper"><img class="img-fluid" src="{% static 'assets/images/landing/application/istockphoto-1284419710-612x612.jpg' %}" alt=""></div>
+                  <div class="demo-detail">                       
+                    <div class="demo-title">
+                      <h3>AMBIL BARANG</h3>
+                    </div>
+                  </div></a></div>
+            </div>
+          </div>
+        </div>
+      </section>
+  </div>
+
+   
+
+</body>
+</html>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+{% comment %} <script>
+    document.getElementById('id_username').value = 'test'
+    document.getElementById('id_password').value = 'testing@123'
+</script> {% endcomment %}
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}
