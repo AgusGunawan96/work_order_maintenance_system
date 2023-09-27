@@ -1,0 +1,102 @@
+{% block content %}
+<div class="card-body">
+    <div class="card manage-invoice-sec">
+        <div class="card-header pb-0">
+            <hr>
+            <h1 style="text-align: center;">Master Tag Low Modulus</h1>
+            <form id="uploadForm" action="{% url 'master_app:UploadMasterLowModulus' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input id="fileInput" type="file" name="file" accept=".csv" required>
+                <button type="submit" value="Upload" class="btn btn-primary">Update</button>
+              </form>
+              <a href="{% url 'master_app:download_csv_masterLowModulus' %}" class="btn btn-primary">Download CSV</a>
+            <hr>
+            <h2>Updated Items:</h2>
+            <ul>
+                {% for item in updated_items %}
+                <li>{{ item.item_no }} - {{ item.item_desc }}</li>
+                {% endfor %}
+            </ul>
+            
+            <h2>Created Items:</h2>
+            <ul>
+                {% for item in created_items %}
+                <li>{{ item.item_no }} - {{ item.item_desc }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- Progress bar to show the percentage progress -->
+        <div id="progressBar" style="width: 0%;"></div>
+        <div class="card-body">
+            <div class="manage-invoice-table">
+                <div class="item">
+                    <div class="table-responsive manage-invoice">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">id</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">item_no</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">item_desc</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">spec</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">poc</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">tension</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">tension_plus</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">tension_minus</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">ride_out</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">ride_out_plus</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">ride_out_minus</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">tipe_pulley</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">pulley_diameter</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">top_width</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">top_width_plus</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">top_width_minus</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">thickness</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">thickness_plus</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">thickness_minus</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">cpl100mm</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">cpl1round</th>
+                                    <!-- Add inline styles for other table headers -->
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for tag in list_mastertags  %}
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ forloop.counter }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.item_no }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.item_desc }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.spec }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.poc }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.tension }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.tension_plus }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.tension_minus }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.ride_out }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.ride_out_plus }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.ride_out_minus }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.tipe_pulley }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.pulley_diameter }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.top_width }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.top_width_plus }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.top_width_minus }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.thickness }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.thickness_plus }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.thickness_minus }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.cpl100mm }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.cpl1round }}</td>
+                                    <!-- Add inline styles for other table cells -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<!-- Add this JavaScript to your template -->
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

@@ -55,4 +55,40 @@ class POCVLPermission(models.Model):
     updated_at          = models.DateTimeField('updated at', auto_now=True)
     def __str__(self):
         return self.user.first_name + " " + self.user.last_name
+    
+class masterTagLowModulus(models.Model):
+    item_no             = models.CharField(max_length=128, null=True, blank=True)
+    item_desc           = models.CharField(max_length=128, null=True, blank=True)
+    spec                = models.CharField(max_length=128, null=True, blank=True) 
+    poc                 = models.PositiveBigIntegerField(null=True, blank=True)
+    tension             = models.PositiveBigIntegerField(null=True, blank=True)
+    tension_plus        = models.FloatField(max_length=128, null=True, blank=True)
+    tension_minus       = models.FloatField(max_length=128, null=True, blank=True)
+    ride_out            = models.FloatField(max_length=128, null=True, blank=True)
+    ride_out_plus       = models.FloatField(max_length=128, null=True, blank=True)
+    ride_out_minus      = models.FloatField(max_length=128, null=True, blank=True)
+    tipe_pulley         = models.CharField(max_length=128, null=True, blank=True) 
+    pulley_diameter     = models.FloatField(max_length=128, null=True, blank=True)
+    top_width           = models.FloatField(max_length=128, null=True, blank=True)
+    top_width_plus      = models.FloatField(max_length=128, null=True, blank=True)
+    top_width_minus     = models.FloatField(max_length=128, null=True, blank=True)
+    thickness           = models.FloatField(max_length=128, null=True, blank=True)
+    thickness_plus      = models.FloatField(max_length=128, null=True, blank=True)
+    thickness_minus     = models.FloatField(max_length=128, null=True, blank=True)
+    cpl100mm            = models.FloatField(max_length=128, null=True, blank=True)
+    cpl1round           = models.FloatField(max_length=128, null=True, blank=True)
+
+class POCLowModulusRecord(models.Model):
+    created_at          = models.DateTimeField('created at', auto_now_add=True)
+    updated_at          = models.DateTimeField('updated at', auto_now=True)
+
+class POCLowModulusPermission(models.Model):
+    user                = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    created_at          = models.DateTimeField('created at', auto_now_add=True)
+    updated_at          = models.DateTimeField('updated at', auto_now=True)
+    def __str__(self):
+        return self.user.first_name + " " + self.user.last_name
+
+
+
 # POC VL END

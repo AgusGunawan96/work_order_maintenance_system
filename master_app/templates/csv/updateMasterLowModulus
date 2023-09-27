@@ -1,0 +1,2 @@
+id,item_no,item_desc,spec,poc,tension,tension_plus,tension_minus,ride_out,ride_out_plus,ride_out_minus,tipe_pulley,pulley_diameter,top_width,top_width_plus,top_width_minus,thickness,thickness_plus,thickness_minus,cpl100mm,cpl1round
+1,AVRRV30D0-17521-53SA0+132N,17521-53SA0,R98-7W,796,186,60.0,60.0,2.6,0.6,0.6,K,95.5,10.68,0.45,0.45,4.3,0.3,0.3,0.0,0.0
