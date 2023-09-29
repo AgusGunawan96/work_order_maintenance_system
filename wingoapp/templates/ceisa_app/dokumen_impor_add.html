@@ -1,0 +1,621 @@
+{% extends 'starter_kit/ceisa_base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+{% load widget_tweaks %}
+
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <div class="col-sm-12 col-xl-12 xl-100">
+
+    <div class="card">
+      <div class="card-header pb-0">
+        <h5>Kirim Dokumen Impor | {{request.user.first_name}} {{request.user.last_name}}</h5><span>Kirim Dokumen Impor</span>
+      </div>
+      <div class="card-body btn-showcase">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message | safe }}
+          <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <!-- blok untuk menampilkan notifikasi pesan sukses -->
+        <button type="button" class="btn btn-primary" id="generate-content-button">Submit to Ceisa</button>
+
+        <div>
+        </div>
+
+            
+      </div>
+      <div class="card-body">
+        <ul class="nav nav-tabs border-tab" id="top-tab" role="tablist">
+          <li class="nav-item"><a class="nav-link active" id="top-header-tab" data-bs-toggle="tab" href="#top-header" role="tab" aria-controls="top-header" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Header</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-barang-tab" data-bs-toggle="tab" href="#top-barang" role="tab" aria-controls="top-barang" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Barang</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-entitas-tab" data-bs-toggle="tab" href="#top-entitas" role="tab" aria-controls="top-entitas" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Entitas</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-kemasan-tab" data-bs-toggle="tab" href="#top-kemasan" role="tab" aria-controls="top-kemasan" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Kemasan</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-kontainer-tab" data-bs-toggle="tab" href="#top-kontainer" role="tab" aria-controls="top-kontainer" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Kontainer</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-dokumen-tab" data-bs-toggle="tab" href="#top-dokumen" role="tab" aria-controls="top-dokumen" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Dokumen</a></li>
+          <li class="nav-item"><a class="nav-link" id="top-pengangkut-tab" data-bs-toggle="tab" href="#top-pengangkut" role="tab" aria-controls="top-pengangkut" aria-selected="true"><i class="icofont icofont-man-in-glasses"></i>Pengangkut</a></li>
+        </ul>
+        <div class="tab-content" id="top-tabContent">
+
+          <div class="tab-pane fade show active" id="top-header" role="tabpanel"
+            aria-labelledby="top-header-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <form method="POST"id="multi-tab-form"  enctype="multipart/form-data" >
+                    {% csrf_token %}
+                    {% for hidden in ceisaHForm.hidden_fields %}
+                    {{ hidden }}
+                     {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if ceisaHForm.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in ceisaHForm.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  
+                    {% for field in ceisaHForm.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+                    
+                        {% if ceisaHForm.is_bound %}
+                          {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                        {% else %}
+                                {% render_field field class="form-control" %}
+                        {% endif %}
+                          
+                        {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade show" id="top-barang" role="tabpanel" aria-labelledby="top-barang-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                      <label for="po-number">PO Number:</label>
+                      <input type="text" class="form-control" id="po-number" name="po_number" />
+                    </div>
+                    <!-- Add more input fields here for additional data -->
+                    <button type="button" class="btn btn-primary" id="submit-button">Add PO</button>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>PO Number</th>
+                        <!-- Add more table headers for additional data -->
+                      </tr>
+                    </thead>
+                    <tbody id="table-body">
+                      <!-- Table rows will be added here dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+          
+              <div class="card" id="dynamic-content-container">
+                <div class="card-body">
+                  <!-- Dynamic content will be added here -->
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+
+          <div class="tab-pane fade show" id="top-entitas" role="tabpanel" aria-labelledby="top-entitas-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                    {% csrf_token %}
+                    {% for hidden in ceisaEForm.hidden_fields %}
+                    {{ hidden }}
+                     {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if ceisaEForm.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in ceisaEForm.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  
+                    {% for field in ceisaEForm.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+                    
+                        {% if ceisaEForm.is_bound %}
+                          {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                        {% else %}
+                                {% render_field field class="form-control" %}
+                        {% endif %}
+                          
+                        {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+    
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade show" id="top-kemasan" role="tabpanel" aria-labelledby="top-kemasan-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                    {% csrf_token %}
+                    {% for hidden in ceisaKemForm.hidden_fields %}
+                    {{ hidden }}
+                     {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if ceisaKemForm.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in ceisaKemForm.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  
+                    {% for field in ceisaKemForm.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+                    
+                        {% if ceisaKemForm.is_bound %}
+                          {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                        {% else %}
+                                {% render_field field class="form-control" %}
+                        {% endif %}
+                          
+                        {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+    
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade show" id="top-kontainer" role="tabpanel" aria-labelledby="top-kontainer-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                    {% csrf_token %}
+                    {% for hidden in ceisaKonForm.hidden_fields %}
+                    {{ hidden }}
+                     {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if ceisaKonForm.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in ceisaKonForm.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  
+                    {% for field in ceisaKonForm.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+                    
+                        {% if ceisaKonForm.is_bound %}
+                          {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                        {% else %}
+                                {% render_field field class="form-control" %}
+                        {% endif %}
+                          
+                        {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+    
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade show" id="top-dokumen" role="tabpanel" aria-labelledby="top-dokumen-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                    {% csrf_token %}
+                    {% for hidden in ceisaDForm.hidden_fields %}
+                    {{ hidden }}
+                     {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if ceisaDForm.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in ceisaDForm.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  
+                    {% for field in ceisaDForm.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+                    
+                        {% if ceisaDForm.is_bound %}
+                          {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                        {% else %}
+                                {% render_field field class="form-control" %}
+                        {% endif %}
+                          
+                        {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+    
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade show" id="top-pengangkut" role="tabpanel" aria-labelledby="top-pengangkut-tab">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                    {% csrf_token %}
+                    {% for hidden in ceisaPForm.hidden_fields %}
+                    {{ hidden }}
+                     {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if ceisaPForm.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in ceisaPForm.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  
+                    {% for field in ceisaPForm.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+                    
+                        {% if ceisaPForm.is_bound %}
+                          {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                        {% else %}
+                                {% render_field field class="form-control" %}
+                        {% endif %}
+                          
+                        {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+    
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#id_kodeCaraBayar').select2();
+        $('#id_kodeDokumen').select2();
+        $('#id_kodeIncoterm').select2();
+        $('#id_kodeKantor').select2();
+        $('#id_kodeValuta').select2();
+        $('#id_kodeSatuanBarang').select2();
+        $('#id_kodeStatus').select2();
+        $('#id_kodeNegara').select2();
+        $('#id_kodeJenisKemasan').select2();
+        $('#id_kodeIjin').select2();
+        $('#id_kodeFasilitas').select2();
+    });
+</script>
+<script>
+  $(document).ready(function () {
+    var dataArray = [];
+    var uniquePOs = new Set();
+
+    $("#submit-button").click(function () {
+        var poNumber = $("#po-number").val();
+
+        if (!isInteger(poNumber)) {
+            alert("Please enter a valid integer for PO Number.");
+            return;
+        }
+
+        if (uniquePOs.has(poNumber)) {
+            alert("Duplicate PO Number. Please enter a unique PO Number.");
+            return;
+        }
+
+        uniquePOs.add(poNumber);
+        dataArray.push({ po_number: parseInt(poNumber) });
+        $("#po-number").val("");
+        updateTable();
+    });
+
+    
+  $("#generate-content-button").click(function () {
+    if (dataArray.length === 0) {
+      alert("Tambahkan nomor PO terlebih dahulu di tab Barang!");
+      return;
+    }
+
+    // Extract PO numbers from dataArray
+    var poNumbers = dataArray.map(function (item) {
+      return item.po_number;
+    });
+
+    // Add the poNumbers as a hidden input field to the form
+    var form = $("#multi-tab-form");
+    poNumbers.forEach(function (poNumber) {
+      var input = $("<input>")
+        .attr("type", "hidden")
+        .attr("name", "po_numbers[]")
+        .val(poNumber);
+      form.append(input);
+    });
+
+    // Serialize the entire form data, including poNumbers
+    var formData = form.serialize();
+    // Capture the values of id_kodeCaraBayar and id_kodeDokumen
+    // Send data to the server using AJAX
+    $.ajax({
+      url: '/ceisa_app/update_data/',
+      method: 'POST',
+      data: formData,
+      dataType: 'json',
+      success: function (response) {
+        // Handle the server's response here (e.g., show a success message)
+        alert(response.message);
+        generateDynamicContent(dataArray.length);
+      },
+      error: function (xhr, status, error) {
+        // Handle any AJAX errors here
+        alert("An error occurred: " + error);
+      }
+    });
+  });
+
+   // $("#generate-content-button").click(function () {
+   //     if (dataArray.length === 0) {
+   //         alert("Tambahkan nomor PO terlebih dahulu di tab Barang!");
+   //         return;
+   //     }
+//
+   //     // Extract PO numbers from dataArray
+   //     var poNumbers = dataArray.map(function (item) {
+   //         return item.po_number;
+   //     });
+//
+   //     
+   //     // Send data to the server using AJAX
+   //     $.ajax({
+   //         url: '/ceisa_app/update_data/',
+   //         method: 'POST',
+   //         data: { 'po_numbers[]': poNumbers },
+   //         dataType: 'json',
+   //         success: function (response) {
+   //             // Handle the server's response here (e.g., show a success message)
+   //             //alert(response.message);
+   //             generateDynamicContent(dataArray.length);
+   //         },
+   //         error: function (xhr, status, error) {
+   //             // Handle any AJAX errors here
+   //             alert("An error occurred: " + error);
+   //         }
+   //     });
+   // });
+//
+    // Event delegation to handle "Remove" button clicks
+    $('#table-body').on('click', '.remove-button', function() {
+        // Remove the corresponding table row
+        $(this).closest('tr').remove();
+        
+        // Remove the corresponding data from dataArray
+        var poNumberToRemove = parseInt($(this).closest('tr').find('td:first').text());
+        removePOFromDataArray(poNumberToRemove);
+    });
+
+    function isInteger(value) {
+        return /^\d+$/.test(value);
+    }
+
+    function updateTable() {
+        var tableBody = $("#table-body");
+        tableBody.empty();
+
+        for (var i = 0; i < dataArray.length; i++) {
+            var rowData = dataArray[i];
+            var row = $("<tr>");
+            row.append($("<td>").text(rowData.po_number));
+            row.append($("<td>").html('<button class="btn btn-danger remove-button">Remove</button>'));
+            tableBody.append(row);
+        }
+    }
+
+    function generateDynamicContent(rowCount) {
+        var dynamicContentContainer = $("#dynamic-content-container");
+        dynamicContentContainer.empty();
+
+        for (var i = 0; i < rowCount; i++) {
+            var dynamicContent = $("<div>").html("Nomor PO yang dikirimkan: " + dataArray[i].po_number);
+            dynamicContentContainer.append(dynamicContent);
+        }
+    }
+
+    function removePOFromDataArray(poNumber) {
+        var index = dataArray.findIndex(function(item) {
+            return item.po_number === poNumber;
+        });
+
+        if (index !== -1) {
+            dataArray.splice(index, 1);
+        }
+    }
+});
+
+</script>
+{% comment %} JADI INI MERUPAKAN BACKUP DARI ADD PO MULTIPLE {% endcomment %}
+{% comment %} <script>
+  $(document).ready(function () {
+    var dataArray = [];
+    var uniquePOs = new Set(); // Use a Set to store unique PO numbers
+  
+    $("#submit-button").click(function () {
+      var poNumber = $("#po-number").val();
+  
+      if (!isInteger(poNumber)) {
+        alert("Please enter a valid integer for PO Number.");
+        return;
+      }
+  
+      if (uniquePOs.has(poNumber)) {
+        alert("Duplicate PO Number. Please enter a unique PO Number.");
+        return;
+      }
+  
+      uniquePOs.add(poNumber); // Add the PO number to the Set
+      dataArray.push({ po_number: parseInt(poNumber) });
+      $("#po-number").val("");
+      updateTable();
+    });
+  
+    $("#generate-content-button").click(function () {
+      if (dataArray.length === 0) {
+        alert("Please add data to the table first.");
+        return;
+      }
+  
+      generateDynamicContent(dataArray.length);
+    });
+  
+    // Add a click event handler for removing rows
+    $("#table-body").on("click", ".remove-button", function () {
+      var rowIndex = $(this).closest("tr").index();
+      var removedPO = dataArray[rowIndex].po_number;
+      dataArray.splice(rowIndex, 1); // Remove the corresponding item from the array
+      uniquePOs.delete(removedPO); // Remove the PO number from the Set
+      updateTable();
+    });
+  
+    function isInteger(value) {
+      return /^\d+$/.test(value);
+    }
+  
+    function updateTable() {
+      var tableBody = $("#table-body");
+      tableBody.empty();
+  
+      for (var i = 0; i < dataArray.length; i++) {
+        var rowData = dataArray[i];
+        var row = $("<tr>");
+        row.append($("<td>").text(rowData.po_number));
+        // Add a remove button in each row
+        row.append($("<td>").html('<button class="btn btn-danger remove-button">Remove</button>'));
+        tableBody.append(row);
+      }
+    }
+  
+    function generateDynamicContent(rowCount) {
+      var dynamicContentContainer = $("#dynamic-content-container");
+      dynamicContentContainer.empty();
+  
+      for (var i = 0; i < rowCount; i++) {
+        // Create dynamic content based on the number of table rows
+        var dynamicContent = $("<div>").html("Dynamic Content for PO Number: " + dataArray[i].po_number);
+        dynamicContentContainer.append(dynamicContent);
+      }
+    }
+  });
+  
+</script> {% endcomment %}
+
+
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}
