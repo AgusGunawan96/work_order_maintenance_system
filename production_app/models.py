@@ -77,6 +77,9 @@ class masterTagLowModulus(models.Model):
     thickness_minus     = models.FloatField(max_length=128, null=True, blank=True)
     cpl100mm            = models.FloatField(max_length=128, null=True, blank=True)
     cpl1round           = models.FloatField(max_length=128, null=True, blank=True)
+    high_speed          = models.FloatField(max_length=128, null=True, blank=True)
+    low_speed           = models.FloatField(max_length=128, null=True, blank=True)
+    rpm                 = models.FloatField(max_length=128, null=True, blank=True)
 
 class POCLowModulusRecord(models.Model):
     created_at          = models.DateTimeField('created at', auto_now_add=True)
