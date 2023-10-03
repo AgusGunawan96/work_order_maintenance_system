@@ -2159,9 +2159,10 @@ class refrensiNegara    (models.TextChoices):
     MY   ='MY', 'MALAYSIA'
     NE   ='NE', 'NIGER'
     NR   ='NR', 'NAURU'
-    Nz   ='Nz', 'NAuHTA   '
+    Nz   ='Nz', 'NAuHTA'
     OM   ='OM', 'OMAN'
     PK   ='PK', 'PAKISTAN'
+    JP   ='JP', 'JAPAN'
 
 class refrensiRespon    (models.TextChoices):
     PENERBITAN_NOMOR_DAFTAR_BC_20    = 20 ,   '	PENERBITAN NOMOR DAFTAR BC 20'

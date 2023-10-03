@@ -79,10 +79,10 @@ class ceisaKirimImporHeaderForm(forms.Form):
         choices=refrensiJenisPIB.choices,
        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
     )
-    kodeKantor = forms.ChoiceField(
-        choices=refrensiKantor.choices,
-       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
-    )
+    # kodeKantor = forms.ChoiceField(
+    #     choices=refrensiKantor.choices,
+    #    widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    # )
     kodeTps = forms.CharField(label='Kode TPS',max_length=255, required=True)
     kodePelTransit = forms.CharField(label='Kode Pel Transit',max_length=255, required=True)
     kodePelTujuan = forms.CharField(label='Kode Pel Tujuan',max_length=255, required=True)
@@ -107,7 +107,7 @@ class ceisaKirimImporHeaderForm(forms.Form):
     # kotaTtd = forms.CharField(label='Kota TTD',max_length=255, required=True)
     kotaTtd = forms.CharField(label='Kota TTD',max_length=255,widget=forms.HiddenInput(),initial='Bekasi')
 
-    namaTtd = forms.CharField(label='Nama TTD',max_length=255, required=True)
+    # namaTtd = forms.CharField(label='Nama TTD',max_length=255, required=True)
     ndpbm = forms.DecimalField(label='ndpbm',max_digits=24, decimal_places=4, required=True,widget=forms.NumberInput(attrs={'readonly': 'readonly'}))
     netto = forms.DecimalField(label='Netto',max_digits=24, decimal_places=4, required=True,widget=forms.NumberInput(attrs={'readonly': 'readonly'}))
     nilaiBarang = forms.DecimalField(label='Nilai Barang',max_digits=24, decimal_places=2, required=True)
@@ -272,47 +272,54 @@ class ceisaKirimImporBarangForm(forms.Form):
     
 
 
-class ceisaKirimImporEntitasForm(forms.Form):
-    alamatEntitas = forms.CharField(label='Alamat Entitas', max_length=255, required=False)
-    kodeEntitas       = forms.CharField(label='Kode Entitas',max_length=255,widget=forms.HiddenInput(),initial='1')
-    kodeJenisApi = forms.ChoiceField(
-        label="Kode Jenis API",
-        choices=[
-            ("01", "APIU"),  # Value, Display text
-            ("02", "APIP")
-        ],
-        widget=forms.Select(attrs={
-            'class': 'form-control'  # You can add additional attributes as needed
-        }),
-        initial="01"  # Set the initial value to "0" (Tidak)
-    )
-    kodeJenisIdentitas = forms.ChoiceField(
-        label="Kode Jenis Identitas",
-        choices=[
-            ("0", "NPWP 12 Digit"),
-            ("1", "NPWP 10 Digit"),  # Value, Display text
-            ("2", "Paspor"),
-            ("3", "KTP"),
-            ("4", "Lainnya"),
-            ("5", "NPWP 15 Digit"),
-        ],
-        widget=forms.Select(attrs={
-            'class': 'form-control'  # You can add additional attributes as needed
-        }),
-        initial="0"  # Set the initial value to "0" (Tidak)
-    )
-    kodeStatus = forms.ChoiceField(
-        choices=refrensiStatus.choices,
-        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
-    )
-    namaEntitas = forms.CharField(label='Nama Entitas', max_length=255, required=False)
-    nibEntitas = forms.CharField(label='NIB Entitas', max_length=255, required=False)
-    nomorIdentitas = forms.CharField(label='Nomor Identitas', max_length=255, required=False)
-    kodeNegara = forms.ChoiceField(
+class ceisaKirimImporEntitasPengirimForm(forms.Form):
+    namaEntitasPengirim = forms.CharField(label='Nama Entitas', max_length=255, required=False)
+    alamatEntitasPengirim = forms.CharField(label='Alamat Entitas', max_length=255, required=False)
+    kodeNegaraPengirim = forms.ChoiceField(
         choices=refrensiNegara.choices,
         widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
     )
-    seriEntitas = forms.IntegerField(label='Seri Entitas',required=False)
+class ceisaKirimImporEntitasPenjualForm(forms.Form):
+    namaEntitasPenjual = forms.CharField(label='Nama Entitas', max_length=255, required=False)
+    alamatEntitasPenjual = forms.CharField(label='Alamat Entitas', max_length=255, required=False)
+    kodeNegaraPenjual = forms.ChoiceField(
+        choices=refrensiNegara.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    # kodeEntitas       = forms.CharField(label='Kode Entitas',max_length=255,widget=forms.HiddenInput(),initial='1')
+    # kodeJenisApi = forms.ChoiceField(
+    #     label="Kode Jenis API",
+    #     choices=[
+    #         ("01", "APIU"),  # Value, Display text
+    #         ("02", "APIP")
+    #     ],
+    #     widget=forms.Select(attrs={
+    #         'class': 'form-control'  # You can add additional attributes as needed
+    #     }),
+    #     initial="01"  # Set the initial value to "0" (Tidak)
+    # )
+    # kodeJenisIdentitas = forms.ChoiceField(
+    #     label="Kode Jenis Identitas",
+    #     choices=[
+    #         ("0", "NPWP 12 Digit"),
+    #         ("1", "NPWP 10 Digit"),  # Value, Display text
+    #         ("2", "Paspor"),
+    #         ("3", "KTP"),
+    #         ("4", "Lainnya"),
+    #         ("5", "NPWP 15 Digit"),
+    #     ],
+    #     widget=forms.Select(attrs={
+    #         'class': 'form-control'  # You can add additional attributes as needed
+    #     }),
+    #     initial="0"  # Set the initial value to "0" (Tidak)
+    # )
+    # kodeStatus = forms.ChoiceField(
+    #     choices=refrensiStatus.choices,
+    #     widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    # )
+    # nibEntitas = forms.CharField(label='NIB Entitas', max_length=255, required=False)
+    # nomorIdentitas = forms.CharField(label='Nomor Identitas', max_length=255, required=False)
+    # seriEntitas = forms.IntegerField(label='Seri Entitas',required=False)
 
 class ceisaKirimImporKemasanForm(forms.Form):
     jumlahKemasan   = forms.IntegerField(label='Jumlah Kemasan', required=False)

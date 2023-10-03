@@ -132,26 +132,27 @@
 
           <div class="tab-pane fade show" id="top-entitas" role="tabpanel" aria-labelledby="top-entitas-tab">
             <div class="col-sm-12">
+              <h1>PENGIRIM</h1>
               <div class="card">
                 <div class="card-body">
                     {% csrf_token %}
-                    {% for hidden in ceisaEForm.hidden_fields %}
+                    {% for hidden in ceisaEPengirimForm.hidden_fields %}
                     {{ hidden }}
                      {% endfor %}
                     <!-- merender semua field form dari objek TaskForm -->
-                    {% if ceisaEForm.non_field_errors %}
+                    {% if ceisaEPengirimForm.non_field_errors %}
                       <div class="alert alert-danger" role="alert">
-                        {% for error in ceisaEForm.non_field_errors %}
+                        {% for error in ceisaEPengirimForm.non_field_errors %}
                           {{ error }}
                         {% endfor %}
                       </div>
                     {% endif %}
                   
-                    {% for field in ceisaEForm.visible_fields %}
+                    {% for field in ceisaEPengirimForm.visible_fields %}
                       <div class="form-group">
                         {{ field.label_tag }}
                     
-                        {% if ceisaEForm.is_bound %}
+                        {% if ceisaEPengirimForm.is_bound %}
                           {% if field.errors %}
                             {% render_field field class="form-control is-invalid" %}
                             {% for error in field.errors %}
@@ -174,6 +175,51 @@
     
                 </div>
               </div>
+              <h1>PENJUAL</h1>
+              <div class="card">
+                <div class="card-body">
+                    {% csrf_token %}
+                    {% for hidden in ceisaEPenjualForm.hidden_fields %}
+                    {{ hidden }}
+                     {% endfor %}
+                    <!-- merender semua field form dari objek TaskForm -->
+                    {% if ceisaEPenjualForm.non_field_errors %}
+                      <div class="alert alert-danger" role="alert">
+                        {% for error in ceisaEPenjualForm.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  
+                    {% for field in ceisaEPenjualForm.visible_fields %}
+                      <div class="form-group">
+                        {{ field.label_tag }}
+                    
+                        {% if ceisaEPenjualForm.is_bound %}
+                          {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                              <div class="invalid-feedback">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                          {% endif %}
+                        {% else %}
+                                {% render_field field class="form-control" %}
+                        {% endif %}
+                          
+                        {% if field.help_text %}
+                          <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+    
+                </div>
+              </div>
+
+
             </div>
           </div>
 
@@ -389,7 +435,8 @@
         $('#id_kodeValuta').select2();
         $('#id_kodeSatuanBarang').select2();
         $('#id_kodeStatus').select2();
-        $('#id_kodeNegara').select2();
+        $('#id_kodeNegaraPengirim').select2();
+        $('#id_kodeNegaraPenjual').select2();
         $('#id_kodeJenisKemasan').select2();
         $('#id_kodeIjin').select2();
         $('#id_kodeFasilitas').select2();

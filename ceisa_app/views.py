@@ -5,7 +5,7 @@ from django.contrib.auth.models import User, Group
 from django.core.paginator import Paginator
 from django.db.models import F, OuterRef, Subquery, Value, CharField, Case, When, Value, IntegerField
 from django.db.models.functions import Length 
-from ceisa_app.forms import ceisaKirimImporHeaderForm, ceisaKirimImporBarangForm,ceisaKirimImporEntitasForm, ceisaKirimImporKemasanForm, ceisaKirimImporDokumenForm, ceisaKirimImporPengangkutForm, ceisaKirimImporKontainerForm
+from ceisa_app.forms import ceisaKirimImporHeaderForm, ceisaKirimImporBarangForm,ceisaKirimImporEntitasPengirimForm,ceisaKirimImporEntitasPenjualForm, ceisaKirimImporKemasanForm, ceisaKirimImporDokumenForm, ceisaKirimImporPengangkutForm, ceisaKirimImporKontainerForm
 # from ceisa_app.forms 
 import jwt 
 import time 
@@ -68,7 +68,8 @@ def dokumen_impor_add(request):
     # NANTI DISINI DARI FORM AKAN DI CONVERT KE JSON 
     ceisaHForm = ceisaKirimImporHeaderForm()
     ceisaBForm = ceisaKirimImporBarangForm()
-    ceisaEForm = ceisaKirimImporEntitasForm()
+    ceisaEPengirimForm = ceisaKirimImporEntitasPengirimForm()
+    ceisaEPenjualForm = ceisaKirimImporEntitasPenjualForm()
     ceisaKemForm = ceisaKirimImporKemasanForm()
     ceisaKonForm = ceisaKirimImporKontainerForm()
     ceisaDForm = ceisaKirimImporDokumenForm()
@@ -76,7 +77,8 @@ def dokumen_impor_add(request):
     context = {
         'ceisaHForm'  : ceisaHForm,
         'ceisaBForm'  : ceisaBForm,
-        'ceisaEForm'    : ceisaEForm,
+        'ceisaEPengirimForm'    : ceisaEPengirimForm,
+        'ceisaEPenjualForm'    : ceisaEPenjualForm,
         'ceisaKemForm'    : ceisaKemForm,
         'ceisaKonForm'    : ceisaKonForm,
         'ceisaDForm'    : ceisaDForm,
@@ -188,7 +190,7 @@ def update_data(request):
         ndpbm_value = float(ndpbm_value) if ndpbm_value else default_ndpbm_value
         
         data_dict = {
-            "asalData": "S",
+            "asalData": "S", #Otomatis
             "asuransi": asuransi_value,
             "biayaPengurang": biayaPengurang_value,
             "biayaTambahan": biayaTambahan_value,
@@ -199,26 +201,26 @@ def update_data(request):
             "fob": fob_value,
             "freight": freight_value,
             "hargaPenyerahan": hargaPenyerahan_value,
-            "idPengguna": "ABCDE",
-            "jabatanTtd": "PRESIDENT DIRECTOR",
+            "idPengguna": "ABCDE", #otomatis
+            "jabatanTtd": "PRESIDENT DIRECTOR", #otomatis
             "jumlahKontainer": jumlahKontainer_value,
             "jumlahTandaPengaman": tandaPengaman_value,
-            "kodeAsuransi": "LN",
-            "kodeCaraBayar": "1",
+            "kodeAsuransi": request.POST.get('kodeAsuransi',''),
+            "kodeCaraBayar": request.POST.get('kodeAsuransi',''),
             "kodeDokumen": "20",
-            "kodeIncoterm": "FOB",
-            "kodeJenisImpor": "1",
-            "kodeJenisNilai": "KMD",
-            "kodeJenisProsedur": "1",
-            "kodeKantor": "050100",
+            "kodeIncoterm": request.POST.get('kodeIncoterm',''),
+            "kodeJenisImpor": request.POST.get('kodeJenisImpor',''),
+            "kodeJenisNilai": request.POST.get('kodeJenisNilai',''),
+            "kodeJenisProsedur": request.POST.get('kodeJenisProsedur',''),
+            "kodeKantor": "050100", #otomatis
             "kodePelMuat": "JPOSA",
             "kodePelTransit": "",
             "kodePelTujuan": "IDCGK",
             "kodeTps": "GDWD",
-            "kodeTutupPu": "11",
-            "kodeValuta": "USD",
-            "kotaTtd": "JAKARTA",
-            "namaTtd": "YASUTSUGU KUNIHIRO",
+            "kodeTutupPu": request.POST.get('kodeTutupPu',''),
+            "kodeValuta": request.POST.get('kodeJenisNilai',''), 
+            "kotaTtd": "JAKARTA", #otomatis
+            "namaTtd": "YASUTSUGU KUNIHIRO", #otomatis
             "ndpbm": ndpbm_value,
             "netto": netto_value,
             "nilaiBarang": nilaiBarang_value,
@@ -464,22 +466,28 @@ def update_data(request):
         "seriEntitas": 2
       },
       {
-        "alamatEntitas": "4-2-21 HAMAZO DO-RI, NAGATAKU, KOBE 653-0024, JAPAN",
+        "alamatEntitas": request.POST.get('alamatEntitasPengirim',''),
         "kodeEntitas": "9",
-        "kodeNegara": "JP",
-        "namaEntitas": "PENGIRIM",
+        "kodeNegara": request.POST.get('kodeNegaraPengirim',''),
+        "namaEntitas": request.POST.get('namaEntitasPengirim',''),
         "seriEntitas": 3
       },
       {
-        "alamatEntitas": "4-2-21 HAMAZO DO-RI, NAGATAKU, KOBE 653-0024, JAPAN",
+        "alamatEntitas": request.POST.get('alamatEntitasPenjual',''),
         "kodeEntitas": "10",
-        "kodeNegara": "JP",
-        "namaEntitas": "PENJUAL",
+        "kodeNegara": request.POST.get('kodeNegaraPenjual',''),
+        "namaEntitas": request.POST.get('namaEntitasPenjual',''),
         "seriEntitas": 4
       }
         ]
         data_dict["kemasan"]    = [
         {
+        "jumlahKemasan": 2,
+        "kodeJenisKemasan": "CT",
+        "merkKemasan": "Tanpa Merk",
+        "seriKemasan": 1
+      },
+              {
         "jumlahKemasan": 2,
         "kodeJenisKemasan": "CT",
         "merkKemasan": "Tanpa Merk",
@@ -525,10 +533,10 @@ def update_data(request):
         ]
         data_dict["pengangkut"] = [
                   {
-        "kodeBendera": "JP",
-        "namaPengangkut": "JAPAN AIRLINES",
-        "nomorPengangkut": "JL725",
-        "kodeCaraAngkut": "4",
+        "kodeBendera": request.POST.get('kodeBendera',''),
+        "namaPengangkut": request.POST.get('namaPengangkut',''),
+        "nomorPengangkut": request.POST.get('nomorPengangkut',''),
+        "kodeCaraAngkut": request.POST.get('kodeCaraAngkut',''),
         "seriPengangkut": 1
       }
         ]
