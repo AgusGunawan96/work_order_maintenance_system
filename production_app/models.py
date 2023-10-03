@@ -80,7 +80,9 @@ class masterTagLowModulus(models.Model):
     high_speed          = models.FloatField(max_length=128, null=True, blank=True)
     low_speed           = models.FloatField(max_length=128, null=True, blank=True)
     rpm                 = models.FloatField(max_length=128, null=True, blank=True)
-
+    def __str__(self):
+        return self.item_no 
+    
 class POCLowModulusRecord(models.Model):
     created_at          = models.DateTimeField('created at', auto_now_add=True)
     updated_at          = models.DateTimeField('updated at', auto_now=True)
