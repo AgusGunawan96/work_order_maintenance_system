@@ -434,7 +434,7 @@ def UpdateMasterLowModulus(request):
 
     updates = []
     creates = []
-    for item_no_row,item_desc_row,spec_row,poc_row,tension_row,tension_plus_row,tension_minus_row,ride_out_row,ride_out_plus_row,ride_out_minus_row,tipe_pulley_row,pulley_diameter_row,top_width_row,top_width_plus_row,top_width_minus_row,thickness_row,thickness_plus_row,thickness_minus_row,cpl100mm_row, cpl1round_row,high_speed_row,low_speed_row,rpm_row, *__ in data:
+    for item_no_row,item_desc_row,spec_row,poc_row,tension_row,tension_plus_row,tension_minus_row,ride_out_row,ride_out_plus_row,ride_out_minus_row,tipe_pulley_row,pulley_diameter_row,top_width_row,top_width_plus_row,top_width_minus_row,thickness_row,thickness_plus_row,thickness_minus_row,cpl100mm_row, cpl1round_row,high_speed_row,low_speed_row,rpm_row,is_doc_row, *__ in data:
         item = masterTagLowModulus.objects.filter(item_no=item_no_row).first()
         if item:
             if(
@@ -459,7 +459,8 @@ def UpdateMasterLowModulus(request):
             item.cpl1round      != cpl1round_row or
             item.high_speed     != high_speed_row or
             item.low_speed      != low_speed_row or
-            item.rpm            != rpm_row 
+            item.rpm            != rpm_row or
+            item.is_doc         != is_doc_row 
             ):
                 item.item_desc  = item_desc_row
                 item.spec   = spec_row
@@ -483,6 +484,7 @@ def UpdateMasterLowModulus(request):
                 item.high_speed = high_speed_row
                 item.low_speed = low_speed_row
                 item.rpm = rpm_row
+                item.is_doc = is_doc_row
                 updates.append(item)
         else:
             item_exists_in_creates = any(item.item_no == item_no_row for item in creates)
@@ -510,10 +512,11 @@ def UpdateMasterLowModulus(request):
                     cpl1round       = cpl1round_row,
                     high_speed       = high_speed_row,
                     low_speed       = low_speed_row,
-                    rpm       = rpm_row
+                    rpm       = rpm_row,
+                    is_doc       = is_doc_row
                 ))
     if updates:
-        masterTagLowModulus.objects.bulk_update(updates, ['item_no','item_desc','spec','poc','tension','tension_plus','tension_minus','ride_out','ride_out_plus','ride_out_minus','tipe_pulley','pulley_diameter','top_width','top_width_plus','top_width_minus','thickness','thickness_plus','thickness_minus','cpl100mm','cpl1round','high_speed','low_speed','rpm'])
+        masterTagLowModulus.objects.bulk_update(updates, ['item_no','item_desc','spec','poc','tension','tension_plus','tension_minus','ride_out','ride_out_plus','ride_out_minus','tipe_pulley','pulley_diameter','top_width','top_width_plus','top_width_minus','thickness','thickness_plus','thickness_minus','cpl100mm','cpl1round','high_speed','low_speed','rpm', 'is_doc'])
     if creates:
         masterTagLowModulus.objects.bulk_create(creates)
     return updates, creates
@@ -801,13 +804,13 @@ def download_csv_masterLowModulus(request):
     response['Content-Disposition'] = 'attachment; filename="master_tag_LowModulus.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['id','item_no','item_desc','spec','poc','tension','tension_plus','tension_minus','ride_out','ride_out_plus','ride_out_minus','tipe_pulley','pulley_diameter','top_width','top_width_plus','top_width_minus','thickness','thickness_plus','thickness_minus','cpl100mm','cpl1round','high_speed','low_speed','rpm'])
+    writer.writerow(['id','item_no','item_desc','spec','poc','tension','tension_plus','tension_minus','ride_out','ride_out_plus','ride_out_minus','tipe_pulley','pulley_diameter','top_width','top_width_plus','top_width_minus','thickness','thickness_plus','thickness_minus','cpl100mm','cpl1round','high_speed','low_speed','rpm', 'DOC'])
 
     # Replace `YourModel` with the actual model name you are using for Master Tags
     master_tags = masterTagLowModulus.objects.all()
 
     for tag in master_tags:
-        writer.writerow([tag.id ,tag.item_no ,tag.item_desc ,tag.spec ,tag.poc ,tag.tension ,tag.tension_plus ,tag.tension_minus ,tag.ride_out ,tag.ride_out_plus ,tag.ride_out_minus ,tag.tipe_pulley ,tag.pulley_diameter ,tag.top_width ,tag.top_width_plus ,tag.top_width_minus ,tag.thickness ,tag.thickness_plus ,tag.thickness_minus ,tag.cpl100mm ,tag.cpl1round, tag.high_speed, tag.low_speed, tag.rpm])
+        writer.writerow([tag.id ,tag.item_no ,tag.item_desc ,tag.spec ,tag.poc ,tag.tension ,tag.tension_plus ,tag.tension_minus ,tag.ride_out ,tag.ride_out_plus ,tag.ride_out_minus ,tag.tipe_pulley ,tag.pulley_diameter ,tag.top_width ,tag.top_width_plus ,tag.top_width_minus ,tag.thickness ,tag.thickness_plus ,tag.thickness_minus ,tag.cpl100mm ,tag.cpl1round, tag.high_speed, tag.low_speed, tag.rpm, tag.is_doc])
     return response
 # DOWNLOAD END
 
