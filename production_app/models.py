@@ -80,6 +80,7 @@ class masterTagLowModulus(models.Model):
     high_speed          = models.FloatField(max_length=128, null=True, blank=True)
     low_speed           = models.FloatField(max_length=128, null=True, blank=True)
     rpm                 = models.FloatField(max_length=128, null=True, blank=True)
+    is_doc              = models.BooleanField(default=False, null=True, blank=True)
     def __str__(self):
         return self.item_no 
     
