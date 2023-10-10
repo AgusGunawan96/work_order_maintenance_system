@@ -58,6 +58,7 @@
                                     <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">high_speed</th>
                                     <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">low_speed</th>
                                     <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">rpm</th>
+                                    <th style="padding: 10px; border: 1px solid #ccc; background-color: #f2f2f2;">DOC</th>
                                     <!-- Add inline styles for other table headers -->
                                 </tr>
                             </thead>
@@ -89,6 +90,7 @@
                                     <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.high_speed }}</td>
                                     <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.low_speed }}</td>
                                     <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.rpm }}</td>
+                                    <td style="padding: 10px; border: 1px solid #ccc;">{{ tag.is_doc }}</td>
                                     <!-- Add inline styles for other table cells -->
                                 </tr>
                                 {% endfor %}
