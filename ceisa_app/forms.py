@@ -6,6 +6,16 @@ from django_select2.forms import Select2Widget
 
 class ceisaKirimImporHeaderForm(forms.Form):
     asalData = forms.CharField(label='Asal Data',max_length=255,widget=forms.HiddenInput(),initial='S')
+    nomorAju = forms.CharField(
+        label="Nomor Aju",
+        max_length=26,
+        validators=[
+            RegexValidator(
+                regex=r'^[A-Za-z0-9]{26}$',
+                message="Sesuaikan format nomor pengajuan dokumen impor terdiri 26 digit: 4 digit kode kantor, 2 digit kode dokumen pabean, 6 digit unik perusahaan, 8 digit tanggal pengajuan dengan format YYYYMMDD, 6 digit sequence/nomor urut pengajuan dokumen impor"
+            )
+        ]
+    )
     asuransi = forms.DecimalField(label='Asuransi',max_digits=24, decimal_places=2, required=True)
     biayaPengurang = forms.DecimalField(label='Biaya Pengurang yang dikenakan',max_digits=24, decimal_places=2, required=True)
     biayaTambahan = forms.DecimalField(label='Biaya Tambahan yang dikenakan',max_digits=24, decimal_places=2, required=True)
@@ -113,16 +123,7 @@ class ceisaKirimImporHeaderForm(forms.Form):
     nilaiBarang = forms.DecimalField(label='Nilai Barang',max_digits=24, decimal_places=2, required=True)
     nilaiIncoterm = forms.DecimalField(label='Nilai Incoterm',max_digits=24, decimal_places=2, required=True)
     nilaiMaklon = forms.DecimalField(label='Nilai Maklon',max_digits=24, decimal_places=2, required=True)
-    nomorAju = forms.CharField(
-        label="Nomor Aju",
-        max_length=26,
-        validators=[
-            RegexValidator(
-                regex=r'^[A-Za-z0-9]{26}$',
-                message="Sesuaikan format nomor pengajuan dokumen impor terdiri 26 digit: 4 digit kode kantor, 2 digit kode dokumen pabean, 6 digit unik perusahaan, 8 digit tanggal pengajuan dengan format YYYYMMDD, 6 digit sequence/nomor urut pengajuan dokumen impor"
-            )
-        ]
-    )
+
     nomorBc11 = forms.CharField(label='Nomor BC 11',max_length=255, required=True)
     posBc11 = forms.CharField(label='POS BC 11',max_length=255, required=True)
     seri = forms.IntegerField(label='Seri',required=True)

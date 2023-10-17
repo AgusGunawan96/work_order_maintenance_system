@@ -49,6 +49,30 @@ class POCVLRecord(models.Model):
     # ro_low         = models.FloatField(max_length=128, null=True, blank=True)
     # ro_upper       = models.FloatField(max_length=128, null=True, blank=True)
 
+class POCLowModulusRecord(models.Model):
+    user                = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    so_no               = models.CharField(max_length=128,null=True, blank=True)
+    item_no             = models.CharField(max_length=128, null=True, blank=True)
+    item_desc           = models.CharField(max_length=128, null=True, blank=True)
+    belt_no             = models.FloatField(max_length=128, null=True, blank=True)
+    doc                 = models.FloatField(max_length=128, null=True, blank=True)
+    tension             = models.FloatField(max_length=128, null=True, blank=True)
+    tension_status      = models.BooleanField(default=False)
+    ro                  = models.FloatField(max_length=128, null=True, blank=True) 
+    ro_status           = models.BooleanField(default=False) 
+    thickness           = models.FloatField(max_length=128, null=True, blank=True)
+    thickness_status    = models.BooleanField(default=False) 
+    top_width           = models.FloatField(max_length=128, null=True, blank=True)
+    top_width_status    = models.BooleanField(default=False)
+    cpl100mm            = models.FloatField(max_length=128, null=True, blank=True)
+    cpl100mm_status     = models.BooleanField(default=False)
+    cpl1round           = models.FloatField(max_length=128, null=True, blank=True)
+    cpl1round_status    = models.BooleanField(default=False)
+    shift               = models.PositiveIntegerField(null=True, blank=True)
+    created_at          = models.DateTimeField('created at', auto_now_add=True)
+    updated_at          = models.DateTimeField('updated at', auto_now=True)
+    created_at          = models.DateTimeField('created at', auto_now_add=True)
+    updated_at          = models.DateTimeField('updated at', auto_now=True)
 class POCVLPermission(models.Model):
     user                = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     created_at          = models.DateTimeField('created at', auto_now_add=True)
@@ -83,10 +107,6 @@ class masterTagLowModulus(models.Model):
     is_doc              = models.BooleanField(default=False, null=True, blank=True)
     def __str__(self):
         return self.item_no 
-    
-class POCLowModulusRecord(models.Model):
-    created_at          = models.DateTimeField('created at', auto_now_add=True)
-    updated_at          = models.DateTimeField('updated at', auto_now=True)
 
 class POCLowModulusPermission(models.Model):
     user                = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)

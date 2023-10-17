@@ -16,7 +16,8 @@ from datetime import date
 # Create your views here.
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-
+from django.db import connections
+from django.forms import formset_factory
 # BUAT API 
 import requests
 
@@ -74,14 +75,18 @@ def dokumen_impor_add(request):
     ceisaKonForm = ceisaKirimImporKontainerForm()
     ceisaDForm = ceisaKirimImporDokumenForm()
     ceisaPForm = ceisaKirimImporPengangkutForm()
+    KemasanFormSet = formset_factory(ceisaKirimImporKemasanForm, extra=1)
+    KontainerFormSet = formset_factory(ceisaKirimImporKontainerForm, extra=1)
+    DokumenFormSet = formset_factory(ceisaKirimImporDokumenForm, extra=1)
+    
     context = {
         'ceisaHForm'  : ceisaHForm,
         'ceisaBForm'  : ceisaBForm,
         'ceisaEPengirimForm'    : ceisaEPengirimForm,
         'ceisaEPenjualForm'    : ceisaEPenjualForm,
-        'ceisaKemForm'    : ceisaKemForm,
-        'ceisaKonForm'    : ceisaKonForm,
-        'ceisaDForm'    : ceisaDForm,
+        'ceisaKemForm'    : KemasanFormSet,
+        'ceisaKonForm'    : KontainerFormSet,
+        'ceisaDForm'    : DokumenFormSet,
         'ceisaPForm'    : ceisaPForm,
     }
     return render(request, 'ceisa_app/dokumen_impor_add.html', context )
@@ -97,7 +102,6 @@ def dokumen_ekspor_add(request):
 @csrf_exempt  # For simplicity, using csrf_exempt; consider CSRF protection in production
 def update_data(request):
     if request.method == 'POST':
-        data = request.POST.getlist('po_numbers[]', [])
         access_token = get_access_token()
         # print(access_token)
             # Define the API URL
@@ -111,7 +115,28 @@ def update_data(request):
         # request.POST.get('kodeTps', '')
         # CIF = fob + freight + asuransi -> Generate
         # Mari kita inisiasikan Value apabila boleh 0 
-
+        po_numbers = request.POST.getlist('po_numbers[]', [])  # Get the list of 'po_numbers[]' from the POST data
+        formatted_po_numbers = ','.join(["'" + number + "'" for number in po_numbers])
+            # Create a placeholder for each PO number
+        # placeholders = ', '.join(['%s'] * len(po_numbers))
+        # Build the SQL query with placeholders
+        database_alias = 'poseiwa_db'  # Replace with the alias of the desired database
+        connection = connections[database_alias]
+        with connection.cursor() as cursor:
+          query = """
+                  SELECT A.po_no, A.kode_barang, A.qty AS 'Satuan', A.unit, A.unit_price, A.amount AS 'CFR',
+                         C.nama_barang AS 'Tipe', B.nama_supplier
+                  FROM dbo.T_PO A
+                  LEFT JOIN dbo.master_supplier B ON A.kode_supplier = B.kode_supplier
+                  LEFT JOIN dbo.master_barang C ON A.kode_barang = C.kode_barang
+                  WHERE A.po_no IN ('23071062','23071061','23071059')
+                  """
+          a = cursor.execute(query)
+          rows = cursor.fetchall()
+        # print(rows)
+        # print(po_numbers)
+        # print(formatted_po_numbers)
+        # return HttpResponse("True")
         # Asuransi
         asuransi_value =  request.POST.get('asuransi','')
         default_asuransi_value = 0
@@ -226,7 +251,7 @@ def update_data(request):
             "nilaiBarang": nilaiBarang_value,
             "nilaiIncoterm": nilaiIncoterm_value,
             "nilaiMaklon": nilaiMaklon_value,
-            "nomorAju": "00002301971220230823000003",
+            "nomorAju": request.POST.get('nomorAju',''),
             "nomorBc11": "032095",
             "posBc11": "0017",
             "seri": seri_value,
@@ -450,7 +475,7 @@ def update_data(request):
         "alamatEntitas": "JL.LOMBOK I, BLOK M 2-2, KAW.INDUSTRI MM2100, GANDAMEKAR - GANDAMEKAR, CIKARANG BARAT, BEKASI, JAWA BARAT",
         "kodeEntitas": "1",
         "kodeJenisApi": "01",
-        "kodeJenisIdentitas": "3",
+        "kodeJenisIdentitas": "5",
         "kodeStatus": "AEO",
         "namaEntitas": "SEIWA INDONESIA",
         "nibEntitas": "8120010090198",
@@ -460,11 +485,12 @@ def update_data(request):
       {
         "alamatEntitas": "JL.LOMBOK I, BLOK M 2-2, KAW.INDUSTRI MM2100, GANDAMEKAR - GANDAMEKAR, CIKARANG BARAT, BEKASI, JAWA BARAT",
         "kodeEntitas": "7",
-        "kodeJenisIdentitas": "2",
+        "kodeJenisIdentitas": "5",
         "namaEntitas": "SEIWA INDONESIA",
         "nomorIdentitas": "010712495055000",
         "seriEntitas": 2
       },
+
       {
         "alamatEntitas": request.POST.get('alamatEntitasPengirim',''),
         "kodeEntitas": "9",
@@ -478,6 +504,14 @@ def update_data(request):
         "kodeNegara": request.POST.get('kodeNegaraPenjual',''),
         "namaEntitas": request.POST.get('namaEntitasPenjual',''),
         "seriEntitas": 4
+      },
+      {
+        "alamatEntitas": "JL.LOMBOK I, BLOK M 2-2, KAW.INDUSTRI MM2100, GANDAMEKAR - GANDAMEKAR, CIKARANG BARAT, BEKASI, JAWA BARAT",
+        "kodeEntitas": "11",
+        "kodeJenisIdentitas": "5",
+        "namaEntitas": "SEIWA INDONESIA",
+        "nomorIdentitas": "010712495055000",
+        "seriEntitas": 5
       }
         ]
         data_dict["kemasan"]    = [

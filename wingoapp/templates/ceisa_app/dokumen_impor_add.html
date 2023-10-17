@@ -227,91 +227,38 @@
             <div class="col-sm-12">
               <div class="card">
                 <div class="card-body">
-                    {% csrf_token %}
-                    {% for hidden in ceisaKemForm.hidden_fields %}
-                    {{ hidden }}
-                     {% endfor %}
-                    <!-- merender semua field form dari objek TaskForm -->
-                    {% if ceisaKemForm.non_field_errors %}
-                      <div class="alert alert-danger" role="alert">
-                        {% for error in ceisaKemForm.non_field_errors %}
-                          {{ error }}
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-                  
-                    {% for field in ceisaKemForm.visible_fields %}
-                      <div class="form-group">
-                        {{ field.label_tag }}
-                    
-                        {% if ceisaKemForm.is_bound %}
-                          {% if field.errors %}
-                            {% render_field field class="form-control is-invalid" %}
-                            {% for error in field.errors %}
-                              <div class="invalid-feedback">
-                                {{ error }}
-                              </div>
-                            {% endfor %}
-                          {% else %}
-                            {% render_field field class="form-control is-valid" %}
-                          {% endif %}
-                        {% else %}
-                                {% render_field field class="form-control" %}
-                        {% endif %}
-                          
-                        {% if field.help_text %}
-                          <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
+                  {% csrf_token %}
+                  <div class="kemasan-forms">
+                    {{ ceisaKemForm.management_form }} {# Include management form for formset #}
+                    {% for form in ceisaKemForm %}
+                      <div class="form-row">
+                        <div class="col-md-10">
+                          {{ form.as_table }}
+                        </div>
+                        {% comment %} <div class="col-md-2">
+                          <button type="button" class="remove-form">Remove</button>
+                        </div> {% endcomment %}
                       </div>
                     {% endfor %}
-    
+                  </div>
+                  <button type="button" id="add-form">Add Form</button> {# Use type="button" to prevent form submission #}
                 </div>
               </div>
             </div>
           </div>
-
+          
           <div class="tab-pane fade show" id="top-kontainer" role="tabpanel" aria-labelledby="top-kontainer-tab">
             <div class="col-sm-12">
               <div class="card">
                 <div class="card-body">
-                    {% csrf_token %}
-                    {% for hidden in ceisaKonForm.hidden_fields %}
-                    {{ hidden }}
-                     {% endfor %}
-                    <!-- merender semua field form dari objek TaskForm -->
-                    {% if ceisaKonForm.non_field_errors %}
-                      <div class="alert alert-danger" role="alert">
-                        {% for error in ceisaKonForm.non_field_errors %}
-                          {{ error }}
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-                  
-                    {% for field in ceisaKonForm.visible_fields %}
-                      <div class="form-group">
-                        {{ field.label_tag }}
-                    
-                        {% if ceisaKonForm.is_bound %}
-                          {% if field.errors %}
-                            {% render_field field class="form-control is-invalid" %}
-                            {% for error in field.errors %}
-                              <div class="invalid-feedback">
-                                {{ error }}
-                              </div>
-                            {% endfor %}
-                          {% else %}
-                            {% render_field field class="form-control is-valid" %}
-                          {% endif %}
-                        {% else %}
-                                {% render_field field class="form-control" %}
-                        {% endif %}
-                          
-                        {% if field.help_text %}
-                          <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
-                      </div>
-                    {% endfor %}
-    
+                  {% csrf_token %}
+                  <div class="kontainer-forms">
+                  {{ ceisaKonForm.management_form }} {# Include management form for formset #}
+                  {% for form in ceisaKonForm %}
+                    {{ form.as_table }}
+                  {% endfor %}
+                </div>
+                <button type="button" id="add-form-container">Add Form</button> {# Use type="button" to prevent form submission #}
                 </div>
               </div>
             </div>
@@ -321,44 +268,14 @@
             <div class="col-sm-12">
               <div class="card">
                 <div class="card-body">
-                    {% csrf_token %}
-                    {% for hidden in ceisaDForm.hidden_fields %}
-                    {{ hidden }}
-                     {% endfor %}
-                    <!-- merender semua field form dari objek TaskForm -->
-                    {% if ceisaDForm.non_field_errors %}
-                      <div class="alert alert-danger" role="alert">
-                        {% for error in ceisaDForm.non_field_errors %}
-                          {{ error }}
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-                  
-                    {% for field in ceisaDForm.visible_fields %}
-                      <div class="form-group">
-                        {{ field.label_tag }}
-                    
-                        {% if ceisaDForm.is_bound %}
-                          {% if field.errors %}
-                            {% render_field field class="form-control is-invalid" %}
-                            {% for error in field.errors %}
-                              <div class="invalid-feedback">
-                                {{ error }}
-                              </div>
-                            {% endfor %}
-                          {% else %}
-                            {% render_field field class="form-control is-valid" %}
-                          {% endif %}
-                        {% else %}
-                                {% render_field field class="form-control" %}
-                        {% endif %}
-                          
-                        {% if field.help_text %}
-                          <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
-                      </div>
-                    {% endfor %}
-    
+                  {% csrf_token %}
+                  <div class="dokumen-forms">
+                  {{ ceisaDForm.management_form }} {# Include management form for formset #}
+                  {% for form in ceisaDForm %}
+                    {{ form.as_table }}
+                  {% endfor %}
+                </div>
+                <button type="button" id="add-form-dokumen">Add Form</button> {# Use type="button" to prevent form submission #}
                 </div>
               </div>
             </div>
@@ -509,36 +426,6 @@
     });
   });
 
-   // $("#generate-content-button").click(function () {
-   //     if (dataArray.length === 0) {
-   //         alert("Tambahkan nomor PO terlebih dahulu di tab Barang!");
-   //         return;
-   //     }
-//
-   //     // Extract PO numbers from dataArray
-   //     var poNumbers = dataArray.map(function (item) {
-   //         return item.po_number;
-   //     });
-//
-   //     
-   //     // Send data to the server using AJAX
-   //     $.ajax({
-   //         url: '/ceisa_app/update_data/',
-   //         method: 'POST',
-   //         data: { 'po_numbers[]': poNumbers },
-   //         dataType: 'json',
-   //         success: function (response) {
-   //             // Handle the server's response here (e.g., show a success message)
-   //             //alert(response.message);
-   //             generateDynamicContent(dataArray.length);
-   //         },
-   //         error: function (xhr, status, error) {
-   //             // Handle any AJAX errors here
-   //             alert("An error occurred: " + error);
-   //         }
-   //     });
-   // });
-//
     // Event delegation to handle "Remove" button clicks
     $('#table-body').on('click', '.remove-button', function() {
         // Remove the corresponding table row
@@ -588,80 +475,71 @@
 });
 
 </script>
-{% comment %} JADI INI MERUPAKAN BACKUP DARI ADD PO MULTIPLE {% endcomment %}
-{% comment %} <script>
-  $(document).ready(function () {
-    var dataArray = [];
-    var uniquePOs = new Set(); // Use a Set to store unique PO numbers
+<!-- your_template.html -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const addFormButton = document.getElementById("add-form");
+    const formsContainer = document.querySelector(".kemasan-forms");
+    let formCount = {{ ceisaKemForm|length }}; // Use the length of your formset
   
-    $("#submit-button").click(function () {
-      var poNumber = $("#po-number").val();
+    addFormButton.addEventListener("click", function() {
+      const newForm = document.createElement("div");
+      newForm.innerHTML = `
+        {{ ceisaKemForm.empty_form.as_table }}
+      `;
+      formsContainer.appendChild(newForm);
   
-      if (!isInteger(poNumber)) {
-        alert("Please enter a valid integer for PO Number.");
-        return;
-      }
-  
-      if (uniquePOs.has(poNumber)) {
-        alert("Duplicate PO Number. Please enter a unique PO Number.");
-        return;
-      }
-  
-      uniquePOs.add(poNumber); // Add the PO number to the Set
-      dataArray.push({ po_number: parseInt(poNumber) });
-      $("#po-number").val("");
-      updateTable();
+      // Update the management form's total form count
+      formCount++;
+      document.querySelector("#id_ceisakemform_set-TOTAL_FORMS").value = formCount;
     });
   
-    $("#generate-content-button").click(function () {
-      if (dataArray.length === 0) {
-        alert("Please add data to the table first.");
-        return;
-      }
-  
-      generateDynamicContent(dataArray.length);
-    });
-  
-    // Add a click event handler for removing rows
-    $("#table-body").on("click", ".remove-button", function () {
-      var rowIndex = $(this).closest("tr").index();
-      var removedPO = dataArray[rowIndex].po_number;
-      dataArray.splice(rowIndex, 1); // Remove the corresponding item from the array
-      uniquePOs.delete(removedPO); // Remove the PO number from the Set
-      updateTable();
-    });
-  
-    function isInteger(value) {
-      return /^\d+$/.test(value);
-    }
-  
-    function updateTable() {
-      var tableBody = $("#table-body");
-      tableBody.empty();
-  
-      for (var i = 0; i < dataArray.length; i++) {
-        var rowData = dataArray[i];
-        var row = $("<tr>");
-        row.append($("<td>").text(rowData.po_number));
-        // Add a remove button in each row
-        row.append($("<td>").html('<button class="btn btn-danger remove-button">Remove</button>'));
-        tableBody.append(row);
-      }
-    }
-  
-    function generateDynamicContent(rowCount) {
-      var dynamicContentContainer = $("#dynamic-content-container");
-      dynamicContentContainer.empty();
-  
-      for (var i = 0; i < rowCount; i++) {
-        // Create dynamic content based on the number of table rows
-        var dynamicContent = $("<div>").html("Dynamic Content for PO Number: " + dataArray[i].po_number);
-        dynamicContentContainer.append(dynamicContent);
-      }
-    }
+    // Handle remove button clicks
+
   });
+  </script>
+
   
-</script> {% endcomment %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const addFormButton = document.getElementById("add-form-container");
+      const formsContainer = document.querySelector(".kontainer-forms");
+      let formCount = {{ ceisaKonForm|length }}; // Use the length of your formset
+    
+      addFormButton.addEventListener("click", function() {
+        const newForm = document.createElement("div");
+        newForm.innerHTML = `
+          {{ ceisaKonForm.empty_form.as_table }}
+        `;
+        formsContainer.appendChild(newForm);
+    
+        // Update the management form's total form count
+        formCount++;
+        document.querySelector("#id_ceisakonform_set-TOTAL_FORMS").value = formCount;
+      });
+    });
+    </script>  
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const addFormButton = document.getElementById("add-form-dokumen");
+        const formsContainer = document.querySelector(".dokumen-forms");
+        let formCount = {{ ceisaDForm|length }}; // Use the length of your formset
+      
+        addFormButton.addEventListener("click", function() {
+          const newForm = document.createElement("div");
+          newForm.innerHTML = `
+            {{ ceisaDForm.empty_form.as_table }}
+          `;
+          formsContainer.appendChild(newForm);
+      
+          // Update the management form's total form count
+          formCount++;
+          document.querySelector("#id_ceisaDForm_set-TOTAL_FORMS").value = formCount;
+        });
+      });
+      </script>
 
 
 <!-- Plugins JS Ends-->
