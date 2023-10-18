@@ -10,6 +10,7 @@ urlpatterns = [
     # REPORT POC VL START 
     path('report_poc_vl/index', views.report_poc_vl_index, name = 'report_poc_vl_index'),
     path('report_incoming/index', views.report_incoming_index, name = 'report_incoming_index'),
+    path('report_low_modulus/index', views.report_low_modulus_index, name = 'report_low_modulus_index'),
     path('report_finishing/index', views.report_finishing_index, name = 'report_finishing_index'),
     # path('report_poc_vl/get_table_data_ajax', views.report_poc_vl_get_table_data_ajax, name = 'report_poc_vl_get_table_data_ajax'),
     path('report_poc_vl/report_poc_vl_filter_table_data_ajax', views.report_poc_vl_filter_table_data_ajax, name = 'report_poc_vl_filter_table_data_ajax'),

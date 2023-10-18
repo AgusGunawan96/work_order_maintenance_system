@@ -89,6 +89,25 @@ def report_finishing_index(request):
     })
     return HttpResponse(html)
 
+def report_low_modulus_index(request):
+    METABASE_SITE_URL = "http://172.16.202.225:3000"
+    METABASE_SECRET_KEY = "cc81afc24eece1a20ef494e8b352bd73bd63c649c531c958a20aefdbcb4005e1"
+
+    payload = {
+      "resource": {"dashboard": 65},
+      "params": {
+
+      },
+      "exp": round(time.time()) + (60 * 10) # 10 minute expiration
+    }
+    token = jwt.encode(payload, METABASE_SECRET_KEY, algorithm="HS256")
+    iframeUrl = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true"
+    html = render_to_string('production_app/report_low_modulus_index.html', {
+        'title': 'Embedding Metabase',
+        'iframeUrl': iframeUrl
+    })
+    return HttpResponse(html)
+
 def report_poc_vl_filter_table_data_ajax(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
