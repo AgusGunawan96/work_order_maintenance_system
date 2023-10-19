@@ -69,10 +69,11 @@ class POCLowModulusRecord(models.Model):
     cpl1round           = models.FloatField(max_length=128, null=True, blank=True)
     cpl1round_status    = models.BooleanField(default=False)
     shift               = models.PositiveIntegerField(null=True, blank=True)
+    build_no            = models.FloatField(max_length=128, null=True, blank=True)
+    ddate               = models.DateTimeField('building date', null=True, blank=True)
     created_at          = models.DateTimeField('created at', auto_now_add=True)
     updated_at          = models.DateTimeField('updated at', auto_now=True)
-    created_at          = models.DateTimeField('created at', auto_now_add=True)
-    updated_at          = models.DateTimeField('updated at', auto_now=True)
+
 class POCVLPermission(models.Model):
     user                = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     created_at          = models.DateTimeField('created at', auto_now_add=True)
