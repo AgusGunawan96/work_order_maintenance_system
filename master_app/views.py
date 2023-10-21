@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.decorators import method_decorator
 from django.urls import path, reverse_lazy
@@ -6,11 +6,14 @@ from django.urls import path, reverse_lazy
 # LIBRARY FOR IMPORT DATA
 from django.http import JsonResponse, HttpResponse
 from csv import reader
+from django.db import connections
+
 from django.contrib.auth.models import User, Group
-from master_app.models import UserProfileInfo, UserKeluargaInfo, Province, Regency, District, Village
+from master_app.models import UserProfileInfo, UserKeluargaInfo, Province, Regency, District, Village,Department, Division
 from it_app.models import IPAddress, Hardware, ListLocation
 from qc_app.models import rirMaterial, rirVendor
 from hrd_app.models import medicalApprovalList, medicalRemain
+
 from accounting_app.models import coaCode
 from production_app.models import masterTagVL, masterTagLowModulus
 from django.contrib.auth.decorators import user_passes_test
@@ -20,8 +23,78 @@ from django.contrib.auth.hashers import check_password
 from datetime import datetime
 
 
+@login_required
+def userIndex(request):
+    users = User.objects.all()  # Query all user objects
 
+    database_alias = 'seiwa_int_app_db'  # Replace with the alias of the desired database
+    connection = connections[database_alias]
+    
+    # Execute a SQL query to fetch multiple fields from sys_user
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT IDUser, UserName, Department, Division, SubSection
+            FROM sys_user
+        """)
+        seiwa_users_data = cursor.fetchall()
+
+    # Create a list of dictionaries with field names as keys
+    seiwa_users = [{'IDUser': row[0], 'UserName': row[1], 'Department': row[2], 'Division': row[3], 'SubSection': row[4]} for row in seiwa_users_data]
+
+    # Compare seiwa_users with users' usernames to find new users
+    new_users = [user for user in seiwa_users if user['IDUser'] not in users.values_list('username', flat=True)]
+
+    context = {
+        'seiwa_users': seiwa_users,
+        'users': users,
+        'new_users': new_users
+    }
+
+    return render(request, 'master_app/user.html', context)
+
+@login_required 
+def userSynchronize(request):
+    users = User.objects.all()  # Query all user objects
+
+    database_alias = 'seiwa_int_app_db'  # Replace with the alias of the desired database
+    connection = connections[database_alias]
+    
+    # Execute a SQL query to fetch multiple fields from sys_user
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT IDUser, UserName, Department, Division, SubSection
+            FROM sys_user
+        """)
+        seiwa_users_data = cursor.fetchall()
+
+    # Create a list of dictionaries with field names as keys
+    seiwa_users = [{'IDUser': row[0], 'UserName': row[1], 'Department': row[2], 'Division': row[3], 'SubSection': row[4]} for row in seiwa_users_data]
+
+    # Compare seiwa_users with users' usernames to find new users
+    new_users = [user for user in seiwa_users if user['IDUser'] not in users.values_list('username', flat=True)]
+
+    # Create new auth_user records and set passwords for them
+    for new_user in new_users:
+        # Define a password for the new user
+
+        # Create a new User record
+        user = User.objects.create_user(
+            username=new_user['IDUser'],
+            password=new_user['IDUser'],
+            first_name=new_user['UserName'],
+            email='',  # You can set an email if needed
+        )
+        department_user = ''
+        department_user = Department.objects.filter(department_name__contains=new_user['Department']).first()
+        division_user = ''
+        division_user = Division.objects.filter(division_name__contains = new_user['Division']).first()
+        if not division_user or division_user == '' :
+            division_user = None
+        if not department_user or department_user == '' : 
+            department_user = None
+    return redirect('master_app:userIndex')
 # @permission_required('polls.add_choice')
+
 @login_required
 def index(request):
     # context={"breadcrumb":{"parent":"Color Version","child":"Layout Light"}}

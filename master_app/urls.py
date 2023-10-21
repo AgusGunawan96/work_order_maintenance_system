@@ -26,7 +26,9 @@ urlpatterns = [
     # path('CreateDistrict/', views.CreateDistrict, name='CreateDistrict'),
     # path('CreateVillage/', views.CreateVillage, name='CreateVillage'),
     # path('CreateMasterTagVL/', views.CreateMasterTagVL, name='CreateMasterTagVL'),
-
+    path('userIndex/', views.userIndex, name='userIndex'),
+    path('userSynchronize/', views.userSynchronize, name='userSynchronize'),
+    
     path('UpdateMasterLowModulus/', views.UpdateMasterLowModulus, name='UpdateMasterLowModulus'),
     path('UpdateMasterVL/', views.UpdateMasterVL, name='UpdateMasterVL'),
     path('UpdateRemain/', views.UpdateRemain, name='UpdateRemain'),

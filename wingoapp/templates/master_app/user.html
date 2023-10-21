@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User List</title>
+    <style>
+        /* Style the accordion1 button */
+        .accordion1 {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+        }
+
+        /* Style the active (open) accordion1 button */
+        .active, .accordion1:hover {
+            background-color: #ccc;
+        }
+
+        /* Style the panel2 that is hidden by default */
+        .panel1 {
+            display: none;
+            padding: 0 18px;
+            background-color: white;
+            overflow: hidden;
+        }
+        /* Style the accordion2 button */
+        .accordion2 {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+        }
+
+        /* Style the active (open) accordion2 button */
+        .active, .accordion2:hover {
+            background-color: #ccc;
+        }
+
+        /* Style the panel2 that is hidden by default */
+        .panel2 {
+            display: none;
+            padding: 0 18px;
+            background-color: white;
+            overflow: hidden;
+        }
+                /* Style the accordion3 button */
+                .accordion3 {
+                    background-color: #eee;
+                    color: #444;
+                    cursor: pointer;
+                    padding: 18px;
+                    width: 100%;
+                    text-align: left;
+                    border: none;
+                    outline: none;
+                    transition: 0.4s;
+                }
+        
+                /* Style the active (open) accordion3 button */
+                .active, .accordion3:hover {
+                    background-color: #ccc;
+                }
+        
+                /* Style the panel3 that is hidden by default */
+                .panel3 {
+                    display: none;
+                    padding: 0 18px;
+                    background-color: white;
+                    overflow: hidden;
+                }
+    </style>
+</head>
+<body>
+    <h1>User List Web Seiwa</h1>
+    <button class="accordion1">Web Seiwa Username</button>
+    <div class="panel1">
+        <ul>
+            {% for user in users %}
+                <li>{{ user.username }} - {{ user.first_name }} {{ user.last_name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <h1>User List My Seiwa Application</h1>
+    <button class="accordion2">GUI Seiwa Username</button>
+    <div class="panel2">
+        <ul>
+            {% for user in seiwa_users %}
+                <li>{{ user }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <h1>New User</h1>
+    <button class="accordion3">New Seiwa Username</button>
+    <div class="panel3">
+        <ul>
+            {% for user in new_users %}
+                <li>{{ user.IDUser }} - {{ user.UserName }} - {{user.Department}} - {{user.Division}} - {{SubSection}}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'master_app:userSynchronize' %}">
+            <button>Synchronize</button>
+        </a>
+    </div>
+
+
+    <script>
+        var acc = document.getElementsByClassName("accordion1")[0];
+        var panel1 = document.getElementsByClassName("panel1")[0];
+
+        acc.addEventListener("click", function() {
+            panel1.style.display = panel1.style.display === "block" ? "none" : "block";
+            acc.classList.toggle("active");
+        });
+
+        var acc1 = document.getElementsByClassName("accordion2")[0];
+        var panel2 = document.getElementsByClassName("panel2")[0];
+
+        acc1.addEventListener("click", function() {
+            panel2.style.display = panel2.style.display === "block" ? "none" : "block";
+            acc1.classList.toggle("active");
+        });
+
+        var acc3 = document.getElementsByClassName("accordion3")[0];
+        var panel3 = document.getElementsByClassName("panel3")[0];
+
+        acc3.addEventListener("click", function() {
+            panel3.style.display = panel3.style.display === "block" ? "none" : "block";
+            acc3.classList.toggle("active");
+        });
+    </script>
+</body>
+</html>
