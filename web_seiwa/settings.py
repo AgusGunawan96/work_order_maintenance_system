@@ -142,6 +142,15 @@ DATABASES = {
     'HOST': '172.16.202.237\SEIBSC01',
     'PORT': '',
     'OPTIONS': {},  # Additional options for the second database
+    },
+    'seiwa_int_app_db': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'db_seiwa_intapp',
+    'USER': 'seiwa',
+    'PASSWORD': 'BimaSakti!01',
+    'HOST': '172.16.202.101',
+    'PORT': '',
+    'OPTIONS': {},  # Additional options for the second database
     }
 }
 
