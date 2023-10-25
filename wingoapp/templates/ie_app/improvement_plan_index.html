@@ -1,0 +1,135 @@
+{% extends 'starter_kit/base.html' %}{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/date-picker.scss' %}">
+
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <div class="row starter-main">
+      <div class="col-sm-12">
+
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>IMPROVEMENT PLAN |  {{ request.user.first_name }} {{ request.user.last_name }}</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+                <div class="mb-3 col-md-12">  
+                    <label class="col-form-label">Name</label>
+                    <input class="form-control" type="text" value="{{request.user.first_name}} {{request.user.last_name}}" readonly style="text-transform: uppercase;">
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Nomor Karyawan</label>
+                    <input class="form-control" type="text" value="{{request.user.username}}" readonly style="text-transform: uppercase;">
+                </div>
+                <div class="mb-3 col-md-6">  
+                    <label class="col-form-label">Department</label>
+                    <input class="form-control" type="text" value="{{request.user.userprofileinfo.department.department_name}}" readonly style="text-transform: uppercase;">
+                </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header pb-0">
+              <h5>IMPROVEMENT PLAN | CLASSIFICATION</h5>
+            </div>
+            <form method="POST" enctype="multipart/form-data" class="form theme-form">
+            {% csrf_token %}
+            <div class="card-body animate-chk">
+              <div class="row">
+                <div class="col">
+                  <label class="d-block radio-primary" for="edo-ani" >
+                    <input class="radio_animated radio-primary" id="edo-ani" type="radio" name="rdo-ani"  value="SAFETY"checked=""> S - SAFETY
+                  </label>
+                  <label class="d-block" for="edo-ani1">
+                    <input class="radio_animated radio-primary" id="edo-ani1" type="radio" name="rdo-ani" value="PRODUCTIVITY"> P - PRODUCTIVITY (SPEED UP)
+                  </label>
+                  <label class="d-block" for="edo-ani2">
+                    <input class="radio_animated radio-primary" id="edo-ani2" type="radio" name="rdo-ani"  value="QUALITY"checked=""> Q - QUALITY
+                  </label>
+                  <label class="d-block" for="edo-ani13">
+                    <input class="radio_animated radio-primary" id="edo-ani13" type="radio" name="rdo-ani" value="COST"> C - COST
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        <div class="card">
+            <div class="card-header pb-0">
+              <h5>IMPROVEMENT PLAN | DETAIL</h5>
+            </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label class="form-label" for="exampleFormControlInput15">Due Date</label>
+                      <input class="form-control digits" id="disabled-days" name ="due_date" type="text">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div>
+                      <h5 class="form-label mb-1" for="problem_desc">Problem/Current Condition</h5>
+                      <textarea class="form-control mb-3 input-air-primary" id="problem_desc" name="problem_desc" rows="3"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                      <div>
+                        <h5 class="form-label mb-1" for="improvement_plan_desc">Improvement Plan</h5>
+                        <textarea class="form-control mb-3 input-air-primary" id="improvement_plan_desc" name="improvement_plan_desc" rows="3"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div>
+                        <h5 class="form-label mb-1" for="target_desc">Target</h5>
+                        <textarea class="form-control mb-3 input-air-primary" id="target_desc" name="target_desc" rows="3"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div>
+                        <h5 class="form-label mb-1" for="benefit_desc">Benefit</h5>
+                        <textarea class="form-control mb-3 input-air-primary" id="benefit_desc" name="benefit_desc" rows="3"></textarea>
+                      </div>
+                    </div>
+                  </div>
+      
+              </div>
+              <div class="card-footer text-end pt-0">
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <input class="btn btn-light" type="reset" value="Cancel">
+              </div>
+            </form>
+          </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datepicker/date-picker/datepicker.js' %}"></script>
+<script src="{% static 'assets/js/datepicker/date-picker/datepicker.en.js' %}"></script>
+<script src="{% static 'assets/js/datepicker/date-picker/datepicker.custom.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}
