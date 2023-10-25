@@ -43,13 +43,7 @@ def improvement_plan_index(request):
             target_desc = target_desc_input,
             benefit_desc = benefit_desc_input,
         )
-        # print(plan_no_input)
-        # print(classification_input)
-        # print(dueDate_input)
-        # print(problem_desc_input)
-        # print(improvement_desc_input)
-        # print(target_desc_input)
-        # print(benefit_desc_input)
+        messages.success(request, 'Improvement Plan Added!')    
         return redirect('ie_app:improvement_plan_index')
     else:
         return render(request, 'ie_app/improvement_plan_index.html')

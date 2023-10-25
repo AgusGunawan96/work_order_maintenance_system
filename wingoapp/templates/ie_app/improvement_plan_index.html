@@ -19,6 +19,21 @@
           <div class="card-header pb-0">
             <h5>IMPROVEMENT PLAN |  {{ request.user.first_name }} {{ request.user.last_name }}</h5>
           </div>
+          
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message | safe }}
+              <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <!-- blok untuk menampilkan notifikasi pesan sukses -->
+            <div>
+            </div>
+    
+                
+          
           <div class="card-body">
             <div class="row">
                 <div class="mb-3 col-md-12">  
@@ -72,7 +87,7 @@
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label" for="exampleFormControlInput15">Due Date</label>
-                      <input class="form-control digits" id="disabled-days" name ="due_date" type="text">
+                      <input class="form-control digits" id="disabled-days" name ="due_date" type="text" required="">
                     </div>
                   </div>
                 </div>
@@ -80,7 +95,7 @@
                   <div class="col">
                     <div>
                       <h5 class="form-label mb-1" for="problem_desc">Problem/Current Condition</h5>
-                      <textarea class="form-control mb-3 input-air-primary" id="problem_desc" name="problem_desc" rows="3"></textarea>
+                      <textarea class="form-control mb-3 input-air-primary" id="problem_desc" name="problem_desc" rows="3" required=""></textarea>
                     </div>
                   </div>
                 </div>
@@ -88,7 +103,7 @@
                     <div class="col">
                       <div>
                         <h5 class="form-label mb-1" for="improvement_plan_desc">Improvement Plan</h5>
-                        <textarea class="form-control mb-3 input-air-primary" id="improvement_plan_desc" name="improvement_plan_desc" rows="3"></textarea>
+                        <textarea class="form-control mb-3 input-air-primary" id="improvement_plan_desc" name="improvement_plan_desc" rows="3" required=""></textarea>
                       </div>
                     </div>
                   </div>
@@ -96,7 +111,7 @@
                     <div class="col">
                       <div>
                         <h5 class="form-label mb-1" for="target_desc">Target</h5>
-                        <textarea class="form-control mb-3 input-air-primary" id="target_desc" name="target_desc" rows="3"></textarea>
+                        <textarea class="form-control mb-3 input-air-primary" id="target_desc" name="target_desc" rows="3"required=""></textarea>
                       </div>
                     </div>
                   </div>
@@ -104,7 +119,7 @@
                     <div class="col">
                       <div>
                         <h5 class="form-label mb-1" for="benefit_desc">Benefit</h5>
-                        <textarea class="form-control mb-3 input-air-primary" id="benefit_desc" name="benefit_desc" rows="3"></textarea>
+                        <textarea class="form-control mb-3 input-air-primary" id="benefit_desc" name="benefit_desc" rows="3"required=""></textarea>
                       </div>
                     </div>
                   </div>
