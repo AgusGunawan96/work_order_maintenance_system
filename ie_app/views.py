@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.http import Http404, HttpResponse, JsonResponse
-from ie_app.models import ImpPlanH,ImpPlanD
+from ie_app.models import ImpPlanH,ImpPlanD, ImpPlanAttachment
 import datetime
 import csv
 import xlwt
@@ -27,14 +27,17 @@ def improvement_plan_index(request):
         plan_maks = ImpPlanH.objects.filter(plan_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
         plan_no_input = "PLN" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( plan_maks, ))  
         dueDate_input = datetime.datetime.strptime(dueDate_input, '%m/%d/%Y').strftime('%Y-%m-%d')
-
-
         improvement_header = ImpPlanH.objects.create(
             user = request.user,
             plan_no = plan_no_input,
             duedate = dueDate_input,
             classification  = classification_input,
         )
+        files = request.FILES.getlist('attachment')
+        for f in files:
+             attachment = ImpPlanAttachment(attachment=f)
+             attachment.planh = improvement_header
+             attachment.save()
         ImpPlanD.objects.create(
             planh = improvement_header,
             plan_no = plan_no_input,

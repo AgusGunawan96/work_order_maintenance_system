@@ -32,3 +32,9 @@ class ImpPlanD(models.Model):
     updated_at          = models.DateTimeField('updated at', auto_now=True)
     def __str__(self) :
         return self.plan_no
+    
+class ImpPlanAttachment(models.Model):
+    planh               = models.ForeignKey(ImpPlanH, on_delete=models.CASCADE, blank=True, null=True)
+    attachment          = models.FileField(upload_to='PlanAttachment/', null=False, blank=True)
+    created_at          = models.DateTimeField('created at', auto_now_add=True)
+    updated_at          = models.DateTimeField('updated at', auto_now=True)

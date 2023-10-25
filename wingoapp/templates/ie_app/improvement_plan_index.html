@@ -4,6 +4,7 @@
 <!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/date-picker.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/dropzone.scss' %}">
 
 <!-- Plugins css Ends-->
 {% endblock css %}
@@ -19,7 +20,7 @@
           <div class="card-header pb-0">
             <h5>IMPROVEMENT PLAN |  {{ request.user.first_name }} {{ request.user.last_name }}</h5>
           </div>
-          
+
             {% if messages %}
             {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -73,6 +74,12 @@
                   <label class="d-block" for="edo-ani13">
                     <input class="radio_animated radio-primary" id="edo-ani13" type="radio" name="rdo-ani" value="COST"> C - COST
                   </label>
+                  <label class="d-block" for="edo-ani14">
+                    <input class="radio_animated radio-primary" id="edo-ani14" type="radio" name="rdo-ani" value="6S PROJECT"> 6S - 6S PROJECT
+                  </label>
+                  <label class="d-block" for="edo-ani15">
+                    <input class="radio_animated radio-primary" id="edo-ani15" type="radio" name="rdo-ani" value="OTHERS"> O - OTHERS
+                  </label>
                 </div>
               </div>
             </div>
@@ -87,7 +94,7 @@
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label" for="exampleFormControlInput15">Due Date</label>
-                      <input class="form-control digits" id="disabled-days" name ="due_date" type="text" required="">
+                      <input class="form-control digits" id="disabled-days" name ="due_date" type="text" required="" >
                     </div>
                   </div>
                 </div>
@@ -123,14 +130,23 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col">
+                        <label class="col-sm-3 col-form-label">Upload File</label>
+                        <div class="col-sm-9">
+                          <input name="attachment" class="form-control" type="file" multiple>
+                        </div>
+                    </div>
+                  </div>
       
               </div>
               <div class="card-footer text-end pt-0">
                 <button class="btn btn-primary" type="submit">Submit</button>
                 <input class="btn btn-light" type="reset" value="Cancel">
               </div>
-            </form>
-          </div>
+            </div>
+            
+        </form>
 
       </div>
     </div>
@@ -146,5 +162,7 @@
 <script src="{% static 'assets/js/datepicker/date-picker/datepicker.js' %}"></script>
 <script src="{% static 'assets/js/datepicker/date-picker/datepicker.en.js' %}"></script>
 <script src="{% static 'assets/js/datepicker/date-picker/datepicker.custom.js' %}"></script>
+<script src="{% static 'assets/js/dropzone/dropzone.js' %}"></script>
+<script src="{% static 'assets/js/dropzone/dropzone-script.js' %}"></script>
 <!-- Plugins JS Ends-->
 {% endblock scriptcontent %}
