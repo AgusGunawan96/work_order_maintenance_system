@@ -21,22 +21,592 @@ import csv
 # Create your views here.
 from django.contrib.auth.hashers import check_password
 from datetime import datetime
+import json
 
+# ==== TAMBAHAN UNTUK SDBM AUTHENTICATION ====
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django import forms
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+class SDBMLoginForm(forms.Form):
+    """
+    Form login khusus untuk SDBM authentication
+    """
+    employee_number = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nomor Karyawan',
+            'required': True,
+        }),
+        label='Nomor Karyawan'
+    )
+    
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Password',
+            'required': True,
+        }),
+        label='Password'
+    )
+
+def convert_datetime_to_string(obj):
+    """
+    Helper function untuk mengkonversi datetime objects ke string
+    """
+    if isinstance(obj, datetime):
+        return obj.strftime('%Y-%m-%d %H:%M:%S')
+    elif hasattr(obj, 'strftime'):  # untuk date objects
+        return obj.strftime('%Y-%m-%d')
+    return obj
+
+def sdbm_login_view(request):
+    """
+    FIXED: View untuk login menggunakan SDBM database
+    Handle datetime serialization issue dengan triple safety check
+    """
+    if request.method == 'POST':
+        form = SDBMLoginForm(request.POST)
+        
+        if form.is_valid():
+            employee_number = form.cleaned_data['employee_number']
+            password = form.cleaned_data['password']
+            
+            logger.info(f"LOGIN ATTEMPT: {employee_number}")
+            
+            # Authenticate menggunakan custom backend
+            user = authenticate(
+                request=request,
+                username=employee_number, 
+                password=password
+            )
+            
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'Selamat datang, {user.first_name}!')
+                
+                # FIXED: Triple safety untuk session storage
+                try:
+                    # STEP 1: Cek apakah sudah ada di session dari authentication backend
+                    existing_data = request.session.get('employee_data')
+                    
+                    if not existing_data:
+                        # STEP 2: Ambil fresh data jika belum ada
+                        logger.info(f"LOGIN: Getting fresh employee data for {employee_number}")
+                        employee_data = get_employee_data_for_session(employee_number)
+                        
+                        if employee_data:
+                            # STEP 3: Final conversion dan validation
+                            try:
+                                # Test JSON serialization sebelum simpan
+                                json_test = json.dumps(employee_data)
+                                
+                                # Jika berhasil, simpan ke session
+                                request.session['employee_data'] = employee_data
+                                logger.info(f"LOGIN SUCCESS: Employee data saved to session for {employee_number}")
+                                
+                            except (TypeError, ValueError) as json_error:
+                                logger.error(f"LOGIN JSON TEST FAILED: {json_error}")
+                                
+                                # Last resort: create minimal safe data
+                                safe_data = {
+                                    'employee_number': employee_number,
+                                    'fullname': user.get_full_name() or user.username,
+                                    'nickname': user.first_name or user.username,
+                                    'department_name': 'Unknown Department',
+                                    'section_name': 'Unknown Section',
+                                    'title_name': 'Unknown Title',
+                                    'display_name': user.first_name or user.username,
+                                    'has_approval_role': False,
+                                    'is_manager': False,
+                                    'is_supervisor': False,
+                                    'is_general_manager': False,
+                                    'is_bod': False,
+                                    'login_method': 'fallback_safe_data'
+                                }
+                                
+                                # Test dan simpan safe data
+                                json.dumps(safe_data)  # Test
+                                request.session['employee_data'] = safe_data
+                                logger.warning(f"LOGIN: Used safe fallback data for {employee_number}")
+                    else:
+                        logger.info(f"LOGIN: Using existing session data for {employee_number}")
+                
+                except Exception as session_error:
+                    logger.error(f"LOGIN SESSION ERROR: {session_error}")
+                    # Login tetap berlanjut meski session save gagal
+                    messages.warning(request, 'Login berhasil, tapi ada masalah dengan penyimpanan data. Fungsi mungkin terbatas.')
+                
+                # Redirect ke halaman yang diminta atau dashboard
+                next_url = request.GET.get('next', '/')
+                logger.info(f"LOGIN REDIRECT: {employee_number} -> {next_url}")
+                return redirect(next_url)
+            else:
+                logger.warning(f"LOGIN FAILED: Invalid credentials for {employee_number}")
+                messages.error(request, 'Nomor karyawan atau password salah!')
+        else:
+            logger.warning(f"LOGIN FORM ERROR: {form.errors}")
+            messages.error(request, 'Form tidak valid!')
+    else:
+        form = SDBMLoginForm()
+    
+    context = {
+        'form': form,
+        'title': 'Login SDBM System'
+    }
+    
+    return render(request, 'registration/login.html', context)
+
+def get_employee_data_for_session(employee_number):
+    """
+    FIXED: Helper function untuk mengambil data employee dari SDBM untuk session
+    Memastikan semua datetime objects dikonversi ke string
+    """
+    try:
+        with connections['SDBM'].cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT
+                    e.id as employee_id,
+                    e.fullname,
+                    e.nickname,
+                    e.employee_number,
+                    e.job_status,
+                    e.level_user,
+                    
+                    -- Position data
+                    p.id as position_id,
+                    p.departmentId,
+                    p.sectionId,
+                    p.subsectionId,
+                    p.titleId,
+                    p.divisionId,
+                    
+                    -- Department info
+                    d.name as department_name,
+                    
+                    -- Section info
+                    s.name as section_name,
+                    
+                    -- Subsection info
+                    sub.name as subsection_name,
+                    
+                    -- Title info
+                    t.Name as title_name,
+                    t.is_manager,
+                    t.is_supervisor,
+                    t.is_generalManager,
+                    t.is_bod,
+                    
+                    -- AVOID datetime fields yang menyebabkan masalah
+                    -- e.created_date,  -- REMOVE untuk hindari datetime issues
+                    
+                    p.created_date  -- Ambil dari position table sebagai test
+                    
+                FROM [hrbp].[employees] e
+                INNER JOIN [hrbp].[position] p ON e.id = p.employeeId
+                LEFT JOIN [hr].[department] d ON p.departmentId = d.id
+                LEFT JOIN [hr].[section] s ON p.sectionId = s.id  
+                LEFT JOIN [hr].[subsection] sub ON p.subsectionId = sub.id
+                LEFT JOIN [hr].[title] t ON p.titleId = t.id
+                
+                WHERE e.employee_number = %s 
+                    AND e.is_active = 1
+                    AND p.is_active = 1
+                    AND (d.is_active IS NULL OR d.is_active = 1)
+                    AND (s.is_active IS NULL OR s.is_active = 1)
+                    AND (sub.is_active IS NULL OR sub.is_active = 1)
+                    AND (t.is_active IS NULL OR t.is_active = 1)
+                    
+                ORDER BY p.id DESC
+            """, [employee_number])
+            
+            row = cursor.fetchone()
+            
+            if row:
+                # FIXED: Konversi datetime field immediately ke string
+                position_created_date = None
+                if row[22]:  # position created_date
+                    try:
+                        position_created_date = row[22].strftime('%Y-%m-%d %H:%M:%S')
+                    except:
+                        position_created_date = str(row[22]) if row[22] else None
+                
+                employee_data = {
+                    'employee_id': row[0],
+                    'fullname': row[1],
+                    'nickname': row[2],
+                    'employee_number': row[3],
+                    'job_status': row[4],
+                    'level_user': row[5],
+                    'position_id': row[6],
+                    'department_id': row[7],
+                    'section_id': row[8],
+                    'subsection_id': row[9],
+                    'title_id': row[10],
+                    'division_id': row[11],
+                    'department_name': row[12],
+                    'section_name': row[13],
+                    'subsection_name': row[14],
+                    'title_name': row[15],
+                    'is_manager': row[16],
+                    'is_supervisor': row[17],
+                    'is_general_manager': row[18],
+                    'is_bod': row[19],
+                    
+                    # FIXED: Convert datetime field to string immediately  
+                    'position_created_date': position_created_date,
+                    
+                    # Computed fields
+                    'display_name': row[2] if row[2] else row[1],
+                    'has_approval_role': (
+                        row[16] or row[17] or row[18] or row[19] or
+                        'SUPERVISOR' in str(row[15] or '').upper() or
+                        'MANAGER' in str(row[15] or '').upper() or
+                        'SPV' in str(row[15] or '').upper() or
+                        'MGR' in str(row[15] or '').upper()
+                    ),
+                    
+                    # FIXED: Set safe default values - avoid datetime fields
+                    'email': None,
+                    'telph_number': None,
+                    'join_date': None,  # String, bukan datetime
+                    'employee_status': row[4],
+                    'created_date': None  # Remove untuk safety
+                }
+                
+                # FINAL SAFETY CHECK: convert any remaining datetime objects
+                employee_data = convert_data_for_session(employee_data)
+                
+                return employee_data
+                
+    except Exception as e:
+        logger.error(f"Error fetching employee data for session: {e}")
+        
+    return None
+
+def convert_data_for_session(data):
+    """
+    FIXED: Konversi data agar aman untuk disimpan ke session (JSON serializable)
+    """
+    if isinstance(data, dict):
+        return {key: convert_data_for_session(value) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [convert_data_for_session(item) for item in data]
+    elif isinstance(data, datetime):
+        return data.strftime('%Y-%m-%d %H:%M:%S')
+    elif hasattr(data, 'strftime'):  # untuk date objects
+        return data.strftime('%Y-%m-%d')
+    elif data is None:
+        return None
+    else:
+        return data
+
+def sdbm_api_check_user(request, employee_number, password):
+    """
+    FIXED: API untuk check user dari sistem eksternal - safe JSON response
+    """
+    user = authenticate(
+        request=request,
+        username=employee_number, 
+        password=password
+    )
+    
+    if user is not None:
+        # FIXED: Ambil employee data yang aman untuk JSON response
+        try:
+            employee_data = get_employee_data_for_session(employee_number)
+            serializable_data = convert_data_for_session(employee_data) if employee_data else {}
+            
+            # Test JSON serialization
+            json.dumps(serializable_data)
+            
+            return JsonResponse({
+                'status': 'success',
+                'valid': True,
+                'employee_data': serializable_data
+            })
+        except Exception as e:
+            logger.error(f"API JSON ERROR: {e}")
+            return JsonResponse({
+                'status': 'success',
+                'valid': True,
+                'employee_data': {
+                    'employee_number': employee_number,
+                    'login_status': 'valid_but_data_error'
+                }
+            })
+    else:
+        return JsonResponse({
+            'status': 'failed',
+            'valid': False,
+            'message': 'Invalid credentials'
+        })
+
+
+def get_employee_info(request, employee_number):
+    """
+    FIXED: API untuk mendapatkan informasi karyawan dari SDBM
+    Handle datetime serialization dengan safety check
+    """
+    try:
+        employee_data = get_employee_data_for_session(employee_number)
+        
+        if employee_data:
+            # Konversi ke format yang aman untuk JSON
+            serializable_data = convert_data_for_session(employee_data)
+            
+            # Test JSON serialization
+            json.dumps(serializable_data)
+            
+            return JsonResponse({
+                'status': 'success',
+                'employee': serializable_data
+            })
+        else:
+            return JsonResponse({
+                'status': 'failed',
+                'message': 'Employee not found'
+            })
+            
+    except Exception as e:
+        logger.error(f"Error in get_employee_info: {e}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        })
+
+
+# def employee_context(request):
+#     """
+#     Context processor untuk menambahkan data employee ke semua template
+#     """
+#     if request.user.is_authenticated:
+#         employee_data = request.session.get('employee_data', {})
+#         return {
+#             'employee_data': employee_data
+#         }
+#     return {}
+
+# FIXED employee_context - Bagian untuk mengganti di master_app/views.py
+
+# FIXED employee_context - Bagian untuk mengganti di master_app/views.py
+def employee_context(request):
+    """
+    FIXED: Context processor untuk menyediakan data employee dari SDBM ke semua template
+    Handle datetime serialization dan gunakan data dari session dengan safety check
+    """
+    
+    # Default context
+    context = {
+        'employee_data': None,
+        'sdbm_status': 'not_authenticated'
+    }
+    
+    # Hanya proses jika user authenticated
+    if not request.user.is_authenticated:
+        return context
+    
+    try:
+        # FIXED: Coba ambil dari session dulu untuk efisiensi
+        employee_data = request.session.get('employee_data')
+        
+        if employee_data:
+            # SAFETY CHECK: pastikan data masih JSON serializable
+            try:
+                json.dumps(employee_data)
+                context.update({
+                    'employee_data': employee_data,
+                    'sdbm_status': 'connected'
+                })
+                return context
+            except Exception as json_error:
+                logger.error(f"CONTEXT JSON ERROR: {json_error}")
+                # Clear bad session data
+                del request.session['employee_data']
+        
+        # Jika tidak ada di session atau ada error, query database
+        employee_data = get_employee_data_for_session(request.user.username)
+        
+        if employee_data:
+            # Konversi untuk session storage
+            serializable_data = convert_data_for_session(employee_data)
+            
+            # Test JSON serialization
+            json.dumps(serializable_data)
+            
+            # Simpan ke session untuk penggunaan berikutnya
+            request.session['employee_data'] = serializable_data
+            
+            context.update({
+                'employee_data': serializable_data,
+                'sdbm_status': 'connected'
+            })
+            
+            logger.debug(f"Employee context loaded for {employee_data['fullname']} ({employee_data['employee_number']})")
+            
+        else:
+            logger.warning(f"Employee data not found in SDBM for user: {request.user.username}")
+            # Fallback safe data
+            fallback_data = {
+                'fullname': request.user.get_full_name() or request.user.username,
+                'nickname': request.user.first_name or request.user.username,
+                'employee_number': request.user.username,
+                'department_name': 'Unknown Department',
+                'section_name': 'Unknown Section',
+                'title_name': 'Unknown Title',
+                'display_name': request.user.first_name or request.user.username,
+                'has_approval_role': False,
+                'is_manager': False,
+                'is_supervisor': False,
+                'is_general_manager': False,
+                'is_bod': False,
+                'email': None,
+                'telph_number': None,
+                'join_date': None,
+                'employee_status': 'active',
+                'context_source': 'fallback'
+            }
+            
+            context.update({
+                'employee_data': fallback_data,
+                'sdbm_status': 'no_data'
+            })
+                
+    except Exception as e:
+        logger.error(f"Error loading employee context for user {request.user.username}: {e}")
+        
+        # Emergency fallback context dengan data minimal
+        emergency_data = {
+            'fullname': request.user.get_full_name() or request.user.username,
+            'nickname': request.user.first_name or request.user.username,
+            'employee_number': request.user.username,
+            'department_name': 'System Error',
+            'section_name': 'System Error',
+            'title_name': 'System Error',
+            'display_name': request.user.first_name or request.user.username,
+            'has_approval_role': False,
+            'is_manager': False,
+            'is_supervisor': False,
+            'is_general_manager': False,
+            'is_bod': False,
+            'email': None,
+            'telph_number': None,
+            'join_date': None,
+            'employee_status': 'error',
+            'context_source': 'emergency_fallback'
+        }
+        
+        context.update({
+            'employee_data': emergency_data,
+            'sdbm_status': 'error'
+        })
+    
+    return context
+
+# ===== FUNGSI HELPER UNTUK CEK APPROVAL ROLE =====
+
+def user_has_approval_role(user):
+    """
+    Fungsi helper untuk mengecek apakah user memiliki role approval
+    """
+    if not user or not user.is_authenticated:
+        return False
+    
+    try:
+        from wo_maintenance_app.utils import get_employee_hierarchy_data
+        
+        employee_data = get_employee_hierarchy_data(user)
+        if employee_data:
+            user_title = str(employee_data.get('title_name', '')).upper()
+            
+            return (
+                employee_data.get('is_manager', False) or
+                employee_data.get('is_supervisor', False) or
+                employee_data.get('is_general_manager', False) or
+                employee_data.get('is_bod', False) or
+                'SUPERVISOR' in user_title or
+                'MANAGER' in user_title or
+                'SPV' in user_title or
+                'MGR' in user_title
+            )
+    except Exception as e:
+        logger.error(f"Error checking approval role for {user.username}: {e}")
+    
+    return False
+
+
+def get_user_department_section(user):
+    """
+    Fungsi helper untuk mendapatkan department dan section user
+    """
+    if not user or not user.is_authenticated:
+        return None, None
+    
+    try:
+        from wo_maintenance_app.utils import get_employee_hierarchy_data
+        
+        employee_data = get_employee_hierarchy_data(user)
+        if employee_data:
+            return employee_data.get('department_name'), employee_data.get('section_name')
+    except Exception as e:
+        logger.error(f"Error getting department/section for {user.username}: {e}")
+    
+    return None, None
+
+@login_required
+def dashboard_view(request):
+    """
+    Dashboard utama yang menampilkan informasi employee dari SDBM
+    """
+    employee_data = request.session.get('employee_data', {})
+    
+    context = {
+        'employee_data': employee_data,
+        'page_title': 'Dashboard',
+    }
+    
+    return render(request, 'master_app/dashboard.html', context)
+
+@login_required
+def employee_profile_view(request):
+    """
+    Halaman profil employee dari SDBM
+    """
+    employee_data = request.session.get('employee_data', {})
+    
+    context = {
+        'employee_data': employee_data,
+        'page_title': 'Profil Karyawan',
+    }
+    
+    return render(request, 'master_app/employee_profile.html', context)
+
+# ==== KODE EXISTING YANG DIPERBARUI ====
 
 @login_required
 def userIndex(request):
     users = User.objects.all()  # Query all user objects
 
-    database_alias = 'seiwa_int_app_db'  # Replace with the alias of the desired database
-    connection = connections[database_alias]
-    
-    # Execute a SQL query to fetch multiple fields from sys_user
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT IDUser, UserName, Department, Division, SubSection
-            FROM sys_user
-        """)
-        seiwa_users_data = cursor.fetchall()
+    # Gunakan database alias yang benar berdasarkan konfigurasi
+    try:
+        database_alias = 'seiwa_int_app_db'  # Replace with the alias of the desired database
+        connection = connections[database_alias]
+        
+        # Execute a SQL query to fetch multiple fields from sys_user
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT IDUser, UserName, Department, Division, SubSection
+                FROM sys_user
+            """)
+            seiwa_users_data = cursor.fetchall()
+    except:
+        # Fallback jika database seiwa_int_app_db tidak tersedia
+        seiwa_users_data = []
 
     # Create a list of dictionaries with field names as keys
     seiwa_users = [{'IDUser': row[0], 'UserName': row[1], 'Department': row[2], 'Division': row[3], 'SubSection': row[4]} for row in seiwa_users_data]
@@ -44,10 +614,55 @@ def userIndex(request):
     # Compare seiwa_users with users' usernames to find new users
     new_users = [user for user in seiwa_users if user['IDUser'] not in users.values_list('username', flat=True)]
 
+    # Ambil data employee dari SDBM juga
+    sdbm_employees = []
+    try:
+        connection = connections['SDBM']
+        cursor = connection.cursor()
+        
+        query = """
+            SELECT 
+                e.employee_number, 
+                e.fullname, 
+                e.nickname,
+                d.name as department_name,
+                s.name as section_name,
+                ss.name as subsection_name,
+                t.Name as title_name
+            FROM hrbp.employees e
+            LEFT JOIN hrbp.position p ON e.id = p.employeeId
+            LEFT JOIN hr.department d ON p.departmentId = d.id
+            LEFT JOIN hr.section s ON p.sectionId = s.id
+            LEFT JOIN hr.subsection ss ON p.subsectionId = ss.id
+            LEFT JOIN hr.title t ON p.titleId = t.id
+            WHERE e.is_active = 1
+            ORDER BY e.employee_number
+        """
+        
+        cursor.execute(query)
+        sdbm_data = cursor.fetchall()
+        
+        sdbm_employees = [{
+            'employee_number': row[0],
+            'fullname': row[1],
+            'nickname': row[2],
+            'department_name': row[3],
+            'section_name': row[4],
+            'subsection_name': row[5],
+            'title_name': row[6],
+        } for row in sdbm_data]
+        
+    except Exception as e:
+        print(f"Error fetching SDBM employees: {e}")
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+
     context = {
         'seiwa_users': seiwa_users,
         'users': users,
-        'new_users': new_users
+        'new_users': new_users,
+        'sdbm_employees': sdbm_employees,
     }
 
     return render(request, 'master_app/user.html', context)
@@ -56,131 +671,194 @@ def userIndex(request):
 def userSynchronize(request):
     users = User.objects.all()  # Query all user objects
 
-    database_alias = 'seiwa_int_app_db'  # Replace with the alias of the desired database
-    connection = connections[database_alias]
+    try:
+        database_alias = 'seiwa_int_app_db'  # Replace with the alias of the desired database
+        connection = connections[database_alias]
+        
+        # Execute a SQL query to fetch multiple fields from sys_user
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT IDUser, UserName, Department, Division, SubSection
+                FROM sys_user
+            """)
+            seiwa_users_data = cursor.fetchall()
+
+        # Create a list of dictionaries with field names as keys
+        seiwa_users = [{'IDUser': row[0], 'UserName': row[1], 'Department': row[2], 'Division': row[3], 'SubSection': row[4]} for row in seiwa_users_data]
+
+        # Compare seiwa_users with users' usernames to find new users
+        new_users = [user for user in seiwa_users if user['IDUser'] not in users.values_list('username', flat=True)]
+
+        # Create new auth_user records and set passwords for them
+        for new_user in new_users:
+            # Define a password for the new user
+
+            # Create a new User record
+            user = User.objects.create_user(
+                username=new_user['IDUser'],
+                password=new_user['IDUser'],
+                first_name=new_user['UserName'],
+                email='',  # You can set an email if needed
+            )
+            department_user = ''
+            department_user = Department.objects.filter(department_name__contains=new_user['Department']).first()
+            division_user = ''
+            division_user = Division.objects.filter(division_name__contains = new_user['Division']).first()
+            if not division_user or division_user == '' :
+                division_user = None
+            if not department_user or department_user == '' : 
+                department_user = None
+    except Exception as e:
+        print(f"Error in userSynchronize: {e}")
+        messages.error(request, f"Error synchronizing users: {e}")
     
-    # Execute a SQL query to fetch multiple fields from sys_user
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT IDUser, UserName, Department, Division, SubSection
-            FROM sys_user
-        """)
-        seiwa_users_data = cursor.fetchall()
-
-    # Create a list of dictionaries with field names as keys
-    seiwa_users = [{'IDUser': row[0], 'UserName': row[1], 'Department': row[2], 'Division': row[3], 'SubSection': row[4]} for row in seiwa_users_data]
-
-    # Compare seiwa_users with users' usernames to find new users
-    new_users = [user for user in seiwa_users if user['IDUser'] not in users.values_list('username', flat=True)]
-
-    # Create new auth_user records and set passwords for them
-    for new_user in new_users:
-        # Define a password for the new user
-
-        # Create a new User record
-        user = User.objects.create_user(
-            username=new_user['IDUser'],
-            password=new_user['IDUser'],
-            first_name=new_user['UserName'],
-            email='',  # You can set an email if needed
-        )
-        department_user = ''
-        department_user = Department.objects.filter(department_name__contains=new_user['Department']).first()
-        division_user = ''
-        division_user = Division.objects.filter(division_name__contains = new_user['Division']).first()
-        if not division_user or division_user == '' :
-            division_user = None
-        if not department_user or department_user == '' : 
-            department_user = None
     return redirect('master_app:userIndex')
-# @permission_required('polls.add_choice')
 
 @login_required
 def index(request):
-    # context={"breadcrumb":{"parent":"Color Version","child":"Layout Light"}}
-    master_app = Group.objects.get(name="master_app").user_set.all()
-    accounting_app = Group.objects.get(name="accounting_app").user_set.all()
-    costcontrol_app = Group.objects.get(name="costcontrol_app").user_set.all()
-    engineering_app = Group.objects.get(name="engineering_app").user_set.all()
-    ga_app = Group.objects.get(name="ga_app").user_set.all()
-    hrd_app = Group.objects.get(name="hrd_app").user_set.all()
-    ie_app = Group.objects.get(name="ie_app").user_set.all()
-    it_app = Group.objects.get(name="it_app").user_set.all()
-    ppc_app = Group.objects.get(name="ppc_app").user_set.all()
-    qc_app = Group.objects.get(name="qc_app").user_set.all()
-    sales_app = Group.objects.get(name="sales_app").user_set.all()
-    warehouse_app = Group.objects.get(name="warehouse_app").user_set.all()
+    """
+    Index view yang sudah diperbarui dengan dashboard routing yang lebih baik
+    """
+    # Ambil data employee dari session jika ada
+    employee_data = request.session.get('employee_data', {})
+    
+    # Check user groups - kode existing tetap dipertahankan
+    try:
+        master_app = Group.objects.get(name="master_app").user_set.all()
+        accounting_app = Group.objects.get(name="accounting_app").user_set.all()
+        costcontrol_app = Group.objects.get(name="costcontrol_app").user_set.all()
+        engineering_app = Group.objects.get(name="engineering_app").user_set.all()
+        ga_app = Group.objects.get(name="ga_app").user_set.all()
+        hrd_app = Group.objects.get(name="hrd_app").user_set.all()
+        ie_app = Group.objects.get(name="ie_app").user_set.all()
+        it_app = Group.objects.get(name="it_app").user_set.all()
+        ppc_app = Group.objects.get(name="ppc_app").user_set.all()
+        qc_app = Group.objects.get(name="qc_app").user_set.all()
+        sales_app = Group.objects.get(name="sales_app").user_set.all()
+        warehouse_app = Group.objects.get(name="warehouse_app").user_set.all()
 
-    if request.user in it_app:
-        return render(request,'it_app/dashboard.html')
-    else:
-        if request.user in master_app:
-            return render(request, 'master_app/dashboard.html')
+        # Logika routing berdasarkan group - tetap seperti kode asli
+        if request.user in it_app:
+            return render(request,'it_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in master_app:
+            return render(request, 'master_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in accounting_app:
+            return render(request, 'accounting_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in costcontrol_app:
+            return render(request, 'costcontrol_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in engineering_app:
+            return render(request, 'engineering_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in ga_app:
+            return render(request, 'ga_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in hrd_app:
+            return render(request, 'hrd_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in ie_app:
+            return render(request, 'ie_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in ppc_app:
+            return render(request, 'ppc_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in qc_app:
+            return render(request,'qc_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in sales_app:
+            return render(request, 'sales_app/dashboard.html', {'employee_data': employee_data})
+        elif request.user in warehouse_app:
+            return render(request, 'warehouse_app/dashboard.html', {'employee_data': employee_data})
         else:
-            if request.user in accounting_app:
-                return render(request, 'accounting_app/dashboard.html')
-            else:
-                if request.user in costcontrol_app:
-                    return render(request, 'costcontrol_app/dashboard.html')
-                else:
-                    if request.user in engineering_app:
-                        return render(request, 'engineering_app/dashboard.html')
-                    else:
-                        if request.user in ga_app:
-                            return render(request, 'ga_app/dashboard.html')
-                        else:
-                            if request.user in hrd_app:
-                                return render(request, 'hrd_app/dashboard.html')
-                            else:
-                                if request.user in ie_app:
-                                    return render(request, 'ie_app/dashboard.html')
-                                else:
-                                    if request.user in ppc_app:
-                                        return render(request, 'ppc_app/dashboard.html')
-                                    else:
-                                        if request.user in qc_app:
-                                            return render(request,'qc_app/dashboard.html')
-                                        else:
-                                            if request.user in sales_app:
-                                                return render(request, 'sales_app/dashboard.html')
-                                            else:
-                                                if request.user in warehouse_app:
-                                                    return render(request, 'warehouse_app/dashboard.html')
-                                                else:
-                                                    return render (request, 'master_app/dashboard.html')
+            return render (request, 'master_app/dashboard.html', {'employee_data': employee_data})
+    
+    except Group.DoesNotExist:
+        # Jika group tidak ada, redirect ke dashboard master
+        return render(request, 'master_app/dashboard.html', {'employee_data': employee_data})
 
-
-    # return render(request,'it_app/index.html')
-
-# VISUALBASIC START
+# VISUALBASIC START - Diperbarui untuk mendukung SDBM
 def pocvl_check_user(request, Username, Password):
-    user = User.objects.filter(username = Username).first()
-    password_check = check_password(Password, user.password)
-    if password_check:
+    """
+    Check user untuk Visual Basic - sekarang mendukung SDBM
+    """
+    # Coba authenticate dengan SDBM dulu
+    user = authenticate(request=request, username=Username, password=Password)
+    
+    if user is not None:
         return HttpResponse('True')
     else:
+        # Fallback ke Django User model
+        try:
+            user = User.objects.filter(username=Username).first()
+            if user and check_password(Password, user.password):
+                return HttpResponse('True')
+        except:
+            pass
         return HttpResponse('False')
     
 def getFullName(request, Username):
-    user = User.objects.filter(username__contains = Username).first()
-    fullname = user.first_name +' '+ user.last_name
-    return HttpResponse(fullname)
+    """
+    Get full name - prioritas dari SDBM, fallback ke Django User
+    """
+    # Coba ambil dari SDBM dulu
+    try:
+        connection = connections['SDBM']
+        cursor = connection.cursor()
+        
+        query = """
+            SELECT e.fullname, e.nickname
+            FROM hrbp.employees e
+            WHERE e.is_active = 1 AND e.employee_number = %s
+        """
+        
+        cursor.execute(query, [Username])
+        employee_data = cursor.fetchone()
+        
+        if employee_data:
+            fullname, nickname = employee_data
+            return HttpResponse(fullname or nickname or Username)
+            
+    except Exception as e:
+        print(f"Error getting fullname from SDBM: {e}")
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+    
+    # Fallback ke Django User
+    try:
+        user = User.objects.filter(username__contains=Username).first()
+        if user:
+            fullname = user.first_name + ' ' + user.last_name
+            return HttpResponse(fullname)
+    except:
+        pass
+    
+    return HttpResponse(Username)
 
-# INI UNTUK GATEPASS SYSTEM 
+# INI UNTUK GATEPASS SYSTEM - Diperbarui untuk mendukung SDBM
 def gatepass_check_user(request, Username, Password):
-    user = User.objects.filter(username = Username).first()
-    password_check = check_password(Password, user.password)
-    if password_check:
+    """
+    Check user untuk gatepass system - sekarang mendukung SDBM
+    """
+    # Coba authenticate dengan SDBM dulu
+    user = authenticate(request=request, username=Username, password=Password)
+    
+    if user is not None:
         return HttpResponse('True')
     else:
+        # Fallback ke Django User model
+        try:
+            user = User.objects.filter(username=Username).first()
+            if user and check_password(Password, user.password):
+                return HttpResponse('True')
+        except:
+            pass
         return HttpResponse('False')
     
 def getSecurityName(request, Username):
-    user = User.objects.filter(username__contains = Username).first()
-    fullname = user.first_name +' '+ user.last_name
-    return HttpResponse(fullname)
+    """
+    Get security name - prioritas dari SDBM, fallback ke Django User
+    """
+    return getFullName(request, Username)  # Gunakan fungsi yang sama
 
 # VISUALBASIC END
+
+# ==== SEMUA KODE CREATE, UPDATE, DAN FUNCTION LAINNYA TETAP SAMA ====
+# Saya akan menyalin semua fungsi yang sudah ada tanpa perubahan
+
 # CREATE START
 @login_required
 def CreateUserdata(request):
@@ -314,7 +992,6 @@ def CreateRemain(request):
             data.append(medical_remain)
         medicalRemain.objects.bulk_create(data)
     return JsonResponse('Remain csv is now working', safe=False)
-    return HttpResponse('jadi ini merupakan Create Remain')
 
 @login_required
 def CreateProvince(request):
@@ -360,18 +1037,6 @@ def CreateVillage(request):
         Village.objects.bulk_create(data)
     return JsonResponse('Village csv is now working', safe=False)
 
-
-# @login_required
-# def CreateMasterTagVL(request):
-#     with open('templates/csv/list_master_tag.csv', 'r', encoding="utf-8") as csv_file:
-#         csvf = reader(csv_file)
-#         data = []
-#         for item_no, item_desc, spec,poc,poc_lower,poc_upper,vib,run_out,ro_low,ro_upper,tipe_pulley,pulley_diameter,weight_kg,weight_n,top_width,top_width_plus,top_width_minus,thickness,thickness_plus,thickness_minus,tipe_belt,   *__ in csvf:
-#             master_tag = masterTagVL(item_no = item_no, item_desc = item_desc, spec = spec, poc = poc, poc_lower = poc_lower,poc_upper = poc_upper,vib = vib,run_out = run_out,ro_low = ro_low,ro_upper = ro_upper,tipe_pulley = tipe_pulley,pulley_diameter = pulley_diameter,weight_kg = weight_kg,weight_n = weight_n,top_width = top_width,top_width_plus = top_width_plus,top_width_minus = top_width_minus,thickness = thickness,thickness_plus = thickness_plus,thickness_minus = thickness_minus,tipe_belt = tipe_belt)
-#             data.append(master_tag)
-#         masterTagVL.objects.bulk_create(data)
-#     return JsonResponse('Master Tag VL CSV is now Working', safe=False)
-
 @login_required
 def CreateMasterTagVL(request):
     with open('templates/csv/list_mastertag.csv', 'r', encoding="utf-8") as csv_file:
@@ -384,47 +1049,10 @@ def CreateMasterTagVL(request):
     return JsonResponse('Master Tag VL CSV is now Working', safe=False)
 # CREATE END
 
+# ==== SEMUA FUNGSI UPDATE DAN LAINNYA TETAP SAMA ====
+# Saya akan melanjutkan dengan semua fungsi existing tanpa perubahan
+
 # UPDATE START
-
-# def UpdateRemain(request):
-#     # Read CSV File
-#     with open('hrd_app/templates/csv/updateremain.csv') as f:
-#         reader = csv.reader(f)
-#         data = list(reader)
-        
-#     # Retrieve objects from the database and update fields
-#     updates = []
-#     invalid_rows = []
-    
-#     for row in data:
-#         if len(row) != 5:
-#             invalid_rows.append(row)
-#             continue
-        
-#         username_row, marital_status_row, limit_row, used_row, remain_row = row
-        
-#         user = UserProfileInfo.objects.filter(user__username=username_row).first()
-#         medical = medicalRemain.objects.filter(user=user).first()
-        
-#         if medical:
-#             id_value = medical.id
-#             marital_status_value = marital_status_row
-#             limit_value = limit_row
-#             used_value = used_row
-#             remain_value = remain_row
-#             updates.append(medicalRemain(id=id_value, marital_status=marital_status_value, limit=limit_value, used=used_value, remain=remain_value))
-    
-#     # Perform bulk update
-#     medicalRemain.objects.bulk_update(updates, ['marital_status', 'limit', 'used', 'remain'])
-    
-#     # Prepare the response
-#     response_data = {
-#         'message': 'updateremain csv is now working',
-#         'invalid_rows': invalid_rows,
-#     }
-    
-#     return JsonResponse(response_data, safe=False)
-
 @login_required
 def UpdateRemain(request):
     # Read CSV File
@@ -593,6 +1221,7 @@ def UpdateMasterLowModulus(request):
     if creates:
         masterTagLowModulus.objects.bulk_create(creates)
     return updates, creates
+
 def UpdateMasterVL(request):
     # Check if a file was uploaded
     if 'file' not in request.FILES:

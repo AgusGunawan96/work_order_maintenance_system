@@ -7,6 +7,9 @@ from django.db.models import F, OuterRef, Subquery, Value, CharField, Case, When
 from django.db.models.functions import Length 
 from ceisa_app.forms import ceisaKirimImporHeaderForm, ceisaKirimImporBarangForm,ceisaKirimImporEntitasPengirimForm,ceisaKirimImporEntitasPenjualForm, ceisaKirimImporKemasanForm, ceisaKirimImporDokumenForm, ceisaKirimImporPengangkutForm, ceisaKirimImporKontainerForm
 # from ceisa_app.forms 
+# CREATE AG
+from ceisa_app.forms import ceisaKirimEksporHeaderForm, ceisaKirimEksporBarangForm, ceisaKirimEksporEntitasPengirimForm, ceisaKirimEksporEntitasPenjualForm, ceisaKirimEksporKemasanForm,  ceisaKirimEksporDokumenForm, ceisaKirimEksporPengangkutForm, ceisaKirimEksporKontainerForm, ceisaKirimEksporbankDevisaForm, ceisaKirimEksporkesiapanBarangForm
+
 import jwt 
 import time 
 import json
@@ -94,7 +97,32 @@ def dokumen_impor_add(request):
 
 # DOKUMEN EKSPOR ADD START 
 def dokumen_ekspor_add(request):
+    ceisaHEForm = ceisaKirimEksporHeaderForm()
+    ceisaBEForm = ceisaKirimEksporBarangForm()
+    ceisaEEPengirimForm = ceisaKirimEksporEntitasPengirimForm()
+    ceisaEEPenjualForm = ceisaKirimEksporEntitasPenjualForm()
+    ceisaEKemForm = ceisaKirimEksporKemasanForm()
+    ceisaEKonForm = ceisaKirimEksporKontainerForm()
+    ceisaEDForm = ceisaKirimEksporDokumenForm()
+    ceisaEPForm = ceisaKirimEksporPengangkutForm()
+    ceisaEBDForm =  ceisaKirimEksporbankDevisaForm()
+    ceisaEBForm = ceisaKirimEksporkesiapanBarangForm()
+    KemasanFormSett = formset_factory(ceisaKirimEksporKemasanForm, extra=1)
+    KontainerFormSett = formset_factory(ceisaKirimEksporKontainerForm, extra=1)
+    DokumenFormSett = formset_factory(ceisaKirimEksporDokumenForm, extra=1)
+    
+
     context = {
+        'ceisaHEForm' : ceisaHEForm,
+        'ceisaBEForm' : ceisaBEForm,
+        'ceisaEEPengirimForm' : ceisaEEPengirimForm,
+        'ceisaEEPenjualForm' : ceisaEEPenjualForm,
+        'ceisaEKemForm' : KemasanFormSett,
+        'ceisaEKonForm' : KontainerFormSett,
+        'ceisaEDForm' : DokumenFormSett,
+        'ceisaEPForm' : ceisaEPForm, 
+        'ceisaEBDForm' : ceisaEBDForm,
+        'ceisaEBForm' : ceisaEBForm,    
     }
     return render(request, 'ceisa_app/dokumen_ekspor_add.html', context )
 # DOKUMEN EKSPOR ADD END 
@@ -213,6 +241,53 @@ def update_data(request):
         ndpbm_value = request.POST.get('ndpbm','')
         default_ndpbm_value = 0
         ndpbm_value = float(ndpbm_value) if ndpbm_value else default_ndpbm_value
+
+        # CREATE AG EKSPOR
+        # Asuransi 
+        asuransi_valuee =  request.POST.get('asuransi','')
+        default_asuransi_valuee = 0
+        asuransi_valuee = float(asuransi_valuee) if asuransi_valuee else default_asuransi_valuee
+        # Bruto 
+        bruto_valuee = request.POST.get('bruto', '')
+        default_bruto_valuee = 0
+        bruto_valuee = float(bruto_valuee) if bruto_valuee else default_bruto_valuee
+        # Cif
+        cif_valuee = request.POST.get('cif', '')
+        default_cif_valuee = 0
+        cif_valuee = float(cif_valuee) if cif_valuee else default_cif_valuee
+        # Fob
+        fob_valuee = request.POST.get('fob', '')
+        default_fob_valuee = 0
+        fob_valuee = float(fob_valuee) if fob_valuee else default_fob_valuee
+        # Freight
+        freight_valuee = request.POST.get('freight', '')
+        default_freight_valuee = 0
+        freight_valuee = float(freight_valuee) if freight_valuee else default_freight_valuee
+        # JumlahKontainer
+        jumlahKontainer_valuee = request.POST.get('jumlahKontainer', '')
+        default_jumlahKontainer_valuee = 0
+        jumlahKontainer_valuee = float(jumlahKontainer_valuee) if jumlahKontainer_valuee else default_jumlahKontainer_valuee
+        # Ndpbm
+        ndpbm_valuee = request.POST.get('ndpbm', '')
+        default_ndpbm_valuee = 0
+        ndpbm_valuee = float(ndpbm_valuee) if ndpbm_valuee else default_ndpbm_valuee
+        # Netto
+        netto_valuee = request.POST.get('netto', '')
+        default_netto_valuee = 0
+        netto_valuee = float(netto_valuee) if netto_valuee else default_netto_valuee
+        # NIlai Maklon
+        nilaiMaklon_valuee = request.POST.get('nilaiMaklon', '')
+        default_nilaiMaklon_valuee = 0
+        nilaiMaklon_valuee = float(nilaiMaklon_valuee) if nilaiMaklon_valuee else default_nilaiMaklon_valuee
+        # Seri
+        seri_valuee = request.POST.get('seri', '')
+        default_seri_valuee = 0
+        seri_valuee = float(seri_valuee) if seri_valuee else default_seri_valuee
+        # Total Dana Sawit
+        totalDanaSawit_valuee = request.POST.get('totalDanaSawit', '')
+        default_totalDanaSawit_valuee = 0
+        totalDanaSawit_valuee = float(totalDanaSawit_valuee) if totalDanaSawit_valuee else default_totalDanaSawit_valuee
+
         
         data_dict = {
             "asalData": "S", #Otomatis
@@ -252,7 +327,7 @@ def update_data(request):
             "nilaiIncoterm": nilaiIncoterm_value,
             "nilaiMaklon": nilaiMaklon_value,
             "nomorAju": request.POST.get('nomorAju',''),
-            "nomorBc11": "032095",
+            # "nomorBc11": "032095", #hide
             "posBc11": "0017",
             "seri": seri_value,
             "subPosBc11": "00030000",
@@ -264,6 +339,7 @@ def update_data(request):
             "volume": volume_value,
             "vd": vd_value,
         }
+
 
         # Create a list for 'barang' data
         data_dict["barang"] = [
@@ -574,6 +650,199 @@ def update_data(request):
         "seriPengangkut": 1
       }
         ]
+
+        data_dict = {
+            "asalData": "S",
+            "asuransi": asuransi_valuee,
+            "bruto": bruto_valuee,
+            "cif": cif_valuee,
+            "disclaimer": request.POST.get('disclaimer',''),
+            "flagCurah": request.POST.get('flagCurah',''),
+            "flagMigas": request.POST.get('flagMigas',''),
+            "fob": fob_valuee,
+            "freight": freight_valuee,
+            "idPengguna": "ABCDE", #otomatis
+            "jabatanTtd": "PRESIDENT DIRECTOR", #otomatis
+            "jumlahKontainer": jumlahKontainer_valuee,
+            "kodeAsuransi": request.POST.get('kodeAsuransi',''),
+            "kodeCaraBayar": request.POST.get('kodeAsuransi',''),
+            "kodeCaraDagang": request.POST.get('kodeCaraDagang', ''),
+            "kodeDokumen": "20",
+            "kodeIncoterm": request.POST.get('kodeIncoterm', ''),
+            "kodeJenisEkspor": request.POST.get('kodeJenisEkspor', ''),
+            "kodeJenisNilai": request.POST.get('kodeJenisNilai',''),
+            "kodeJenisProsedur": request.POST.get('kodeJenisProsedur',''),           
+            "kodeKantor": "050100", #otomatis
+            "kodeKantorEkspor": "050100",
+            "kodeKantorMuat": "050100",
+            "kodeKantorPeriksa": "050100",
+            "kodeKategoriEkspor": "21",
+            "kodeLokasi": "2",
+            "kodeNegaraTujuan": "SA",
+            "kodePelBongkar": "IDCGK",
+            "kodePelEkspor": "JPOSA",
+            "kodePelMuat": "JPOSA",
+            "kodePelTujuan": "IDCGK",
+            "kodeTps": "GDWD",
+            "kodeValuta": request.POST.get('kodeJenisNilai',''), 
+            "kotaTtd": "JAKARTA",
+            "namaTtd": "YASUTSUGU KUNIHIRO", #otomatis
+            "ndpbm": ndpbm_valuee,
+            "netto": netto_valuee,
+            "nilaiMaklon": nilaiMaklon_valuee,
+            "nomorAju": request.POST.get('nomorAju',''),
+            # "nomorBc11": "032095", #hide
+            "posBc11": "0017",
+            "seri": seri_valuee,
+            "subPosBc11": "00030000",
+            "tanggalAju": "2023-09-04",
+            "tanggalBc11": "2023-09-03",
+            "tanggalEkspor": "2023-09-03",
+             "tanggalPeriksa": "2023-09-03",
+            "tanggalTtd": "2023-09-04",
+            "totalDanaSawit": totalDanaSawit_valuee,
+        }  
+
+        data_dict["barang"] =  [
+          {
+            "cif": 0,
+            "cifRupiah": 0,
+            "fob": 7654000,
+            "hargaEkspor": 0,
+            "hargaPatokan": 0,
+            "hargaPerolehan": 0,
+            "hargaSatuan": 4.56,
+            "jumlahKemasan": 1,
+            "jumlahSatuan": 12,
+            "kodeAsalBahanBaku": "0",
+            "kodeBarang": "BARANG 1",
+            "kodeDaerahAsal": "3175",
+            "kodeDokumen": "30",
+            "kodeJenisKemasan": "CT",
+            "kodeNegaraAsal": "JP",
+            "kodeSatuanBarang": "RO",
+            "merk": "-",
+            "ndpbm": 14250,
+            "netto": 335.5,
+            "nilaiBarang": 0,
+            "nilaiDanaSawit": 0,
+            "posTarif": "12345678",
+            "seriBarang": 1,
+            "spesifikasiLain": "ISURB01",
+            "tipe": "ISURB01",
+            "ukuran": "LABELS FOR RUBBER BELTS(MARK)",
+            "uraian": "LABELS FOR RUBBER BELTS(MARK)",
+            "volume": 388.5,
+            "barangDokumen": [
+              {
+                "seriDokumen": 1
+              }
+            ],
+            "barangPemilik": [],
+            "barangTarif": []
+          }
+        ]
+ 
+        data_dict["entitas"] = [
+            {
+              "alamatEntitas": "JL.LOMBOK I, BLOK M 2-2, KAW.INDUSTRI MM2100, GANDAMEKAR - GANDAMEKAR, CIKARANG BARAT, BEKASI, JAWA BARAT",
+              "kodeEntitas": "1",
+              "kodeJenisIdentitas": "5",
+              "namaEntitas": "SEIWA INDONESIA",
+              "nibEntitas": "8120010090198",
+              "nomorIdentitas": "010712495055000",
+              "seriEntitas": 1
+            },
+            {
+              "alamatEntitas": "JL.LOMBOK I, BLOK M 2-2, KAW.INDUSTRI MM2100, GANDAMEKAR - GANDAMEKAR, CIKARANG BARAT, BEKASI, JAWA BARAT",
+              "kodeEntitas": "7",
+              "kodeJenisIdentitas": "5",
+              "namaEntitas": "SEIWA INDONESIA",
+              "nibEntitas": "8120010090198",
+              "nomorIdentitas": "010712495055000",
+              "seriEntitas": 2
+            },
+            {
+              "alamatEntitas": request.POST.get('alamatEntitasPengirim',''),
+              "kodeEntitas": "9",
+              "kodeNegara":  request.POST.get('kodeNegaraPengirim',''),
+              "namaEntitas":  request.POST.get('namaEntitasPengirim',''),
+              "seriEntitas": 3
+            },
+            {
+              "alamatEntitas": request.POST.get('alamatEntitasPenjual',''),
+              "kodeEntitas": "10",
+              "kodeNegara": request.POST.get('kodeNegaraPenjual',''),
+              "namaEntitas": request.POST.get('namaEntitasPenjual',''),
+              "seriEntitas": 4
+            }
+         ]
+        data_dict["kemasan"] = [
+            {
+              "jumlahKemasan": 2,
+              "kodeJenisKemasan": "CT",
+              "merkKemasan": "Tanpa Merk",
+              "seriKemasan": 1
+            }
+          ]
+            #     data_dict["kontainer"]  = [
+            #     {
+            #     "kodeJenisKontainer": "4",
+            #     "kodeTipeKontainer": "99",
+            #     "kodeUkuranKontainer": "40",
+            #     "nomorKontainer": "",
+            #     "seriKontainer": 1
+            #   }
+            #     ]
+        data_dict["kemasan"] = [
+            {
+              "idDokumen": "1",
+              "kodeDokumen": "380",
+              "nomorDokumen": "MPTS03847",
+              "seriDokumen": 1,
+              "tanggalDokumen": "2023-09-01"
+            },
+            {
+              "idDokumen": "3",
+              "kodeDokumen": "740",
+              "nomorDokumen": "HEI-1406 3991",
+              "seriDokumen": 3,
+              "tanggalDokumen": "2023-09-01"
+            }
+          ]
+
+        data_dict["pengangkut"] = [
+            {
+              "kodeBendera": request.POST.get('kodeBendera',''),
+              "namaPengangkut": request.POST.get('namaPengangkut',''),
+              "nomorPengangkut": request.POST.get('nomorPengangkut',''),
+              "kodeCaraAngkut": request.POST.get('kodeCaraAngkut',''),
+              "seriPengangkut": 1
+            }
+          ]
+        data_dict["bankDevisa"] = [
+            {
+              "kodeBank": "9",
+              "seriBank": 1
+            }
+          ]
+        data_dict["kesiapanBarang"] = [
+            {
+              "kodeJenisBarang": "1",
+              "kodeJenisGudang": "2",
+              "namaPic": "YASUTSUGU KUNIHIRO",
+              "alamat": "JAKARTA",
+              "nomorTelpPic": "081111111111",
+              "lokasiSiapPeriksa": "JAKARTA",
+              "kodeCaraStuffing": "7",
+              "kodeJenisPartOf": "2",
+              "tanggalPkb": "2021-12-25",
+              "waktuSiapPeriksa": "2022-11-22",
+              "jumlahContainer20": 825,
+              "jumlahContainer40": 181
+            }
+        ]
+        
         # Serialize the dictionary to JSON
         json_data = json.dumps(data_dict)
         # DISINI AKAN BERAKHIR FUNGSINYA

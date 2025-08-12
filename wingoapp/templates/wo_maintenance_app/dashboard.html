@@ -1,0 +1,726 @@
+<!-- wo_maintenance_app/templates/wo_maintenance_app/dashboard.html -->
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load humanize %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/animate.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .dashboard-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+    
+    /* User Info Card */
+    .user-info-card {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    }
+    
+    .user-info-content .user-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .user-info-content .user-details {
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+    
+    .user-badges .badge {
+        margin-left: 8px;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Reviewer Special Card */
+    .reviewer-card {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+    
+    .reviewer-card h4 {
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .reviewer-card p {
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+    
+    /* Statistics Cards */
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px 20px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+        margin-bottom: 20px;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stat-card.pending {
+        border-left-color: #ffa502;
+    }
+    
+    .stat-card.approved {
+        border-left-color: #2ed573;
+    }
+    
+    .stat-card.completed {
+        border-left-color: #3742fa;
+    }
+    
+    .stat-card.review {
+        border-left-color: #ff4757;
+        animation: glow 2s infinite alternate;
+    }
+    
+    @keyframes glow {
+        from { box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+        to { box-shadow: 0 5px 20px rgba(255, 71, 87, 0.3); }
+    }
+    
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        color: #6c757d;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+    
+    .stat-description {
+        font-size: 0.85rem;
+        color: #adb5bd;
+    }
+    
+    /* Action Cards */
+    .action-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .action-card h5 {
+        color: #495057;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    
+    .action-btn {
+        width: 100%;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+    
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+    }
+    
+    .btn-primary-custom:hover {
+        background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-success-custom {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+    }
+    
+    .btn-success-custom:hover {
+        background: linear-gradient(135deg, #218838, #1ba085);
+        color: white;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+    
+    .btn-info-custom {
+        background: linear-gradient(135deg, #17a2b8, #138496);
+        color: white;
+        border: none;
+    }
+    
+    .btn-info-custom:hover {
+        background: linear-gradient(135deg, #138496, #117a8b);
+        color: white;
+        box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+    }
+    
+    .btn-review {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        color: white;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-review:hover {
+        background: linear-gradient(135deg, #ff5252, #d63031);
+        color: white;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+    
+    .btn-review::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .btn-review:hover::before {
+        left: 100%;
+    }
+    
+    /* Recent Activity */
+    .recent-activity {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .recent-activity h5 {
+        color: #495057;
+        margin-bottom: 20px;
+        font-weight: 600;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 10px;
+    }
+    
+    .activity-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #f1f3f4;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-info h6 {
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .activity-info p {
+        margin-bottom: 0;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .activity-status {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-approved {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .status-completed {
+        background: #cce7ff;
+        color: #004085;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-title {
+            font-size: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+        }
+        
+        .user-info-card {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .user-badges {
+            margin-top: 15px;
+        }
+        
+        .user-badges .badge {
+            margin: 3px;
+        }
+    }
+    
+    /* Notification Badge */
+    .notification-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        animation: bounce 1s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+        40%, 43% { transform: translate3d(0,-15px,0); }
+        70% { transform: translate3d(0,-7px,0); }
+        90% { transform: translate3d(0,-3px,0); }
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header text-center">
+        <h1 class="dashboard-title">Work Order Maintenance System</h1>
+        <p class="dashboard-subtitle">Sistem Manajemen Pengajuan Maintenance Terintegrasi</p>
+    </div>
+
+    <!-- User Info Card -->
+    {% if employee_data %}
+    <div class="user-info-card">
+        <div class="user-info-content">
+            <div class="user-name">👋 Selamat datang, {{ employee_data.fullname|default:employee_data.nickname }}</div>
+            <div class="user-details">
+                {{ employee_data.department_name|default:"-" }}
+                {% if employee_data.section_name %} > {{ employee_data.section_name }}{% endif %}
+                • {{ employee_data.title_name|default:"-" }}
+            </div>
+        </div>
+        <div class="user-badges">
+            {% if employee_data.is_manager %}
+                <span class="badge">👑 Manager</span>
+            {% elif employee_data.is_supervisor %}
+                <span class="badge">🔰 Supervisor</span>
+            {% endif %}
+            {% if is_reviewer %}
+                <span class="badge">🔍 Reviewer</span>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Special Reviewer Card -->
+    {% if is_reviewer %}
+    <div class="reviewer-card">
+        <h4>🔍 REVIEWER DASHBOARD</h4>
+        <p>Anda memiliki akses khusus untuk me-review semua pengajuan yang sudah di-approve</p>
+        {% if pending_review_count > 0 %}
+            <div class="alert alert-warning d-inline-block mb-0">
+                <strong>⚠️ {{ pending_review_count }} pengajuan menunggu review Anda!</strong>
+            </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card pending">
+                <div class="stat-number" id="totalPengajuan">{{ total_pengajuan|default:0 }}</div>
+                <div class="stat-label">Total Pengajuan</div>
+                <div class="stat-description">Semua pengajuan dalam sistem</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card pending">
+                <div class="stat-number" id="pendingCount">{{ pengajuan_pending|default:0 }}</div>
+                <div class="stat-label">Pending Approval</div>
+                <div class="stat-description">Menunggu persetujuan atasan</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card approved">
+                <div class="stat-number" id="approvedCount">{{ pengajuan_approved|default:0 }}</div>
+                <div class="stat-label">Approved</div>
+                <div class="stat-description">Sudah disetujui atasan</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card completed">
+                <div class="stat-number" id="completedCount">{{ pengajuan_completed|default:0 }}</div>
+                <div class="stat-label">Completed</div>
+                <div class="stat-description">Pekerjaan selesai</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Statistics (hanya untuk reviewer) -->
+    {% if is_reviewer %}
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card review">
+                <div class="stat-number" id="pendingReviewCount">{{ pending_review_count|default:0 }}</div>
+                <div class="stat-label">Pending Review</div>
+                <div class="stat-description">Perlu di-review oleh Anda</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-number" id="todayCount">{{ pengajuan_today|default:0 }}</div>
+                <div class="stat-label">Hari Ini</div>
+                <div class="stat-description">Pengajuan hari ini</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-number" id="weekCount">{{ pengajuan_this_week|default:0 }}</div>
+                <div class="stat-label">Minggu Ini</div>
+                <div class="stat-description">Pengajuan minggu ini</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Review Access</div>
+                <div class="stat-description">Akses review penuh</div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="stat-card">
+                <div class="stat-number" id="todayCount">{{ pengajuan_today|default:0 }}</div>
+                <div class="stat-label">Hari Ini</div>
+                <div class="stat-description">Pengajuan hari ini</div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="stat-card">
+                <div class="stat-number" id="weekCount">{{ pengajuan_this_week|default:0 }}</div>
+                <div class="stat-label">Minggu Ini</div>
+                <div class="stat-description">Pengajuan minggu ini</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Action Cards -->
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="action-card">
+                <h5>📝 Pengajuan Baru</h5>
+                <p class="text-muted mb-3">Buat pengajuan work order maintenance baru untuk perbaikan mesin atau peralatan.</p>
+                <a href="{% url 'wo_maintenance_app:input_laporan' %}" class="action-btn btn-primary-custom">
+                    <i data-feather="plus"></i> Buat Pengajuan
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="action-card">
+                <h5>📋 Daftar Pengajuan</h5>
+                <p class="text-muted mb-3">Lihat dan kelola semua pengajuan maintenance yang telah dibuat.</p>
+                <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="action-btn btn-success-custom">
+                    <i data-feather="list"></i> Lihat Daftar
+                </a>
+            </div>
+        </div>
+        
+        {% if is_reviewer %}
+        <div class="col-lg-4 col-md-6">
+            <div class="action-card" style="position: relative;">
+                <h5>🔍 Review Pengajuan</h5>
+                <p class="text-muted mb-3">Review dan assign pengajuan yang sudah di-approve ke section yang tepat.</p>
+                <a href="{% url 'wo_maintenance_app:review_pengajuan_index' %}" class="action-btn btn-review">
+                    <i data-feather="eye"></i> Review Pengajuan
+                </a>
+                {% if pending_review_count > 0 %}
+                    <div class="notification-badge">{{ pending_review_count }}</div>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="col-lg-4 col-md-6">
+            <div class="action-card">
+                <h5>📊 Laporan</h5>
+                <p class="text-muted mb-3">Lihat statistik dan laporan pengajuan maintenance.</p>
+                <a href="#" class="action-btn btn-info-custom" onclick="showComingSoon()">
+                    <i data-feather="bar-chart-2"></i> Lihat Laporan
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+        <h5><i data-feather="activity"></i> Aktivitas Terbaru</h5>
+        {% if recent_pengajuan %}
+            {% for pengajuan in recent_pengajuan %}
+            <div class="activity-item">
+                <div class="activity-info">
+                    <h6>{{ pengajuan.0|default:"No ID" }} - {{ pengajuan.1|default:"Unknown Mesin" }}</h6>
+                    <p>
+                        Oleh: {{ pengajuan.2|default:"Unknown" }} • 
+                        Line: {{ pengajuan.5|default:"-" }} • 
+                        {{ pengajuan.4|date:"d/m/Y H:i"|default:"No Date" }}
+                        {% if pengajuan.6 %}
+                            • Review Status: 
+                            {% if pengajuan.6 == '0' or pengajuan.6 == None %}
+                                <span class="text-warning">Pending Review</span>
+                            {% elif pengajuan.6 == '1' %}
+                                <span class="text-success">Reviewed</span>
+                            {% elif pengajuan.6 == '2' %}
+                                <span class="text-danger">Rejected</span>
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                </div>
+                <div>
+                    {% if pengajuan.3 == '0' %}
+                        <span class="activity-status status-pending">Pending</span>
+                    {% elif pengajuan.3 == '1' %}
+                        <span class="activity-status status-approved">Approved</span>
+                    {% elif pengajuan.3 == '4' %}
+                        <span class="activity-status status-completed">Completed</span>
+                    {% else %}
+                        <span class="activity-status">{{ pengajuan.3|default:"Unknown" }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-4">
+                <p class="text-muted mb-0">
+                    <i data-feather="inbox" style="width: 48px; height: 48px; opacity: 0.5;"></i><br>
+                    Belum ada aktivitas terbaru
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Animate statistics numbers
+    $('.stat-number').each(function() {
+        var $this = $(this);
+        var countTo = $this.text().replace(/[^\d]/g, ''); // Remove non-numeric characters
+        
+        if (countTo && !isNaN(countTo)) {
+            $({ countNum: 0 }).animate({
+                countNum: countTo
+            }, {
+                duration: 2000,
+                easing: 'swing',
+                step: function() {
+                    $this.text(Math.floor(this.countNum));
+                },
+                complete: function() {
+                    $this.text(this.countNum);
+                    // Add back % if it was there originally
+                    if ($this.parent().find('.stat-label').text().includes('Access')) {
+                        $this.text(this.countNum + '%');
+                    }
+                }
+            });
+        }
+    });
+    
+    // Auto-refresh untuk reviewer (jika ada pending review)
+    {% if is_reviewer and pending_review_count > 0 %}
+    setInterval(function() {
+        // Refresh page setiap 5 menit jika ada pending review
+        console.log('Auto-refreshing dashboard for pending reviews...');
+        window.location.reload();
+    }, 300000); // 5 menit
+    {% endif %}
+    
+    // Notification untuk reviewer
+    {% if is_reviewer and pending_review_count > 0 %}
+    // Show notification setelah 3 detik
+    setTimeout(function() {
+        if (window.Notification && Notification.permission === "granted") {
+            new Notification("WO Maintenance Review", {
+                body: "Ada {{ pending_review_count }} pengajuan yang perlu di-review",
+                icon: "{% static 'assets/images/favicon.png' %}"
+            });
+        } else if (window.Notification && Notification.permission !== "denied") {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === "granted") {
+                    new Notification("WO Maintenance Review", {
+                        body: "Ada {{ pending_review_count }} pengajuan yang perlu di-review",
+                        icon: "{% static 'assets/images/favicon.png' %}"
+                    });
+                }
+            });
+        }
+    }, 3000);
+    {% endif %}
+    
+    // Hover effects untuk action cards
+    $('.action-card').hover(
+        function() {
+            $(this).addClass('shadow-lg');
+        },
+        function() {
+            $(this).removeClass('shadow-lg');
+        }
+    );
+    
+    // Click tracking untuk analytics (optional)
+    $('.action-btn').on('click', function() {
+        const actionType = $(this).text().trim();
+        console.log('Dashboard action clicked:', actionType);
+        // Here you can add analytics tracking if needed
+    });
+    
+    console.log('WO Maintenance Dashboard loaded successfully');
+    {% if is_reviewer %}
+    console.log('Reviewer mode activated for user {{ employee_data.employee_number }}');
+    {% endif %}
+});
+
+// Function untuk coming soon features
+function showComingSoon() {
+    alert('🚧 Fitur ini sedang dalam pengembangan dan akan segera tersedia!');
+}
+
+// Real-time updates (if needed)
+function updateDashboardStats() {
+    // This function can be called periodically to update statistics
+    // Implementation would depend on your real-time requirements
+    console.log('Updating dashboard statistics...');
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + N = New Pengajuan
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        window.location.href = "{% url 'wo_maintenance_app:input_laporan' %}";
+    }
+    
+    // Ctrl/Cmd + L = List Pengajuan
+    if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
+        e.preventDefault();
+        window.location.href = "{% url 'wo_maintenance_app:daftar_laporan' %}";
+    }
+    
+    {% if is_reviewer %}
+    // Ctrl/Cmd + R = Review (untuk reviewer)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+        e.preventDefault();
+        window.location.href = "{% url 'wo_maintenance_app:review_pengajuan_index' %}";
+    }
+    {% endif %}
+});
+</script>
+{% endblock scriptcontent %}

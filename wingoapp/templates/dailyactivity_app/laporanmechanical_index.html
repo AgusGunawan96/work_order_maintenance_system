@@ -1,0 +1,270 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
+ <style>
+  .page-body {
+    padding-top: 20px;
+  }
+  .full-width-card {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+  }
+  .card {
+    margin-top: -20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .card-header h5 {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+  }
+  .card-body {
+    padding: 15px;
+  }
+  .form-inline-row .form-group {
+    width: 18%; /* Reduced width for inline display */
+    margin-right: 1%; /* Space between fields */
+    display: inline-block;
+    vertical-align: top;
+  }
+  .form-inline-row .form-group:last-child {
+    margin-right: 0; /* Remove margin from the last item */
+  }
+  .wider-textarea {
+    width: 100%; /* atau persentase lain seperti 80% */
+    max-width: 100%; /* memastikan tidak melampaui lebar parent */
+}
+.table-container {
+  border: 1px solid #000;
+  padding: 10px;
+  margin-top: 20px;
+}
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-container th,
+.table-container td {
+  border: 1px solid #000;
+  padding: 5px;
+  text-align: center;
+}
+.add-row-btn {
+  margin-top: 10px;
+  display: inline-block;
+}
+</style> 
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Notifikasi untuk pesan -->
+  {% if messages %}
+      <div class="alert alert-success" role="alert">
+          {% for message in messages %}
+              {{ message }}<br>
+          {% endfor %}
+      </div>
+  {% endif %}
+  <!-- Card Full Width -->
+  <div class="card full-width-card mt-4">
+    <div class="card-header">
+      <h5>Input laporan Mechanical</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" action="{% url 'dailyactivity_app:laporanmechanical_submit' %}">
+            {% csrf_token %}
+            <div class="form-inline-row">
+                <div class="form-group ">
+                    <label for="tanggal">Tanggal:</label>
+                    <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                </div>            
+                <div class="form-group">
+                    <label for="shift">Shift:</label>
+                    <select class="form-control select2" id="shift" name="shift" required>
+                        <option value="">-- Pilih Shift --</option>
+                        {% for shift in shifts %}
+                            <option value="{{ shift.id }}">{{ shift.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="pic">Jadwal Cuti:</label>
+                  <select class="form-control select2" id="pic" name="pic"  multiple>
+                      <option value="">-- Pilih Karyawan --</option>
+                      {% for pic in pic_laporan %}
+                          <option value="{{ pic.id }}">
+                              {{ pic.name }} ({{ pic.nokar }})
+                          </option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <div class="form-group col-md-2">
+                <label for="piclembur">Jadwal Lembur:</label>
+                <select class="form-control select2" id="piclembur" name="piclembur" required multiple>
+                    <option value="">-- Pilih PIC --</option>
+                    {% for pic_lembur in pic_lembur %}
+                        <option value="{{ pic_lembur.id }}">
+                            {{ pic_lembur.name }} ({{ pic_lembur.nokar }})
+                        </option>
+                    {% endfor %}
+                </select> 
+            </div>
+            </div>       
+            <div class="table-container">
+              <table id="laporan-table" class="table table-bordered">
+                  <thead>
+                      <tr>
+                          <th style="width: 5%;">Add</th>
+                          <th style="width: 60%;">Deskripsi Pekerjaan</th> <!-- Lebar kolom diperbesar -->
+                          <th style="width: 10%;">Jenis Pekerjaan</th>
+                          <th style="width: 10%;">Lama Pekerjaan (Jam)</th>
+                          <th style="width: 10%;">PIC Pekerjaan</th>
+                          <th style="width: 5%;">Delete</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td><button type="button" class="btn btn-success add-row-btn">Add +</button></td>
+                          <td><textarea name="masalah[]" class="form-control masalah-textarea" rows="3" required></textarea></td>
+                          <td>
+                              <select name="jenis_pekerjaan[]" class="form-control select2" required>
+                                  <option value="Mizen Boshi">Mizen Boshi</option>
+                                  <option value="WO">WO</option>
+                                  <option value="Perbaikan">Perbaikan</option>
+                                  <option value="Inspeksi">Inspeksi</option>
+                                  <option value="Others">Others</option>
+                              </select>
+                          </td>
+                          <td><input type="text" name="lama_pekerjaan[]" class="form-control" required></td>
+                          <td><input type="text" name="pic_masalah[]" class="form-control" required></td>
+                          <td><button type="button" class="btn btn-danger delete-row-btn">Delete</button></td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+          
+          <button type="submit" class="btn btn-primary mt-3">Simpan</button>          
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/custom/location-machine-filter.js' %}"></script>
+<script src="{% static 'assets/js/custom/script.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script> 
+<script>
+  $(document).ready(function() {
+    // Inisialisasi Select2 pada elemen select dengan class 'select2'
+    $('.select2').select2();
+
+    const addRowBtn = document.querySelector('.add-row-btn');
+    const laporanTable = document.querySelector('#laporan-table tbody');
+
+    // Fungsi untuk menambahkan baris baru
+    function addRow() {
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td><button type="button" class="btn btn-success add-row-btn">Add +</button></td>
+        <td><textarea name="masalah[]" class="form-control masalah-textarea" rows="3" required></textarea></td>
+        <td>
+          <select name="jenis_pekerjaan[]" class="form-control select2" required>
+            <option value="Mizen Boshi">Mizen Boshi</option>
+            <option value="WO">WO</option>
+            <option value="Perbaikan">Perbaikan</option>
+            <option value="Inspeksi">Inspeksi</option>
+            <option value="Others">Others</option>
+          </select>
+        </td>
+        <td><input type="text" name="lama_pekerjaan[]" class="form-control" required></td>
+        <td><input type="text" name="pic_masalah[]" class="form-control" required></td>
+        <td><button type="button" class="btn btn-danger delete-row-btn">Delete</button></td>
+      `;
+      laporanTable.appendChild(newRow);
+
+      // Inisialisasi Select2 pada row baru
+      $('.select2').select2();
+
+      // Fokus ke textarea masalah di baris baru
+      newRow.querySelector('.masalah-textarea').focus();
+    }
+
+    // Tambahkan baris baru saat tombol 'Add +' diklik
+    addRowBtn.addEventListener('click', function() {
+      addRow();
+    });
+
+    // Event listener untuk menangani tombol 'Delete'
+    laporanTable.addEventListener('click', function(e) {
+      if (e.target.classList.contains('delete-row-btn')) {
+        const row = e.target.closest('tr');
+        row.remove();
+      }
+    });
+  });
+</script>
+
+
+{% comment %} <script>
+  $(document).ready(function() {
+    // Inisialisasi Select2 pada elemen select yang memiliki class 'select2'
+    $('.select2').select2();
+    
+    const addRowBtn = document.querySelector('.add-row-btn');
+    const laporanTable = document.querySelector('#laporan-table tbody');
+  
+    addRowBtn.addEventListener('click', function() {
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td><button type="button" class="btn btn-success add-row-btn">Add +</button></td>
+        <td><input type="text" name="masalah[]" class="form-control" required></td>
+        <td>
+          <select name="jenis_pekerjaan[]" class="form-control" required>
+            <option value="Mizen Boshi">Mizen Boshi</option>
+            <option value="WO">WO</option>
+            <option value="Perbaikan">Perbaikan</option>
+            <option value="Inspeksi">Inspeksi</option>
+            <option value="Others">Others</option>
+          </select>
+        </td>
+        <td><input type="text" name="lama_pekerjaan[]" class="form-control" required></td>
+        <td><input type="text" name="pic_masalah[]" class="form-control" required></td>
+        <td><button type="button" class="btn btn-danger delete-row-btn">Delete</button></td>
+      `;
+      laporanTable.appendChild(newRow);
+      // Inisialisasi select2 pada row baru
+      $('.select2').select2();
+    });
+  
+    laporanTable.addEventListener('click', function(e) {
+      if (e.target.classList.contains('delete-row-btn')) {
+        const row = e.target.closest('tr');
+        row.remove();
+      }
+    });
+  });
+</script> {% endcomment %}
+
+<script>
+  $(document).ready(function() {
+    $('.select2').select2({
+        width: '100%',
+        allowClear: true
+    });
+});
+</script>
+{% endblock scriptcontent %}
+

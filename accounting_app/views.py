@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment, advAttachment, settleAttachment, advanceApprovalManager, advanceApprovalAccountingManager, advanceApprovalPresident, advanceApprovalCashier, rel_cashPayment_accountcode, coaCode
+from accounting_app.models import cashPayment, cashPaymentAttachment, cashPaymentApprovalManager, cashPaymentApprovalAccountingManager, cashPaymentApprovalPresident, cashPaymentApprovalCashier, cashPaymentBalance, cashierAttachment, advAttachment, settleAttachment, advanceApprovalManager, advanceApprovalAccountingManager, advanceApprovalPresident, advanceApprovalCashier, rel_cashPayment_accountcode, coaCode, cashReceived
 from django.contrib.auth.decorators import login_required
 from accounting_app.forms import cashPaymentForms, cashPaymentAttachmentForms, cashPaymentApprovalManagerForms, cashPaymentApprovalAccountingManagerForms, cashPaymentApprovalPresidentForms, cashPaymentApprovalCashierForms, cashPaymentDebitForms, cashPaymentCreditForms, cashPaymentSettleForms, cashPaymentBalanceForms, cashPaymentCashierAttachmentForms, cashPaymentSettleAttachmentForms, cashPaymentAdvAttachmentForms, cashPaymentAdvForms, cashPaymentCashierForms, advanceApprovalManagerForms, advanceApprovalAccountingManagerForms, advanceApprovalPresidentForms, advanceApprovalCashierForms, cashPaymentAccountForms
 from django.contrib import messages
@@ -78,6 +78,43 @@ def cashPayment_index(request):
          'form_adv'                 : cashPaymentAdvForms,
     }
     return render(request, 'accounting_app/cashPayment_index.html', context)
+    return HttpResponse(calculate_cashPayment_balance_open())
+
+@login_required
+def cashReceived_index(request):
+    cashPayments = cashPayment.objects.order_by('-created_at')
+    managers = cashPaymentApprovalManager.objects.order_by('-id')
+    managersAccountings = cashPaymentApprovalAccountingManager.objects.order_by('-id')
+    presidents = cashPaymentApprovalPresident.objects.order_by('-id')
+    cashiers = cashPaymentApprovalCashier.objects.order_by('-id')
+    attachments = cashPaymentAttachment.objects.order_by('-id')
+    downloadcsv = cashPaymentBalance.objects.order_by('cashPayment_balance_no')
+    downloadcsv = list(downloadcsv)
+    del downloadcsv[0]
+    # return HttpResponse(downloadcsv)
+        
+    context = {
+         'cashpayments'             : cashPayments,
+         'managers'                 : managers,
+         'managersAccountings'      : managersAccountings,
+         'presidents'               : presidents,
+         'cashiers'                 : cashiers,
+         'attachments'              : attachments,
+         'csv_list'                 : downloadcsv,
+         'form_cashier_attachment'  : cashPaymentCashierAttachmentForms,
+         'form_settle_attachment'   : cashPaymentSettleAttachmentForms,
+         'form_adv_attachment'      : cashPaymentAdvAttachmentForms,
+         'form_manager'             : cashPaymentApprovalManagerForms,
+         'form_manager_accounting'  : cashPaymentApprovalAccountingManagerForms,
+         'form_president'           : cashPaymentApprovalPresidentForms,
+         'form_cashier'             : cashPaymentApprovalCashierForms,
+         'form_cashier_transfer'    : cashPaymentCashierForms,
+         'form_debit'               : cashPaymentDebitForms,
+         'form_credit'              : cashPaymentCreditForms,
+         'form_settle'              : cashPaymentSettleForms,
+         'form_adv'                 : cashPaymentAdvForms,
+    }
+    return render(request, 'accounting_app/cashReceived_index.html', context)
     return HttpResponse(calculate_cashPayment_balance_open())
 
 @login_required
@@ -228,7 +265,7 @@ def cashPayment_debit_add(request):
             # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment + cashPayment_debit.rp_total
             # Menambahkan Master balance
             if(cashPayment_balance is None):
-                balance = cashPaymentBalanceForms().save(commit=False)
+                balance = cashPaymentBalanceForms().save(commit=False) 
                 if(balance_previous is not None):
                     balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
                     balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
@@ -700,6 +737,114 @@ def cashPayment_cashier_reject(request,cashPayment_id):
             return redirect('accounting_app:cashPayment_index')
         return HttpResponse(approval_cashier_form)   
 # CASH PAYMENT END
+
+# CASH RECEIVED START
+@login_required
+def cashReceived_add(request):
+    if request.method == "POST":
+         cashReceived_form = cashPaymentForms (data=request.POST)
+         approval_manager_form = cashPaymentApprovalManagerForms(data=request.POST)
+         cashPayment_attachment_form = cashPaymentAttachmentForms(data=request.POST)
+         if cashPayment_form.is_valid() and approval_manager_form.is_valid() and cashPayment_attachment_form.is_valid() :
+            # Simpan data cashPayment
+            cashPayment = cashPayment_form.save(commit=False)
+            cashPayment.assignee = request.user
+            cashPayment.save()
+            # Simpan data RP total di cashPayment
+            rp_total = 0
+            if(cashPayment.rp_detail_1 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_1
+            if(cashPayment.rp_detail_2 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_2
+            if(cashPayment.rp_detail_3 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_3
+            if(cashPayment.rp_detail_4 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_4
+            if(cashPayment.rp_detail_5 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_5
+            if(cashPayment.rp_detail_6 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_6
+            if(cashPayment.rp_detail_7 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_7
+            if(cashPayment.rp_detail_8 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_8
+            if(cashPayment.rp_detail_9 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_9
+            if(cashPayment.rp_detail_10 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_10
+            if(cashPayment.rp_detail_11 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_11
+            if(cashPayment.rp_detail_12 is not None):
+                 rp_total = rp_total + cashPayment.rp_detail_12
+            cashPayment.rp_total = rp_total
+            cashPayment.save()
+            # Simpan data attachment
+            files = request.FILES.getlist('attachment')
+            for f in files:
+                 attachment = cashPaymentAttachment(attachment=f)
+                 attachment.cashPayment = cashPayment
+                 attachment.save()
+            # membuat data Approval Manager
+            manager = approval_manager_form.save(commit=False)
+            manager.cashPayment = cashPayment
+            manager.save()
+            messages.success(request, 'Success Add Cash Payment', 'success')
+            return redirect('accounting_app:cashReceived_index')
+         else:
+              print(cashPayment_form.errors and approval_manager_form.errors and cashPayment_attachment_form)
+    else:
+         cashPayment_form = cashPaymentForms()
+         cashPayment_attachment_form = cashPaymentAttachmentForms()
+         approval_manager_form = cashPaymentApprovalManagerForms()
+
+    context = {
+    'cashPayment_form'              : cashPaymentForms,
+    'cashPayment_attachment_form'   : cashPaymentAttachmentForms,
+    'manager_form'                  : cashPaymentApprovalManagerForms,
+    }
+    return render(request, 'accounting_app/cashReceived_add.html', context)
+
+@login_required
+def cashReceived_debit_add(request):
+     if request.method == "POST":
+        cashPayment_debit_form = cashPaymentDebitForms (data=request.POST)
+        if cashPayment_debit_form.is_valid():
+            #  simpan data cashPayment
+
+            # cashPayment_balance = masterAccounting.objects.get(pk=1)
+            cashPayment_balance = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.now().strftime('%Y%m')).first()
+            balance_month = datetime.datetime.now().strftime('%Y%m')
+            balance_month_previous = datetime.datetime.strptime(balance_month, '%Y%m') - relativedelta(months=1)
+            balance_previous = cashPaymentBalance.objects.filter(cashPayment_balance_no__contains=datetime.datetime.strftime(balance_month_previous, '%Y%m')).first()
+            # Menambahkan CashPayment Debit
+            cashPayment_debit = cashPayment_debit_form.save(commit=False)
+            ticket_maks = cashPayment.objects.filter(ticket_no__contains=datetime.datetime.now().strftime('%Y%m')).count() + 1
+            ticket_no = "CP" + datetime.datetime.now().strftime('%Y%m') + str("%003d" % ( ticket_maks, ))        
+            cashPayment_debit.ticket_no = ticket_no
+            cashPayment_debit.is_debit = True
+            # Edit Penambahan balance pada Accounting
+            # cashPayment_balance.balance_cashPayment = cashPayment_balance.balance_cashPayment + cashPayment_debit.rp_total
+            # Menambahkan Master balance
+            if(cashPayment_balance is None):
+                balance = cashPaymentBalanceForms().save(commit=False) 
+                if(balance_previous is not None):
+                    balance_previous.balance_cashPayment_close = calculate_cashPayment_balance_open()
+                    balance_previous.exchange_rate_close = balance_previous.exchange_rate_open
+                    balance.balance_cashPayment_open = calculate_cashPayment_balance_open() 
+                    balance.exchange_rate_open = balance_previous.exchange_rate_open
+                    balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                    balance_previous.save()
+                    balance.save()
+                else:
+                    balance.cashPayment_balance_no = datetime.datetime.now().strftime('%Y%m')
+                    balance.save()
+            else:
+                cashPayment_balance.save()
+            cashPayment_debit.save()
+
+            messages.success(request, 'Success Add Debit Cash Payment', 'success')
+            return redirect('accounting_app:cashPayment_index')
+
 
 # ADVANCE START
 @login_required

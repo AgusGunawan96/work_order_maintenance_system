@@ -1,0 +1,311 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+  .page-body {
+    padding-top: 20px;
+  }
+  .full-width-card {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+  }
+  .card {
+    margin-top: -20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .card-header h5 {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+  }
+  .card-body {
+    padding: 15px;
+  }
+  .form-inline-row .form-group {
+    width: 18%; /* Reduced width for inline display */
+    margin-right: 1%; /* Space between fields */
+    display: inline-block;
+    vertical-align: top;
+  }
+  .form-inline-row .form-group:last-child {
+    margin-right: 0; /* Remove margin from the last item */
+  }
+</style>
+<style>
+    /* CSS untuk merubah warna teks berdasarkan status pada Nomor WO */
+    #nomor_wo .status-O {
+        color: red !important; /* Merubah warna untuk status O */
+    }
+
+    #nomor_wo .status-C {
+        color: blue !important; /* Merubah warna untuk status C */
+    }
+</style>
+<style>
+    .select2-container .select2-selection__rendered {
+        color: black !important; /* Default color for selected item */
+    }
+</style>
+
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+
+  <!-- Notifikasi untuk pesan -->
+  {% if messages %}
+      <div class="alert alert-success" role="alert">
+          {% for message in messages %}
+              {{ message }}<br>
+          {% endfor %}
+      </div>
+  {% endif %}
+  <!-- Card Full Width -->
+  <div class="card full-width-card mt-4">
+    <div class="card-header">
+      <h5>Edit Mechanical Activity</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" action="{% url 'dailyactivity_app:mechanical_submit' %}">
+            {% csrf_token %}
+            <!-- Row for Tanggal, Jam, Shift, Location, Machine -->
+            <div class="form-inline-row">
+                <div class="form-group ">
+                    <label for="tanggal">Tanggal:</label>
+                    <input type="date" class="form-control" id="tanggal" name="tanggal" value="{{ tanggal }}" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="nomor_wo">Nomor WO:</label>
+                    <select class="form-control select2" id="nomor_wo" name="nomor_wo" onchange="fetchDeskripsi()">
+                        <option value="">Pilih Nomor WO</option>
+                        {% for nomor, status in nomor_wo_list %}
+                            <option value="{{ nomor }}" data-status="{{ status }}" class="status-{{ status }}" 
+                                {% if nomor == data.nomor_wo %} selected {% endif %}>
+                                {{ nomor }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>                            
+                <div class="form-group col-md-2">
+                    <label for="tgl_his"> Waktu WO:</label>
+                    <input type="datetime-local" class="form-control" id="tgl_his" name="tgl_his" 
+                           value="{{ data.tgl_his|date:'Y-m-d\TH:i' }}" placeholder="Masukkan Tanggal Histori" readonly />
+                </div>                
+                <div class="form-group col-md-2">
+                    <label for="nomor_wo">Nomor WO:</label>
+                    <input type="text" class="form-control" id="nomor_wo" name="nomor_wo" value="{{ nomor_wo }}">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="line">Line:</label>
+                    <input type="text" class="form-control" id="line" name="line" value="{{ line }}">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="mesin">Mesin:</label>
+                    <input type="text" class="form-control" id="mesin" name="mesin" value="{{ mesin }}">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="pekerjaan">Jenis Pekerjaan:</label>
+                    <input type="text" class="form-control" id="pekerjaan" name="pekerjaan" value="{{ pekerjaan }}">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="waktu_pengerjaan">Waktu Pengerjaan:</label>
+                    <input type="text" class="form-control" id="waktu_pengerjaan" name="waktu_pengerjaan" value="{{ waktu_pengerjaan }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="shift">Shift:</label>
+                    <select class="form-control select2" id="shift" name="shift" required>
+                        <option value="">-- Pilih Shift --</option>
+                        {% for shift in shifts %}
+                            <option value="{{ shift.id }}" {% if data.shift_id == shift.id %}selected{% endif %}>{{ shift.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="status">Status:</label>
+                    <select class="form-control select2" id="status" name="status" required>
+                        <option value="">-- Pilih Status --</option>
+                        {% for stat in status %}
+                            <option value="{{ stat.id }}" {% if data.status_id == stat.id %}selected{% endif %}>{{ stat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group  col-md-2">
+                    <label for="pic">PIC:</label>
+                    <select multiple class="form-control" id="pic" name="pic">
+                        {% for pic in pic_mechanical %}
+                            <option value="{{ pic.id }}" {% if pic in data.pic.all %}selected{% endif %}>{{ pic.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Masalah, Penyebab, Tindakan, Gambar -->
+            <div class="form-row mt-3">
+                <div class="form-group" style="width: 100%;">
+                    <label for="masalah">Masalah:</label>
+                    <textarea class="form-control" id="masalah" name="masalah" rows="3" required>{{ data.masalah }}</textarea>
+                </div>
+                <div class="form-group" style="width: 100%;">
+                    <label for="penyebab">Penyebab:</label>
+                    <textarea class="form-control" id="penyebab" name="penyebab" rows="3" required>{{ data.penyebab }}</textarea>
+                </div>
+                <div class="form-group" style="width: 100%;">
+                    <label for="tindakan_perbaikan">Tindakan Perbaikan:</label>
+                    <textarea class="form-control" id="tindakan_perbaikan" name="tindakan_perbaikan" rows="3" required>{{ data.tindakan_perbaikan }}</textarea>
+                </div>
+                <div class="form-group" style="width: 100%;">
+                    <label for="tindakan_pencegahan">Tindakan Pencegahan:</label>
+                    <textarea class="form-control" id="tindakan_pencegahan" name="tindakan_pencegahan" rows="3" required>{{ data.tindakan_pencegahan }}</textarea>
+                </div>
+                <div class="form-group" style="width: 100%;">
+                    <label for="image">Add Image:</label>
+                    <input type="file" class="form-control-file" id="image" name="image">
+                </div>
+            </div>       
+            <button type="submit" class="btn btn-primary mt-3">Update</button>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/custom/location-machine-filter.js' %}"></script>
+<script src="{% static 'assets/js/custom/script.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script> 
+
+<script>
+    $(document).ready(function() {
+        // Inisialisasi Select2 untuk Nomor WO dengan format warna status
+        $('#nomor_wo').select2({
+            templateResult: formatWO,  // Menampilkan format warna
+            templateSelection: formatWO, // Menampilkan format warna saat dipilih
+            width: '100%',
+            allowClear: true
+        });
+        // Fungsi untuk mengubah warna status pada elemen #nomor_wo
+        function formatWO(state) {
+            if (!state.id) {
+                return state.text; // Jika tidak ada ID, kembalikan teks biasa
+            }
+            var status = $(state.element).data('status');
+            var color = status === 'O' ? 'red' : 'blue'; // Tentukan warna berdasarkan status
+            return $('<span style="color:' + color + '">' + state.text + '</span>');
+        }
+        // Inisialisasi Select2 untuk elemen #pic dengan multiple select
+        $('#pic').select2({
+            width: '100%',
+            allowClear: true
+        });
+        // Memastikan pemformatan warna tetap diterapkan saat terjadi perubahan
+        $('#nomor_wo').on('change', function() {
+            // Perbarui pemformatan saat item dipilih
+            $(this).trigger('change.select2');
+        });
+    });
+</script>
+
+<script>
+    function fetchDeskripsi() {
+        var nomor_wo = document.getElementById('nomor_wo').value;
+        
+        if (nomor_wo === "") {
+            // Mengaktifkan semua kolom jika nomor_wo kosong
+            document.getElementById('masalah').readOnly = false;
+            document.getElementById('tgl_his').readOnly = false;
+            document.getElementById('penyebab').readOnly = false;
+            document.getElementById('line').readOnly = false;
+            document.getElementById('mesin').readOnly = false;
+            document.getElementById('nomer').readOnly = false;
+            document.getElementById('pekerjaan').readOnly = false;
+            document.getElementById('status_pekerjaan').readOnly = false;
+            document.getElementById('tindakan_perbaikan').readOnly = false;
+            document.getElementById('tindakan_pencegahan').readOnly = false;
+  
+            // Kosongkan field input
+            document.getElementById('masalah').value = '';
+            document.getElementById('tgl_his').value = '';
+            document.getElementById('penyebab').value = '';
+            document.getElementById('line').value = '';
+            document.getElementById('mesin').value = '';
+            document.getElementById('nomer').value = '';
+            document.getElementById('pekerjaan').value = '';
+            document.getElementById('status_pekerjaan').value = '';
+            document.getElementById('tindakan_perbaikan').value = '';
+            document.getElementById('tindakan_pencegahan').value = '';
+        } else {
+            $.ajax({
+                url: '',  // URL yang sama, mengarah ke views.py
+                data: {
+                    'nomor_wo': nomor_wo,
+                },
+                dataType: 'json',
+                success: function(response) {
+                    // Mengisi data jika ada
+                    if (response.deskripsi_perbaikan) {
+                        document.getElementById('masalah').value = response.deskripsi_perbaikan;
+                        document.getElementById('masalah').readOnly = true;
+                    }
+                    if (response.tgl_his) {
+                        document.getElementById('tgl_his').value = response.tgl_his;
+                        document.getElementById('tgl_his').readOnly = true;
+                    }
+                    if (response.penyebab) {
+                        document.getElementById('penyebab').value = response.penyebab;
+                        document.getElementById('penyebab').readOnly = false;  // Selalu aktif
+                    }
+                    if (response.line) {
+                        document.getElementById('line').value = response.line;
+                        document.getElementById('line').readOnly = true;
+                    }
+                    if (response.mesin) {
+                        document.getElementById('mesin').value = response.mesin;
+                        document.getElementById('mesin').readOnly = true;
+                    }
+                    if (response.nomer) {
+                        document.getElementById('nomer').value = response.nomer;
+                        document.getElementById('nomer').readOnly = true;
+                    }
+                    if (response.pekerjaan) {
+                        document.getElementById('pekerjaan').value = response.pekerjaan;
+                        document.getElementById('pekerjaan').readOnly = true;
+                    }
+                    if (response.status_pekerjaan) {
+                        document.getElementById('status_pekerjaan').value = response.status_pekerjaan;
+                        document.getElementById('status_pekerjaan').readOnly = true;
+                    }
+
+                    // Mengaktifkan atau menonaktifkan kolom berdasarkan status pekerjaan
+                    if (response.tindakan_perbaikan) {
+                        document.getElementById('tindakan_perbaikan').value = response.tindakan_perbaikan;
+                        document.getElementById('tindakan_perbaikan').readOnly = false;  // Selalu aktif
+                    }
+                    if (response.tindakan_pencegahan) {
+                        document.getElementById('tindakan_pencegahan').value = response.tindakan_pencegahan;
+                        document.getElementById('tindakan_pencegahan').readOnly = false;  // Selalu aktif
+                    }
+                },
+                error: function() {
+                    // Error handling
+                    alert('Terjadi kesalahan saat mengambil data.');
+                }
+            });
+        }
+    }
+</script>
+
+   
+
+{% endblock scriptcontent %}
+

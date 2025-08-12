@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Order - {{ wo_data.0 }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+        
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .document-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+        
+        .wo-number {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .info-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e0e0e0;
+            text-transform: uppercase;
+        }
+        
+        .info-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .info-row {
+            display: table-row;
+        }
+        
+        .info-label {
+            display: table-cell;
+            width: 30%;
+            padding: 8px;
+            font-weight: bold;
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        
+        .info-value {
+            display: table-cell;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        
+        .description-box {
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: #fafafa;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #28a745;
+        }
+        
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #dc3545;
+        }
+        
+        .status-completed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #17a2b8;
+        }
+        
+        .signature-section {
+            margin-top: 50px;
+            page-break-inside: avoid;
+        }
+        
+        .signature-grid {
+            display: table;
+            width: 100%;
+            margin-top: 30px;
+        }
+        
+        .signature-item {
+            display: table-cell;
+            width: 33.33%;
+            text-align: center;
+            padding: 10px;
+            vertical-align: top;
+        }
+        
+        .signature-title {
+            font-weight: bold;
+            margin-bottom: 60px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        
+        .signature-line {
+            margin-top: 60px;
+            border-top: 1px solid #333;
+            padding-top: 5px;
+            font-size: 10px;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .footer-left {
+            float: left;
+        }
+        
+        .footer-right {
+            float: right;
+        }
+        
+        .qr-code {
+            float: right;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ccc;
+            margin-left: 20px;
+            padding: 5px;
+            text-align: center;
+            font-size: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .urgent-banner {
+            background-color: #dc3545;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 15px;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+        
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 72px;
+            color: rgba(102, 126, 234, 0.1);
+            z-index: -1;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <!-- Watermark -->
+    <div class="watermark">
+        {% if wo_data.6 == '0' %}PENDING{% elif wo_data.6 == '1' %}APPROVED{% elif wo_data.6 == '2' %}REJECTED{% elif wo_data.6 == '4' %}COMPLETED{% endif %}
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="company-name">PT. SEIWA INDONESIA</div>
+        <div class="document-title">Work Order Maintenance</div>
+        <div class="wo-number">{{ wo_data.0 }}</div>
+        
+        <!-- QR Code placeholder -->
+        <div class="qr-code">
+            QR CODE
+            <br>
+            <small>{{ wo_data.0 }}</small>
+        </div>
+        
+        <div style="clear: both;"></div>
+        
+        <!-- Status Badge -->
+        <div style="margin-top: 15px;">
+            {% if wo_data.6 == '0' %}
+                <span class="status-badge status-pending">Pending Approval</span>
+            {% elif wo_data.6 == '1' %}
+                <span class="status-badge status-approved">Approved</span>
+            {% elif wo_data.6 == '2' %}
+                <span class="status-badge status-rejected">Rejected</span>
+            {% elif wo_data.6 == '4' %}
+                <span class="status-badge status-completed">Completed</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Urgent Banner (if applicable) -->
+    {% if wo_data.6 == '0' %}
+    <div class="urgent-banner">
+        ⚠️ MENUNGGU APPROVAL - SEGERA DITINDAKLANJUTI
+    </div>
+    {% endif %}
+
+    <!-- Basic Information -->
+    <div class="info-section">
+        <div class="section-title">📋 Informasi Dasar</div>
+        <div class="info-grid">
+            <div class="info-row">
+                <div class="info-label">History ID</div>
+                <div class="info-value">{{ wo_data.0|default:"-" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Number WO</div>
+                <div class="info-value">{{ wo_data.9|default:"-" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Tanggal Pengajuan</div>
+                <div class="info-value">{{ wo_data.7|date:"d F Y, H:i" }} WIB</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Pengaju</div>
+                <div class="info-value">{{ wo_data.3|default:"-" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Equipment Information -->
+    <div class="info-section">
+        <div class="section-title">🔧 Informasi Peralatan</div>
+        <div class="info-grid">
+            <div class="info-row">
+                <div class="info-label">Line/Section</div>
+                <div class="info-value">{{ wo_data.11|default:"-" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Nama Mesin</div>
+                <div class="info-value">{{ wo_data.4|default:"-" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Section Tujuan</div>
+                <div class="info-value">{{ wo_data.5|default:"-" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Jenis Pekerjaan</div>
+                <div class="info-value">{{ wo_data.6|default:"-" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Work Description -->
+    <div class="info-section">
+        <div class="section-title">📝 Deskripsi Pekerjaan</div>
+        <div class="description-box">
+            {{ wo_data.7|linebreaks|default:"Tidak ada deskripsi" }}
+        </div>
+    </div>
+
+    <!-- Approval Information (if applicable) -->
+    {% if wo_data.6 != '0' %}
+    <div class="info-section">
+        <div class="section-title">✅ Informasi Approval</div>
+        <div class="info-grid">
+            <div class="info-row">
+                <div class="info-label">Status</div>
+                <div class="info-value">
+                    {% if wo_data.6 == '1' %}
+                        <strong style="color: #28a745;">DISETUJUI</strong>
+                    {% elif wo_data.6 == '2' %}
+                        <strong style="color: #dc3545;">DITOLAK</strong>
+                    {% elif wo_data.6 == '4' %}
+                        <strong style="color: #17a2b8;">SELESAI</strong>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Tanggal Approval</div>
+                <div class="info-value">{{ wo_data.7|date:"d F Y, H:i" }} WIB</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Execution Details (for completed WO) -->
+    {% if wo_data.6 == '4' %}
+    <div class="info-section">
+        <div class="section-title">🔨 Detail Pelaksanaan</div>
+        <div class="info-grid">
+            <div class="info-row">
+                <div class="info-label">Teknisi</div>
+                <div class="info-value">_____________________</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Tanggal Mulai</div>
+                <div class="info-value">_____________________</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Tanggal Selesai</div>
+                <div class="info-value">_____________________</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Durasi Pekerjaan</div>
+                <div class="info-value">_____________________</div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <strong>Hasil Pekerjaan:</strong>
+            <div class="description-box" style="min-height: 80px;">
+                <!-- Kosong untuk diisi manual -->
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <strong>Material/Spare Part yang Digunakan:</strong>
+            <div class="description-box" style="min-height: 60px;">
+                <!-- Kosong untuk diisi manual -->
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Signature Section -->
+    <div class="signature-section">
+        <div class="section-title">✍️ Tanda Tangan & Persetujuan</div>
+        
+        <div class="signature-grid">
+            <div class="signature-item">
+                <div class="signature-title">Pengaju</div>
+                <div class="signature-line">
+                    {{ wo_data.3|default:"-" }}
+                    <br>{{ wo_data.7|date:"d/m/Y" }}
+                </div>
+            </div>
+            
+            <div class="signature-item">
+                <div class="signature-title">
+                    {% if wo_data.6 == '1' %}Disetujui Oleh{% else %}Supervisor{% endif %}
+                </div>
+                <div class="signature-line">
+                    {% if wo_data.6 == '1' %}
+                        (Sudah Disetujui Digital)
+                        <br>{{ wo_data.7|date:"d/m/Y" }}
+                    {% else %}
+                        (____________________)
+                        <br>Tanggal: ___________
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="signature-item">
+                <div class="signature-title">
+                    {% if wo_data.6 == '4' %}Teknisi Pelaksana{% else %}Manager{% endif %}
+                </div>
+                <div class="signature-line">
+                    {% if wo_data.6 == '4' %}
+                        (____________________)
+                        <br>Tanggal: ___________
+                    {% else %}
+                        (____________________)
+                        <br>Tanggal: ___________
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checklist Section (for maintenance) -->
+    {% if wo_data.6 != '2' %}
+    <div class="info-section" style="page-break-before: always;">
+        <div class="section-title">☑️ Checklist Pelaksanaan</div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+            <thead>
+                <tr style="background-color: #f8f9fa;">
+                    <th style="border: 1px solid #ddd; padding: 8px; width: 5%;">No</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; width: 60%;">Item Pemeriksaan</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; width: 15%;">OK</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; width: 20%;">Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">1</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Safety & Lockout Procedure</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">☐</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;"></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">2</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Diagnosis Awal Masalah</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">☐</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;"></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">3</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Persiapan Tools & Material</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">☐</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;"></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">4</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Pelaksanaan Perbaikan</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">☐</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;"></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">5</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Testing & Commissioning</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">☐</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;"></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">6</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Cleanup & Documentation</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">☐</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;"></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">7</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Handover ke User</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">☐</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-left">
+            <strong>PT. SEIWA INDONESIA</strong><br>
+            Maintenance Work Order System
+        </div>
+        <div class="footer-right">
+            Generated: {{ generated_at|date:"d F Y, H:i" }} WIB<br>
+            By: {{ generated_by }}
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <!-- Print Instructions -->
+    <div class="no-print" style="margin-top: 30px; padding: 15px; background-color: #e9ecef; border-radius: 5px;">
+        <strong>Instruksi Cetak:</strong>
+        <ul style="margin: 10px 0;">
+            <li>Gunakan kertas A4 untuk hasil terbaik</li>
+            <li>Pastikan printer dalam kondisi baik</li>
+            <li>Simpan salinan digital untuk arsip</li>
+            <li>Distribusikan ke pihak terkait sesuai SOP</li>
+        </ul>
+    </div>
+</body>
+</html>

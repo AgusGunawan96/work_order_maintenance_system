@@ -1,0 +1,850 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+    }
+    
+    .form-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .form-section h5 {
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 8px;
+    }
+    
+    .required-field label::after {
+        content: " *";
+        color: #dc3545;
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .user-info {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .user-info .info-text {
+        font-size: 0.9rem;
+    }
+    
+    .user-info .user-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        border-color: #667eea;
+    }
+    
+    .alert {
+        border-radius: 8px;
+        border: none;
+        margin-bottom: 20px;
+    }
+    
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+    
+    .loading-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .field-info {
+        font-size: 0.8rem;
+        margin-top: 5px;
+        padding: 5px 8px;
+        border-radius: 4px;
+    }
+    
+    .field-info.success {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+    
+    .field-info.warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+    
+    .field-info.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    /* Custom styling for select2 validation */
+    .select2-container.is-invalid .select2-selection {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .select2-container--default .select2-selection--single {
+        height: 38px;
+        border: 1px solid #ced4da;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 36px;
+        padding-left: 12px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px;
+    }
+
+    .select2-container--default .select2-selection--single:focus {
+        outline: none;
+    }
+
+    /* Form validation styles */
+    .form-control.is-invalid,
+    .select2-container.is-invalid .select2-selection {
+        border-color: #dc3545;
+    }
+
+    .invalid-feedback {
+        display: block;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        color: #dc3545;
+    }
+
+    /* Icon replacements - using Unicode symbols instead of Feather */
+    .icon-info::before { content: "ℹ️"; }
+    .icon-check::before { content: "✅"; }
+    .icon-warning::before { content: "⚠️"; }
+    .icon-error::before { content: "❌"; }
+    .icon-loading::before { content: "🔄"; }
+    .icon-wifi-off::before { content: "📶"; }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- Notifikasi untuk pesan -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- User Info -->
+    {% if employee_data %}
+    <div class="user-info">
+        <div>
+            <div class="user-name">{{ employee_data.fullname|default:employee_data.nickname }}</div>
+            <div class="info-text">{{ employee_data.section_name|default:"-" }} - {{ employee_data.department_name|default:"-" }}</div>
+        </div>
+        <div>
+            👤
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="card">
+        <div class="card-header">
+            <h5>📝 Form Pengajuan Work Order</h5>
+            <p class="mb-0 text-muted">Isi form di bawah ini untuk membuat pengajuan work order maintenance</p>
+        </div>
+        
+        <div class="card-body">
+            <form method="post" id="pengajuanForm">
+                {% csrf_token %}
+                
+                <!-- Informasi Lokasi dan Mesin -->
+                <div class="form-section">
+                    <h5>📍 Informasi Lokasi dan Mesin</h5>
+                    <div class="row">
+                        <div class="col-md-6 required-field">
+                            <div class="mb-3">
+                                <label for="{{ form.line_section.id_for_label }}" class="form-label">
+                                    {{ form.line_section.label }}
+                                    {% if form.line_section.choices|length > 1 %}
+                                        <small class="text-success">({{ form.line_section.choices|length|add:"-1" }} line tersedia)</small>
+                                    {% else %}
+                                        <small class="text-warning">(Error loading line data)</small>
+                                    {% endif %}
+                                </label>
+                                {{ form.line_section|add_class:"form-control select2" }}
+                                {% if form.line_section.errors %}
+                                    <div class="invalid-feedback">{{ form.line_section.errors.0 }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">{{ form.line_section.help_text }}</small>
+                                <div id="line-info" class="field-info" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 required-field">
+                            <div class="mb-3">
+                                <label for="{{ form.nama_mesin.id_for_label }}" class="form-label">
+                                    {{ form.nama_mesin.label }}
+                                    <span id="mesin-count" class="text-muted" style="font-weight: normal;"></span>
+                                </label>
+                                <!-- FIXED: Changed to select with dynamic options -->
+                                <select name="nama_mesin" id="id_nama_mesin" class="form-control select2" required>
+                                    <option value="">Pilih Line terlebih dahulu</option>
+                                </select>
+                                {% if form.nama_mesin.errors %}
+                                    <div class="invalid-feedback">{{ form.nama_mesin.errors.0 }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">{{ form.nama_mesin.help_text }}</small>
+                                <div id="mesin-info" class="field-info warning" style="display: block;">
+                                    <span class="icon-info"></span> Pilih line/section terlebih dahulu
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informasi Pekerjaan -->
+                <div class="form-section">
+                    <h5>🔧 Informasi Pekerjaan</h5>
+                    <div class="row">
+                        <div class="col-md-6 required-field">
+                            <div class="mb-3">
+                                <label for="{{ form.section_tujuan.id_for_label }}" class="form-label">{{ form.section_tujuan.label }}</label>
+                                {{ form.section_tujuan|add_class:"form-control select2" }}
+                                {% if form.section_tujuan.errors %}
+                                    <div class="invalid-feedback">{{ form.section_tujuan.errors.0 }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">{{ form.section_tujuan.help_text }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 required-field">
+                            <div class="mb-3">
+                                <label for="{{ form.jenis_pekerjaan.id_for_label }}" class="form-label">{{ form.jenis_pekerjaan.label }}</label>
+                                {{ form.jenis_pekerjaan|add_class:"form-control select2" }}
+                                {% if form.jenis_pekerjaan.errors %}
+                                    <div class="invalid-feedback">{{ form.jenis_pekerjaan.errors.0 }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">{{ form.jenis_pekerjaan.help_text }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 required-field">
+                            <div class="mb-3">
+                                <label for="{{ form.deskripsi_pekerjaan.id_for_label }}" class="form-label">{{ form.deskripsi_pekerjaan.label }}</label>
+                                {{ form.deskripsi_pekerjaan|add_class:"form-control" }}
+                                {% if form.deskripsi_pekerjaan.errors %}
+                                    <div class="invalid-feedback">{{ form.deskripsi_pekerjaan.errors.0 }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">{{ form.deskripsi_pekerjaan.help_text }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'wo_maintenance_app:dashboard' %}" class="btn btn-secondary">
+                                ← Kembali
+                            </a>
+                            <div>
+                                <button type="reset" class="btn btn-outline-secondary me-2">
+                                    🔄 Reset
+                                </button>
+                                <button type="submit" class="btn btn-submit">
+                                    📤 Kirim Pengajuan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <h5>Menyimpan Pengajuan...</h5>
+        <p>Mohon tunggu sebentar</p>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script>
+
+<script>
+// ============================================================================
+// WO MAINTENANCE FORM SCRIPT - FIXED FOR CHARFIELD VERSION
+// ============================================================================
+
+// Global variables
+let isFormInitialized = false;
+let availableMesins = []; // Store available mesins for validation
+
+// Safe debug log function
+function debugLog(message, data = null) {
+    const timestamp = new Date().toLocaleTimeString();
+    console.log(`[${timestamp}] FIXED WO:`, message);
+    
+    if (data) {
+        console.log(`[${timestamp}] FIXED DATA:`, data);
+    }
+}
+
+// Initialize Select2 with enhanced options
+function initializeSelect2() {
+    try {
+        debugLog('Initializing Select2 for CharField version...');
+        
+        if (typeof $.fn.select2 === 'undefined') {
+            console.error('Select2 is not loaded!');
+            return false;
+        }
+        
+        // Initialize all select2 elements except nama_mesin (handled separately)
+        $('.select2').not('#id_nama_mesin').each(function() {
+            const $element = $(this);
+            const elementId = $element.attr('id');
+            
+            try {
+                $element.select2({
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: function() {
+                        return $(this).data('placeholder') || 'Pilih...';
+                    }
+                });
+                
+                debugLog('Select2 initialized successfully for: ' + elementId);
+            } catch (e) {
+                console.error('Failed to initialize Select2 for ' + elementId + ':', e);
+            }
+        });
+        
+        // Initialize nama_mesin select2 separately
+        $('#id_nama_mesin').select2({
+            width: '100%',
+            allowClear: true,
+            placeholder: 'Pilih Line terlebih dahulu'
+        });
+        
+        debugLog('Select2 initialization completed for CharField version');
+        return true;
+    } catch (e) {
+        console.error('Select2 initialization failed:', e);
+        return false;
+    }
+}
+
+// Main document ready function
+$(document).ready(function() {
+    try {
+        debugLog('=== WO MAINTENANCE FORM INITIALIZING (CHARFIELD VERSION) ===');
+        
+        // Initialize Select2
+        const select2Success = initializeSelect2();
+        if (!select2Success) {
+            console.error('Critical: Select2 initialization failed');
+            return;
+        }
+        
+        // =================================================================
+        // LINE SELECTION CHANGE HANDLER - CHARFIELD VERSION
+        // =================================================================
+        $('#id_line_section').on('change', function() {
+            try {
+                const selectedLineId = $(this).val();
+                const selectedLineText = $(this).find('option:selected').text();
+                const mesinSelect = $('#id_nama_mesin');
+                const mesinInfo = $('#mesin-info');
+                const lineInfo = $('#line-info');
+                const mesinCount = $('#mesin-count');
+                
+                debugLog('Line selection changed', {
+                    selectedLineId: selectedLineId,
+                    selectedLineText: selectedLineText
+                });
+                
+                // Clear available mesins
+                availableMesins = [];
+                
+                if (selectedLineId && selectedLineId !== '') {
+                    // Show loading state
+                    mesinInfo.removeClass('warning success error').addClass('warning')
+                            .html('<span class="icon-loading"></span> Memuat mesin untuk ' + selectedLineText + '...').show();
+                    lineInfo.removeClass('warning error').addClass('success')
+                           .html('<span class="icon-check"></span> Line dipilih: ' + selectedLineText).show();
+                    
+                    // Clear dan disable mesin dropdown
+                    mesinSelect.empty().append('<option value="">Memuat mesin...</option>')
+                              .prop('disabled', true).trigger('change');
+                    
+                    debugLog('Starting AJAX request for line_id: ' + selectedLineId);
+                    
+                    // AJAX request for CharField version
+                    $.ajax({
+                        url: '{% url "wo_maintenance_app:get_mesin_by_line" %}',
+                        type: 'GET',
+                        data: {
+                            'line_id': selectedLineId
+                        },
+                        timeout: 30000,
+                        cache: false,
+                        beforeSend: function() {
+                            debugLog('AJAX request started for line: ' + selectedLineId);
+                        },
+                        success: function(response) {
+                            debugLog('AJAX response received', response);
+                            
+                            try {
+                                if (response && response.success) {
+                                    // Clear dropdown
+                                    mesinSelect.empty().append('<option value="">Pilih Mesin</option>');
+                                    
+                                    if (response.mesins && response.mesins.length > 0) {
+                                        let addedCount = 0;
+                                        
+                                        // Store available mesins for validation
+                                        availableMesins = [];
+                                        
+                                        $.each(response.mesins, function(index, mesin) {
+                                            if (mesin && mesin.id && mesin.text && 
+                                                mesin.id.toString().trim() !== '' && 
+                                                mesin.text.toString().trim() !== '') {
+                                                
+                                                const mesinId = mesin.id.toString().trim();
+                                                const mesinText = mesin.text.toString().trim();
+                                                
+                                                if (!isNaN(mesinId) && parseInt(mesinId) > 0) {
+                                                    // Add to dropdown
+                                                    mesinSelect.append(new Option(mesinText, mesinId));
+                                                    
+                                                    // Store for validation
+                                                    availableMesins.push({
+                                                        id: mesinId,
+                                                        text: mesinText
+                                                    });
+                                                    
+                                                    addedCount++;
+                                                    debugLog('Added mesin: ' + mesinId + ' - ' + mesinText);
+                                                }
+                                            }
+                                        });
+                                        
+                                        debugLog('Available mesins stored for validation:', availableMesins);
+                                        
+                                        if (addedCount > 0) {
+                                            mesinInfo.removeClass('warning error').addClass('success')
+                                                    .html('<span class="icon-check"></span> ' + addedCount + ' mesin tersedia untuk ' + (response.line_name || selectedLineText));
+                                            mesinCount.text('(' + addedCount + ' mesin tersedia)');
+                                        } else {
+                                            mesinInfo.removeClass('success').addClass('warning')
+                                                    .html('<span class="icon-warning"></span> Tidak ada mesin valid untuk ' + (response.line_name || selectedLineText));
+                                            mesinCount.text('(Tidak ada mesin valid)');
+                                        }
+                                        
+                                    } else {
+                                        debugLog('No mesins found in response');
+                                        mesinInfo.removeClass('success').addClass('warning')
+                                                .html('<span class="icon-warning"></span> Tidak ada mesin tersedia untuk ' + (response.line_name || selectedLineText));
+                                        mesinCount.text('(Tidak ada mesin)');
+                                    }
+                                    
+                                    // Enable dropdown
+                                    mesinSelect.prop('disabled', false).trigger('change');
+                                    
+                                } else {
+                                    // Server returned error
+                                    debugLog('Server returned error', response);
+                                    const errorMsg = response.message || 'Error loading mesin data';
+                                    mesinInfo.removeClass('success warning').addClass('error')
+                                            .html('<span class="icon-error"></span> ' + errorMsg);
+                                    mesinCount.text('(Error)');
+                                    mesinSelect.empty().append('<option value="">Error - Coba lagi</option>')
+                                              .prop('disabled', false).trigger('change');
+                                }
+                            } catch (e) {
+                                debugLog('Error processing AJAX response', e);
+                                mesinInfo.removeClass('success warning').addClass('error')
+                                        .html('<span class="icon-error"></span> Error memproses data mesin');
+                                mesinCount.text('(Error processing)');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            debugLog('AJAX request failed', {
+                                status: status,
+                                error: error,
+                                statusCode: xhr.status
+                            });
+                            
+                            let errorMessage = 'Gagal memuat data mesin';
+                            
+                            if (xhr.status === 0) {
+                                errorMessage = 'Koneksi terputus - Periksa jaringan internet';
+                            } else if (xhr.status === 404) {
+                                errorMessage = 'Endpoint tidak ditemukan - Hubungi administrator';
+                            } else if (xhr.status === 500) {
+                                errorMessage = 'Error server - Hubungi administrator';
+                            } else if (status === 'timeout') {
+                                errorMessage = 'Timeout - Coba lagi dalam beberapa saat';
+                            }
+                            
+                            mesinInfo.removeClass('success warning').addClass('error')
+                                    .html('<span class="icon-wifi-off"></span> ' + errorMessage);
+                            mesinCount.text('(Error koneksi)');
+                            mesinSelect.empty().append('<option value="">Error - Coba lagi</option>')
+                                      .prop('disabled', false).trigger('change');
+                        },
+                        complete: function() {
+                            debugLog('AJAX request completed for line: ' + selectedLineId);
+                        }
+                    });
+                    
+                } else {
+                    // No line selected
+                    debugLog('No line selected - clearing mesin dropdown');
+                    mesinSelect.empty().append('<option value="">Pilih Line terlebih dahulu</option>')
+                              .prop('disabled', true).trigger('change');
+                    mesinInfo.removeClass('success error').addClass('warning')
+                            .html('<span class="icon-info"></span> Pilih line/section terlebih dahulu').show();
+                    lineInfo.hide();
+                    mesinCount.text('');
+                    availableMesins = [];
+                }
+            } catch (e) {
+                console.error('Error in line change handler:', e);
+                debugLog('Critical error in line change handler', e);
+            }
+        });
+        
+        // =================================================================
+        // FORM VALIDATION AND SUBMISSION - CHARFIELD VERSION
+        // =================================================================
+        $('#pengajuanForm').on('submit', function(e) {
+            try {
+                debugLog('Form submission started (CharField version)');
+                
+                // Collect form data
+                const formData = {
+                    line_section: $('#id_line_section').val(),
+                    nama_mesin: $('#id_nama_mesin').val(),
+                    section_tujuan: $('#id_section_tujuan').val(),
+                    jenis_pekerjaan: $('#id_jenis_pekerjaan').val(),
+                    deskripsi_pekerjaan: $('#id_deskripsi_pekerjaan').val()
+                };
+                
+                debugLog('Form data being submitted', formData);
+                debugLog('Available mesins for validation', availableMesins);
+                
+                // Enhanced validation
+                let isValid = true;
+                const validationErrors = [];
+                
+                // Clear previous validation states
+                $('.is-invalid').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+                
+                // Check required fields
+                const requiredFields = [
+                    { element: $('#id_line_section'), name: 'Line/Section', value: formData.line_section },
+                    { element: $('#id_nama_mesin'), name: 'Nama Mesin', value: formData.nama_mesin },
+                    { element: $('#id_section_tujuan'), name: 'Section Tujuan', value: formData.section_tujuan },
+                    { element: $('#id_jenis_pekerjaan'), name: 'Jenis Pekerjaan', value: formData.jenis_pekerjaan },
+                    { element: $('#id_deskripsi_pekerjaan'), name: 'Deskripsi Pekerjaan', value: formData.deskripsi_pekerjaan }
+                ];
+                
+                requiredFields.forEach(function(field) {
+                    const fieldValue = field.value;
+                    
+                    if (!fieldValue || fieldValue.toString().trim() === '') {
+                        isValid = false;
+                        validationErrors.push(field.name + ' wajib diisi');
+                        
+                        // Add visual validation state
+                        if (field.element.hasClass('select2-hidden-accessible')) {
+                            field.element.next('.select2-container').addClass('is-invalid');
+                        } else {
+                            field.element.addClass('is-invalid');
+                        }
+                        
+                        // Add error message
+                        const errorMsg = '<div class="invalid-feedback">' + field.name + ' wajib diisi</div>';
+                        if (field.element.hasClass('select2-hidden-accessible')) {
+                            field.element.next('.select2-container').after(errorMsg);
+                        } else {
+                            field.element.after(errorMsg);
+                        }
+                        
+                        debugLog('Validation failed for field: ' + field.name);
+                    } else {
+                        debugLog('Validation passed for field: ' + field.name + ' = ' + fieldValue);
+                    }
+                });
+                
+                // CHARFIELD VERSION: Client-side validation for mesin-line relationship
+                if (formData.line_section && formData.nama_mesin) {
+                    const isValidMesin = availableMesins.some(function(mesin) {
+                        return mesin.id === formData.nama_mesin;
+                    });
+                    
+                    if (!isValidMesin) {
+                        isValid = false;
+                        validationErrors.push('Mesin tidak valid untuk line yang dipilih');
+                        $('#id_nama_mesin').next('.select2-container').addClass('is-invalid');
+                        $('#id_nama_mesin').next('.select2-container').after('<div class="invalid-feedback">Mesin tidak valid untuk line yang dipilih. Pilih mesin dari dropdown yang tersedia.</div>');
+                        debugLog('Validation failed: Mesin tidak valid untuk line', {
+                            selectedMesin: formData.nama_mesin,
+                            availableMesins: availableMesins
+                        });
+                    }
+                }
+                
+                // Special validation untuk deskripsi
+                const deskripsi = formData.deskripsi_pekerjaan;
+                if (deskripsi && deskripsi.trim().length < 10) {
+                    isValid = false;
+                    validationErrors.push('Deskripsi pekerjaan minimal 10 karakter');
+                    $('#id_deskripsi_pekerjaan').addClass('is-invalid');
+                    $('#id_deskripsi_pekerjaan').after('<div class="invalid-feedback">Deskripsi pekerjaan minimal 10 karakter</div>');
+                    debugLog('Validation failed: Deskripsi too short');
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    
+                    // Show summary error message
+                    showNotification('Mohon periksa kembali form: ' + validationErrors.join(', '), 'error');
+                    
+                    debugLog('Form validation failed', {
+                        errors: validationErrors,
+                        formData: formData
+                    });
+                    
+                    // Scroll to first error
+                    const firstError = $('.is-invalid').first();
+                    if (firstError.length) {
+                        $('html, body').animate({
+                            scrollTop: firstError.offset().top - 100
+                        }, 500);
+                    }
+                    
+                    return false;
+                }
+                
+                // Show loading overlay
+                $('#loadingOverlay').show();
+                debugLog('Form validation passed - submitting form', formData);
+                
+            } catch (e) {
+                console.error('Error in form submission:', e);
+                e.preventDefault();
+                showNotification('Terjadi kesalahan sistem. Silakan coba lagi.', 'error');
+                return false;
+            }
+        });
+        
+        // =================================================================
+        // OTHER FORM HANDLERS
+        // =================================================================
+        
+        // Auto-resize textarea
+        $('textarea').each(function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        }).on('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+        
+        // Character counter
+        $('#id_deskripsi_pekerjaan').on('input', function() {
+            const currentLength = $(this).val().length;
+            const minLength = 10;
+            
+            let counterHtml = currentLength + ' karakter';
+            if (currentLength < minLength) {
+                counterHtml += ' (minimal ' + minLength + ')';
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+            
+            // Update counter
+            let counter = $(this).siblings('.char-counter');
+            if (counter.length === 0) {
+                counter = $('<small class="char-counter text-muted"></small>');
+                $(this).after(counter);
+            }
+            counter.html(counterHtml);
+        });
+        
+        // Form reset handler
+        $('button[type="reset"]').on('click', function() {
+            if (confirm('Apakah Anda yakin ingin mereset form?')) {
+                debugLog('Form reset triggered');
+                $('#pengajuanForm')[0].reset();
+                $('.is-invalid').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+                $('.char-counter').remove();
+                
+                // Reset Select2
+                $('.select2').val(null).trigger('change');
+                
+                // Reset info messages
+                $('#mesin-info').removeClass('success error').addClass('warning')
+                               .html('<span class="icon-info"></span> Pilih line/section terlebih dahulu').show();
+                $('#line-info').hide();
+                $('#mesin-count').text('');
+                $('#id_nama_mesin').prop('disabled', true).empty().append('<option value="">Pilih Line terlebih dahulu</option>');
+                
+                // Clear available mesins
+                availableMesins = [];
+            }
+        });
+        
+        // Select2 validation cleanup
+        $('.select2').on('select2:open', function() {
+            $(this).next('.select2-container').removeClass('is-invalid');
+            $(this).next('.select2-container').next('.invalid-feedback').remove();
+        });
+        
+        // Initial state
+        if (!$('#id_line_section').val()) {
+            $('#id_nama_mesin').prop('disabled', true);
+            debugLog('Initial state: mesin disabled');
+        }
+        
+        isFormInitialized = true;
+        debugLog('Form initialization completed successfully (CharField version)');
+        
+    } catch (e) {
+        console.error('Critical error during form initialization:', e);
+        debugLog('Critical initialization error', e);
+    }
+});
+
+// =================================================================
+// HELPER FUNCTIONS
+// =================================================================
+
+function showNotification(message, type) {
+    const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+    const icon = type === 'error' ? '❌' : '✅';
+    
+    const alertHtml = 
+        '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+            icon + ' ' + message +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+        '</div>';
+    
+    $('.card-body').prepend(alertHtml);
+    
+    // Auto dismiss
+    setTimeout(function() {
+        $('.alert').alert('close');
+    }, 5000);
+    
+    debugLog('Notification shown: ' + message);
+}
+
+// =================================================================
+// ERROR HANDLING
+// =================================================================
+
+window.addEventListener('error', function(e) {
+    console.error('Global JavaScript error:', e.error);
+    debugLog('Global error caught', {
+        message: e.message,
+        filename: e.filename,
+        lineno: e.lineno
+    });
+});
+
+</script>
+{% endblock scriptcontent %}

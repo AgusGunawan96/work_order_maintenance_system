@@ -31,9 +31,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['172.16.202.72', 'localhost', '127.0.0.1', '172.16.202.237', 'myseiwa.com', '172.16.222.72', '172.16.202.225', '172.16.222.225']
 
+# ===== AUTHENTICATION BACKENDS =====
+# PENTING: SDBM backend harus di urutan pertama untuk prioritas login
+AUTHENTICATION_BACKENDS = [
+    'authentication.SDBMAuthenticationBackend',  # Custom backend untuk SDBM (prioritas utama)
+    'django.contrib.auth.backends.ModelBackend',  # Default Django backend sebagai fallback
+]
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -62,11 +67,13 @@ INSTALLED_APPS = [
     'production_app',
     'gatepass_app',
     'ceisa_app',
-    'POSEIWA',
-    'sfc_2',
+    # 'POSEIWA',
+    # 'sfc_2',
     'seiwa',
     'wingoapp',
     'sass_processor',
+    'dailyactivity_app',
+    'wo_maintenance_app',
     # other apps
     'django_extensions',
 ]
@@ -83,6 +90,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'web_seiwa.urls'
 
+# ===== TEMPLATES CONFIGURATION =====
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -95,6 +103,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'master_app.views.employee_context',  # Context processor untuk data employee SDBM
             ],
         },
     },
@@ -102,8 +111,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'web_seiwa.wsgi.application'
 
-
-# Database
+# ===== DATABASE CONFIGURATION =====
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
@@ -112,48 +120,59 @@ DATABASES = {
         'NAME': 'web_seiwa',
         'USER': 'sa',
         'PASSWORD': 'loginS@EDP',
-        'HOST': '172.16.202.237\SEIBSC02',
+        'HOST': '172.16.202.237\\SEIBSC02',
         'PORT': '',
-        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'extra_params': (
+                'TrustServerCertificate=yes;'
+                'Encrypt=no;'
+                'MultipleActiveResultSets=False;'
+                'Connection Timeout=30;'
+                'Command Timeout=30;'
+            ),
+        },
     },
-    'poseiwa_db': {
-    'ENGINE': 'mssql',
-    'NAME': 'DB_POSEIWA',
-    'USER': 'sa',
-    'PASSWORD': 'loginS@EDP',
-    'HOST': '172.16.202.234',
-    'PORT': '',
-    'OPTIONS': {},  # Additional options for the second database
-    },
-    'seiwa_db': {
-    'ENGINE': 'mssql',
-    'NAME': 'seiwa',
-    'USER': 'sa',
-    'PASSWORD': 'loginS@EDP',
-    'HOST': '172.16.202.234',
-    'PORT': '',
-    'OPTIONS': {},  # Additional options for the second database
-    },
-    'sfc_db': {
-    'ENGINE': 'mssql',
-    'NAME': 'SFC_2',
-    'USER': 'sa',
-    'PASSWORD': 'loginS@EDP',
-    'HOST': '172.16.202.237\SEIBSC01',
-    'PORT': '',
-    'OPTIONS': {},  # Additional options for the second database
-    },
-    'seiwa_int_app_db': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'db_seiwa_intapp',
-    'USER': 'seiwa',
-    'PASSWORD': 'BimaSakti!01',
-    'HOST': '172.16.202.101',
-    'PORT': '',
-    'OPTIONS': {},  # Additional options for the second database
-    }
-}
 
+    # ===== DATABASE SDBM untuk AUTHENTICATION =====
+    'SDBM': {
+        'ENGINE': 'mssql',
+        'NAME': 'SDBM',
+        'USER': 'seiwa_app',
+        'PASSWORD': 'Password123!',
+        'HOST': '172.16.202.223\\SPM',
+        'PORT': '',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'extra_params': (
+                'TrustServerCertificate=yes;'
+                'Encrypt=no;'
+                'MultipleActiveResultSets=False;'
+                'Connection Timeout=30;'
+                'Command Timeout=30;'
+            ),
+        },
+    },
+
+    'DB_Maintenance': {
+        'ENGINE': 'mssql',
+        'NAME': 'DB_Maintenance',
+        'USER': 'sa',
+        'PASSWORD': 'loginS@EDP',
+        'HOST': '172.16.202.234',
+        'PORT': '1433',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'extra_params': (
+                'TrustServerCertificate=yes;'
+                'Encrypt=no;'
+                'MultipleActiveResultSets=False;'
+                'Connection Timeout=30;'
+                'Command Timeout=30;'
+            ),
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -182,18 +201,50 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
+# ===== AUTHENTICATION & SESSION SETTINGS =====
+# LOGIN/LOGOUT URLs untuk SDBM
+LOGIN_URL = '/login/'  # URL untuk login SDBM
+LOGIN_REDIRECT_URL = '/'    # Redirect setelah login sukses
+LOGOUT_REDIRECT_URL = '/login/'  # Redirect setelah logout
+
+# SESSION SETTINGS yang dioptimalkan untuk SDBM
+SESSION_COOKIE_AGE = 28800  # 8 jam dalam detik
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_NAME = 'seiwa_sessionid'
+SESSION_COOKIE_HTTPONLY = True
+
+# Security settings untuk production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'id'  # Bahasa Indonesia sebagai default
 
 TIME_ZONE = 'Asia/Jakarta'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = False
 USE_THOUSAND_SEPARATOR = True
+
+LANGUAGES = [
+    ('id', 'Indonesian'),
+    ('en', 'English'),
+    ('ja', 'Japanese'),
+]
+LOCALE_PATHS = [
+    BASE_DIR / 'locale'
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -204,9 +255,6 @@ STATICFILES_DIRS = [
 ]
 SASS_PROCESSOR_ROOT = BASE_DIR / 'static'
 
-# LOGIN
-LOGIN_REDIRECT_URL = '/'
-
 # MEDIA
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
@@ -215,3 +263,255 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ===== LOGGING CONFIGURATION (untuk debugging SDBM authentication) =====
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'authentication': {  # Logger khusus untuk SDBM auth
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# Buat direktori logs jika belum ada
+import os
+log_dir = BASE_DIR / 'logs'
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+# ===== SDBM SETTINGS (berdasarkan hasil test) =====
+SDBM_DATABASE_INFO = {
+    'SERVER': '172.16.202.223\\SPM',
+    'DATABASE': 'SDBM', 
+    'ACTIVE_EMPLOYEES': 665,  # Dari hasil test
+    'TABLES_VERIFIED': True,
+    'LAST_TEST_DATE': '2025-08-07',
+    'CONNECTION_STATUS': 'WORKING'
+}
+
+# ===== CUSTOM SETTINGS untuk SDBM =====
+# Konfigurasi khusus untuk integrasi SDBM
+SDBM_SETTINGS = {
+    'ENABLE_AUTO_USER_CREATION': True,  # Otomatis buat user Django dari SDBM
+    'SYNC_USER_DATA_ON_LOGIN': True,    # Update data user setiap login
+    'DEFAULT_USER_GROUPS': ['employees'],  # Group default untuk user SDBM
+    'ADMIN_LEVEL_USERS': ['admin', 'supervisor', 'manager'],  # Level user yang dianggap admin
+}
+
+# ===== CACHE CONFIGURATION (opsional untuk performa) =====
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+        'TIMEOUT': 300,  # 5 menit
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+        }
+    }
+}
+
+# ===== MESSAGE FRAMEWORK =====
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+    messages.SUCCESS: 'success',
+    messages.INFO: 'info',
+    messages.WARNING: 'warning',
+}
+
+# Tambahkan di bagian bawah file web_seiwa/settings.py
+
+# ===== DATABASE ROUTERS untuk WO Maintenance =====
+DATABASE_ROUTERS = [
+    'wo_maintenance_app.models.MaintenanceDatabaseRouter',
+]
+
+# ===== WO MAINTENANCE SETTINGS =====
+# Konfigurasi khusus untuk WO Maintenance
+WO_MAINTENANCE_SETTINGS = {
+    'DEFAULT_STATUS': '0',  # Pending
+    'DEFAULT_APPROVE': '0',  # Not Approved
+    'AUTO_GENERATE_HISTORY_ID': True,
+    'AUTO_GENERATE_NUMBER_WO': True,
+    'ENABLE_APPROVAL_SYSTEM': True,
+    'ADMIN_LEVEL_USERS': ['admin', 'supervisor', 'manager'],  # Level user yang bisa approve
+}
+
+# ===== LOGGING UPDATE untuk WO Maintenance =====
+# Update existing LOGGING configuration
+LOGGING['loggers']['wo_maintenance_app'] = {
+    'handlers': ['file', 'console'],
+    'level': 'DEBUG',
+    'propagate': True,
+}
+
+# ===== WO MAINTENANCE HIERARCHY SETTINGS =====
+# Tambahkan konfigurasi khusus untuk sistem hierarchy
+WO_MAINTENANCE_HIERARCHY_SETTINGS = {
+    # Role-based approval levels
+    'APPROVAL_LEVELS': {
+        'OPERATOR': 1,
+        'STAFF': 2,
+        'JUNIOR': 2,
+        'SENIOR': 3,
+        'LEADER': 4,
+        'FOREMAN': 5,
+        'ASSISTANT SUPERVISOR': 6,
+        'SUPERVISOR': 6,
+        'MANAGER': 7,
+        'MGR': 7,
+        'GENERAL': 8,
+        'GM': 8,
+        'BOD': 9
+    },
+    
+    # Keywords untuk mengidentifikasi role dari title
+    'SUPERVISOR_KEYWORDS': ['SUPERVISOR', 'SPV'],
+    'MANAGER_KEYWORDS': ['MANAGER', 'MGR'],
+    'GENERAL_MANAGER_KEYWORDS': ['GENERAL', 'GM'],
+    'BOD_KEYWORDS': ['BOD', 'DIRECTOR'],
+    
+    # Approval scope settings
+    'MANAGER_SCOPE': 'DEPARTMENT',  # Manager dapat approve dalam department yang sama
+    'SUPERVISOR_SCOPE': 'SECTION',  # Supervisor dapat approve dalam section yang sama
+    'GENERAL_MANAGER_SCOPE': 'COMPANY',  # GM dapat approve seluruh company
+    'BOD_SCOPE': 'ALL',  # BOD dapat approve semua
+    
+    # Filter settings
+    'ENABLE_HIERARCHY_FILTER': True,
+    'ALLOW_SELF_APPROVAL': False,  # User tidak dapat approve pengajuan sendiri
+    'AUTO_APPROVE_THRESHOLD': None,  # Threshold untuk auto-approve (jika diperlukan)
+    
+    # Debugging
+    'DEBUG_HIERARCHY': True if DEBUG else False,
+    'LOG_APPROVAL_ACTIONS': True
+}
+
+# ===== LOGGING UPDATE untuk WO Maintenance Hierarchy =====
+# Update existing LOGGING configuration untuk menambahkan logger hierarchy
+if 'LOGGING' in locals() or 'LOGGING' in globals():
+    LOGGING['loggers']['wo_maintenance_hierarchy'] = {
+        'handlers': ['file', 'console'],
+        'level': 'DEBUG' if DEBUG else 'INFO',
+        'propagate': True,
+    }
+    
+    LOGGING['loggers']['master_app.views'] = {
+        'handlers': ['file', 'console'],
+        'level': 'DEBUG' if DEBUG else 'INFO',
+        'propagate': True,
+    }
+
+# ===== CACHE SETTINGS untuk Performance =====
+# Update cache settings untuk menyimpan data hierarchy sementara
+if 'CACHES' in locals() or 'CACHES' in globals():
+    CACHES['hierarchy'] = {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'hierarchy-cache',
+        'TIMEOUT': 1800,  # 30 menit
+        'OPTIONS': {
+            'MAX_ENTRIES': 500,
+        }
+    }
+
+# ===== TAMBAHAN SECURITY SETTINGS untuk SDBM =====
+# Tambahan security untuk koneksi SDBM
+SDBM_SECURITY_SETTINGS = {
+    'CONNECTION_TIMEOUT': 30,
+    'QUERY_TIMEOUT': 30,
+    'MAX_RETRIES': 3,
+    'ENABLE_CONNECTION_POOLING': True,
+    'LOG_QUERIES': DEBUG,  # Log query hanya saat development
+}
+
+# ===== EMPLOYEE CONTEXT SETTINGS =====
+EMPLOYEE_CONTEXT_SETTINGS = {
+    'CACHE_EMPLOYEE_DATA': True,
+    'CACHE_TIMEOUT': 1800,  # 30 menit
+    'FALLBACK_TO_DJANGO_USER': True,  # Gunakan data Django user jika SDBM tidak tersedia
+    'REQUIRED_FIELDS': [
+        'employee_number', 'fullname', 'department_name', 
+        'section_name', 'title_name'
+    ],
+    'AUTO_CREATE_DJANGO_USER': False,  # Jangan auto-create user baru
+    'SYNC_USER_DATA_ON_LOGIN': True,  # Update data user setiap login
+}
+
+# ===== DEVELOPMENT HELPERS =====
+if DEBUG:
+    # Tambahan setting untuk development
+    WO_MAINTENANCE_DEV_SETTINGS = {
+        'SHOW_DEBUG_PANEL': True,
+        'ENABLE_SQL_LOGGING': True,
+        'MOCK_SDBM_DATA': False,  # Set True jika ingin test tanpa koneksi SDBM
+        'TEST_USERS': {
+            # Format: 'username': {'title': 'SUPERVISOR', 'department': 'IT', 'section': 'Development'}
+            'test_spv': {
+                'title': 'SUPERVISOR',
+                'department': 'IT',
+                'section': 'Development',
+                'is_supervisor': True
+            },
+            'test_mgr': {
+                'title': 'MANAGER',
+                'department': 'IT', 
+                'section': 'Development',
+                'is_manager': True
+            }
+        }
+    }
+
+# ===== LOGGING FORMATTER untuk Hierarchy =====
+if 'LOGGING' in locals() or 'LOGGING' in globals():
+    LOGGING['formatters']['hierarchy'] = {
+        'format': '[HIERARCHY] {levelname} {asctime} {module} - {message}',
+        'style': '{',
+    }
+    
+    # Gunakan formatter khusus untuk logger hierarchy
+    LOGGING['handlers']['hierarchy_file'] = {
+        'level': 'DEBUG',
+        'class': 'logging.FileHandler',
+        'filename': BASE_DIR / 'logs' / 'wo_hierarchy.log',
+        'formatter': 'hierarchy',
+    }
+    
+    # Update logger hierarchy untuk menggunakan handler khusus
+    LOGGING['loggers']['wo_maintenance_hierarchy']['handlers'] = ['hierarchy_file', 'console']
+
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'  # Default, pastikan tidak diubah
+SESSION_COOKIE_AGE = 3600  # 1 jam (optional)
+SESSION_SAVE_EVERY_REQUEST = False  # Optional untuk performa

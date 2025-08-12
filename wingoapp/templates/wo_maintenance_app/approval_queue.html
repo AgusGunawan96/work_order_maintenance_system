@@ -1,0 +1,542 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+        color: white;
+        font-weight: 600;
+    }
+    
+    .approval-card {
+        border-left: 4px solid #dc3545;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .approval-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
+    }
+    
+    .priority-high {
+        border-left-color: #dc3545;
+    }
+    
+    .priority-medium {
+        border-left-color: #ffc107;
+    }
+    
+    .priority-low {
+        border-left-color: #28a745;
+    }
+    
+    .approval-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #17a2b8;
+    }
+    
+    .btn-approve {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        font-weight: 600;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-approve:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+        color: white;
+    }
+    
+    .btn-reject {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        font-weight: 600;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-reject:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+        color: white;
+    }
+    
+    .urgency-indicator {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .urgency-high {
+        background: #dc3545;
+        color: white;
+        animation: pulse 2s infinite;
+    }
+    
+    .urgency-medium {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .urgency-low {
+        background: #28a745;
+        color: white;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .wo-meta {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .wo-description {
+        background: white;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #e9ecef;
+        margin: 10px 0;
+    }
+    
+    .requester-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .requester-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+    
+    .stats-cards {
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        border-left: 4px solid #dc3545;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #dc3545;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- User Info & Role -->
+    {% if user_hierarchy %}
+    <div class="approval-info">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">🔒 Panel Approval - {{ user_hierarchy.fullname }}</h6>
+                <p class="mb-0 text-muted">
+                    {{ user_hierarchy.title_name }} | {{ user_hierarchy.department_name }} - {{ user_hierarchy.section_name }}
+                    {% if user_hierarchy.is_supervisor %}
+                        <span class="badge bg-primary">Supervisor</span>
+                    {% endif %}
+                    {% if user_hierarchy.is_manager %}
+                        <span class="badge bg-success">Manager</span>
+                    {% endif %}
+                    {% if user_hierarchy.is_general_manager %}
+                        <span class="badge bg-warning">General Manager</span>
+                    {% endif %}
+                    {% if user_hierarchy.is_bod %}
+                        <span class="badge bg-danger">BOD</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div>
+                👤
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Statistics -->
+    <div class="stats-cards">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ pengajuan_list|length }}</div>
+                    <div class="stat-label">Menunggu Approval</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="border-left-color: #ffc107;">
+                    <div class="stat-number" style="color: #ffc107;">
+                        {{ pengajuan_list|length|add:0 }}
+                    </div>
+                    <div class="stat-label">Total Hari Ini</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="border-left-color: #28a745;">
+                    <div class="stat-number" style="color: #28a745;">0</div>
+                    <div class="stat-label">Sudah Disetujui</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="border-left-color: #6c757d;">
+                    <div class="stat-number" style="color: #6c757d;">0</div>
+                    <div class="stat-label">Ditolak</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifikasi untuk pesan -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5><i data-feather="clock"></i> Antrian Approval Work Order</h5>
+                    <p class="mb-0 text-muted">Pengajuan yang memerlukan persetujuan Anda</p>
+                </div>
+                <div>
+                    <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="btn btn-light me-2">
+                        <i data-feather="list"></i> Lihat Semua WO
+                    </a>
+                    <a href="{% url 'wo_maintenance_app:dashboard' %}" class="btn btn-outline-light">
+                        <i data-feather="home"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            {% if pengajuan_list %}
+                {% for pengajuan in pengajuan_list %}
+                <div class="approval-card card position-relative 
+                    {% cycle 'priority-high' 'priority-medium' 'priority-low' %}">
+                    
+                    <!-- Urgency Indicator -->
+                    <div class="urgency-indicator 
+                        {% cycle 'urgency-high' 'urgency-medium' 'urgency-low' %}">
+                        {% cycle 'URGENT' 'NORMAL' 'LOW' %}
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!-- Header Info -->
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <strong class="text-primary">{{ pengajuan.0 }}</strong>
+                                            <span class="badge bg-warning text-dark">PENDING APPROVAL</span>
+                                        </h6>
+                                        <p class="wo-meta mb-0">
+                                            WO: {{ pengajuan.8|default:"-" }} | 
+                                            Line: <span class="badge bg-info">{{ pengajuan.9|default:"-" }}</span> |
+                                            Tanggal: {{ pengajuan.7|date:"d/m/Y H:i" }}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Requester Info -->
+                                <div class="requester-info">
+                                    <div class="requester-avatar">
+                                        {{ pengajuan.1|first|upper }}
+                                    </div>
+                                    <div>
+                                        <strong>{{ pengajuan.1 }}</strong>
+                                        <br>
+                                        <small class="text-muted">Pengaju</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- WO Details -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <strong>Mesin:</strong><br>
+                                        <span class="text-muted">{{ pengajuan.2|default:"-" }}</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Section Tujuan:</strong><br>
+                                        <span class="text-muted">{{ pengajuan.3|default:"-" }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <strong>Jenis Pekerjaan:</strong><br>
+                                        <span class="text-muted">{{ pengajuan.4|default:"-" }}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Description -->
+                                <div class="wo-description">
+                                    <strong>Deskripsi Pekerjaan:</strong><br>
+                                    {{ pengajuan.5|default:"-"|truncatechars:200 }}
+                                    {% if pengajuan.5|length > 200 %}
+                                        <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" class="text-primary">
+                                            ...baca selengkapnya
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="text-end">
+                                    <!-- Quick Actions -->
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" 
+                                           class="btn btn-outline-primary">
+                                            <i data-feather="eye"></i> Detail & Approval
+                                        </a>
+                                        
+                                        <!-- Quick Approve/Reject Buttons -->
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-approve btn-sm" 
+                                                    onclick="quickApproval('{{ pengajuan.0 }}', '1', 'Quick Approve')">
+                                                <i data-feather="check"></i> Setujui
+                                            </button>
+                                            <button type="button" class="btn btn-reject btn-sm" 
+                                                    onclick="quickApproval('{{ pengajuan.0 }}', '2', 'Quick Reject')">
+                                                <i data-feather="x"></i> Tolak
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Time Info -->
+                                    <div class="mt-3 text-muted">
+                                        <small>
+                                            <i data-feather="clock"></i>
+                                            {% now "Y-m-d H:i" as current_time %}
+                                            {% if pengajuan.7 %}
+                                                {{ pengajuan.7|timesince }} yang lalu
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Pagination (if needed) -->
+                <div class="text-center mt-4">
+                    <p class="text-muted">Menampilkan {{ pengajuan_list|length }} pengajuan yang menunggu approval Anda</p>
+                </div>
+            {% else %}
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <i data-feather="inbox"></i>
+                    <h5>Tidak Ada Pengajuan yang Menunggu</h5>
+                    <p class="text-muted">
+                        Saat ini tidak ada work order yang memerlukan approval dari Anda.
+                        <br>Pengajuan baru akan muncul di sini sesuai dengan hierarki department dan section Anda.
+                    </p>
+                    <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="btn btn-primary">
+                        <i data-feather="list"></i> Lihat Semua Work Order
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Quick Approval Modal -->
+<div class="modal fade" id="quickApprovalModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Approval</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin <span id="actionText"></span> pengajuan <strong id="woNumber"></strong>?</p>
+                <div class="mb-3">
+                    <label for="quickKeterangan" class="form-label">Keterangan (Opsional):</label>
+                    <textarea class="form-control" id="quickKeterangan" rows="3" 
+                              placeholder="Masukkan keterangan approval..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="confirmQuickApproval">Konfirmasi</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Auto refresh every 30 seconds
+    setInterval(function() {
+        // Check for new approvals (optional)
+        // location.reload();
+    }, 30000);
+    
+    // Tooltip initialization
+    $('[data-bs-toggle="tooltip"]').tooltip();
+});
+
+// Quick Approval Function
+let currentWO = '';
+let currentAction = '';
+
+function quickApproval(woNumber, action, actionText) {
+    currentWO = woNumber;
+    currentAction = action;
+    
+    $('#woNumber').text(woNumber);
+    $('#actionText').text(action === '1' ? 'menyetujui' : 'menolak');
+    $('#quickKeterangan').val('');
+    
+    $('#quickApprovalModal').modal('show');
+}
+
+// Confirm Quick Approval
+$('#confirmQuickApproval').on('click', function() {
+    const keterangan = $('#quickKeterangan').val() || 'Quick approval from queue';
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('action', currentAction);
+    formData.append('keterangan', keterangan);
+    
+    // Submit to detail page
+    fetch(`{% url 'wo_maintenance_app:detail_laporan' 'PLACEHOLDER' %}`.replace('PLACEHOLDER', currentWO), {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // Show success message
+            const actionText = currentAction === '1' ? 'disetujui' : 'ditolak';
+            showNotification(`Pengajuan ${currentWO} berhasil ${actionText}`, 'success');
+            
+            // Reload page after short delay
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            showNotification('Terjadi kesalahan saat memproses approval', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Terjadi kesalahan koneksi', 'error');
+    });
+    
+    $('#quickApprovalModal').modal('hide');
+});
+
+// Notification function
+function showNotification(message, type) {
+    const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+    const icon = type === 'error' ? '❌' : '✅';
+    
+    const alertHtml = 
+        '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+            icon + ' ' + message +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+        '</div>';
+    
+    $('.card-body').prepend(alertHtml);
+    
+    // Auto dismiss
+    setTimeout(function() {
+        $('.alert').alert('close');
+    }, 5000);
+}
+
+// Keyboard shortcuts
+$(document).keydown(function(e) {
+    // Press 'R' to refresh
+    if (e.key === 'r' || e.key === 'R') {
+        if (!e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            location.reload();
+        }
+    }
+});
+</script>
+{% endblock scriptcontent %}

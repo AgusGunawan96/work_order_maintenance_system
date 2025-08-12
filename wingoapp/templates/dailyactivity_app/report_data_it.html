@@ -1,0 +1,183 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+{% comment %} <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datepicker.scss' %}"> {% endcomment %}
+<!-- Plugins css Ends-->
+<style>
+  .project-row {
+    background-color: #e8f5e9;
+    font-weight: bold;
+  }
+  .issue-row {
+    background-color: #fff8e1;
+  }
+  .progress {
+    height: 20px;
+    margin-bottom: 0;
+  }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Container-fluid starts-->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Laporan Data IT</h5>
+            <div class="card-header-right">
+              <ul class="setting-option">
+                <li>
+                  <div class="setting-badge"><i class="fa fa-spin fa-cog font-primary"></i></div>
+                </li>
+                <li><i class="view-html fa fa-code font-primary"></i></li>
+                <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
+                <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
+                <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
+                <li><i class="icofont icofont-error close-card font-primary"></i></li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Filter section -->
+            <div class="card-body pb-0">
+              <form method="GET" class="row g-3 align-items-end mb-4">
+                <div class="col-md-4">
+                  <label for="start_date" class="form-label">Tanggal Mulai</label>
+                  <input type="date" class="datepicker-here form-control" id="start_date" name="start_date" value="{{ start_date }}" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="end_date" class="form-label">Tanggal Akhir</label>
+                  <input type="date" class="datepicker-here form-control" id="end_date" name="end_date" value="{{ end_date }}" required>
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-primary">Filter</button>
+                  {% if filtered %}
+                  <button type="submit" name="export" value="1" class="btn btn-success ms-2">Export ke Excel</button>
+                  {% endif %}
+                </div>
+              </form>
+            </div>
+
+            {% if not filtered %}
+            <!-- Tampilan awal sebelum filter -->
+            <div class="alert alert-info mb-0 text-center">
+              <h5>Silahkan pilih rentang tanggal dan klik tombol Filter untuk menampilkan data</h5>
+            </div>
+            {% else %}
+
+            <!-- Combined table section (hanya ditampilkan setelah filter) -->
+            <div class="table-responsive">
+              {% if projects %}
+              <table class="display datatables" id="combined-table">
+                <thead>
+                  <tr>
+                    <th>Project</th>
+                    <th>PIC Project</th>
+                    <th>Department</th>
+                    <th>Start Date</th>
+                    <th>Finish Date</th>
+                    <th>Issue</th>
+                    <th>PIC Issue</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Remark</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for project in projects %}
+                    {% with issues=project.issues.all %}
+                      {% if issues.exists %}
+                        {% for issue in issues %}
+                          <tr {% if forloop.counter == 1 %}class="project-row"{% else %}class="issue-row"{% endif %}>
+                            {% if forloop.counter == 1 %}
+                              <td rowspan="{{ issues.count }}">{{ project.project_name }}</td>
+                              <td rowspan="{{ issues.count }}">{{ project.pic_project }}</td>
+                              <td rowspan="{{ issues.count }}">{{ project.department }}</td>
+                              <td rowspan="{{ issues.count }}">{{ project.start_date|date:"d/m/Y" }}</td>
+                              <td rowspan="{{ issues.count }}">{{ project.finish_date|date:"d/m/Y" }}</td>
+                            {% endif %}
+                            <td>{{ issue.issue }}</td>
+                            <td>{{ issue.pic }}</td>
+                            <td>{{ issue.due_date|date:"d/m/Y" }}</td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ issue.status }}%;" 
+                                  aria-valuenow="{{ issue.status }}" aria-valuemin="0" aria-valuemax="100">{{ issue.status }}%</div>
+                              </div>
+                            </td>
+                            <td>{{ issue.remark|default:"" }}</td>
+                          </tr>
+                        {% endfor %}
+                      {% else %}
+                        <tr class="project-row">
+                          <td>{{ project.project_name }}</td>
+                          <td>{{ project.pic_project }}</td>
+                          <td>{{ project.department }}</td>
+                          <td>{{ project.start_date|date:"d/m/Y" }}</td>
+                          <td>{{ project.finish_date|date:"d/m/Y" }}</td>
+                          <td colspan="5" class="text-center">Tidak ada issue untuk project ini</td>
+                        </tr>
+                      {% endif %}
+                    {% endwith %}
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <div class="alert alert-warning text-center">
+                <h5>Tidak ada data yang ditemukan untuk rentang tanggal yang dipilih</h5>
+              </div>
+              {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="code-box-copy">
+              <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#example-head" title="Copy"><i
+                  class="icofont icofont-copy-alt"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container-fluid Ends-->
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datepicker/datepicker.js' %}"></script>
+<script src="{% static 'assets/js/datepicker/datepicker.en.js' %}"></script>
+<script src="{% static 'assets/js/datepicker/datepicker.custom.js' %}"></script>
+
+<script>
+  $(document).ready(function() {
+    // Initialize DataTables jika tabel ada
+    if ($("#combined-table").length > 0) {
+      $('#combined-table').DataTable({
+        "language": {
+          "search": "Cari:",
+          "lengthMenu": "Tampilkan _MENU_ data per halaman",
+          "zeroRecords": "Tidak ada data yang ditemukan",
+          "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+          "infoEmpty": "Tidak ada data yang tersedia",
+          "infoFiltered": "(difilter dari _MAX_ total data)"
+        }
+      });
+    }
+  });
+</script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

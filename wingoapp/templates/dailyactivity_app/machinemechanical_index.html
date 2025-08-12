@@ -1,0 +1,117 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="container-fluid">
+        <div class="row starter-main">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Manage Machine Mechanical</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'dailyactivity_app:machinemechanical_index' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="machinemechanical_name" class="form-label">Machine Mechanical Name</label>
+                                <input type="text" class="form-control" id="machinemechanical_name" name="machinemechanical_name" required>
+                            </div>
+
+                            <!-- Menambahkan Input Location dan Nomor -->
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <select name="location" class="form-control" required>
+                                    <option value="">Select Location</option>
+                                    {% for location in locations %}
+                                        <option value="{{ location.id }}">{{ location.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nomor" class="form-label">Nomor</label>
+                                <input type="text" class="form-control" id="nomor" name="nomor">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Add Machine Mechanical</button>
+                        </form>
+
+                        <h5>Existing Mechanical</h5>
+                        <table class="table table-bordered" id="machinemechanicalTable">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Machine Mechanical Name</th>
+                                    <th>Location</th>
+                                    <th>Nomor</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for machinemechanical in machinemechanicals %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ machinemechanical.name }}</td>
+                                    <td>{{ machinemechanical.location.name }}</td>
+                                    <td>{{ machinemechanical.nomor }}</td>
+                                    <td>
+                                        <a href="{% url 'dailyactivity_app:edit_machinemechanical' machinemechanical.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form method="POST" action="{% url 'dailyactivity_app:delete_machinemechanical' machinemechanical.id %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5">No Machine Mechanical available.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#machinemechanicalTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "language": {
+                "paginate": {
+                    "previous": "Previous",
+                    "next": "Next"
+                },
+                "search": "Search:",
+                "lengthMenu": "Show _MENU_ entries"
+            }
+        });
+    });
+</script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

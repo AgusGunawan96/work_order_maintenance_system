@@ -1,0 +1,298 @@
+<!-- web_seiwa/wingoapp/templates/wo_maintenance_app/review_dashboard.html -->
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        font-weight: 600;
+    }
+    
+    .stat-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        border: none;
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+    
+    .pending-stat {
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        color: #2d3436;
+    }
+    
+    .today-stat {
+        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        color: white;
+    }
+    
+    .week-stat {
+        background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+        color: white;
+    }
+    
+    .approved-stat {
+        background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+        color: white;
+    }
+    
+    .rejected-stat {
+        background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+        color: white;
+    }
+    
+    .reviewer-info {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .reviewer-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .reviewer-role {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+    
+    .action-buttons {
+        margin-top: 30px;
+    }
+    
+    .btn-action {
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        margin: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+    }
+    
+    .btn-success-custom {
+        background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+        border: none;
+        color: white;
+    }
+    
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .quick-stats {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- Reviewer Info -->
+    <div class="reviewer-info">
+        <div class="reviewer-name">👩‍💼 {{ reviewer_name }}</div>
+        <div class="reviewer-role">Reviewer & Distributor Pengajuan Maintenance</div>
+        <div class="mt-2">
+            <small>📋 Mengelola distribusi pengajuan ke: IT, Elektrik, Mekanik, Utility</small>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card pending-stat">
+                <div class="stat-number">{{ pending_review_count }}</div>
+                <div class="stat-label">⏳ Pending Review</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card today-stat">
+                <div class="stat-number">{{ reviewed_today_count }}</div>
+                <div class="stat-label">📅 Reviewed Hari Ini</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card week-stat">
+                <div class="stat-number">{{ reviewed_week_count }}</div>
+                <div class="stat-label">📊 Reviewed Minggu Ini</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card approved-stat">
+                <div class="stat-number">{{ review_stats.1|default:0 }}</div>
+                <div class="stat-label">✅ Total Approved</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Stats -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="quick-stats">
+                <h6 class="mb-3">📈 Review Statistics</h6>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-center">
+                            <div class="h4 text-success">{{ review_stats.1|default:0 }}</div>
+                            <small class="text-muted">Approved & Distributed</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <div class="h4 text-danger">{{ review_stats.2|default:0 }}</div>
+                            <small class="text-muted">Rejected</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="quick-stats">
+                <h6 class="mb-3">🎯 Priority Actions</h6>
+                <div class="text-center">
+                    {% if pending_review_count > 0 %}
+                        <div class="alert alert-warning">
+                            <strong>{{ pending_review_count }}</strong> pengajuan menunggu review Anda
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success">
+                            ✅ Semua pengajuan sudah direview
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons text-center">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" class="btn btn-primary-custom btn-action btn-lg w-100">
+                    <i data-feather="list"></i> Daftar Pengajuan untuk Review
+                    {% if pending_review_count > 0 %}
+                        <span class="badge bg-warning text-dark ms-2">{{ pending_review_count }}</span>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <a href="{% url 'wo_maintenance_app:review_history' %}" class="btn btn-success-custom btn-action btn-lg w-100">
+                    <i data-feather="clock"></i> History Review
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Access -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5><i data-feather="zap"></i> Quick Access</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}?review_status=0" class="btn btn-outline-warning w-100">
+                        <i data-feather="clock"></i> Pending Review
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a href="{% url 'wo_maintenance_app:review_history' %}?review_status=1" class="btn btn-outline-success w-100">
+                        <i data-feather="check-circle"></i> Approved History
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a href="{% url 'wo_maintenance_app:review_history' %}?review_status=2" class="btn btn-outline-danger w-100">
+                        <i data-feather="x-circle"></i> Rejected History
+                    </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="btn btn-outline-info w-100">
+                        <i data-feather="list"></i> All Pengajuan
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Info -->
+    <div class="alert alert-info mt-4">
+        <h6><i data-feather="info"></i> Panduan Review:</h6>
+        <ul class="mb-0">
+            <li><strong>Review Pengajuan:</strong> Periksa detail pengajuan yang sudah di-approve atasan</li>
+            <li><strong>Pilih Section:</strong> Tentukan section final (IT, Elektrik, Mekanik, Utility)</li>
+            <li><strong>Approve/Reject:</strong> Setujui dan distribusikan, atau tolak dengan alasan</li>
+            <li><strong>Auto-Assignment:</strong> Pengajuan approved otomatis ter-assign ke supervisor section tujuan</li>
+        </ul>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Auto refresh pending count every 30 seconds
+    setInterval(function() {
+        // Simple AJAX call to refresh pending count
+        fetch(window.location.href)
+            .then(response => response.text())
+            .then(html => {
+                // Extract pending count from response (basic implementation)
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newCount = doc.querySelector('.pending-stat .stat-number');
+                if (newCount) {
+                    document.querySelector('.pending-stat .stat-number').textContent = newCount.textContent;
+                }
+            })
+            .catch(error => console.log('Auto refresh failed:', error));
+    }, 30000);
+    
+    console.log('Review Dashboard loaded for {{ reviewer_name }}');
+});
+</script>
+{% endblock scriptcontent %}

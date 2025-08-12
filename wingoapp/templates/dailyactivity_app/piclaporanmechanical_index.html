@@ -1,0 +1,104 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="container-fluid">
+        <div class="row starter-main">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h5>Manage PIC Mechanical</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'dailyactivity_app:piclaporanmechanical_index' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="name" class="form-label">PIC laporan Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nokar" class="form-label">No. Karyawan</label>
+                                <input type="text" class="form-control" id="nokar" name="nokar" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Add PIC laporan</button>
+                        </form>
+
+                        <h5>Existing PIC laporan</h5>
+                        <table class="table table-bordered" id="piclaporanTable">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>PIC laporan Name</th>
+                                    <th>No. Karyawan</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for piclaporan in piclaporans %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ piclaporan.name }}</td>
+                                    <td>{{ piclaporan.nokar }}</td>
+                                    <td>
+                                        <a href="{% url 'dailyactivity_app:edit_piclaporanmechanical' piclaporan.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form method="POST" action="{% url 'dailyactivity_app:delete_piclaporanmechanical' piclaporan.pk %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4">No PIC laporan available.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#piclaporanTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "language": {
+                "paginate": {
+                    "previous": "Previous",
+                    "next": "Next"
+                },
+                "search": "Search:",
+                "lengthMenu": "Show _MENU_ entries"
+            }
+        });
+    });
+</script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

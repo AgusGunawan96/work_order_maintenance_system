@@ -1,0 +1,69 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins CSS Start -->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins CSS Ends -->
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <div class="card full-width-card mt-4">
+        <div class="card-header">
+            <h5>Data It - Pilih Tanggal</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="tanggalTable" class="display table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for date in dates %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ date.date|date:"d-m-Y" }}</td>
+                            <td>
+                                <a href="{% url 'dailyactivity_app:data_it' date.date %}" class="btn btn-primary btn-sm">
+                                    Lihat Data
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS Start -->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<!-- Plugins JS Ends -->
+
+<script>
+    $(document).ready(function() {
+        $('#tanggalTable').DataTable({
+            "language": {
+                "url": "{% static 'assets/js/datatable/datatables/lang/Indonesian.json' %}"
+            },
+            "order": [[ 1, "desc" ]], // Mengurutkan berdasarkan kolom tanggal
+            "pagingType": "full_numbers" // Menambahkan previous dan next yang lengkap
+        });
+    });
+</script>
+{% endblock scriptcontent %}

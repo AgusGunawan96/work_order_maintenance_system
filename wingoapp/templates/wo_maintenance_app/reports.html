@@ -1,0 +1,789 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/chartist.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/date-picker.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    .report-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .report-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .report-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        position: relative;
+    }
+    
+    .report-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-item {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-section {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+        margin-bottom: 25px;
+    }
+    
+    .form-section h6 {
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    
+    .btn-generate {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-generate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+    
+    .chart-container {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .chart-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #495057;
+    }
+    
+    .legend {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 15px;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 3px;
+    }
+    
+    .access-info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #c3e6cb 100%);
+        border: 1px solid #bee5eb;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .quick-stat {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .quick-stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .quick-stat-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+    
+    .report-actions {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 20px;
+    }
+    
+    .action-btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 12px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .action-btn:hover {
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    
+    .btn-excel {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+    
+    .btn-pdf {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+    }
+    
+    .btn-csv {
+        background: linear-gradient(135deg, #ffc107, #fd7e14);
+        color: white;
+    }
+    
+    .monthly-chart {
+        height: 300px;
+        margin: 20px 0;
+    }
+    
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    
+    .loading-content {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- Access Info -->
+    {% if user_hierarchy %}
+    <div class="access-info">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h6 class="mb-2">
+                    <i data-feather="bar-chart"></i>
+                    Panel Laporan & Analisis WO Maintenance
+                </h6>
+                <p class="mb-0">
+                    Akses sebagai: {{ user_hierarchy.title_name }} - {{ user_hierarchy.department_name }}
+                    {% if user_hierarchy.is_manager %}
+                        <span class="badge bg-success">Manager</span>
+                    {% endif %}
+                    {% if user_hierarchy.is_general_manager %}
+                        <span class="badge bg-warning">General Manager</span>
+                    {% endif %}
+                    {% if user_hierarchy.is_bod %}
+                        <span class="badge bg-danger">BOD</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <i data-feather="trending-up" style="width: 48px; height: 48px; color: #667eea;"></i>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Notifikasi untuk pesan -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Current Statistics -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h5 class="mb-2">📊 Statistik Work Order Terkini</h5>
+                    <p class="mb-0 opacity-75">Overview performa work order maintenance</p>
+                </div>
+                
+                <div class="card-body">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.total_wo }}</div>
+                            <div class="stat-label">Total WO</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.pending_wo }}</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.approved_wo }}</div>
+                            <div class="stat-label">Approved</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.completed_wo }}</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Metrics -->
+                    <div class="quick-stats">
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" style="color: #28a745;">
+                                {% if stats.total_wo > 0 %}
+                                    {{ stats.completed_wo|floatformat:0 }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </div>
+                            <div class="quick-stat-label">Completion Rate</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" style="color: #ffc107;">
+                                {% if stats.total_wo > 0 %}
+                                    {{ stats.pending_wo|floatformat:0 }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </div>
+                            <div class="quick-stat-label">Pending Rate</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" style="color: #17a2b8;">2.5</div>
+                            <div class="quick-stat-label">Avg Days</div>
+                        </div>
+                        <div class="quick-stat">
+                            <div class="quick-stat-number" style="color: #667eea;">98%</div>
+                            <div class="quick-stat-label">On-Time Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Trend Chart -->
+            <div class="report-card">
+                <div class="card-header">
+                    <h6 class="mb-0">📈 Trend Work Order Bulanan</h6>
+                </div>
+                <div class="card-body">
+                    {% if monthly_stats %}
+                        <div class="chart-container">
+                            <canvas id="monthlyChart" class="monthly-chart"></canvas>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #667eea;"></div>
+                                <span>Total WO</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #28a745;"></div>
+                                <span>Completed</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #ffc107;"></div>
+                                <span>Pending</span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <i data-feather="bar-chart"></i>
+                            <h6>Belum Ada Data Trend</h6>
+                            <p>Data trend bulanan akan muncul setelah ada work order yang tercatat</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Report Generator -->
+            <div class="report-card">
+                <div class="card-header">
+                    <h6 class="mb-0">🔧 Generator Laporan</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="reportForm">
+                        {% csrf_token %}
+                        
+                        <div class="form-section">
+                            <h6><i data-feather="settings"></i> Konfigurasi Laporan</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.report_type.id_for_label }}" class="form-label">
+                                        <strong>{{ form.report_type.label }}</strong>
+                                    </label>
+                                    {{ form.report_type|add_class:"form-control" }}
+                                    {% if form.report_type.errors %}
+                                        <div class="text-danger mt-1">{{ form.report_type.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.export_format.id_for_label }}" class="form-label">
+                                        <strong>{{ form.export_format.label }}</strong>
+                                    </label>
+                                    {{ form.export_format|add_class:"form-control" }}
+                                    {% if form.export_format.errors %}
+                                        <div class="text-danger mt-1">{{ form.export_format.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.date_from.id_for_label }}" class="form-label">
+                                        <strong>{{ form.date_from.label }}</strong>
+                                    </label>
+                                    {{ form.date_from|add_class:"form-control" }}
+                                    {% if form.date_from.errors %}
+                                        <div class="text-danger mt-1">{{ form.date_from.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.date_to.id_for_label }}" class="form-label">
+                                        <strong>{{ form.date_to.label }}</strong>
+                                    </label>
+                                    {{ form.date_to|add_class:"form-control" }}
+                                    {% if form.date_to.errors %}
+                                        <div class="text-danger mt-1">{{ form.date_to.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.department_filter.id_for_label }}" class="form-label">
+                                        {{ form.department_filter.label }}
+                                    </label>
+                                    {{ form.department_filter|add_class:"form-control" }}
+                                    {% if form.department_filter.errors %}
+                                        <div class="text-danger mt-1">{{ form.department_filter.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-generate">
+                                <i data-feather="download"></i> Generate Laporan
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm()">
+                                <i data-feather="refresh-cw"></i> Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="report-actions">
+                <h6 class="mb-3"><i data-feather="zap"></i> Aksi Cepat</h6>
+                
+                <button type="button" class="action-btn btn-excel" onclick="generateQuickReport('excel')">
+                    <i data-feather="file-text"></i> Export Excel (30 hari terakhir)
+                </button>
+                
+                <button type="button" class="action-btn btn-pdf" onclick="generateQuickReport('pdf')">
+                    <i data-feather="file"></i> Export PDF Summary
+                </button>
+                
+                <button type="button" class="action-btn btn-csv" onclick="generateQuickReport('csv')">
+                    <i data-feather="database"></i> Export CSV Data
+                </button>
+                
+                <hr>
+                
+                <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="action-btn" style="background: #f8f9fa; color: #495057; border: 1px solid #e9ecef;">
+                    <i data-feather="list"></i> Lihat Daftar WO
+                </a>
+                
+                {% if user_hierarchy.is_manager or user_hierarchy.is_general_manager or user_hierarchy.is_bod %}
+                <a href="{% url 'wo_maintenance_app:approval_queue' %}" class="action-btn" style="background: linear-gradient(135deg, #ffc107, #fd7e14); color: white;">
+                    <i data-feather="clock"></i> Approval Queue
+                </a>
+                {% endif %}
+                
+                <a href="{% url 'wo_maintenance_app:dashboard' %}" class="action-btn" style="background: linear-gradient(135deg, #6c757d, #5a6268); color: white;">
+                    <i data-feather="home"></i> Dashboard
+                </a>
+            </div>
+
+            <!-- Performance Indicators -->
+            <div class="chart-container mt-3">
+                <div class="chart-title">🎯 Key Performance Indicators</div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span>Completion Rate</span>
+                        <span class="fw-bold text-success">85%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span>On-Time Delivery</span>
+                        <span class="fw-bold text-info">92%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-info" style="width: 92%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span>Approval Speed</span>
+                        <span class="fw-bold text-warning">78%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-warning" style="width: 78%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <h5>Generating Report...</h5>
+        <p>Mohon tunggu sebentar</p>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/chart/chartist/chartist.js' %}"></script>
+<script src="{% static 'assets/js/chart/chartist/chartist-plugin-tooltip.js' %}"></script>
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Set default dates
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    $('#id_date_from').val(firstDay.toISOString().split('T')[0]);
+    $('#id_date_to').val(today.toISOString().split('T')[0]);
+    
+    // Initialize monthly chart
+    {% if monthly_stats %}
+    initializeMonthlyChart();
+    {% endif %}
+    
+    // Form submission
+    $('#reportForm').on('submit', function(e) {
+        const dateFrom = $('#id_date_from').val();
+        const dateTo = $('#id_date_to').val();
+        
+        if (!dateFrom || !dateTo) {
+            e.preventDefault();
+            alert('Tanggal mulai dan selesai wajib diisi');
+            return false;
+        }
+        
+        if (new Date(dateFrom) > new Date(dateTo)) {
+            e.preventDefault();
+            alert('Tanggal mulai tidak boleh lebih besar dari tanggal selesai');
+            return false;
+        }
+        
+        // Show loading
+        $('#loadingOverlay').show();
+    });
+    
+    // Auto-update statistics every 5 minutes
+    setInterval(function() {
+        updateStatistics();
+    }, 300000); // 5 minutes
+});
+
+function initializeMonthlyChart() {
+    // Sample data - replace with actual data from backend
+    const monthlyData = {
+        labels: [
+            {% for stat in monthly_stats %}
+                '{{ stat.1 }}/{{ stat.0 }}',
+            {% endfor %}
+        ],
+        series: [
+            [
+                {% for stat in monthly_stats %}
+                    {{ stat.2 }},
+                {% endfor %}
+            ]
+        ]
+    };
+    
+    const options = {
+        low: 0,
+        showArea: true,
+        showPoint: true,
+        fullWidth: true,
+        axisX: {
+            showGrid: false
+        },
+        axisY: {
+            onlyInteger: true
+        },
+        plugins: [
+            Chartist.plugins.tooltip()
+        ]
+    };
+    
+    new Chartist.Line('#monthlyChart', monthlyData, options);
+}
+
+function generateQuickReport(format) {
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today - 30 * 24 * 60 * 60 * 1000);
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('report_type', 'summary');
+    formData.append('export_format', format);
+    formData.append('date_from', thirtyDaysAgo.toISOString().split('T')[0]);
+    formData.append('date_to', today.toISOString().split('T')[0]);
+    
+    // Show loading
+    $('#loadingOverlay').show();
+    
+    // Submit form
+    fetch('{% url "wo_maintenance_app:wo_reports" %}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.blob();
+        }
+        throw new Error('Network response was not ok');
+    })
+    .then(blob => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `wo_report_${format}_${today.toISOString().split('T')[0]}.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        $('#loadingOverlay').hide();
+        showNotification(`Laporan ${format.toUpperCase()} berhasil didownload`, 'success');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        $('#loadingOverlay').hide();
+        showNotification('Gagal generate laporan', 'error');
+    });
+}
+
+function resetForm() {
+    $('#reportForm')[0].reset();
+    
+    // Reset default dates
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    $('#id_date_from').val(firstDay.toISOString().split('T')[0]);
+    $('#id_date_to').val(today.toISOString().split('T')[0]);
+}
+
+function updateStatistics() {
+    // Auto-update statistics
+    fetch('{% url "wo_maintenance_app:dashboard" %}')
+        .then(response => response.text())
+        .then(data => {
+            // Parse and update statistics if needed
+            console.log('Statistics updated');
+        })
+        .catch(error => {
+            console.error('Error updating statistics:', error);
+        });
+}
+
+function showNotification(message, type) {
+    const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+    const icon = type === 'error' ? '❌' : '✅';
+    
+    const alertHtml = 
+        '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+            icon + ' ' + message +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+        '</div>';
+    
+    $('.page-body').prepend(alertHtml);
+    
+    // Auto dismiss
+    setTimeout(function() {
+        $('.alert').alert('close');
+    }, 5000);
+}
+
+// Keyboard shortcuts
+$(document).keydown(function(e) {
+    if (!$('input, textarea, select').is(':focus')) {
+        // Press 'E' for Excel export
+        if (e.key === 'e' || e.key === 'E') {
+            e.preventDefault();
+            generateQuickReport('excel');
+        }
+        
+        // Press 'P' for PDF export
+        if (e.key === 'p' || e.key === 'P') {
+            e.preventDefault();
+            generateQuickReport('pdf');
+        }
+        
+        // Press 'R' for reset form
+        if (e.key === 'r' || e.key === 'R') {
+            e.preventDefault();
+            resetForm();
+        }
+    }
+});
+</script>
+{% endblock scriptcontent %}

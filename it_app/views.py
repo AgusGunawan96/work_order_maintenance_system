@@ -10,7 +10,7 @@ import datetime
 from django.db.models.functions import Concat
 import xlwt
 from seiwa.models import TabelPemasukan
-from POSEIWA.models import TPo
+# from POSEIWA.models import TPo
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from .models import ITReportH

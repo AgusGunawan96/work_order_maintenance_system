@@ -1,0 +1,217 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h3>IT Project Managementt</h3>
+      </div>
+      <div class="card-body">
+       <form method="POST">
+          {% csrf_token %} 
+          {% comment %} <form method="POST" action="{% url 'dailyactivity_app:submit_issues' %}">
+            {% csrf_token %}
+            <input type="hidden" name="project_id" value="{{ project.id }}"> {% endcomment %}
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="projectName">Nama Project</label>
+              <input type="text" class="form-control" id="projectName" name="project_name" required>
+            </div>
+            <div class="col-md-6">
+              <label for="picProject">PIC Project</label>
+              <input type="text" class="form-control" id="picProject" name="pic_project" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="department">Department</label>
+              <input type="text" class="form-control" id="department" name="department" required>
+            </div>
+            <div class="col-md-3">
+              <label for="dateStart">Start Date</label>
+              <input type="date" class="form-control" id="dateStart" name="start_date" required>
+            </div>
+            <div class="col-md-3">
+              <label for="dateFinish">Finish Date</label>
+              <input type="date" class="form-control" id="dateFinish" name="finish_date" required>
+            </div>
+          </div>
+
+          <h4>Issues List</h4>
+          <table class="table table-bordered" id="issuesTable">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Issue</th>
+                <th>PIC</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Remark</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><input type="text" class="form-control" name="issue_1"></td>
+                <td><input type="text" class="form-control" name="issue_pic_1"></td>
+                <td><input type="date" class="form-control" name="issue_due_1"></td>
+                <td>
+                  <select class="form-control" name="issue_status_1">
+                    <option value="0">0%</option>
+                    <option value="10">10%</option>
+                    <option value="20">20%</option>
+                    <option value="30">30%</option>
+                    <option value="40">40%</option>
+                    <option value="50">50%</option>
+                    <option value="60">60%</option>
+                    <option value="70">70%</option>
+                    <option value="80">80%</option>
+                    <option value="90">90%</option>
+                    <option value="100">100%</option>
+                </select>
+                </td>
+                <td><input type="text" class="form-control" name="issue_remark_1" required></td>
+                <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" id="addRow" class="btn btn-primary">Add Row</button>
+          <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<!-- Plugins JS Ends-->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('issuesTable').getElementsByTagName('tbody')[0];
+    const addRowButton = document.getElementById('addRow');
+
+    // Fungsi untuk memperbarui nomor urut dan nama elemen input
+    function updateRowIndexes() {
+        Array.from(table.rows).forEach((row, index) => {
+            // Update nomor urut
+            row.cells[0].textContent = index + 1;
+
+            // Update nama atribut input dan select
+            const inputs = row.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                const nameParts = input.name.split('_');
+                nameParts[nameParts.length - 1] = index + 1; // Perbarui indeks akhir
+                input.name = nameParts.join('_');
+            });
+        });
+    }
+
+    // Menambahkan baris baru
+    addRowButton.addEventListener('click', function () {
+        const rowCount = table.rows.length + 1;
+        const newRow = table.insertRow();
+
+        // Tambahkan sel ke baris baru
+        newRow.innerHTML = `
+            <td>${rowCount}</td>
+            <td><input type="text" class="form-control" name="issue_${rowCount}" placeholder="Enter Issue" required></td>
+            <td><input type="text" class="form-control" name="issue_pic_${rowCount}" placeholder="Enter PIC" required></td>
+            <td><input type="date" class="form-control" name="issue_due_${rowCount}" required></td>
+            <td>
+                <select class="form-control" name="issue_status_${rowCount}">
+                    <option value="0">0%</option>
+                    <option value="10">10%</option>
+                    <option value="20">20%</option>
+                    <option value="30">30%</option>
+                    <option value="40">40%</option>
+                    <option value="50">50%</option>
+                    <option value="60">60%</option>
+                    <option value="70">70%</option>
+                    <option value="80">80%</option>
+                    <option value="90">90%</option>
+                    <option value="100">100%</option>
+                </select>
+            </td>
+            <td><input type="text" class="form-control" name="issue_remark_${rowCount}" placeholder="Enter Remark" required></td>
+            <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
+        `;
+    });
+
+    // Menghapus baris
+    table.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            const row = e.target.closest('tr');
+            row.remove(); // Hapus baris
+
+            // Perbarui nomor urut dan nama elemen input setelah baris dihapus
+            updateRowIndexes();
+        }
+    });
+});
+  
+</script>
+
+{% comment %} <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('issuesTable').getElementsByTagName('tbody')[0];
+    const addRowButton = document.getElementById('addRow');
+
+    // Add row functionality
+    addRowButton.addEventListener('click', function () {
+      const rowCount = table.rows.length;
+      const newRow = table.insertRow();
+
+      // Create cells for the new row
+      newRow.innerHTML = `
+        <td>${rowCount + 1}</td>
+        <td><input type="text" class="form-control" name="issue_${rowCount + 1}"></td>
+        <td><input type="text" class="form-control" name="issue_pic_${rowCount + 1}"></td>
+        <td><input type="date" class="form-control" name="issue_due_${rowCount + 1}"></td>
+        <td>
+         <select class="form-control" name="issue_status_${rowCount + 1}">
+    <option value="0">0%</option>
+    <option value="10">10%</option>
+    <option value="20">20%</option>
+    <option value="30">30%</option>
+    <option value="40">40%</option>
+    <option value="50">50%</option>
+    <option value="60">60%</option>
+    <option value="70">70%</option>
+    <option value="80">80%</option>
+    <option value="90">90%</option>
+    <option value="100">100%</option>
+</select>
+        </td>
+        <td><input type="text" class="form-control" name="issue_remark_${rowCount + 1}" required></td>
+        <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
+      `;
+    });
+
+    // Remove row functionality
+    table.addEventListener('click', function (e) {
+      if (e.target.classList.contains('remove-row')) {
+        const row = e.target.closest('tr');
+        row.remove();
+
+        // Update row numbers
+        Array.from(table.rows).forEach((row, index) => {
+          row.cells[0].textContent = index + 1;
+        });
+      }
+    });
+  });
+</script> {% endcomment %}
+{% endblock scriptcontent %}

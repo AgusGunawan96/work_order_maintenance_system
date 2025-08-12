@@ -15,7 +15,55 @@ class cashPaymentBalance (models.Model):
     created_at                  = models.DateTimeField('created_at', auto_now_add=True)
     updated_at                  = models.DateTimeField('updated_at', auto_now=True)
 
+class cashReceivedBalance (models.Model):
+    balance_cashReceived_open    = models.BigIntegerField(null=True, blank=True)
+    balance_cashReceived_close   = models.BigIntegerField(null=True, blank=True)
+    exchange_rate_open          = models.PositiveBigIntegerField(null=True, blank=True)
+    exchange_rate_close         = models.PositiveBigIntegerField(null=True, blank=True)
+    cashReceived_balance_no      = models.CharField(max_length=128, null=True, blank=True)
+    created_at                  = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at                  = models.DateTimeField('updated_at', auto_now=True)
+
 class cashPayment (models.Model):
+    assignee        = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    created_at      = models.DateTimeField('created at', auto_now_add = True)
+    updated_at      = models.DateTimeField('updated at', auto_now = True)
+    is_debit        = models.BooleanField(default=False, blank=True, null=True )
+    is_credit       = models.BooleanField(default=False, blank=True, null=True )
+    is_settle       = models.BooleanField(default=False, blank=True, null=True )
+    is_adv          = models.BooleanField(default=False, blank=True, null=True )
+    adv             = models.CharField(max_length=200, null=True, blank=True)
+    settle          = models.CharField(max_length=200, null=True, blank=True)
+    type            = models.CharField(max_length=25, choices=TransferType.choices, null=True)
+    remark          = models.CharField(max_length=200, null=True, blank=True)
+    ticket_no       = models.CharField(max_length=128, null=True, blank=True)
+    rp_total        = models.PositiveBigIntegerField(null=True, blank=True)
+    description_1   = models.TextField(blank=True, null=True)
+    rp_detail_1     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_2   = models.TextField(blank=True, null=True)
+    rp_detail_2     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_3   = models.TextField(blank=True, null=True)
+    rp_detail_3     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_4   = models.TextField(blank=True, null=True)
+    rp_detail_4     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_5   = models.TextField(blank=True, null=True)
+    rp_detail_5     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_6   = models.TextField(blank=True, null=True)
+    rp_detail_6     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_7   = models.TextField(blank=True, null=True)
+    rp_detail_7     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_8   = models.TextField(blank=True, null=True)
+    rp_detail_8     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_9   = models.TextField(blank=True, null=True)
+    rp_detail_9     = models.PositiveBigIntegerField(null=True, blank=True)
+    description_10  = models.TextField(blank=True, null=True)
+    rp_detail_10    = models.PositiveBigIntegerField(null=True, blank=True)
+    description_11  = models.TextField(blank=True, null=True)
+    rp_detail_11    = models.PositiveBigIntegerField(null=True, blank=True)
+    description_12  = models.TextField(blank=True, null=True)
+    rp_detail_12    = models.PositiveBigIntegerField(null=True, blank=True)
+
+class cashReceived (models.Model):
     assignee        = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     created_at      = models.DateTimeField('created at', auto_now_add = True)
     updated_at      = models.DateTimeField('updated at', auto_now = True)
@@ -71,6 +119,12 @@ class rel_cashPayment_accountcode(models.Model):
     created_at    = models.DateTimeField('created_at', auto_now_add=True)
     updated_at    = models.DateTimeField('updated_at', auto_now=True)
 
+class rel_cashReceived_accountcode(models.Model):
+    cashPayment   = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
+    account_code  = models.ForeignKey(coaCode, on_delete=models.CASCADE, blank=True, null=True)
+    created_at    = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at    = models.DateTimeField('updated_at', auto_now=True)
+
 
 # ATTACHMENT START
 class cashPaymentAttachment(models.Model):
@@ -88,6 +142,11 @@ class settleAttachment(models.Model):
 class advAttachment(models.Model):
     cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
     attachment  = models.FileField(upload_to='advAttachments/', null=False, blank=True)
+
+class cashReceivedAttachment(models.Model):
+    cashPayment = models.ForeignKey(cashPayment, on_delete=models.CASCADE, blank=True, null=True)
+    attachment  = models.FileField(upload_to='cashPaymentAttachments/', null=False, blank=True)
+
 # ATTACHMENT END
 
 # ADVANCE APPROVAL START
@@ -173,3 +232,5 @@ class cashPaymentApprovalCashier(models.Model):
     updated_at                              = models.DateTimeField('updated_at', auto_now=True)
 
 # CASHPAYMENT APPROVAL END
+    
+    

@@ -1,0 +1,102 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+    .line-with-border {
+        border-bottom: 1px solid #000; /* Garis hitam */
+        padding-bottom: 5px; /* Jarak antara teks dan garis */
+        margin-bottom: 5px; /* Jarak antar baris */
+    }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="card full-width-card mt-4">
+        <div class="card-header">
+            <h5>Data Jadwal Pekerjaan</h5>
+        </div>
+        <div class="card-body">
+            {% if laporan_data %}
+                {% for data in laporan_data %}
+                    <div class="row mb-2"> <!-- Reduced margin-bottom -->
+                        <div class="col-12">
+                            <strong>Tanggal:</strong>
+                            <p>{{ data.tanggal|date:"d-m-Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-2"> <!-- Reduced margin-bottom -->
+                        <div class="col-12">
+                            <strong>Shift:</strong>
+                            <p>{{ data.shift.name }}</p>
+                        </div>
+                    </div>             
+                    <div class="row mb-2"> <!-- Untuk Masalah -->
+                        <div class="col-12">
+                            <strong>Jadwal Pekerjaan:</strong>
+                            <div class="masalah-content">
+                                {% for line in data.pekerjaan.splitlines %}
+                                    <div class="line-with-border">{{ line }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-2"> <!-- Reduced margin-bottom -->
+                        <!-- Image -->
+                        <div class="col-12">
+                            <strong>Image:</strong><br>
+                            {% if data.image %}
+                                <a href="{{ data.image.url }}" target="_blank">View Image</a>
+                            {% else %}
+                                <p>No Image</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                     <div class="d-flex justify-content-between">
+                        <!-- Tombol Edit di pojok kiri -->
+                        {% comment %} <div>
+                            {% if data.id %}
+                            <a href="{% url 'dailyactivity_app:edit_schedule' data.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            {% else %}
+                            <span>ID tidak tersedia</span>
+                            {% endif %}
+                        </div>   {% endcomment %}
+                        <!-- Tombol Delete di pojok kanan -->
+                        <div>
+                            <a href="{% url 'dailyactivity_app:delete_schedule' data.id %}" 
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this item?');">
+                               Delete
+                            </a>
+                        </div> 
+                    </div>                 
+                    <hr>
+                {% endfor %}
+            {% else %}
+                <div class="text-center">No data available</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS Start -->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<!-- Plugins JS Ends -->
+<script>
+    function confirmDelete() {
+        return confirm("Apakah Anda yakin ingin menghapus data ini?");
+    }
+</script>
+{% endblock scriptcontent %}

@@ -1,0 +1,225 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+  .page-body {
+    padding-top: 20px;
+  }
+  .full-width-card {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+  }
+  .card {
+    margin-top: -20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .card-header h5 {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+  }
+  .card-body {
+    padding: 15px;
+  }
+  .form-inline-row .form-group {
+    width: 18%;
+    margin-right: 1%;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .form-inline-row .form-group:last-child {
+    margin-right: 0;
+  }
+  .wider-textarea {
+    width: 100%;
+    max-width: 100%;
+  }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Notifikasi untuk pesan -->
+  {% if messages %}
+      <div class="alert alert-success" role="alert">
+          {% for message in messages %}
+              {{ message }}<br>
+          {% endfor %}
+      </div>
+  {% endif %}
+  <!-- Card Full Width -->
+  <div class="card full-width-card mt-4">
+    <div class="card-header">
+      <h5>Edit Laporan Activityy</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" action="{% url 'dailyactivity_app:edit_laporanmechanical' laporan.id %}">
+            {% csrf_token %}
+            <!-- Row for Tanggal, Shift, PIC -->
+            <div class="form-inline-row">
+                <div class="form-group">
+                    <label for="tanggal">Tanggal:</label>
+                    <input type="date" class="form-control" id="tanggal" name="tanggal" value="{{ laporan.tanggal|date:'Y-m-d' }}" required>
+                </div>            
+                <div class="form-group">
+                    <label for="shift">Shift:</label>
+                    <select class="form-control select2" id="shift" name="shift" required>
+                        <option value="">-- Pilih Shift --</option>
+                        {% for shift in shifts %}
+                            <option value="{{ shift.id }}" {% if laporan.shift.id == shift.id %}selected{% endif %}>
+                                {{ shift.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="pic">Cuti Karyawan:</label>
+                  <select class="form-control select2" id="pic" name="pic"  multiple>
+                      {% for pic in pic_laporan %}
+                          <option value="{{ pic.id }}" {% if pic.id in selected_pic %}selected{% endif %}>
+                              {{ pic.name }} ({{ pic.nokar }})
+                          </option>
+                      {% endfor %}
+                  </select>
+              </div>
+              
+              <div class="form-group col-md-6">
+                  <label for="piclembur">PIC Lembur:</label>
+                  <select class="form-control select2" id="piclembur" name="piclembur" multiple>
+                      {% for lembur in pic_lembur %}
+                          <option value="{{ lembur.id }}" {% if lembur.id in selected_piclembur %}selected{% endif %}>
+                              {{ lembur.name }} ({{ lembur.nokar }})
+                          </option>
+                      {% endfor %}
+                  </select>
+              </div>
+              
+              
+              <div class="table-container mt-4">
+                <table id="laporan-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Add</th>
+                            <th style="width: 60%;">Deskripsi Pekerjaan</th>
+                            <th style="width: 10%;">Jenis Pekerjaan</th>
+                            <th style="width: 10%;">Lama Pekerjaan (Jam)</th>
+                            <th style="width: 10%;">PIC Pekerjaan</th>
+                            <th style="width: 5%;">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {% if pekerjaan_list %}
+                          {% for pekerjaan in pekerjaan_list %}
+                          <tr>
+                              <td>
+                                  <button type="button" class="btn btn-success add-row-btn">Add +</button>
+                              </td>
+                              <td>
+                                <textarea name="masalah[]" class="form-control masalah-textarea" rows="3" required>{{ pekerjaan.masalah }}</textarea>
+                            </td>
+                              <td>
+                                  <select name="jenis_pekerjaan[]" class="form-control select2" required>
+                                      <option value="Mizen Boshi" {% if pekerjaan.jenis_pekerjaan == 'Mizen Boshi' %}selected{% endif %}>Mizen Boshi</option>
+                                      <option value="WO" {% if pekerjaan.jenis_pekerjaan == 'WO' %}selected{% endif %}>WO</option>
+                                      <option value="Perbaikan" {% if pekerjaan.jenis_pekerjaan == 'Perbaikan' %}selected{% endif %}>Perbaikan</option>
+                                      <option value="Inspeksi" {% if pekerjaan.jenis_pekerjaan == 'Inspeksi' %}selected{% endif %}>Inspeksi</option>
+                                      <option value="Others" {% if pekerjaan.jenis_pekerjaan == 'Others' %}selected{% endif %}>Others</option>
+                                  </select>
+                              </td>
+                              <td>
+                                  <input type="text" name="lama_pekerjaan[]" class="form-control" value="{{ pekerjaan.lama_pekerjaan }}" required>
+                              </td>
+                              <td>
+                                  <input type="text" name="pic_masalah[]" class="form-control" value="{{ pekerjaan.pic_masalah }}" required>
+                              </td>
+                              <td>
+                                  <button type="button" class="btn btn-danger delete-row-btn">Delete</button>
+                              </td>
+                          </tr>
+                          {% endfor %}
+                      {% else %}
+                          <tr>
+                              <td colspan="6" class="text-center">Tidak ada data pekerjaan untuk ditampilkan.</td>
+                          </tr>
+                      {% endif %}
+                  </tbody>
+                  
+                </table>
+            </div>
+        
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{% url 'dailyactivity_app:data_laporanmechanical' laporan.tanggal|date:'Y-m-d' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/custom/location-machine-filter.js' %}"></script>
+<script src="{% static 'assets/js/custom/script.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script> 
+
+<script>
+  $(document).ready(function() {
+      $('.select2').select2();
+  
+      const laporanTable = document.querySelector('#laporan-table tbody');
+  
+      laporanTable.addEventListener('click', function(e) {
+          if (e.target.classList.contains('add-row-btn')) {
+              const newRow = document.createElement('tr');
+              newRow.innerHTML = `
+                  <td><button type="button" class="btn btn-success add-row-btn">Add +</button></td>
+                 <td>
+                      <textarea name="masalah[]" class="form-control masalah-textarea" rows="3" required></textarea>
+                  </td>
+                  <td>
+                      <select name="jenis_pekerjaan[]" class="form-control select2" required>
+                          <option value="Mizen Boshi">Mizen Boshi</option>
+                          <option value="WO">WO</option>
+                          <option value="Perbaikan">Perbaikan</option>
+                          <option value="Inspeksi">Inspeksi</option>
+                          <option value="Others">Others</option>
+                      </select>
+                  </td>
+                  <td><input type="text" name="lama_pekerjaan[]" class="form-control" required></td>
+                  <td><input type="text" name="pic_masalah[]" class="form-control" required></td>
+                  <td><button type="button" class="btn btn-danger delete-row-btn">Delete</button></td>
+              `;
+              laporanTable.appendChild(newRow);
+              $('.select2').select2();
+              newRow.querySelector('.masalah-textarea').focus();
+          }
+          if (e.target.classList.contains('delete-row-btn')) {
+              const row = e.target.closest('tr');
+              row.remove();
+          }
+      });
+  });
+  </script>
+  
+  
+
+<script>
+  $(document).ready(function() {
+    $('.select2').select2({
+        width: '100%',
+        allowClear: true
+    });
+});
+</script>
+{% endblock scriptcontent %}

@@ -8,6 +8,7 @@ app_name ='accounting_app'
 urlpatterns = [
     path('dashboard/', views.dashboard, name = 'accounting_dashboard'),
     path('cashPayment', views.cashPayment_index, name = 'cashPayment_index'),
+    path('cashReceived', views.cashReceived_index, name='cashReceived_index'),
     path('Advance', views.advance_index, name = 'advance_index'),
     path('settle', views.cashPayment_settle_index, name = "cashPayment_settle_index"),
     path('adv', views.cashPayment_adv_index, name = "cashPayment_adv_index"),
@@ -39,6 +40,35 @@ urlpatterns = [
     path('cashPayment/accoounting_cashPayment_report/<int:cashPayment_id>', views.accounting_cashPayment_report, name='accounting_cashPayment_report'),
 
     # CASHPAYMENT END
+
+    # CASHRECEIVED END
+    path('cashReceived/add/', views.cashReceived_add, name='cashReceived_add'),
+    path('cashReceived/add_debit/', views.cashReceived_debit_add, name='cashPayment_debit_add'),
+    path('cashReceived/add_settle/', views.cashPayment_settle_add, name='cashPayment_settle_add'),
+    path('cashReceived/add_adv/', views.cashPayment_adv_add, name='cashPayment_adv_add'),
+    path('cashReceived/cashPayment_detail/<int:cashPayment_id>', views.cashPayment_detail, name='cashPayment_detail'),
+    path('cashReceived/cashPayment_monitoring/', views.cashPayment_monitoring, name='cashPayment_monitoring'),
+
+    path('cashReceived/cashPayment_manager_checked/<int:cashPayment_id>', views.cashPayment_manager_check, name='cashPayment_manager_check'),
+    path('cashReceived/cashPayment_manager_approve/<int:cashPayment_id>', views.cashPayment_manager_approve, name='cashPayment_manager_approve'),
+    path('cashReceived/cashPayment_manager_reject/<int:cashPayment_id>', views.cashPayment_manager_reject, name='cashPayment_manager_reject'),
+
+    path('cashReceived/cashPayment_accounting_manager_checked/<int:cashPayment_id>', views.cashPayment_accounting_manager_check, name='cashPayment_accounting_manager_check'),
+    path('cashReceived/cashPayment_accounting_manager_approve/<int:cashPayment_id>', views.cashPayment_accounting_manager_approve, name='cashPayment_accounting_manager_approve'),
+    path('cashReceived/cashPayment_accounting_manager_reject/<int:cashPayment_id>', views.cashPayment_accounting_manager_reject, name='cashPayment_accounting_manager_reject'),
+
+    path('cashReceived/cashPayment_president_checked/<int:cashPayment_id>', views.cashPayment_president_check, name='cashPayment_president_check'),
+    path('cashReceived/cashPayment_president_approve/<int:cashPayment_id>', views.cashPayment_president_approval, name='cashPayment_president_approve'),
+    path('cashReceived/cashPayment_president_reject/<int:cashPayment_id>', views.cashPayment_president_reject, name='cashPayment_president_reject'),
+
+    path('cashReceived/cashPayment_cashier_checked/<int:cashPayment_id>', views.cashPayment_cashier_check, name='cashPayment_cashier_check'),
+    path('cashReceived/cashPayment_cashier_approve/<int:cashPayment_id>', views.cashPayment_cashier_approval, name='cashPayment_cashier_approve'),
+    path('cashReceived/cashPayment_cashier_reject/<int:cashPayment_id>', views.cashPayment_cashier_reject, name='cashPayment_cashier_reject'),
+
+    path('cashReceived/accoounting_cashPayment_report/<int:cashPayment_id>', views.accounting_cashPayment_report, name='accounting_cashPayment_report'), 
+    # CASHRECEIVED START
+
+     # CASHRECEIVED END
 
     # ADVANCE START
     path('advance/advaance_detail/<int:cashPayment_id>', views.advance_detail, name='advance_detail'),

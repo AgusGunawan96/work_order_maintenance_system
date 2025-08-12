@@ -1,0 +1,170 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<style>
+    .chart-container {
+        display: flex;
+        justify-content: space-around;
+    }
+    .chart-box {
+        background-color: #f8f9fa; /* Warna latar belakang kotak */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+        width: 45%; /* Membuat kotak setengah dari lebar halaman */
+    }
+    canvas {
+        width: 100% !important; /* Memperbesar ukuran kanvas agar menyesuaikan lebar kotak */
+        height: 400px !important; /* Memperbesar tinggi grafik */
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="card full-width-card mt-4">
+        <div class="container">
+            {% comment %} <h1>Dashboard</h1> {% endcomment %}
+            <div class="chart-container">
+                <!-- Kotak untuk grafik Mechanical -->
+                <div class="chart-box">
+                    <canvas id="mechanicalChart"></canvas>
+                </div>
+                <!-- Kotak untuk grafik Electrical -->
+                <div class="chart-box">
+                    <canvas id="electricalChart"></canvas>
+                </div>
+                 <!-- Kotak untuk grafik Utility -->
+                 <div class="chart-box">
+                  <canvas id="utilityChart"></canvas>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/feather.min.js' %}"></script>
+<script src="{% static 'assets/js/Chart.bundle.min.js' %}"></script>
+
+
+
+{{ labels_mechanical|json_script:"labels-mechanical-data" }}
+{{ total_masalah_mechanical|json_script:"total-masalah-mechanical-data" }}
+{{ labels_electrical|json_script:"labels-electrical-data" }}
+{{ total_masalah_electrical|json_script:"total-masalah-electrical-data" }}
+{{ labels_utility|json_script:"labels-utility-data" }}
+{{ total_masalah_utility|json_script:"total-masalah-utility-data" }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Grafik Mechanical
+    const labelsMechanical = JSON.parse(document.getElementById('labels-mechanical-data').textContent);
+    const totalMasalahMechanical = JSON.parse(document.getElementById('total-masalah-mechanical-data').textContent);
+    const ctxMechanical = document.getElementById('mechanicalChart').getContext('2d');
+    const mechanicalChart = new Chart(ctxMechanical, {
+        type: 'bar',
+        data: {
+            labels: labelsMechanical,
+            datasets: [{
+                label: 'Jumlah Masalah Mechanical',
+                data: totalMasalahMechanical,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { ticks: { display: true } },
+                y: { beginAtZero: false }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) { return `${context.dataset.label}: ${context.raw}`; },
+                        afterLabel: function(context) { return `Detail: ${context.label}`; }
+                    }
+                }
+            }
+        }
+    });
+
+    // Grafik Electrical
+    const labelsElectrical = JSON.parse(document.getElementById('labels-electrical-data').textContent);
+    const totalMasalahElectrical = JSON.parse(document.getElementById('total-masalah-electrical-data').textContent);
+    const ctxElectrical = document.getElementById('electricalChart').getContext('2d');
+    const electricalChart = new Chart(ctxElectrical, {
+        type: 'bar',
+        data: {
+            labels: labelsElectrical,
+            datasets: [{
+                label: 'Jumlah Masalah Electrical',
+                data: totalMasalahElectrical,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { ticks: { display: true } },
+                y: { beginAtZero: false }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) { return `${context.dataset.label}: ${context.raw}`; },
+                        afterLabel: function(context) { return `Detail: ${context.label}`; }
+                    }
+                }
+            }
+        }
+    });
+
+    // Grafik Utility
+    const labelsUtility = JSON.parse(document.getElementById('labels-utility-data').textContent);
+    const totalMasalahUtility = JSON.parse(document.getElementById('total-masalah-utility-data').textContent);
+    const ctxUtility = document.getElementById('utilityChart').getContext('2d');
+    const utilityChart = new Chart(ctxUtility, {
+        type: 'bar',
+        data: {
+            labels: labelsUtility,
+            datasets: [{
+                label: 'Jumlah Masalah Utility',
+                data: totalMasalahUtility,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { ticks: { display: true } },
+                y: { beginAtZero: false }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) { return `${context.dataset.label}: ${context.raw}`; },
+                        afterLabel: function(context) { return `Detail: ${context.label}`; }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock scriptcontent %}

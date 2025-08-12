@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from POSEIWA.models import TPo, MasterSupplier
+# from POSEIWA.models import TPo, MasterSupplier
 # Create your models here.
 
 class KendaraanType(models.TextChoices):
@@ -54,7 +54,7 @@ class GatePassInDetailKirimBarang(models.Model):
 
 class rel_gatepass_po:
     gatepass_header     = models.ForeignKey(GatePassInHeader, on_delete = models.CASCADE, blank = True, null = True)
-    no_po               = models.ForeignKey(TPo, on_delete = models.CASCADE, blank = True, null = True)
+    # no_po               = models.ForeignKey(TPo, on_delete = models.CASCADE, blank = True, null = True)
     quantity            = models.PositiveBigIntegerField(blank=True, null=True)
     created_at          = models.DateTimeField('created at', auto_now_add = True)
     updated_at          = models.DateTimeField('updated at', auto_now = True)

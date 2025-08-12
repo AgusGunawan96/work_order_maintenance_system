@@ -1,0 +1,150 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+  .page-body {
+    padding-top: 20px;
+  }
+  .full-width-card {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+  }
+  .card {
+    margin-top: -20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .card-header h5 {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+  }
+  .card-body {
+    padding: 15px;
+  }
+  .form-inline-row .form-group {
+    width: 18%; /* Reduced width for inline display */
+    margin-right: 1%; /* Space between fields */
+    display: inline-block;
+    vertical-align: top;
+  }
+  .form-inline-row .form-group:last-child {
+    margin-right: 0; /* Remove margin from the last item */
+  }
+  .wider-textarea {
+    width: 100%; /* atau persentase lain seperti 80% */
+    max-width: 100%; /* memastikan tidak melampaui lebar parent */
+}
+
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <!-- Notifikasi untuk pesan -->
+  {% if messages %}
+      <div class="alert alert-success" role="alert">
+          {% for message in messages %}
+              {{ message }}<br>
+          {% endfor %}
+      </div>
+  {% endif %}
+  <!-- Card Full Width -->
+  <div class="card full-width-card mt-4">
+    <div class="card-header">
+      <h5>Input Jadwal Pekerjaan</h5>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" action="{% url 'dailyactivity_app:schedule_index' %}">
+        {% csrf_token %}
+        <div class="form-inline-row">
+            <div class="form-group">
+                <label for="tanggal">Tanggal:</label>
+                <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+            </div>            
+            <div class="form-group">
+                <label for="shift">Shift:</label>
+                <select class="form-control select2" id="shift" name="shift" required>
+                    <option value="">-- Pilih Shift --</option>
+                    {% for shift in shifts %}
+                        <option value="{{ shift.id }}">{{ shift.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>       
+        <div class="form-row mt-3">
+            <div class="form-group">
+                <label for="pekerjaan">Input Jadwal Mechanical:</label>
+                <textarea class="form-control" id="pekerjaan" name="pekerjaan" rows="3" required style="height: 400px;"></textarea>
+            </div>                                 
+            <div class="form-group" style="width: 100%;">
+                <label for="image">Add Image:</label>
+                <input type="file" class="form-control-file" id="image" name="image">
+            </div>
+        </div>       
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>    
+        
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/custom/location-machine-filter.js' %}"></script>
+<script src="{% static 'assets/js/custom/script.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script> 
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const picSelect = document.getElementById('pic');
+      const jamContainer = document.getElementById('jam-container');
+      const picData = {{ pic_lembur|safe }};  // Data PIC dikirim dari views.py
+
+      picSelect.addEventListener('change', function () {
+          const selectedOptions = Array.from(this.selectedOptions);
+          jamContainer.innerHTML = '';  // Reset kontainer
+
+          selectedOptions.forEach(option => {
+              if (option.value) {
+                  const picId = option.value;
+                  const pic = picData[picId];  // Ambil nama PIC
+
+                  if (pic) {
+                      // Buat input untuk jam terkait PIC
+                      const div = document.createElement('div');
+                      div.classList.add('form-group');
+                      div.innerHTML = `
+                          <label>Input Jam untuk ${pic.name}:</label>
+                          <input type="text" name="input_${picId}" class="form-control" placeholder="Masukkan jam kerja atau catatan" required>
+                      `;
+                      jamContainer.appendChild(div);
+                  }
+              }
+          });
+      });
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+      $('.select2').select2({
+          width: '100%',
+          allowClear: true
+      });
+  });
+</script>
+
+{% endblock scriptcontent %}
+

@@ -1,0 +1,123 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="card full-width-card mt-4">
+        <div class="card-header">
+            <h5>Data Electrical Activity</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="electricalDataTable" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tanggal</th>
+                            <th>Waktu WO</th>
+                            <th>Nomor WO</th>
+                            <th>Waktu Pengerjaan</th>
+                            <th>Shift</th>
+                            <th>Lokasi</th>
+                            <th>Mesin</th>
+                            <th>Nomor</th>
+                            <th>Jenis Pekerjaan</th>
+                            <th>Masalah</th>
+                            <th>Penyebab</th>
+                            <th>Tindakan</th>
+                            <th>Status</th>
+                            <th>PIC</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in electrical_data %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ data.tanggal|date:"d-m-Y" }}</td>
+                            <td>{{ data.jam }}</td>
+                            <td>{{ data.nomor_wo }}</td>
+                            <td>{{ data.waktu_pengerjaan }}</td>
+                            <td>{{ data.shift.name }}</td>
+                            <td>{{ data.location.name }}</td>
+                            <td>{{ data.machine.name }}</td>
+                            <td>{{ data.machine.nomor }}</td>
+                            <td>{{ data.category.name }}</td>
+                            <td>{{ data.masalah }}</td>
+                            <td>{{ data.penyebab }}</td>
+                            <td>{{ data.tindakan }}</td>
+                            <td>{{ data.status.name }}</td>
+
+                            <td>
+                                {% for pic in data.pic.all %}
+                                    <span>{{ pic.name }} ({{ pic.nokar }})</span><br>
+                                {% empty %}
+                                    No PIC assigned
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if data.image %}
+                                    <a href="{{ data.image.url }}" target="_blank">View Image</a>
+                                {% else %}
+                                    No Image
+                                {% endif %}
+                            </td>
+                            <td>
+                                <!-- Tombol Edit -->
+                                <a href="{% url 'dailyactivity_app:edit_electrical_data' data.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                <!-- Tombol Delete -->
+                                <form action="{% url 'dailyactivity_app:delete_electrical_data' data.id %}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="17" class="text-center">No data available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS Start -->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<!-- Plugins JS Ends -->
+
+<script>
+    $(document).ready(function() {
+        $('#electricalDataTable').DataTable({
+            "language": {
+                "url": "{% static 'assets/js/datatable/datatables/lang/Indonesian.json' %}"
+            },
+            "pagingType": "full_numbers",
+            "order": [[ 1, "desc" ]]
+        });
+    });
+
+    function confirmDelete() {
+        return confirm("Apakah Anda yakin ingin menghapus data ini?");
+    }
+</script>
+{% endblock scriptcontent %}

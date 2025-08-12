@@ -1,0 +1,60 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <div class="container-fluid">
+    <div class="row starter-main">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Edit Machine Mechanical</h5>
+          </div>
+          <div class="card-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="machinemechanical_name" class="form-label">Machine Mechanical Name</label>
+                <input type="text" class="form-control" id="machinemechanical_name" name="machinemechanical_name" value="{{ machinemechanical.name }}" required>
+              </div>
+
+              <!-- Edit Location -->
+              <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <select name="location" class="form-control" required>
+                  <option value="">Select Location</option>
+                  {% for location in locations %}
+                    <option value="{{ location.id }}" {% if machinemechanical.location.id == location.id %} selected {% endif %}>{{ location.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Edit Nomor -->
+              <div class="mb-3">
+                <label for="nomor" class="form-label">Nomor</label>
+                <input type="text" class="form-control" id="nomor" name="nomor" value="{{ machinemechanical.nomor }}">
+              </div>
+
+              <button type="submit" class="btn btn-primary">Update Machine Mechanical</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}

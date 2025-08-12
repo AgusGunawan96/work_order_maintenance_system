@@ -1,0 +1,1097 @@
+<!-- web_seiwa/wingoapp/templates/wo_maintenance_app/review_pengajuan.html -->
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        font-weight: 600;
+    }
+    
+    .reviewer-info {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .reviewer-info .info-text {
+        font-size: 0.9rem;
+    }
+    
+    .reviewer-info .user-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .reviewer-info .role-badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+    
+    .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .table th {
+        background: #28a745;
+        color: white;
+        font-weight: 600;
+        border: none;
+        padding: 15px 10px;
+        font-size: 0.85rem;
+    }
+    
+    .table td {
+        padding: 12px 10px;
+        vertical-align: middle;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-approved {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .review-pending {
+        background: #ffeaa7;
+        color: #d63031;
+        animation: pulse 2s infinite;
+    }
+    
+    .review-approved {
+        background: #d1f2eb;
+        color: #00b894;
+    }
+    
+    .review-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+    
+    .action-btn {
+        margin: 2px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+    
+    .priority-high {
+        border-left: 4px solid #dc3545;
+    }
+    
+    .priority-normal {
+        border-left: 4px solid #28a745;
+    }
+    
+    .section-highlight {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+
+    .empty-state i {
+        font-size: 48px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .stats-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+    }
+
+    .stats-item {
+        text-align: center;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        margin: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .stats-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .stats-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- Notifikasi untuk pesan -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Reviewer Info -->
+    {% if employee_data %}
+    <div class="reviewer-info">
+        <div>
+            <div class="user-name">👩‍💼 {{ employee_data.fullname|default:employee_data.nickname }}</div>
+            <div class="info-text">
+                {{ employee_data.department_name|default:"-" }} 
+                {% if employee_data.section_name %}> {{ employee_data.section_name }}{% endif %}
+            </div>
+            <div class="info-text">{{ employee_data.title_name|default:"-" }} • Employee: {{ employee_data.employee_number }}</div>
+        </div>
+        <div>
+            <span class="role-badge">🔍 REVIEWER</span>
+            <span class="role-badge">📋 WORK ORDER</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Statistics Section -->
+    <div class="stats-section">
+        <h6 class="mb-3"><i data-feather="bar-chart"></i> Statistics Review</h6>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-item">
+                    <div class="stats-number">{{ total_records }}</div>
+                    <div class="stats-label">Total Pengajuan</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-item">
+                    <div class="stats-number text-warning">
+                        {% for pengajuan in pengajuan_list %}
+                            {% if pengajuan.15 == '0' or pengajuan.15 == None %}{% if forloop.counter0 == 0 %}1{% else %}{% if forloop.counter == 1 %}1{% endif %}{% endif %}{% endif %}
+                        {% empty %}
+                            0
+                        {% endfor %}
+                    </div>
+                    <div class="stats-label">Pending Review</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-item">
+                    <div class="stats-number text-success">
+                        {% for pengajuan in pengajuan_list %}
+                            {% if pengajuan.15 == '1' %}{% if forloop.counter0 == 0 %}1{% else %}{% if forloop.counter == 1 %}1{% endif %}{% endif %}{% endif %}
+                        {% empty %}
+                            0
+                        {% endfor %}
+                    </div>
+                    <div class="stats-label">Reviewed</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-item">
+                    <div class="stats-number text-info">
+                        {% now "Y-m-d" as today %}
+                        {% for pengajuan in pengajuan_list %}
+                            {% if pengajuan.7|date:"Y-m-d" == today %}{% if forloop.counter0 == 0 %}1{% else %}{% if forloop.counter == 1 %}1{% endif %}{% endif %}{% endif %}
+                        {% empty %}
+                            0
+                        {% endfor %}
+                    </div>
+                    <div class="stats-label">Hari Ini</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5><i data-feather="eye"></i> Review Pengajuan Work Order</h5>
+                    <p class="mb-0 text-muted">
+                        Review dan assign pengajuan maintenance yang sudah di-approve • Total: {{ total_records }} pengajuan
+                    </p>
+                </div>
+                <div>
+                    <a href="{% url 'wo_maintenance_app:dashboard' %}" class="btn btn-light">
+                        <i data-feather="home"></i> Dashboard
+                    </a>
+                    <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="btn btn-outline-light">
+                        <i data-feather="list"></i> Daftar Laporan
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body p-0">
+            {% if pengajuan_list %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 120px;">History ID</th>
+                                <th style="width: 150px;">Pengaju</th>
+                                <th style="width: 120px;">Line/Section</th>
+                                <th style="width: 180px;">Mesin</th>
+                                <th style="width: 120px;">Section Tujuan</th>
+                                <th style="width: 130px;">Jenis Pekerjaan</th>
+                                <th>Deskripsi</th>
+                                <th style="width: 100px;">Status Review</th>
+                                <th style="width: 130px;">Tanggal</th>
+                                <th style="width: 120px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pengajuan in pengajuan_list %}
+                            <tr class="{% if pengajuan.16 == '0' or pengajuan.16 == None %}priority-high{% else %}priority-normal{% endif %}">
+                                <td>
+                                    <strong class="text-primary">{{ pengajuan.0|default:"-" }}</strong>
+                                    <br><small class="text-muted">{{ pengajuan.9|default:"-" }}</small>
+                                </td>
+                                <td>
+                                    {{ pengajuan.1|default:"-" }}
+                                    {% if pengajuan.8 %}
+                                        <br><small class="text-muted">{{ pengajuan.8 }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pengajuan.10 %}
+                                        <span class="badge bg-info">{{ pengajuan.10 }}</span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ pengajuan.2|default:"-" }}</td>
+                                <td>
+                                    <div>
+                                        <span class="section-highlight">{{ pengajuan.3|default:"-" }}</span>
+                                        {% if pengajuan.19 and pengajuan.19 != pengajuan.3 %}
+                                            <br><small class="text-success">
+                                                <i data-feather="arrow-right" style="width: 12px; height: 12px;"></i> 
+                                                Final: {{ pengajuan.19 }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{{ pengajuan.4|default:"-" }}</td>
+                                <td>
+                                    <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                        {{ pengajuan.5|default:"-"|truncatechars:50 }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if pengajuan.16 == '0' or pengajuan.16 == None %}
+                                        <span class="status-badge review-pending">⏳ Pending Review</span>
+                                    {% elif pengajuan.16 == '1' %}
+                                        <span class="status-badge review-approved">✅ Reviewed</span>
+                                        {% if pengajuan.17 %}
+                                            <br><small class="text-muted">{{ pengajuan.18|date:"d/m/Y" }}</small>
+                                        {% endif %}
+                                    {% elif pengajuan.16 == '2' %}
+                                        <span class="status-badge review-rejected">❌ Rejected</span>
+                                        {% if pengajuan.17 %}
+                                            <br><small class="text-muted">{{ pengajuan.18|date:"d/m/Y" }}</small>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="status-badge">{{ pengajuan.16|default:"Unknown" }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pengajuan.7 %}
+                                        {{ pengajuan.7|date:"d/m/Y" }}
+                                        <br><small class="text-muted">{{ pengajuan.7|date:"H:i" }}</small>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group-vertical" role="group">
+                                        {% if pengajuan.0 %}
+                                            <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                                               class="btn btn-sm btn-outline-success action-btn" title="Review">
+                                                <i data-feather="eye"></i> Review
+                                            </a>
+                                            
+                                            {% if pengajuan.16 == '0' or pengajuan.16 == None %}
+                                                <span class="badge bg-warning text-dark mt-1" style="font-size: 0.6rem;">
+                                                    📝 Perlu Review
+                                                </span>
+                                            {% elif pengajuan.16 == '1' %}
+                                                <span class="badge bg-success text-white mt-1" style="font-size: 0.6rem;">
+                                                    ✅ Sudah Review
+                                                </span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="btn btn-sm btn-outline-secondary action-btn disabled">
+                                                <i data-feather="eye"></i> Review
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if total_pages > 1 %}
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="pagination-info">
+                            Halaman {{ page_number }} dari {{ total_pages }} 
+                            ({{ total_records }} total pengajuan)
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-sm mb-0">
+                                {% if has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ previous_page_number }}">
+                                            <i data-feather="chevron-left"></i> Previous
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                
+                                <!-- Page numbers -->
+                                {% for page_num in "123456789"|make_list %}
+                                    {% if page_num|add:0 <= total_pages %}
+                                        {% if page_num|add:0 == page_number %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ page_num }}</span>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_num }}">
+                                                    {{ page_num }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ next_page_number }}">
+                                            Next <i data-feather="chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <i data-feather="inbox" style="width: 48px; height: 48px; color: #28a745;"></i>
+                    <h5 class="mt-3 text-muted">Tidak ada pengajuan untuk di-review</h5>
+                    <p class="text-muted">
+                        Semua pengajuan yang sudah di-approve sudah di-review atau belum ada pengajuan yang di-approve.
+                    </p>
+                    <a href="{% url 'wo_maintenance_app:dashboard' %}" class="btn btn-success">
+                        <i data-feather="home"></i> Kembali ke Dashboard
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Auto refresh untuk pending review (setiap 5 menit)
+    setInterval(function() {
+        // Hanya refresh jika ada pending review
+        if ($('.review-pending').length > 0) {
+            console.log('Auto refreshing page for pending reviews...');
+            window.location.reload();
+        }
+    }, 300000); // 5 menit
+    
+    // Tooltip untuk action buttons
+    $('[title]').tooltip();
+    
+    // Auto dismiss alerts
+    $('.alert').delay(5000).fadeOut();
+    
+    // Highlight row on hover dengan efek
+    $('.table tbody tr').hover(
+        function() {
+            $(this).addClass('table-active');
+        },
+        function() {
+            $(this).removeClass('table-active');
+        }
+    );
+    
+    // Statistics animation
+    $('.stats-number').each(function() {
+        var $this = $(this);
+        var countTo = $this.text();
+        
+        $({ countNum: 0 }).animate({
+            countNum: countTo
+        }, {
+            duration: 1500,
+            easing: 'swing',
+            step: function() {
+                $this.text(Math.floor(this.countNum));
+            },
+            complete: function() {
+                $this.text(this.countNum);
+            }
+        });
+    });
+    
+    console.log('WO Maintenance - Review Pengajuan loaded successfully');
+});
+</script>
+{% endblock scriptcontent %}
+
+<!-- ================================================================== -->
+<!-- wo_maintenance_app/templates/wo_maintenance_app/review_pengajuan_detail.html -->
+
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        font-weight: 600;
+    }
+    
+    .reviewer-info {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .detail-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+    }
+    
+    .detail-section h5 {
+        color: #28a745;
+        font-weight: 600;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 8px;
+    }
+    
+    .review-form-section {
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 2px solid #28a745;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+    
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-approved {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .review-pending {
+        background: #ffeaa7;
+        color: #d63031;
+        animation: pulse 2s infinite;
+    }
+    
+    .review-approved {
+        background: #d1f2eb;
+        color: #00b894;
+    }
+    
+    .review-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+    
+    .btn-review-approve {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-review-approve:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+    
+    .btn-review-reject {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-review-reject:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        color: white;
+    }
+    
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        border-color: #28a745;
+    }
+    
+    .section-highlight {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .info-item {
+        margin-bottom: 15px;
+        padding: 10px;
+        background: white;
+        border-radius: 6px;
+        border-left: 3px solid #28a745;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        color: #6c757d;
+    }
+    
+    .alert-review {
+        border-left: 4px solid #28a745;
+        background: #d1f2eb;
+        border-color: #28a745;
+        color: #155724;
+    }
+    
+    .form-check-input:checked {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    
+    .conditional-section {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        background: #e8f5e8;
+        border-radius: 8px;
+        border: 1px solid #28a745;
+    }
+    
+    .conditional-section.show {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- Notifikasi untuk pesan -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Reviewer Info -->
+    {% if employee_data %}
+    <div class="reviewer-info">
+        <div>
+            <div class="user-name">👩‍💼 {{ employee_data.fullname|default:employee_data.nickname }}</div>
+            <div class="info-text">Review Pengajuan Work Order • Employee: {{ employee_data.employee_number }}</div>
+        </div>
+        <div>
+            <span class="role-badge">🔍 REVIEWER</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Detail Pengajuan -->
+    <div class="detail-section">
+        <h5>📋 Detail Pengajuan {{ pengajuan.history_id }}</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-item">
+                    <div class="info-label">History ID</div>
+                    <div class="info-value"><strong>{{ pengajuan.history_id }}</strong></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Number WO</div>
+                    <div class="info-value">{{ pengajuan.number_wo|default:"-" }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Pengaju</div>
+                    <div class="info-value">
+                        {{ pengajuan.oleh|default:"-" }}
+                        {% if pengajuan.user_insert %}
+                            <br><small class="text-muted">{{ pengajuan.user_insert }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Tanggal Pengajuan</div>
+                    <div class="info-value">
+                        {% if pengajuan.tgl_insert %}
+                            {{ pengajuan.tgl_insert|date:"d/m/Y H:i" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-item">
+                    <div class="info-label">Line/Section</div>
+                    <div class="info-value">
+                        {% if pengajuan.line_name %}
+                            <span class="badge bg-info">{{ pengajuan.line_name }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Nama Mesin</div>
+                    <div class="info-value">{{ pengajuan.mesin|default:"-" }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Section Tujuan Saat Ini</div>
+                    <div class="info-value">
+                        <span class="section-highlight">{{ pengajuan.section_tujuan_current|default:"-" }}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Jenis Pekerjaan</div>
+                    <div class="info-value">{{ pengajuan.pekerjaan|default:"-" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="info-item">
+                    <div class="info-label">Deskripsi Pekerjaan</div>
+                    <div class="info-value">
+                        <div style="background: white; padding: 15px; border-radius: 6px; border: 1px solid #e9ecef;">
+                            {{ pengajuan.deskripsi_perbaikan|default:"-" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="info-item">
+                    <div class="info-label">Status Pengajuan</div>
+                    <div class="info-value">
+                        {% if pengajuan.status == '1' and pengajuan.approve == '1' %}
+                            <span class="status-badge status-approved">✅ Sudah Di-Approve</span>
+                        {% else %}
+                            <span class="status-badge">Status: {{ pengajuan.status|default:"Unknown" }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-item">
+                    <div class="info-label">Status Review</div>
+                    <div class="info-value">
+                        {% if pengajuan.review_status == '0' or pengajuan.review_status == None %}
+                            <span class="status-badge review-pending">⏳ Menunggu Review</span>
+                        {% elif pengajuan.review_status == '1' %}
+                            <span class="status-badge review-approved">✅ Sudah Di-Review (Approved)</span>
+                        {% elif pengajuan.review_status == '2' %}
+                            <span class="status-badge review-rejected">❌ Sudah Di-Review (Rejected)</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Form Section -->
+    {% if can_review %}
+    <div class="review-form-section">
+        <h5>🔍 Form Review Pengajuan</h5>
+        <div class="alert alert-review" role="alert">
+            <strong>📝 Petunjuk Review:</strong><br>
+            • Pilih <strong>Approve</strong> untuk menyetujui pengajuan dan pilih section final yang akan menangani<br>
+            • Pilih <strong>Reject</strong> untuk menolak pengajuan<br>
+            • Tambahkan catatan review jika diperlukan
+        </div>
+        
+        <form method="post" id="reviewForm">
+            {% csrf_token %}
+            
+            <!-- Keputusan Review -->
+            <div class="mb-4">
+                <label class="form-label">{{ review_form.action.label }}</label>
+                <div class="mt-2">
+                    {% for choice in review_form.action %}
+                        <div class="form-check form-check-inline">
+                            {{ choice.tag }}
+                            <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                {% if choice.choice_value == 'approve' %}
+                                    ✅ {{ choice.choice_label }}
+                                {% else %}
+                                    ❌ {{ choice.choice_label }}
+                                {% endif %}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if review_form.action.errors %}
+                    <div class="invalid-feedback d-block">{{ review_form.action.errors.0 }}</div>
+                {% endif %}
+                <small class="form-text text-muted">{{ review_form.action.help_text }}</small>
+            </div>
+            
+            <!-- Section Final (conditional) -->
+            <div id="sectionSelection" class="conditional-section">
+                <div class="mb-3">
+                    <label for="{{ review_form.final_section.id_for_label }}" class="form-label">
+                        {{ review_form.final_section.label }} <span class="text-danger">*</span>
+                    </label>
+                    {{ review_form.final_section|add_class:"form-control select2" }}
+                    {% if review_form.final_section.errors %}
+                        <div class="invalid-feedback d-block">{{ review_form.final_section.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-text text-muted">{{ review_form.final_section.help_text }}</small>
+                </div>
+            </div>
+            
+            <!-- Catatan Review -->
+            <div class="mb-4">
+                <label for="{{ review_form.review_notes.id_for_label }}" class="form-label">{{ review_form.review_notes.label }}</label>
+                {{ review_form.review_notes|add_class:"form-control" }}
+                {% if review_form.review_notes.errors %}
+                    <div class="invalid-feedback">{{ review_form.review_notes.errors.0 }}</div>
+                {% endif %}
+                <small class="form-text text-muted">{{ review_form.review_notes.help_text }}</small>
+            </div>
+            
+            <!-- Submit Buttons -->
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'wo_maintenance_app:review_pengajuan_index' %}" class="btn btn-secondary">
+                    ← Kembali ke Daftar Review
+                </a>
+                <div>
+                    <button type="button" class="btn btn-outline-secondary me-2" onclick="resetForm()">
+                        🔄 Reset
+                    </button>
+                    <button type="submit" class="btn btn-review-approve" id="submitBtn">
+                        📝 Submit Review
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% elif pengajuan.review_status == '1' or pengajuan.review_status == '2' %}
+    <!-- Review Info Section -->
+    {% if review_info %}
+    <div class="detail-section">
+        <h5>✅ Informasi Review</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-item">
+                    <div class="info-label">Di-Review Oleh</div>
+                    <div class="info-value">{{ review_info.reviewer_name }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Tanggal Review</div>
+                    <div class="info-value">
+                        {% if review_info.review_date %}
+                            {{ review_info.review_date|date:"d/m/Y H:i" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                {% if review_info.final_section_name %}
+                <div class="info-item">
+                    <div class="info-label">Final Section Assignment</div>
+                    <div class="info-value">
+                        <span class="section-highlight">{{ review_info.final_section_name }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if review_info.review_notes %}
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="info-item">
+                    <div class="info-label">Catatan Review</div>
+                    <div class="info-value">
+                        <div style="background: white; padding: 15px; border-radius: 6px; border: 1px solid #e9ecef;">
+                            {{ review_info.review_notes }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        <strong>ℹ️ Informasi:</strong> Pengajuan ini tidak dapat di-review atau sudah di-review sebelumnya.
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'wo_maintenance_app:review_pengajuan_index' %}" class="btn btn-secondary">
+                    ← Kembali ke Daftar Review
+                </a>
+                <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.history_id %}" class="btn btn-outline-primary">
+                    📄 Detail Lengkap
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Initialize Select2
+    $('.select2').select2({
+        width: '100%',
+        placeholder: 'Pilih section...'
+    });
+    
+    // Handle action radio button change
+    $('input[name="action"]').on('change', function() {
+        const selectedAction = $(this).val();
+        const sectionSelection = $('#sectionSelection');
+        const submitBtn = $('#submitBtn');
+        
+        if (selectedAction === 'approve') {
+            sectionSelection.addClass('show');
+            submitBtn.removeClass('btn-review-reject').addClass('btn-review-approve');
+            submitBtn.html('✅ Approve & Assign');
+            
+            // Make section selection required
+            $('#id_final_section').prop('required', true);
+        } else if (selectedAction === 'reject') {
+            sectionSelection.removeClass('show');
+            submitBtn.removeClass('btn-review-approve').addClass('btn-review-reject');
+            submitBtn.html('❌ Reject Pengajuan');
+            
+            // Remove section selection requirement
+            $('#id_final_section').prop('required', false);
+        }
+    });
+    
+    // Form validation
+    $('#reviewForm').on('submit', function(e) {
+        const selectedAction = $('input[name="action"]:checked').val();
+        
+        if (!selectedAction) {
+            e.preventDefault();
+            alert('Mohon pilih keputusan review (Approve atau Reject)');
+            return false;
+        }
+        
+        if (selectedAction === 'approve') {
+            const finalSection = $('#id_final_section').val();
+            if (!finalSection) {
+                e.preventDefault();
+                alert('Mohon pilih final section untuk assignment');
+                $('#id_final_section').focus();
+                return false;
+            }
+        }
+        
+        // Konfirmasi sebelum submit
+        const actionText = selectedAction === 'approve' ? 'menyetujui' : 'menolak';
+        if (!confirm(`Apakah Anda yakin akan ${actionText} pengajuan ini?`)) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Show loading
+        const submitBtn = $('#submitBtn');
+        const originalText = submitBtn.html();
+        submitBtn.prop('disabled', true).html('⏳ Memproses...');
+        
+        // Reset after 5 seconds if still processing
+        setTimeout(function() {
+            submitBtn.prop('disabled', false).html(originalText);
+        }, 5000);
+    });
+    
+    // Reset form function
+    window.resetForm = function() {
+        if (confirm('Apakah Anda yakin akan mereset form?')) {
+            $('#reviewForm')[0].reset();
+            $('#sectionSelection').removeClass('show');
+            $('#id_final_section').prop('required', false);
+            $('.select2').val(null).trigger('change');
+            
+            const submitBtn = $('#submitBtn');
+            submitBtn.removeClass('btn-review-reject').addClass('btn-review-approve');
+            submitBtn.html('📝 Submit Review');
+        }
+    };
+    
+    // Auto dismiss alerts
+    $('.alert').delay(5000).fadeOut();
+    
+    console.log('WO Maintenance - Review Detail loaded successfully');
+});
+</script>
+{% endblock scriptcontent %}

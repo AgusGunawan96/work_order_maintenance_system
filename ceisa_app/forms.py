@@ -124,13 +124,13 @@ class ceisaKirimImporHeaderForm(forms.Form):
     nilaiIncoterm = forms.DecimalField(label='Nilai Incoterm',max_digits=24, decimal_places=2, required=True)
     nilaiMaklon = forms.DecimalField(label='Nilai Maklon',max_digits=24, decimal_places=2, required=True)
 
-    nomorBc11 = forms.CharField(label='Nomor BC 11',max_length=255, required=True)
+    # nomorBc11 = forms.CharField(label='Nomor BC 11',max_length=255, required=True) # hide
     posBc11 = forms.CharField(label='POS BC 11',max_length=255, required=True)
     seri = forms.IntegerField(label='Seri',required=True)
-    subPosBc11 = forms.CharField(label='Sub Pos BC 11',max_length=255, required=True)
-    totalDanaSawit = forms.DecimalField(label='Total Dana Sawit',max_digits=24, decimal_places=2, required=True)
+    # subPosBc11 = forms.CharField(label='Sub Pos BC 11',max_length=255, required=True) # hide
+    # totalDanaSawit = forms.DecimalField(label='Total Dana Sawit',max_digits=24, decimal_places=2, required=True) #hide
     volume = forms.DecimalField(label='Volume',max_digits=24, decimal_places=4, required=True)
-    vd = forms.DecimalField(label='Total nilai voluntary declaration',max_digits=24, decimal_places=4, required=True)
+    # vd = forms.DecimalField(label='Total nilai voluntary declaration',max_digits=24, decimal_places=4, required=True) # hide
 
 class ceisaKirimImporBarangTarifForm(forms.Form):
     jumlahSatuan            = forms.DecimalField(label='Jumlah Satuan barang tarif Bea Masuk',max_digits=24, decimal_places=4, required=False, widget=forms.NumberInput(attrs={'class': 'form-control'}))
@@ -419,3 +419,360 @@ class ceisaKirimImporPengangkutForm(forms.Form):
         initial="1"  # Set the initial value to "0" (Tidak)
     )
     seriPengangkut  = forms.IntegerField(label='Seri Pengangkut', required=False)
+
+#CREATE AG
+class ceisaKirimEksporHeaderForm(forms.Form):
+    asalData = forms.CharField(label='Asal Data',max_length=255,widget=forms.HiddenInput(),initial='S')
+    nomorAju = forms.CharField(
+        label="Nomor Aju",
+        max_length=26,
+        validators=[
+            RegexValidator(
+                regex=r'^[A-Za-z0-9]{26}$',
+                message="Sesuaikan format nomor pengajuan dokumen impor terdiri 26 digit: 4 digit kode kantor, 2 digit kode dokumen pabean, 6 digit unik perusahaan, 8 digit tanggal pengajuan dengan format YYYYMMDD, 6 digit sequence/nomor urut pengajuan dokumen impor"
+            )
+        ]
+    )
+    asuransi = forms.DecimalField(label='Asuransi',max_digits=24, decimal_places=2, required=True)
+    bruto = forms.DecimalField(label='Bruto',max_digits=24, decimal_places=4, required=True)
+    cif = forms.DecimalField(label='CIF',max_digits=24, decimal_places=2, required=True)
+    biayaPengurang = forms.DecimalField(label='Biaya Pengurang yang dikenakan',max_digits=24, decimal_places=2, required=True)
+    biayaTambahan = forms.DecimalField(label='Biaya Tambahan yang dikenakan',max_digits=24, decimal_places=2, required=True)
+    disclaimer = forms.ChoiceField(
+        label="Persetujuan pengguna dalam kirim dokumen pabean",
+        choices=[
+            ("0", "Tidak"),  # Value, Display text
+            ("1", "Ya")
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'  # You can add additional attributes as needed
+        }),
+        initial="1"  # Set the initial value to "0" (Tidak)
+    )
+    flagCurah = forms.ChoiceField(
+        label="Flag Curah",
+        choices=[
+            ("0", "Tidak"),  # Value, Display text
+            ("1", "Ya")
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'  # You can add additional attributes as needed
+        }),
+        initial="1"  # Set the initial value to "0" (Tidak)
+    )
+    flagCurah = forms.ChoiceField(
+        label="Flag Migas",
+        choices=[
+            ("0", "Tidak"),  # Value, Display text
+            ("1", "Ya")
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'  # You can add additional attributes as needed
+        }),
+        initial="1"  # Set the initial value to "0" (Tidak)
+    )
+    fob = forms.DecimalField(label='FOB',max_digits=24, decimal_places=2, required=True)
+    freight = forms.DecimalField(label='Freight',max_digits=24, decimal_places=2, required=True)
+    idPengguna = forms.CharField(label='ID Pengguna',max_length=255, required=True)
+    # jabatanTtd = forms.CharField(label='ID Jabatan',max_length=255, required=True)
+    jumlahKontainer = forms.IntegerField(label='jumlah peti kemas yang digunakan untuk mengangkut barang',required=True)
+    kodeAsuransi = forms.ChoiceField(
+        label="Kode Asuransi",
+        choices=[
+            ("LN", "Luar Negeri"),  # Value, Display text
+            ("DN", "Dalam Negeri")
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'  # You can add additional attributes as needed
+        }),
+        initial="LN"  # Set the initial value to "0" (Tidak)
+    )
+    kodeCaraBayar = forms.ChoiceField(
+        choices=refrensiCaraBayar.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeCaraDagang = forms.ChoiceField(
+        choices=refrensiCaraDagang.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeDokumen = forms.ChoiceField(
+        choices=refrensiDokumen.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeIncoterm = forms.ChoiceField(
+        choices=refrensiIncoterm.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeJenisEkspor = forms.ChoiceField(
+        choices=refrensiJenisEkspor.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeJenisNilai = forms.ChoiceField(
+        choices=refrensiJenisTransaksiPerdagangan.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeJenisProsedur = forms.ChoiceField(
+        choices=refrensiJenisPIB.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    # kodeKantor = forms.ChoiceField(
+    #     choices=refrensiKantor.choices,
+    #    widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    # )
+    # kodeKantorEkspor = forms.ChoiceField(
+    #     choices=refrensiKantor.choices,
+    #    widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    # )
+    kodeKategoriEkspor = forms.ChoiceField(
+        choices=refrensiKategoriEkspor.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    # kodeLokasi = forms.ChoiceField(
+    #     choices=refrensiJenisEkspor.choices,
+    #    widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    # )
+    kodeNegaraTujuan = forms.CharField(
+        label="Kode Negara Tujuan",
+        validators=[
+            RegexValidator(
+                regex=r'^[A-Z]{2}$',
+                message="Sesuai kolom formulir BC 3.0 - D.32 Negara Asal Barang. Lihat Referensi Negara"
+            )
+        ]
+    )
+    kodePelBongkar = forms.CharField(label='Kode Pel Bongkar',max_length=255, required=True)
+    kodePelEkspor = forms.CharField(label='Kode Pel Ekspor',max_length=255, required=True)
+    kodePelMuat = forms.CharField(label='Kode Pel Muat',max_length=255, required=True)
+    kodePelTujuan = forms.CharField(label='Kode Pel Tujuan',max_length=255, required=True)
+    kodePembayar = forms.CharField(label='Kode Pembayar',max_length=255, required=True)
+    kodeTps = forms.CharField(label='Kode TPS',max_length=255, required=True)
+    kodeValuta = forms.ChoiceField(
+        choices=refrensiValuta.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kotaTtd = forms.CharField(label='Kota TTD',max_length=255,widget=forms.HiddenInput(),initial='Bekasi')
+    # namaTtd = forms.CharField(label='Nama TTD',max_length=255, required=True)
+    ndpbm = forms.DecimalField(label='ndpbm',max_digits=24, decimal_places=4, required=True,widget=forms.NumberInput(attrs={'readonly': 'readonly'}))
+    netto = forms.DecimalField(label='Netto',max_digits=24, decimal_places=4, required=True,widget=forms.NumberInput(attrs={'readonly': 'readonly'}))
+    nilaiMaklon = forms.DecimalField(label='Nilai Maklon',max_digits=24, decimal_places=2, required=True)
+    # nomorBc11 = forms.CharField(label='Nomor BC 11',max_length=255, required=True) # hide
+    posBc11 = forms.CharField(label='POS BC 11',max_length=255, required=True)
+    seri = forms.IntegerField(label='Seri',required=True)
+    # subPosBc11 = forms.CharField(label='Sub Pos BC 11',max_length=255, required=True) # hide
+    # totalDanaSawit = forms.DecimalField(label='Total Dana Sawit',max_digits=24, decimal_places=2, required=True) #hide
+
+
+class ceisaKirimEksporBarangForm(forms.Form):
+    # asuransi = forms.IntegerField(label = 'Asuransi', required=False)
+    cif = forms.IntegerField(label='CIF', required=False,widget=forms.NumberInput(attrs={'readonly': 'readonly'}))
+    cifRupiah   = forms.IntegerField(label='CIF Rupiah', required=False,widget=forms.NumberInput(attrs={'readonly': 'readonly'}))
+    fob = forms.IntegerField(label='FOB', required=False)
+    hargaEkspor = forms.IntegerField(label='Harga Ekspor', required=False)
+    hargaPatokan    = forms.IntegerField(label='Harga Patokan', required=False)
+    hargaPerolehan  = forms.IntegerField(label='Harga Perolehan', required=False)
+    hargaSatuan = forms.IntegerField(label='Harga Satuan', required=False)
+    jumlahKemasan   = forms.DecimalField(label='Volume',max_digits=24, decimal_places=2, required=True)
+    jumlahSatuan    = forms.DecimalField(label='Volume',max_digits=24, decimal_places=4, required=True)
+    #kodeAsalBahanBaku
+    kodeBarang  = forms.CharField(label='Kode Barang',max_length=255, required=True)
+    kodeDaerahAsal = forms.ChoiceField(
+        choices=refrensiDaerahAsal.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeDokumen = forms.ChoiceField(
+        choices=refrensiDokumen.choices,
+       widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeJenisKemasan = forms.ChoiceField(
+        choices=refrensiJenisKemasan.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeNegaraAsal = forms.CharField(
+        label="Kode Negara Asal",
+        validators=[
+            RegexValidator(
+                regex=r'^[A-Z]{2}$',
+                message="Sesuai kolom formulir BC 3.0 - D.32 Negara Asal Barang. Lihat Referensi Negara"
+            )
+        ]
+    )
+    kodeSatuanBarang = forms.ChoiceField(
+        choices=refrensiSatuanBarang.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    merk    = forms.CharField(label='Merk',max_length=255, required=True)
+    ndpbm   = forms.IntegerField(label='Nilai Dasar Penghitungan Bea Masuk', required=False,widget=forms.NumberInput(attrs={'readonly': 'readonly'}))
+    netto   = forms.IntegerField(label='Netto', required=False,widget=forms.NumberInput(attrs={'readonly': 'readonly'}))
+    nilaiBarang = forms.IntegerField(label='Nilai Barang', required=False)
+    nilaiDanaSawit  = forms.IntegerField(label='Nilai Dana Sawit', required=False)
+    posTarif    = forms.CharField(label='Pos Tarif',max_length=255, required=True)
+    seriBarang  = forms.IntegerField(label='Seri Barang', required=False)
+    spesifikasiLain    = forms.CharField(label='Spesifikasi Lain',max_length=255, required=True)
+    tipe    = forms.CharField(label='Tipe',max_length=255, required=True)
+    ukuran  = forms.CharField(label='Ukuran',max_length=255, required=True)
+    uraian  = forms.CharField(label='Uraian',max_length=255, required=True)
+    volume  = forms.DecimalField(label='Volume Barang',max_digits=24, decimal_places=4, required=True)
+
+class ceisaKirimEksporEntitasPengirimForm(forms.Form):
+    namaEntitasPengirim = forms.CharField(label='Nama Entitas', max_length=255, required=False)
+    alamatEntitasPengirim = forms.CharField(label='Alamat Entitas', max_length=255, required=False)
+    kodeNegaraPengirim = forms.ChoiceField(
+        choices=refrensiNegara.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+class ceisaKirimEksporEntitasPenjualForm(forms.Form):
+    namaEntitasPenjual = forms.CharField(label='Nama Entitas', max_length=255, required=False)
+    alamatEntitasPenjual = forms.CharField(label='Alamat Entitas', max_length=255, required=False)
+    kodeNegaraPenjual = forms.ChoiceField(
+        choices=refrensiNegara.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    # kodeEntitas       = forms.CharField(label='Kode Entitas',max_length=255,widget=forms.HiddenInput(),initial='1')
+    # kodeJenisApi = forms.ChoiceField(
+    #     label="Kode Jenis API",
+    #     choices=[
+    #         ("01", "APIU"),  # Value, Display text
+    #         ("02", "APIP")
+    #     ],
+    #     widget=forms.Select(attrs={
+    #         'class': 'form-control'  # You can add additional attributes as needed
+    #     }),
+    #     initial="01"  # Set the initial value to "0" (Tidak)
+    # )
+    # kodeJenisIdentitas = forms.ChoiceField(
+    #     label="Kode Jenis Identitas",
+    #     choices=[
+    #         ("0", "NPWP 12 Digit"),
+    #         ("1", "NPWP 10 Digit"),  # Value, Display text
+    #         ("2", "Paspor"),
+    #         ("3", "KTP"),
+    #         ("4", "Lainnya"),
+    #         ("5", "NPWP 15 Digit"),
+    #     ],
+    #     widget=forms.Select(attrs={
+    #         'class': 'form-control'  # You can add additional attributes as needed
+    #     }),
+    #     initial="0"  # Set the initial value to "0" (Tidak)
+    # )
+    # kodeStatus = forms.ChoiceField(
+    #     choices=refrensiStatus.choices,
+    #     widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    # )
+    # nibEntitas = forms.CharField(label='NIB Entitas', max_length=255, required=False)
+    # nomorIdentitas = forms.CharField(label='Nomor Identitas', max_length=255, required=False)
+    # seriEntitas = forms.IntegerField(label='Seri Entitas',required=False)
+
+class ceisaKirimEksporKemasanForm(forms.Form):
+    jumlahKemasan   = forms.IntegerField(label='Jumlah Kemasan', required=False)
+    kodeJenisKemasan = forms.ChoiceField(
+        choices=refrensiJenisKemasan.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    merkKemasan = forms.CharField(label='Merk Kemasan', max_length=255, required=False)
+    seriKemasan = forms.IntegerField(label='Seri Kemasan', required=False)
+
+class ceisaKirimEksporKontainerForm(forms.Form):
+    kodeJenisKontainer = forms.ChoiceField(
+        label="Kode Jenis Kontainer",
+        choices=[
+            ("4", "Empty"),
+            ("7", "LCL"),  # Value, Display text
+            ("8", "FCL")
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'  # You can add additional attributes as needed
+        }),
+        initial="4"  # Set the initial value to "0" (Tidak)
+    )
+    kodeTipeKontainer = forms.ChoiceField(
+        label="Kode Tipe Kontainer",
+        choices=[
+            ("1", "General/Dry Cargo"),
+            ("2", "Tunne Type"),  # Value, Display text
+            ("3", "Open Top Steel"),
+            ("4", "Flat Rack"),
+            ("5", "Reefer/Refregete"),
+            ("6", "Barge Container"),
+            ("7", "Bulk Container"),
+            ("8", "Isotank"),
+            ("99", "Lain-Lain"),
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'  # You can add additional attributes as needed
+        }),
+        initial="1"  # Set the initial value to "0" (Tidak)
+    )
+    kodeUkuranKontainer = forms.ChoiceField(
+        label="Kode Ukuran Kontainer",
+        choices=[
+            ("20", "20 feet"),
+            ("40", "40 feet"),  # Value, Display text
+            ("45", "45 feet"),
+            ("60", "60 feet")
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'  # You can add additional attributes as needed
+        }),
+        initial="20"  # Set the initial value to "0" (Tidak)
+    )
+    nomorKontainer = forms.CharField(label='Nomor Kontainer',max_length=255, required=False)
+    seriKontainer  = forms.IntegerField(label='Seri Kontainer', required=False)
+
+class ceisaKirimEksporDokumenForm(forms.Form):
+    idDokumen       = forms.CharField(label='ID Dokumen', max_length=250, required=False)
+    kodeDokumen     = forms.CharField(label='Kode Dokumen',max_length=255,widget=forms.HiddenInput(),initial='380')
+    kodeFasilitas = forms.ChoiceField(
+        choices=refrensiFasilitas.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    kodeIjin = forms.ChoiceField(
+        choices=refrensiIjin.choices,
+        widget=Select2Widget(attrs={'class': 'form-control select2'}),  # Add any widget attributes you need
+    )
+    namaFasilitas   = forms.CharField(label='Nama Fasilitas', max_length=255, required=False)
+    nomorDokumen    = forms.CharField(label='Nomor Dokumen', max_length=255, required=False)
+    seriDokumen     = forms.IntegerField(label='Seri Dokumen', required=False, )
+    tanggalDokumen  = forms.DateField(label='Tanggal Dokumen', required=False,widget=forms.TextInput(attrs={'type': 'date'}))
+    urlDokumen      = forms.CharField(label='URL Dokumen', max_length=255, required=False)
+
+class ceisaKirimEksporPengangkutForm(forms.Form):
+    kodeBendera     = forms.CharField(label='Kode Bendera', max_length=255, required=False)
+    namaPengangkut  = forms.CharField(label='Nama Pengangkut', max_length=255, required=False)
+    nomorPengangkut = forms.CharField(label='Nomor Pengangkut', max_length=255, required=False)
+    kodeCaraAngkut = forms.ChoiceField(
+        label="Kode Cara Angkut",
+        choices=[
+            ("1", "Laut"),
+            ("2", "Kereta Api"),  # Value, Display text
+            ("3", "Darat"),
+            ("4", "Udara"),
+            ("5", "Pos"),
+            ("6", "Multimoda"),
+            ("7", "Instalasi/Pipa"),
+            ("8", "Perairan"),
+            ("9", "Lainnya")
+        ],
+        widget=forms.Select(attrs={
+            'class': 'form-control'  # You can add additional attributes as needed
+        }),
+        initial="1"  # Set the initial value to "0" (Tidak)
+    )
+    seriPengangkut  = forms.IntegerField(label='Seri Pengangkut', required=False)
+
+class ceisaKirimEksporbankDevisaForm(forms.Form):
+     kodeBank     = forms.CharField(label='Kode Bank', max_length=255, required=False)
+     seriPengangkut  = forms.IntegerField(label='Seri Bank', required=False)
+
+class ceisaKirimEksporkesiapanBarangForm(forms.Form):
+      kodeJenisBarang  = forms.CharField(label='Kode Jenis Barang', max_length=250, required=False)
+      kodeJenisGudang  = forms.CharField(label='Kode Jenis Gudang', max_length=250, required=False)
+      namaPIC = forms.CharField(label='Nama PIC',max_length=255, required=True)
+      alamat = forms.CharField(label='Alamat',max_length=255, required=True)
+      nomorTelpPic = forms.CharField(label='Nomor Telp PIC', max_length=250, required=False)
+      lokasiSiapPeriksa = forms.CharField(label='Lokasi Siap Periksa', max_length=255, required=False)
+      kodeCaraStuffing = forms.CharField(label='Kode Cara Stuffing', max_length=255, required=False)
+      kodeJenisPartOf = forms.CharField(label='Kode Cara Part Of', max_length=255, required=False)
+      jumlahContainer20  = forms.IntegerField(label='Jumlah Kontainer 20', required=False)
+      jumlahContainer40  = forms.IntegerField(label='Jumlah Kontainer 40', required=False)
+
+      

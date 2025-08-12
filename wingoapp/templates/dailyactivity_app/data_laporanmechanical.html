@@ -1,0 +1,169 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+    .line-with-border {
+        border-bottom: 1px solid #000; /* Garis hitam */
+        padding-bottom: 5px; /* Jarak antara teks dan garis */
+        margin-bottom: 5px; /* Jarak antar baris */
+    }
+</style>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+</style>
+
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+    <div class="card full-width-card mt-4">
+        <div class="card-header d-flex justify-content-between">
+            <h5>Data Laporan Mechanical</h5>
+            {% comment %} <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#catatanSupervisorModal">
+                Catatan Supervisor
+            </button> {% endcomment %}
+        </div>
+       <div class="card-body">
+            {% if laporan_data %}
+                {% for data in laporan_data %}
+                    <div class="row mb-2"> <!-- Reduced margin-bottom -->
+                        <div class="col-12">
+                            <strong>Tanggal:</strong>
+                            <p>{{ data.tanggal|date:"d-m-Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-2"> <!-- Reduced margin-bottom -->
+                        <div class="col-12">
+                            <strong>Shift:</strong>
+                            <p>{{ data.shift.name }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-2"> <!-- Reduced margin-bottom -->
+                        <div class="col-12">
+                            <strong>Cuti Karyawan:</strong>
+                            {% for pic in data.pic.all %}
+                                <p>{{ pic.name }} ({{ pic.nokar }})</p>
+                            {% empty %}
+                                <p>No Cuti Karyawan</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <strong>Jadwal Lembur:</strong>
+                            {% for pic_lembur in data.piclembur.all %}
+                                <p>{{ pic_lembur.name }} ({{ pic_lembur.nokar }})</p>
+                            {% empty %}
+                                <p>No PIC Lembur assigned</p>
+                            {% endfor %}
+                        </div>
+                    </div>  
+                    
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <strong>Laporan Pekerjaan:</strong>
+                            {% if data.laporan_pekerjaan.exists %}
+                                <table class="table table-bordered mt-3">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Deskripsi Pekerjaan</th>
+                                            <th>Jenis Pekerjaan</th>
+                                            <th>Lama Pekerjaan (Jam)</th>
+                                            <th>PIC Pekerjaan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for pekerjaan in data.laporan_pekerjaan.all %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ pekerjaan.masalah }}</td>
+                                                <td>{{ pekerjaan.jenis_pekerjaan }}</td>
+                                                <td>{{ pekerjaan.lama_pekerjaan }}</td>
+                                                <td>{{ pekerjaan.pic_masalah }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p>No Laporan Pekerjaan available</p>
+                            {% endif %}
+                        </div>
+                    </div>      
+                    
+                    
+                   <div class="d-flex justify-content-between">
+                        <!-- Tombol Edit di pojok kiri -->
+                        <div>
+                            {% if data.id %}
+                            <a href="{% url 'dailyactivity_app:edit_laporanmechanical' data.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            {% else %}
+                            <span>ID tidak tersedia</span>
+                            {% endif %}
+                        </div>
+                    
+                        <!-- Tombol Delete di pojok kanan -->
+                        <div>
+                            <a href="{% url 'dailyactivity_app:delete_laporanmechanical' data.id %}" 
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this item?');">
+                               Delete
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <form method="POST" action="{% url 'dailyactivity_app:add_comment' data.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="comment">Catatan Supervisor:</label>
+                                <textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Masukkan komentar...">{{ data.catatan }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm">Simpan Catatan</button>
+                        </form>
+                    </div>
+                    
+                    <hr>
+                {% endfor %}
+            {% else %}
+                <div class="text-center">No data available</div>
+            {% endif %}
+        </div>
+    </div>
+</div> 
+
+
+{% endblock content %}
+{% block scriptcontent %}
+<!-- Plugins JS Start -->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
+<!-- Plugins JS Ends -->
+<script>
+    function confirmDelete() {
+        return confirm("Apakah Anda yakin ingin menghapus data ini?");
+    }
+</script>
+{% endblock scriptcontent %}

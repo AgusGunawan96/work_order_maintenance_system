@@ -1,0 +1,985 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+<!-- Meta refresh sebagai fallback - akan refresh setiap 60 detik -->
+<meta http-equiv="refresh" content="60">
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+<style>
+  .page-body {
+    padding-top: 20px;
+  }
+  .full-width-card {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+  }
+  .card {
+    margin-top: -20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .card-header h5 {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+  }
+  .card-body {
+    padding: 15px;
+  }
+  
+  /* Real-time Status Indicator */
+  .realtime-status {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1050;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .realtime-status.connected {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+  }
+  
+  .realtime-status.checking {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    color: white;
+  }
+  
+  .realtime-status.error {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: white;
+  }
+  
+  .realtime-status.paused {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    color: white;
+  }
+  
+  .realtime-status.refreshing {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    color: white;
+    animation: pulse 1s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+  }
+  
+  .status-icon {
+    margin-right: 6px;
+    font-size: 10px;
+  }
+  
+  /* Update notification */
+  .update-notification {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    z-index: 1051;
+    max-width: 300px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    transform: translateX(350px);
+    transition: transform 0.3s ease;
+  }
+  
+  .update-notification.show {
+    transform: translateX(0);
+  }
+  
+  /* Style untuk menampilkan catatan dengan warna kuning */
+  .catatan-display {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    color: #856404 !important;
+    border-left: 5px solid #f39c12 !important;
+    padding: 15px 20px !important;
+    margin-top: 15px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    position: relative !important;
+  }
+  
+  .catatan-display::before {
+    content: "📝";
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.2em;
+    opacity: 0.7;
+  }
+  
+  .catatan-display:hover {
+    transform: translateX(5px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  .catatan-label {
+    color: #d68910 !important;
+    font-weight: bold !important;
+    font-size: 0.85em !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .catatan-label::before {
+    content: "⚠️";
+    margin-right: 8px;
+    font-size: 1.1em;
+  }
+  
+  .no-catatan {
+    font-style: italic;
+    color: #6c757d;
+    font-size: 0.9em;
+  }
+  
+  /* Style untuk container group laporan */
+  .laporan-group {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    transition: all 0.3s ease;
+  }
+  
+  .laporan-group:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  /* New content highlight */
+  .laporan-group.new-content {
+    border-color: #4caf50;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+    animation: highlightNew 3s ease-out;
+  }
+  
+  @keyframes highlightNew {
+    0% { background-color: #e8f5e8; }
+    100% { background-color: #ffffff; }
+  }
+  
+  /* Style untuk header group */
+  .group-header {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: -20px -20px 20px -20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .group-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .group-info span {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.9em;
+  }
+  
+  /* Style untuk detail pekerjaan - BACKGROUND HIJAU MINT */
+  .pekerjaan-list {
+    background: linear-gradient(135deg, #d4edd4 0%, #c8e6c9 100%) !important;
+    border: 2px solid #4caf50 !important;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 3px 6px rgba(76, 175, 80, 0.1);
+  }
+  
+  .pekerjaan-header {
+    background: linear-gradient(135deg, #4caf50, #388e3c);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin: -20px -20px 20px -20px;
+    font-weight: bold;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pekerjaan-header::before {
+    content: "🌿";
+    margin-right: 10px;
+    font-size: 1.2em;
+  }
+  
+  .pekerjaan-item {
+    background: linear-gradient(135deg, #e8f5e8 0%, #d4edd4 100%) !important;
+    border: 2px solid #a5d6a7;
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .pekerjaan-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+    border-color: #4caf50;
+    background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%) !important;
+  }
+  
+  .pekerjaan-number {
+    position: absolute;
+    top: -12px;
+    left: 15px;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .pekerjaan-field {
+    margin-bottom: 12px;
+  }
+  
+  .pekerjaan-field:last-child {
+    margin-bottom: 0;
+  }
+  
+  .field-label {
+    font-weight: 600;
+    color: #2e7d32;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .field-value {
+    color: #37474f;
+    background: #f1f8e9;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border-left: 3px solid #4caf50;
+    font-size: 0.95em;
+    line-height: 1.4;
+  }
+  
+  /* Action buttons styling */
+  .action-buttons {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+  }
+  
+  .action-buttons .btn {
+    margin-left: 5px;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.8em;
+  }
+  
+  /* Info section styling */
+  .info-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    border: 1px solid #dee2e6;
+  }
+  
+  .info-item {
+    margin-bottom: 8px;
+  }
+  
+  .info-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .info-label {
+    font-weight: 600;
+    color: #495057;
+    min-width: 100px;
+    display: inline-block;
+  }
+  
+  .info-value {
+    color: #6c757d;
+  }
+  
+  /* Image styling */
+  .laporan-image {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .laporan-image img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .laporan-image img:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Empty state styling */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px dashed #dee2e6;
+  }
+  
+  .empty-state i {
+    font-size: 4em;
+    color: #6c757d;
+    margin-bottom: 20px;
+  }
+  
+  .empty-state h4 {
+    color: #6c757d;
+    margin-bottom: 15px;
+  }
+  
+  .empty-state p {
+    color: #adb5bd;
+    margin-bottom: 25px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .laporan-group {
+      padding: 15px;
+    }
+    
+    .group-header {
+      margin: -15px -15px 15px -15px;
+      padding: 12px 15px;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .group-info {
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .action-buttons {
+      position: static;
+      text-align: right;
+      margin-top: 15px;
+    }
+    
+    .catatan-display {
+      padding: 12px 15px;
+      margin-top: 10px;
+    }
+    
+    .catatan-display::before {
+      display: none;
+    }
+    
+    .info-section {
+      padding: 12px;
+    }
+    
+    .info-item {
+      display: block;
+      margin-bottom: 10px;
+    }
+    
+    .info-label {
+      display: block;
+      margin-bottom: 3px;
+      min-width: auto;
+    }
+    
+    .pekerjaan-list {
+      padding: 15px;
+      background: linear-gradient(135deg, #d4edd4 0%, #c8e6c9 100%) !important;
+    }
+    
+    .pekerjaan-header {
+      margin: -15px -15px 15px -15px;
+      padding: 10px 15px;
+      background: linear-gradient(135deg, #4caf50, #388e3c);
+    }
+    
+    .pekerjaan-item {
+      padding: 15px;
+      background: linear-gradient(135deg, #e8f5e8 0%, #d4edd4 100%) !important;
+    }
+    
+    .realtime-status {
+      top: 10px;
+      right: 10px;
+      font-size: 11px;
+      padding: 6px 12px;
+    }
+    
+    .update-notification {
+      top: 60px;
+      right: 10px;
+      max-width: 250px;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+  }
+  
+  /* Print styles */
+  @media print {
+    .catatan-display {
+      background: #fff3cd !important;
+      border: 2px solid #f39c12 !important;
+      box-shadow: none !important;
+    }
+    
+    .pekerjaan-list {
+      background: #e3f2fd !important;
+      border: 2px solid #2196f3 !important;
+      box-shadow: none !important;
+    }
+    
+    .action-buttons, .realtime-status, .update-notification {
+      display: none !important;
+    }
+    
+    .laporan-group {
+      box-shadow: none !important;
+      border: 1px solid #000 !important;
+    }
+  }
+</style>
+{% endblock css %}
+
+{% block content %}
+<!-- Real-time Status Indicator -->
+<div id="realtimeStatus" class="realtime-status connected" title="Klik untuk ON/OFF | Double-click untuk refresh manual">
+  <span class="status-icon">🔄</span>
+  <span class="status-text">Loading...</span>
+</div>
+
+<!-- Update Notification -->
+<div id="updateNotification" class="update-notification">
+  <strong>🔄 Auto-refresh aktif!</strong><br>
+  <small>Halaman akan refresh setiap 1 menit</small>
+</div>
+
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  
+  <!-- Card Full Width -->
+  <div class="card full-width-card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5>Data Laporan Utility - {{ selected_date|date:"d F Y" }}</h5>
+      <div>
+        <a href="{% url 'dailyactivity_app:laporan_index' %}" class="btn btn-success btn-sm mr-2">
+          <i class="fa fa-plus"></i> Tambah Laporan
+        </a>
+        <a href="{% url 'dailyactivity_app:tanggal_laporan' %}" class="btn btn-secondary btn-sm">
+          <i class="fa fa-arrow-left"></i> Kembali ke Tanggal
+        </a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="laporanContainer">
+        {% if grouped_laporan %}
+          {% for key, group in grouped_laporan.items %}
+            <div class="laporan-group" data-group-key="{{ key }}">
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <a href="{% url 'dailyactivity_app:edit_laporan' group.pekerjaan_list.0.id %}" class="btn btn-warning btn-sm edit-btn" data-laporan-id="{{ group.pekerjaan_list.0.id }}">
+                  <i class="fa fa-edit"></i> Edit
+                </a>
+                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ group.pekerjaan_list.0.id }})">
+                  <i class="fa fa-trash"></i> Delete
+                </button>
+              </div>
+              
+              <!-- Group Header -->
+              <div class="group-header">
+                <div>
+                  <i class="fa fa-user"></i> {{ group.meta.user.get_full_name|default:group.meta.user.username }}
+                </div>
+                <div class="group-info">
+                  <span><i class="fa fa-calendar"></i> {{ group.meta.tanggal|date:"d M Y" }}</span>
+                  <span><i class="fa fa-clock-o"></i> {{ group.meta.shift.name }}</span>
+                  <span><i class="fa fa-tasks"></i> {{ group.pekerjaan_list|length }} Pekerjaan</span>
+                </div>
+              </div>
+              
+              <!-- Detail Pekerjaan List -->
+              <div class="pekerjaan-list">
+                <div class="pekerjaan-header">
+                  Detail Pekerjaan Utility ({{ group.pekerjaan_list|length }} item)
+                </div>
+                
+                {% for pekerjaan in group.pekerjaan_list %}
+                  <div class="pekerjaan-item">
+                    <div class="pekerjaan-number">{{ forloop.counter }}</div>
+                    
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="pekerjaan-field">
+                          <span class="field-label">📝 Deskripsi Pekerjaan:</span>
+                          <div class="field-value">{{ pekerjaan.masalah|linebreaksbr }}</div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="pekerjaan-field">
+                          <span class="field-label">🔨 Jenis Pekerjaan:</span>
+                          <div class="field-value">{{ pekerjaan.jenis_pekerjaan|default:"Tidak ditentukan" }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="row mt-2">
+                      <div class="col-md-6">
+                        <div class="pekerjaan-field">
+                          <span class="field-label">⏱️ Lama Pekerjaan: (Jam)</span>
+                          <div class="field-value">{{ pekerjaan.lama_pekerjaan|default:"Tidak ditentukan" }}</div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="pekerjaan-field">
+                          <span class="field-label">👤 PIC Pekerjaan:</span>
+                          <div class="field-value">{{ pekerjaan.pic_pekerjaan|default:"Tidak ditentukan" }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              
+              <!-- Catatan Khusus (jika ada) -->
+              {% if group.meta.catatan %}
+                <div class="catatan-display">
+                  <span class="catatan-label">Catatan Khusus:</span>
+                  <div>{{ group.meta.catatan|linebreaksbr }}</div>
+                </div>
+              {% endif %}
+              
+              <!-- Info Tambahan -->
+              <div class="info-section">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="info-item">
+                      <span class="info-label">Tanggal:</span>
+                      <span class="info-value">{{ group.meta.tanggal|date:"d F Y" }}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-item">
+                      <span class="info-label">Shift:</span>
+                      <span class="info-value">{{ group.meta.shift.name }}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-item">
+                      <span class="info-label">PIC:</span>
+                      <span class="info-value">
+                        {% for pic in group.meta.pic %}
+                          {{ pic.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                          <span class="text-muted">Tidak ada</span>
+                        {% endfor %}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="info-item">
+                      <span class="info-label">PIC Lembur:</span>
+                      <span class="info-value">
+                        {% for pic_lembur in group.meta.piclembur %}
+                          {{ pic_lembur.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                          <span class="text-muted">Tidak ada</span>
+                        {% endfor %}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- User Info -->
+                <div class="row mt-2">
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <span class="info-label">Dibuat oleh:</span>
+                      <span class="info-value">{{ group.meta.user.get_full_name|default:group.meta.user.username }}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <span class="info-label">Waktu input:</span>
+                      <span class="info-value">{{ group.meta.created_at|date:"d F Y H:i" }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Image (jika ada) -->
+              {% if group.meta.image %}
+                <div class="laporan-image">
+                  <div class="info-label mb-2">
+                    <i class="fa fa-image"></i> Gambar Laporan:
+                  </div>
+                  <img src="{{ group.meta.image.url }}" 
+                       alt="Laporan Image" 
+                       onclick="openImageModal('{{ group.meta.image.url }}')"
+                       title="Klik untuk memperbesar">
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <i class="fa fa-file-text-o"></i>
+            <h4>Tidak ada data laporan</h4>
+            <p>Tidak ada laporan untuk tanggal {{ selected_date|date:"d F Y" }}</p>
+            <a href="{% url 'dailyactivity_app:laporan_index' %}" class="btn btn-primary">
+              <i class="fa fa-plus"></i> Tambah Laporan Baru
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal untuk konfirmasi delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">
+          <i class="fa fa-exclamation-triangle text-warning"></i> Konfirmasi Hapus
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin menghapus grup laporan ini?</p>
+        <p class="text-muted"><small>Semua pekerjaan terkait dalam grup ini akan dihapus dan tidak dapat dikembalikan.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fa fa-times"></i> Batal
+        </button>
+        <form id="deleteForm" method="post" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i class="fa fa-trash"></i> Hapus
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal untuk memperbesar gambar -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Gambar Laporan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="modalImage" src="" alt="Laporan Image" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+
+<script>
+// Original functions that work
+function confirmDelete(laporanId) {
+  var deleteForm = document.getElementById('deleteForm');
+  deleteForm.action = "{% url 'dailyactivity_app:delete_laporan' 0 %}".replace('0', laporanId);
+  $('#deleteModal').modal('show');
+}
+
+function openImageModal(imageUrl) {
+  document.getElementById('modalImage').src = imageUrl;
+  $('#imageModal').modal('show');
+}
+
+// SIMPLE AUTO-REFRESH - Refresh halaman setiap 1 menit
+var REFRESH_INTERVAL = 300; // 60 detik (ubah angka ini untuk mengatur interval)
+var countdown = REFRESH_INTERVAL;
+var refreshTimer;
+var countdownInterval;
+var isRefreshEnabled = true;
+
+// Update tampilan countdown
+function updateCountdownDisplay() {
+  var statusIndicator = document.getElementById('realtimeStatus');
+  var statusText = statusIndicator.querySelector('.status-text');
+  var statusIcon = statusIndicator.querySelector('.status-icon');
+  
+  if (isRefreshEnabled) {
+    statusText.textContent = 'Auto-refresh dalam ' + countdown + 's';
+    statusIcon.textContent = '🔄';
+    statusIndicator.className = 'realtime-status connected';
+    
+    // Log untuk debugging
+    if (countdown % 10 === 0 || countdown <= 5) {
+      console.log('Auto-refresh countdown: ' + countdown + ' seconds');
+    }
+  } else {
+    statusText.textContent = 'Auto-refresh OFF (click untuk ON)';
+    statusIcon.textContent = '⚠';
+    statusIndicator.className = 'realtime-status error';
+  }
+}
+
+// Countdown timer - berjalan setiap detik
+function startCountdown() {
+  countdownInterval = setInterval(function() {
+    if (isRefreshEnabled) {
+      countdown--;
+      updateCountdownDisplay();
+      
+      // Jika countdown mencapai 0, refresh halaman
+      if (countdown <= 0) {
+        console.log('Auto-refresh: Refreshing page now...');
+        
+        // Show refresh notification
+        showNotification('Memperbarui halaman...', 'info');
+        
+        // Update status
+        var statusIndicator = document.getElementById('realtimeStatus');
+        var statusText = statusIndicator.querySelector('.status-text');
+        var statusIcon = statusIndicator.querySelector('.status-icon');
+        statusText.textContent = 'Sedang refresh...';
+        statusIcon.textContent = '↻';
+        statusIndicator.className = 'realtime-status refreshing';
+        
+        // Refresh after 1 second delay
+        setTimeout(function() {
+          window.location.reload(true); // Force reload from server
+        }, 1000);
+        
+        return; // Stop the interval
+      }
+    }
+  }, 1000); // Update every second
+}
+
+// Reset countdown
+function resetCountdown() {
+  countdown = REFRESH_INTERVAL;
+  updateCountdownDisplay();
+  console.log('Countdown reset to ' + REFRESH_INTERVAL + ' seconds');
+}
+
+// Show notification
+function showNotification(message, type) {
+  var notification = document.getElementById('updateNotification');
+  var icons = {
+    'info': '🔄',
+    'success': '✅',
+    'warning': '⚠️',
+    'error': '❌'
+  };
+  
+  var icon = icons[type] || '🔄';
+  notification.innerHTML = '<strong>' + icon + ' ' + message + '</strong>';
+  notification.classList.add('show');
+  
+  // Hide after 3 seconds
+  setTimeout(function() {
+    notification.classList.remove('show');
+  }, 3000);
+}
+
+// Toggle auto-refresh on/off
+function toggleAutoRefresh() {
+  isRefreshEnabled = !isRefreshEnabled;
+  
+  if (isRefreshEnabled) {
+    resetCountdown();
+    showNotification('Auto-refresh DIAKTIFKAN - halaman akan refresh setiap ' + REFRESH_INTERVAL + ' detik', 'success');
+    console.log('Auto-refresh ENABLED');
+  } else {
+    showNotification('Auto-refresh DINONAKTIFKAN - klik status untuk mengaktifkan', 'warning');
+    console.log('Auto-refresh DISABLED');
+  }
+  
+  updateCountdownDisplay();
+}
+
+// Manual refresh
+function manualRefresh() {
+  console.log('Manual refresh triggered');
+  showNotification('Manual refresh...', 'info');
+  
+  setTimeout(function() {
+    window.location.reload(true);
+  }, 500);
+}
+
+// Initialize auto-refresh system
+function initializeAutoRefresh() {
+  console.log('=== AUTO-REFRESH SYSTEM STARTING ===');
+  console.log('Refresh interval: ' + REFRESH_INTERVAL + ' seconds');
+  console.log('Page will refresh every ' + (REFRESH_INTERVAL/60) + ' minute(s)');
+  
+  // Reset countdown
+  resetCountdown();
+  
+  // Start countdown timer
+  startCountdown();
+  
+  // Set up click handler for status indicator
+  var statusIndicator = document.getElementById('realtimeStatus');
+  if (statusIndicator) {
+    // Single click: toggle on/off
+    statusIndicator.addEventListener('click', function(e) {
+      e.preventDefault();
+      toggleAutoRefresh();
+    });
+    
+    // Double click: manual refresh
+    statusIndicator.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+      manualRefresh();
+    });
+    
+    // Add tooltip
+    statusIndicator.title = 'Click: ON/OFF | Double-click: Manual refresh';
+  }
+  
+  // Show welcome notification
+  setTimeout(function() {
+    showNotification('Auto-refresh AKTIF - halaman akan refresh setiap ' + REFRESH_INTERVAL + ' detik', 'success');
+  }, 2000);
+  
+  console.log('Auto-refresh system initialized successfully');
+}
+
+// Original functions that work
+function confirmDelete(laporanId) {
+  var deleteForm = document.getElementById('deleteForm');
+  deleteForm.action = "{% url 'dailyactivity_app:delete_laporan' 0 %}".replace('0', laporanId);
+  $('#deleteModal').modal('show');
+  
+  // Reset countdown when user opens modal (gives them time)
+  resetCountdown();
+  console.log('Delete modal opened - countdown reset');
+}
+
+function openImageModal(imageUrl) {
+  document.getElementById('modalImage').src = imageUrl;
+  $('#imageModal').modal('show');
+  
+  // Reset countdown when user opens modal
+  resetCountdown();
+  console.log('Image modal opened - countdown reset');
+}
+
+// Initialize everything when document is ready
+$(document).ready(function() {
+  console.log('Document ready - initializing auto-refresh system...');
+  
+  // Initialize auto-refresh
+  initializeAutoRefresh();
+  
+  // Reset countdown when user interacts with edit buttons
+  $(document).on('click', '.edit-btn', function() {
+    resetCountdown();
+    console.log('Edit button clicked - countdown reset');
+  });
+  
+  // Reset countdown when modals are opened
+  $('#deleteModal, #imageModal').on('show.bs.modal', function() {
+    resetCountdown();
+    console.log('Modal opened - countdown reset');
+  });
+  
+  // Auto-hide success messages after 5 seconds
+  setTimeout(function() {
+    $('.alert-success').fadeOut('slow');
+  }, 5000);
+  
+  // Add print functionality
+  $('.btn-print').click(function() {
+    window.print();
+  });
+  
+  // Keyboard shortcut: Ctrl+U for manual refresh
+  $(document).keydown(function(e) {
+    if (e.ctrlKey && e.which === 85) { // Ctrl+U
+      e.preventDefault();
+      manualRefresh();
+    }
+  });
+  
+  console.log('All event handlers attached successfully');
+});
+
+// Initialize basic functionality
+$(document).ready(function() {
+  // Auto-hide success messages after 5 seconds
+  setTimeout(function() {
+    $('.alert-success').fadeOut('slow');
+  }, 5000);
+  
+  // Add print functionality
+  $('.btn-print').click(function() {
+    window.print();
+  });
+});
+</script>
+{% endblock scriptcontent %}

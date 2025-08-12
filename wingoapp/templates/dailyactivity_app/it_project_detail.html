@@ -1,0 +1,156 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <div class="container">
+    <div class="card">
+      {% comment %} <div class="card-header">
+        <h3>IT Project Managementt</h3>
+      </div> {% endcomment %}
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>IT Project Management</h3>
+        <a href="{% url 'dailyactivity_app:export_excel' project.id %}" class="btn btn-success btn-sm">Export Excel</a>
+    </div>    
+    <div class="card-body">
+      <form method="POST" action="{% url 'dailyactivity_app:submit_issues' %}">
+          {% csrf_token %}
+          <input type="hidden" name="project_id" value="{{ project.id }}">
+          <div class="row mb-3">
+              <div class="col-md-6">
+                  <label for="projectName">Nama Project</label>
+                  <input type="text" class="form-control" id="projectName" name="project_name" value="{{ project.project_name }}" readonly>
+              </div>
+              <div class="col-md-6">
+                  <label for="picProject">PIC Project</label>
+                  <input type="text" class="form-control" id="picProject" name="pic_project" value="{{ project.pic_project }}" readonly>
+              </div>
+          </div>
+          <div class="row mb-3">
+              <div class="col-md-6">
+                  <label for="department">Department</label>
+                  <input type="text" class="form-control" id="department" name="department" value="{{ project.department }}" readonly>
+              </div>
+              <div class="col-md-3">
+                  <label for="dateStart">Start Date</label>
+                  <input type="date" class="form-control" id="dateStart" name="start_date" value="{{ project.start_date|date:'Y-m-d' }}" readonly>
+              </div>
+              <div class="col-md-3">
+                  <label for="dateFinish">Finish Date</label>
+                  <input type="date" class="form-control" id="dateFinish" name="finish_date" value="{{ project.finish_date|date:'Y-m-d' }}" readonly>
+              </div>
+          </div>
+  
+          <!-- Issues List -->
+          <h4>Issues List</h4>
+          <table class="table table-bordered" id="issuesTable">
+              <thead>
+                  <tr>
+                      <th>No</th>
+                      <th>Issue</th>
+                      <th>PIC</th>
+                      <th>Due Date</th>
+                      <th>Status</th>
+                      <th>Remark</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for issue in issues %}
+                  <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ issue.issue }}</td>
+                      <td>{{ issue.pic }}</td>
+                      <td>{{ issue.due_date }}</td>
+                      <td>{{ issue.status }}</td>
+                      <td>{{ issue.remark }}</td>
+                      <td>
+                          <a href="{% url 'dailyactivity_app:delete_issue' issue.id %}" class="btn btn-danger btn-sm">Delete</a>
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+  
+          <!-- Add Row and Submit Buttons -->
+          <button type="button" id="addRow" class="btn btn-primary">Add Row</button>
+          <button type="submit" class="btn btn-success">Submit</button>
+      </form>
+  </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('issuesTable').getElementsByTagName('tbody')[0];
+    const addRowButton = document.getElementById('addRow');
+
+    // Fungsi untuk memperbarui nomor urut dan nama elemen input
+    function updateRowIndexes() {
+        Array.from(table.rows).forEach((row, index) => {
+            // Update nomor urut
+            row.cells[0].textContent = index + 1;
+
+            // Update nama atribut input dan select
+            const inputs = row.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                const nameParts = input.name.split('_');
+                nameParts[nameParts.length - 1] = index + 1; // Perbarui indeks akhir
+                input.name = nameParts.join('_');
+            });
+        });
+    }
+
+    // Menambahkan baris baru
+    addRowButton.addEventListener('click', function () {
+        const rowCount = table.rows.length + 1;
+        const newRow = table.insertRow();
+
+        // Tambahkan sel ke baris baru
+        newRow.innerHTML = `
+            <td>${rowCount}</td>
+            <td><input type="text" class="form-control" name="issue_${rowCount}" placeholder="Enter Issue" required></td>
+            <td><input type="text" class="form-control" name="issue_pic_${rowCount}" placeholder="Enter PIC" required></td>
+            <td><input type="date" class="form-control" name="issue_due_${rowCount}" required></td>
+            <td>
+                <select class="form-control" name="issue_status_${rowCount}">
+                    <option value="0">0%</option>
+                    <option value="10">10%</option>
+                    <option value="20">20%</option>
+                    <option value="30">30%</option>
+                    <option value="40">40%</option>
+                    <option value="50">50%</option>
+                    <option value="60">60%</option>
+                    <option value="70">70%</option>
+                    <option value="80">80%</option>
+                    <option value="90">90%</option>
+                    <option value="100">100%</option>
+                </select>
+            </td>
+            <td><input type="text" class="form-control" name="issue_remark_${rowCount}" placeholder="Enter Remark" required></td>
+            <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
+        `;
+    });
+
+    // Menghapus baris
+    table.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            const row = e.target.closest('tr');
+            row.remove(); // Hapus baris
+            // Perbarui nomor urut dan nama elemen input setelah baris dihapus
+            updateRowIndexes();
+        }
+    });
+});
+  
+</script>
+{% endblock scriptcontent %}

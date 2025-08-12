@@ -1,44 +1,64 @@
-"""web_seiwa URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+# web_seiwa/urls.py - File URLs utama yang diperbaiki
 from django.contrib import admin
 from django.urls import path, include
-from master_app import views as view_master
-from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.auth.views import LogoutView
+
+# Import views untuk SDBM authentication
+from master_app.views import sdbm_login_view
 
 urlpatterns = [
-    # path('', include('wingoapp.urls')),
-    path('', view_master.index, name='index'),
-    path("accounts/", include("django.contrib.auth.urls")),
-    path('accounting_app/', include('accounting_app.urls')),
-    path('hrd_app/', include('hrd_app.urls')),
-    path('ga_app/', include('ga_app.urls')),
-    path('ppc_app/', include('ppc_app.urls')),
-    path('costcontrol_app/', include('costcontrol_app.urls')),
-    path('sales_app/', include('sales_app.urls')),
-    path('ie_app/', include('ie_app.urls')),
-    path('qc_app/', include('qc_app.urls')),
-    path('warehouse_app/', include('warehouse_app.urls')),
-    path('engineering_app/', include('engineering_app.urls')),
-    path('it_app/', include('it_app.urls')),
-    path('master_app/', include('master_app.urls')),
-    path('timing_app/', include('timing_app.urls')),
-    path('production_app/', include('production_app.urls')),
-    path('gatepass_app/', include('gatepass_app.urls')),
-    path('ceisa_app/', include('ceisa_app.urls')),
     path('admin/', admin.site.urls),
-    path('select2/', include('django_select2.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
+    # ===== AUTHENTICATION URLs =====
+    # SDBM Login (prioritas utama)
+    path('login/', sdbm_login_view, name='login'),  # Default login menggunakan SDBM
+    path('sdbm-login/', sdbm_login_view, name='sdbm_login'),
+    path('logout/', LogoutView.as_view(next_page='/login/'), name='logout'),
+    
+    # ===== ROOT & DASHBOARD =====
+    path('', include('master_app.urls')),  # Root URL langsung ke master_app
+    
+    # ===== APPLICATION URLs =====
+    path('master/', include('master_app.urls')),
+    path('accounting/', include('accounting_app.urls')),
+    path('hrd/', include('hrd_app.urls')),
+    path('ga/', include('ga_app.urls')),
+    path('ppc/', include('ppc_app.urls')),
+    path('costcontrol/', include('costcontrol_app.urls')),
+    path('sales/', include('sales_app.urls')),
+    path('ie/', include('ie_app.urls')),
+    path('qc/', include('qc_app.urls')),
+    path('warehouse/', include('warehouse_app.urls')),
+    path('engineering/', include('engineering_app.urls')),
+    path('it/', include('it_app.urls')),
+    path('timing/', include('timing_app.urls')),
+    path('production/', include('production_app.urls')),
+    path('gatepass/', include('gatepass_app.urls')),
+    path('ceisa/', include('ceisa_app.urls')),
+    path('dailyactivity/', include('dailyactivity_app.urls')),
+    
+    # ===== WO MAINTENANCE APP (BARU) =====
+    path('wo-maintenance/', include('wo_maintenance_app.urls')),
+    
+    # ===== APLIKASI OPSIONAL (Comment sementara untuk mencegah error) =====
+    # Uncomment setelah file URLs dibuat dan ditest
+    # path('POSEIWA/', include('POSEIWA.urls')),
+    # path('sfc_2/', include('sfc_2.urls')),
+    # path('seiwa/', include('seiwa.urls')),     # COMMENT DULU
+    # path('wingo/', include('wingoapp.urls')),  # COMMENT DULU
+]
+
+# ===== STATIC & MEDIA FILES =====
+# Untuk development - serve media files
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Hanya tambahkan jika STATICFILES_DIRS ada dan tidak kosong
+    if hasattr(settings, 'STATICFILES_DIRS') and settings.STATICFILES_DIRS:
+        urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+
+# ===== ERROR HANDLERS (opsional) =====
+# Uncomment jika ingin custom error pages
+# handler404 = 'master_app.views.custom_404'
+# handler500 = 'master_app.views.custom_500'

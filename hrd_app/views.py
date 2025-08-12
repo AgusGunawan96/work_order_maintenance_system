@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator # tambahan
+from django.shortcuts import get_object_or_404 # tambahan
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import check_password
 from django.http import Http404, HttpResponse, JsonResponse
 from dateutil.parser import parse
@@ -31,6 +33,8 @@ from django.utils.dateparse import parse_date
 from django.contrib.auth import get_user_model
 import os
 from django.conf import settings
+from django.utils import timezone
+from django.core.paginator import Paginator
 
 # import usb.core
 # import usb.util
@@ -124,31 +128,182 @@ def kesejahteraan_index(request):
 # KESEJAHTERAAN END
 
 # MEDICAL TRAIN START
+# @login_required
+# def medical_train_index(request):
+#     medical_approval_list       = medicalApprovalList.objects.filter(user_id = request.user).first()
+#     medical_header              = medicalHeader.objects.filter(user_id = request.user).order_by('-id')
+#     medical_modal               = medicalHeader.objects.order_by('-id')
+#     medical_log_accounting      = medicalLogDownloadAccounting.objects.order_by('-id').first()
+#     medical_remain_user = medicalRemain.objects.filter(user = request.user).first()
+#     medical_atasan = False
+#     medical_date = medicalHeader.objects.annotate(
+#         year_month=Substr('medical_no', 4, 6)
+#     ).values('year_month').distinct().all()
+#     year_month_list = [entry['year_month'] for entry in medical_date]
+#     yml = []
+#     for year_month in year_month_list:
+#         year = year_month[:4]
+#         month_number = int(year_month[4:])
+#         month_name = calendar.month_name[month_number]
+#         yml.append(f"{month_name} {year}")
+
+#     if not medical_header:
+#         medical_header = None
+#     # Kondisi Approval 
+#     if medical_approval_list:
+#         if medical_approval_list.is_foreman:
+#             medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+#             medical_approval_reason_foreman = medicalReasonForemanForms()
+#             medical_atasan = True
+#         else:
+#             medical_approval_foreman = None
+#             medical_approval_reason_foreman = None
+
+#         if medical_approval_list.is_supervisor:
+#             medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(medical__is_foreman = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+#             medical_approval_reason_supervisor = medicalReasonSupervisorForms()
+#             medical_atasan = True
+#         else:
+#             medical_approval_supervisor = None
+#             medical_approval_reason_supervisor = None
+
+#         if medical_approval_list.is_manager:
+#             medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+#             medical_approval_reason_manager = medicalReasonManagerForms()
+#             medical_atasan = True
+#         else:
+#             medical_approval_manager = None
+#             medical_approval_reason_manager = None
+
+#         if medical_approval_list.is_hr:
+#             medical_approval_hr         = medicalApprovalHR.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+#             medical_approval_reason_hr  = medicalReasonHRForms()
+#             medical_klaim_status        = medicalStatusKlaimForms()
+#             medical_reject_klaim_status = medicalRejectStatusKlaimForms()
+#             medical_atasan = True
+#         else:
+#             medical_approval_hr         = None
+#             medical_approval_reason_hr  = None
+#             medical_klaim_status        = None
+#             medical_reject_klaim_status = None
+#     else:
+#         medical_approval_foreman            = None
+#         medical_approval_supervisor         = None
+#         medical_approval_manager            = None
+#         medical_approval_hr                 = None
+#         medical_approval_reason_foreman     = None
+#         medical_approval_reason_supervisor  = None
+#         medical_approval_reason_manager     = None
+#         medical_approval_reason_hr          = None
+#         medical_klaim_status                = None
+#         medical_reject_klaim_status         = None
+    
+#     medical_update_remain                   = FileUploadRemainResetForm()
+
+#     context = {
+#         'medical_header'                            : medical_header,
+#         'medical_approval_foreman'                  : medical_approval_foreman, 
+#         'medical_approval_supervisor'               : medical_approval_supervisor, 
+#         'medical_approval_manager'                  : medical_approval_manager, 
+#         'medical_approval_hr'                       : medical_approval_hr, 
+#         'medical_approval_list'                     : medical_approval_list,
+#         'medical_modal'                             : medical_modal,
+#         'medical_date'                              : yml,
+#         'medical_atasan'                            : medical_atasan,
+#         'medical_remain_user'                       : medical_remain_user,
+#         'log'                                       : medical_log_accounting,
+#         'form_medical_approval_reason_foreman'      : medical_approval_reason_foreman ,
+#         'form_medical_approval_reason_supervisor'   : medical_approval_reason_supervisor ,
+#         'form_medical_approval_reason_manager'      : medical_approval_reason_manager ,
+#         'form_medical_approval_reason_hr'           : medical_approval_reason_hr ,
+#         'form_medical_klaim_status'                 : medical_klaim_status ,
+#         'form_medical_reject_klaim_status'          : medical_reject_klaim_status,
+#         'form_medical_update_remain'          : medical_update_remain,
+#     }
+        
+#     return render(request, 'hrd_app/medical_train_index.html', context)
+
 @login_required
 def medical_train_index(request):
-    medical_approval_list       = medicalApprovalList.objects.filter(user_id = request.user).first()
-    medical_header              = medicalHeader.objects.filter(user_id = request.user).order_by('-id')
-    medical_modal               = medicalHeader.objects.order_by('-id')
-    medical_log_accounting      = medicalLogDownloadAccounting.objects.order_by('-id').first()
-    medical_remain_user = medicalRemain.objects.filter(user = request.user).first()
-    medical_atasan = False
+    # user = request.user
+    # medical_approval_list = medicalApprovalList.objects.filter(user=user).first()
+
+    user = request.user
+    medical_approval_list = medicalApprovalList.objects.filter(user=user).first()
+
+    # Ambil informasi pengguna terkait departemen
+    user_profile = user.userprofileinfo  # Pastikan ini sesuai dengan relasi model Anda
+
+    # Cek apakah pengguna berada di departemen yang diizinkan akses tanpa batas
+    allowed_departments = ['Human Resource & General Affairs', 'Engineering']
+
+    # Ambil nama departemen pengguna
+    user_department_name = user_profile.department.department_name if user_profile.department else None
+
+    # Cek apakah departemen pengguna termasuk dalam departemen yang diizinkan
+    is_allowed_department = user_department_name in allowed_departments
+
+    # Dapatkan jam saat ini (timezone lokal server)
+    current_time = timezone.now()  # Dapatkan waktu lokal
+    current_hour = current_time.hour
+    current_minute = current_time.minute
+
+    # Logika akses waktu terbatas (menambahkan interval waktu yang diizinkan)
+    allowed_times = [
+        (6, 0, 7, 0),     # 09:30 - 10:00
+        (9, 30, 9, 40),    # 11:40 - 13:00
+        (11, 45, 12, 45),     # 14:00 - 14:30
+        (14, 5, 14, 15),    # 15:55 - 16:30
+        (18, 0, 18, 30),    # 17:50 - 18:30
+        (22, 0, 22, 30),    # 19:40 - 20:10
+    ]
+
+    # Cek apakah waktu saat ini berada dalam rentang waktu yang diizinkan
+    is_within_allowed_time = any(
+        (start_hour < current_hour < end_hour) or
+        (start_hour == current_hour and current_minute >= start_minute) and
+        (end_hour == current_hour and current_minute <= end_minute) or
+        (start_hour == current_hour and current_minute >= start_minute and
+        end_hour == current_hour and current_minute <= end_minute)
+        for start_hour, start_minute, end_hour, end_minute in allowed_times
+    )
+
+    # Jika pengguna bukan dari departemen yang diizinkan akses tanpa batas dan tidak dalam waktu akses yang diperbolehkan
+    if not is_allowed_department and not is_within_allowed_time:
+        return render(request, 'hrd_app/restricted_access.html')  # Halaman tanpa akses
+
+    
+    # Gunakan select_related untuk mengurangi query ke database
+    medical_header = medicalHeader.objects.filter(user=user).order_by('-id').select_related('hr')[:10]
+    medical_modal = medicalHeader.objects.order_by('-id').select_related('hr')[:10]
+    medical_log_accounting = medicalLogDownloadAccounting.objects.order_by('-id').first()
+    medical_remain_user = medicalRemain.objects.filter(user=user).first()
+    
+    # Paginate jika data sangat besar
+    paginator = Paginator(medical_header, 10)  # 10 items per page
+    page_number = request.GET.get('page')
+    medical_header_page = paginator.get_page(page_number)
+    
+    # Optimalisasi distinct query
     medical_date = medicalHeader.objects.annotate(
         year_month=Substr('medical_no', 4, 6)
-    ).values('year_month').distinct().all()
-    year_month_list = [entry['year_month'] for entry in medical_date]
+    ).values_list('year_month', flat=True).distinct()
+
     yml = []
-    for year_month in year_month_list:
+    for year_month in medical_date:
         year = year_month[:4]
         month_number = int(year_month[4:])
         month_name = calendar.month_name[month_number]
         yml.append(f"{month_name} {year}")
 
-    if not medical_header:
-        medical_header = None
-    # Kondisi Approval 
+    medical_atasan = False
     if medical_approval_list:
         if medical_approval_list.is_foreman:
-            medical_approval_foreman    = medicalApprovalForeman.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+            medical_approval_foreman = medicalApprovalForeman.objects.filter(
+                medical__is_delete=False, medical__is_complete=False, medical__is_foreman=False,
+                medical__is_supervisor=False, medical__is_manager=False, is_approve=False,
+                is_reject=False, medical__is_reject=False
+            ).order_by('-id')
             medical_approval_reason_foreman = medicalReasonForemanForms()
             medical_atasan = True
         else:
@@ -156,7 +311,11 @@ def medical_train_index(request):
             medical_approval_reason_foreman = None
 
         if medical_approval_list.is_supervisor:
-            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_supervisor = False).filter(medical__is_foreman = False).filter(medical__is_manager = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+            medical_approval_supervisor = medicalApprovalSupervisor.objects.filter(
+                medical__is_delete=False, medical__is_complete=False, medical__is_supervisor=False,
+                medical__is_foreman=False, medical__is_manager=False, is_approve=False,
+                is_reject=False, medical__is_reject=False
+            ).order_by('-id')
             medical_approval_reason_supervisor = medicalReasonSupervisorForms()
             medical_atasan = True
         else:
@@ -164,7 +323,11 @@ def medical_train_index(request):
             medical_approval_reason_supervisor = None
 
         if medical_approval_list.is_manager:
-            medical_approval_manager    = medicalApprovalManager.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(medical__is_manager = False).filter(medical__is_foreman = False).filter(medical__is_supervisor = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
+            medical_approval_manager = medicalApprovalManager.objects.filter(
+                medical__is_delete=False, medical__is_complete=False, medical__is_manager=False,
+                medical__is_foreman=False, medical__is_supervisor=False, is_approve=False,
+                is_reject=False, medical__is_reject=False
+            ).order_by('-id')
             medical_approval_reason_manager = medicalReasonManagerForms()
             medical_atasan = True
         else:
@@ -172,52 +335,55 @@ def medical_train_index(request):
             medical_approval_reason_manager = None
 
         if medical_approval_list.is_hr:
-            medical_approval_hr         = medicalApprovalHR.objects.filter(medical__is_delete = False).filter(medical__is_complete = False).filter(is_approve = False).filter(is_reject = False).filter(medical__is_reject = False).order_by('-id')
-            medical_approval_reason_hr  = medicalReasonHRForms()
-            medical_klaim_status        = medicalStatusKlaimForms()
+            medical_approval_hr = medicalApprovalHR.objects.filter(
+                medical__is_delete=False, medical__is_complete=False, is_approve=False,
+                is_reject=False, medical__is_reject=False
+            ).order_by('-id')
+            medical_approval_reason_hr = medicalReasonHRForms()
+            medical_klaim_status = medicalStatusKlaimForms()
             medical_reject_klaim_status = medicalRejectStatusKlaimForms()
             medical_atasan = True
         else:
-            medical_approval_hr         = None
-            medical_approval_reason_hr  = None
-            medical_klaim_status        = None
+            medical_approval_hr = None
+            medical_approval_reason_hr = None
+            medical_klaim_status = None
             medical_reject_klaim_status = None
     else:
-        medical_approval_foreman            = None
-        medical_approval_supervisor         = None
-        medical_approval_manager            = None
-        medical_approval_hr                 = None
-        medical_approval_reason_foreman     = None
-        medical_approval_reason_supervisor  = None
-        medical_approval_reason_manager     = None
-        medical_approval_reason_hr          = None
-        medical_klaim_status                = None
-        medical_reject_klaim_status         = None
+        medical_approval_foreman = None
+        medical_approval_supervisor = None
+        medical_approval_manager = None
+        medical_approval_hr = None
+        medical_approval_reason_foreman = None
+        medical_approval_reason_supervisor = None
+        medical_approval_reason_manager = None
+        medical_approval_reason_hr = None
+        medical_klaim_status = None
+        medical_reject_klaim_status = None
     
-    medical_update_remain                   = FileUploadRemainResetForm()
+    medical_update_remain = FileUploadRemainResetForm()
 
     context = {
-        'medical_header'                            : medical_header,
-        'medical_approval_foreman'                  : medical_approval_foreman, 
-        'medical_approval_supervisor'               : medical_approval_supervisor, 
-        'medical_approval_manager'                  : medical_approval_manager, 
-        'medical_approval_hr'                       : medical_approval_hr, 
-        'medical_approval_list'                     : medical_approval_list,
-        'medical_modal'                             : medical_modal,
-        'medical_date'                              : yml,
-        'medical_atasan'                            : medical_atasan,
-        'medical_remain_user'                       : medical_remain_user,
-        'log'                                       : medical_log_accounting,
-        'form_medical_approval_reason_foreman'      : medical_approval_reason_foreman ,
-        'form_medical_approval_reason_supervisor'   : medical_approval_reason_supervisor ,
-        'form_medical_approval_reason_manager'      : medical_approval_reason_manager ,
-        'form_medical_approval_reason_hr'           : medical_approval_reason_hr ,
-        'form_medical_klaim_status'                 : medical_klaim_status ,
-        'form_medical_reject_klaim_status'          : medical_reject_klaim_status,
-        'form_medical_update_remain'          : medical_update_remain,
+        'medical_header': medical_header_page,  # gunakan paginated medical_header
+        'medical_approval_foreman': medical_approval_foreman,
+        'medical_approval_supervisor': medical_approval_supervisor,
+        'medical_approval_manager': medical_approval_manager,
+        'medical_approval_hr': medical_approval_hr,
+        'medical_approval_list': medical_approval_list,
+        'medical_modal': medical_modal,
+        'medical_date': yml,
+        'medical_atasan': medical_atasan,
+        'medical_remain_user': medical_remain_user,
+        'log': medical_log_accounting,
+        'form_medical_approval_reason_foreman': medical_approval_reason_foreman,
+        'form_medical_approval_reason_supervisor': medical_approval_reason_supervisor,
+        'form_medical_approval_reason_manager': medical_approval_reason_manager,
+        'form_medical_approval_reason_hr': medical_approval_reason_hr,
+        'form_medical_klaim_status': medical_klaim_status,
+        'form_medical_reject_klaim_status': medical_reject_klaim_status,
+        'form_medical_update_remain': medical_update_remain,
     }
-        
-    return render(request, 'hrd_app/medical_train_index.html', context)
+
+    return render(request, 'hrd_app/medical_train_index.html',context)
 
 @login_required
 def medical_train_complete_index(request):
@@ -323,7 +489,7 @@ def medical_train_add(request):
         medical_pemberi_layananan   = medicalPemberiLayananForms()
         medical_pelayanan_kesehatan = medicalPelayananKesehatanForms(request.POST or None, user=curr_user)
         medical_status_claim        = medicalStatusKlaimForms()
-        medical_attachment          = medicalAttachmentForms()
+        medical_attachment          = medicalAttachmentForms()  
         medical_remain_user         = medicalRemain.objects.filter(user = request.user).first()
         value_without_commas        = str( medical_remain_user.remain).replace(',', '')
     context = {

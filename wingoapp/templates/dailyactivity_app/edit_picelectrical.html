@@ -1,0 +1,48 @@
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+  {% include 'starter_kit/layout/breadcrumb.html' %}
+  <div class="container-fluid">
+    <div class="row starter-main">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h5>Edit PIC Electrical</h5>
+          </div>
+          <div class="card-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="name" class="form-label">Machine Electrical Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ form.name.value }}" required>
+              </div>
+              <div class="mb-3">
+                <label for="nokar" class="form-label">Nomor Karyaman</label>
+                <input type="text" class="form-control" id="nokar" name="nokar" value="{{ form.nokar.value }}" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Update PIC Electrical</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
+<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<!-- Plugins JS Ends-->
+{% endblock scriptcontent %}
