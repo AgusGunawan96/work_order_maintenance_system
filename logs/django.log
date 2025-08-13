@@ -4304,3 +4304,177 @@ INFO 2025-08-13 10:51:50,800 autoreload 13048 18228 C:\xampp7.2\htdocs\wo_mainte
 INFO 2025-08-13 10:51:52,718 autoreload 2440 11004 Watching for file changes with StatReloader
 INFO 2025-08-13 10:53:07,506 autoreload 2440 11004 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
 INFO 2025-08-13 10:53:09,447 autoreload 1408 16236 Watching for file changes with StatReloader
+INFO 2025-08-13 10:54:35,232 basehttp 1408 17444 "GET /wo-maintenance/daftar/?mode=approved&search= HTTP/1.1" 302 0
+INFO 2025-08-13 10:54:35,378 basehttp 1408 17444 "GET /login/?next=/wo-maintenance/daftar/%3Fmode%3Dapproved%26search%3D HTTP/1.1" 200 10284
+INFO 2025-08-13 10:54:44,090 views 1408 10204 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 10:54:44,136 authentication 1408 10204 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 10:54:44,136 authentication 1408 10204 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 10:54:44,151 views 1408 10204 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 10:54:44,152 views 1408 10204 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/?mode=approved&search=
+INFO 2025-08-13 10:54:44,156 basehttp 1408 10204 "POST /login/?next=/wo-maintenance/daftar/%3Fmode%3Dapproved%26search%3D HTTP/1.1" 302 0
+ERROR 2025-08-13 10:54:44,267 utils 1408 10204 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:54:44,268 views 1408 10204 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:54:44,288 views 1408 10204 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 10:54:44,408 basehttp 1408 10204 "GET /wo-maintenance/daftar/?mode=approved&search= HTTP/1.1" 200 37574
+ERROR 2025-08-13 10:54:55,747 utils 1408 332 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:54:55,786 views 1408 332 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:54:55,850 basehttp 1408 332 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33270
+ERROR 2025-08-13 10:55:01,938 utils 1408 14920 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:55:01,963 views 1408 14920 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:55:02,030 basehttp 1408 14920 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 33270
+ERROR 2025-08-13 10:55:03,328 utils 1408 14920 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:55:03,329 views 1408 14920 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:55:03,342 views 1408 14920 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 10:55:03,416 basehttp 1408 14920 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 37291
+WARNING 2025-08-13 10:55:10,925 views 1408 11416 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 10:55:10,928 basehttp 1408 11416 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 10:55:11,005 utils 1408 11416 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:55:11,031 views 1408 11416 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:55:11,096 basehttp 1408 11416 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33575
+INFO 2025-08-13 10:55:23,881 basehttp 1408 11196 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:55:23,940 basehttp 1408 11196 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:55:24,035 basehttp 1408 11196 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 10:55:27,732 views 1408 10064 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 10:55:27,743 authentication 1408 10064 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 10:55:27,749 views 1408 10064 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 10:55:27,749 views 1408 10064 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-13 10:55:27,753 basehttp 1408 10064 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-13 10:55:27,833 utils 1408 10064 Error getting SDBM assignments for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:55:27,921 views 1408 10064 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:55:28,005 basehttp 1408 10064 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30839
+ERROR 2025-08-13 10:55:32,569 utils 1408 18040 Error getting SDBM assignments for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:55:32,640 views 1408 18040 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:55:32,706 basehttp 1408 18040 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 30554
+ERROR 2025-08-13 10:55:34,905 utils 1408 18040 Error getting SDBM assignments for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:55:34,973 views 1408 18040 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:55:35,035 basehttp 1408 18040 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+INFO 2025-08-13 10:55:39,956 basehttp 1408 15824 "GET /wo-maintenance/input/ HTTP/1.1" 200 47213
+ERROR 2025-08-13 10:55:43,737 utils 1408 12964 Error getting SDBM assignments for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:55:43,807 views 1408 12964 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:55:43,879 basehttp 1408 12964 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+ERROR 2025-08-13 10:56:24,879 utils 1408 17916 Error getting SDBM assignments for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:56:24,946 views 1408 17916 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:56:25,016 basehttp 1408 17916 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+INFO 2025-08-13 10:56:27,887 basehttp 1408 17960 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:56:27,936 basehttp 1408 17960 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:56:28,032 basehttp 1408 17960 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 10:56:33,719 views 1408 16792 LOGIN ATTEMPT: 002186
+INFO 2025-08-13 10:56:33,734 authentication 1408 16792 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-13 10:56:33,743 views 1408 16792 LOGIN: Using existing session data for 002186
+INFO 2025-08-13 10:56:33,743 views 1408 16792 LOGIN REDIRECT: 002186 -> /wo-maintenance/daftar/
+INFO 2025-08-13 10:56:33,748 basehttp 1408 16792 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-13 10:56:33,835 utils 1408 16792 Error getting SDBM assignments for 002186: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:56:33,861 views 1408 16792 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 10:56:33,923 basehttp 1408 16792 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34494
+INFO 2025-08-13 10:56:47,451 basehttp 1408 6492 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29026
+ERROR 2025-08-13 10:57:13,212 utils 1408 11776 Error getting SDBM assignments for 002186: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:57:13,229 views 1408 11776 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:57:13,301 basehttp 1408 11776 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30502
+INFO 2025-08-13 10:57:14,691 basehttp 1408 11776 "GET /wo-maintenance/input/ HTTP/1.1" 200 47177
+INFO 2025-08-13 10:57:18,891 basehttp 1408 12388 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755057435020 HTTP/1.1" 200 292
+INFO 2025-08-13 10:57:33,010 forms 1408 2884 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-13 10:57:33,033 views 1408 2884 SAVE: Inserting pengajuan WO20250813001
+INFO 2025-08-13 10:57:33,039 views 1408 2884 SUCCESS: Pengajuan WO20250813001 berhasil disimpan
+INFO 2025-08-13 10:57:33,041 basehttp 1408 2884 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+ERROR 2025-08-13 10:57:33,124 utils 1408 2884 Error getting SDBM assignments for 002186: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:57:33,142 views 1408 2884 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 10:57:33,208 basehttp 1408 2884 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34884
+INFO 2025-08-13 10:57:40,199 basehttp 1408 15952 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:57:40,249 basehttp 1408 15952 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:57:40,349 basehttp 1408 15952 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 10:57:45,354 views 1408 14376 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 10:57:45,375 authentication 1408 14376 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 10:57:45,380 views 1408 14376 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 10:57:45,381 views 1408 14376 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 10:57:45,385 basehttp 1408 14376 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-13 10:57:45,461 utils 1408 14376 Error getting SDBM assignments for 002104: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:57:45,520 views 1408 14376 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 10:57:45,593 basehttp 1408 14376 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 37280
+INFO 2025-08-13 10:57:49,506 basehttp 1408 17900 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 34822
+INFO 2025-08-13 10:58:02,458 views 1408 17072 Pengajuan WO20250813001 approved by BADRI KIMAN - sent to review queue
+INFO 2025-08-13 10:58:02,466 views 1408 17072 Review tables and columns verified/created successfully
+INFO 2025-08-13 10:58:02,473 views 1408 17072 Pengajuan WO20250813001 disetujui by BADRI KIMAN
+INFO 2025-08-13 10:58:02,474 basehttp 1408 17072 "POST /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:58:02,624 basehttp 1408 17072 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 31417
+INFO 2025-08-13 10:58:09,464 basehttp 1408 1660 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:58:09,518 basehttp 1408 1660 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:58:09,612 basehttp 1408 1660 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 10:58:15,719 views 1408 1660 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 10:58:15,731 authentication 1408 1660 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 10:58:15,732 authentication 1408 1660 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 10:58:15,739 views 1408 1660 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 10:58:15,741 views 1408 1660 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 10:58:15,746 basehttp 1408 1660 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+WARNING 2025-08-13 10:58:15,836 views 1408 1660 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 10:58:15,840 basehttp 1408 1660 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 10:58:15,920 utils 1408 1660 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:58:15,944 views 1408 1660 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:58:16,010 basehttp 1408 1660 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33844
+ERROR 2025-08-13 10:58:21,404 utils 1408 1660 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:58:21,423 views 1408 1660 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:58:21,490 basehttp 1408 1660 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33270
+ERROR 2025-08-13 10:58:25,616 utils 1408 1660 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:58:25,617 views 1408 1660 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:58:25,631 views 1408 1660 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 10:58:25,700 basehttp 1408 1660 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 37674
+ERROR 2025-08-13 10:58:30,669 views 1408 9916 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 10:58:30,670 basehttp 1408 9916 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 10:58:30,738 views 1408 9916 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 10:58:30,739 basehttp 1408 9916 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:58:30,903 basehttp 1408 9916 "GET /wo-maintenance/ HTTP/1.1" 200 28268
+ERROR 2025-08-13 10:58:33,494 utils 1408 9916 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:58:33,523 views 1408 9916 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:58:33,609 basehttp 1408 9916 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33874
+ERROR 2025-08-13 10:58:37,434 utils 1408 16924 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:58:37,436 views 1408 16924 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:58:37,450 views 1408 16924 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 10:58:37,516 basehttp 1408 16924 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 37674
+INFO 2025-08-13 10:58:44,229 forms 1408 16924 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 10:58:44,250 utils 1408 16924 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 10:58:44,256 utils 1408 16924 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 10:58:44,260 utils 1408 16924 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 10:58:44,265 utils 1408 16924 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 10:58:44,340 basehttp 1408 16924 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33721
+INFO 2025-08-13 10:58:56,776 forms 1408 9732 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 10:58:56,789 utils 1408 9732 Starting SITI review assignment for WO20250813001 to elektrik
+INFO 2025-08-13 10:58:56,809 utils 1408 9732 Updated section tujuan for WO20250813001 to section ID 5
+ERROR 2025-08-13 10:58:56,822 utils 1408 9732 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+WARNING 2025-08-13 10:58:56,823 utils 1408 9732 No SDBM supervisors found for elektrik
+WARNING 2025-08-13 10:58:56,824 views 1408 9732 SITI REVIEW: WO20250813001 processed but no SDBM supervisors found for elektrik
+INFO 2025-08-13 10:58:56,851 utils 1408 9732 Enhanced review tables verified/created successfully
+ERROR 2025-08-13 10:58:56,854 utils 1408 9732 Error logging enhanced review action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'priority_level'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:58:56,856 basehttp 1408 9732 "POST /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:58:56,919 forms 1408 9732 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 10:58:56,926 utils 1408 9732 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 10:58:56,932 utils 1408 9732 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 10:58:56,936 utils 1408 9732 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 10:58:56,940 utils 1408 9732 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 10:58:56,998 basehttp 1408 9732 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 31452
+ERROR 2025-08-13 10:59:43,793 utils 1408 11780 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:59:43,819 views 1408 11780 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 10:59:43,896 basehttp 1408 11780 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33270
+ERROR 2025-08-13 10:59:46,745 utils 1408 9788 Error getting SDBM assignments for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:59:46,746 views 1408 9788 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:59:46,756 views 1408 9788 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 10:59:46,833 basehttp 1408 9788 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 37175
+INFO 2025-08-13 11:00:05,073 basehttp 1408 13252 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:00:05,130 basehttp 1408 13252 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:00:05,235 basehttp 1408 13252 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:00:20,830 views 1408 14368 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 11:00:20,854 authentication 1408 14368 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 11:00:20,861 views 1408 14368 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 11:00:20,862 views 1408 14368 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:00:20,868 basehttp 1408 14368 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-13 11:00:20,936 utils 1408 14368 Error getting SDBM assignments for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 11:00:21,000 views 1408 14368 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:00:21,062 basehttp 1408 14368 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30839
+ERROR 2025-08-13 11:00:26,788 utils 1408 13140 Error getting SDBM assignments for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 11:00:26,864 views 1408 13140 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:00:26,933 basehttp 1408 13140 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+ERROR 2025-08-13 11:00:28,563 utils 1408 13140 Error getting SDBM assignments for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'target_section'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'section_name'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 11:00:28,632 views 1408 13140 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:00:28,699 basehttp 1408 13140 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 30554
+INFO 2025-08-13 11:13:56,265 autoreload 1408 16236 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-13 11:13:58,139 autoreload 6608 15712 Watching for file changes with StatReloader
+INFO 2025-08-13 11:14:18,748 autoreload 16116 17292 Watching for file changes with StatReloader
+INFO 2025-08-13 11:14:33,433 autoreload 18316 15244 Watching for file changes with StatReloader
