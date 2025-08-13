@@ -5,9 +5,25 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# ===== FIXED STATUS CONSTANTS =====
+STATUS_PENDING = '0'      # Pending
+STATUS_APPROVED = 'A'     # FIXED: Approved menggunakan 'A' bukan '1'
+STATUS_REJECTED = '2'     # Rejected
+STATUS_IN_PROGRESS = '3'  # In Progress
+STATUS_COMPLETED = '4'    # Completed
+
+APPROVE_NO = '0'          # Not Approved
+APPROVE_YES = 'Y'         # FIXED: Approved menggunakan 'Y' bukan '1'
+APPROVE_REJECTED = '2'    # Rejected
+
+# ===== REVIEWER CONSTANTS =====
+REVIEWER_EMPLOYEE_NUMBER = '007522'  # SITI FATIMAH
+REVIEWER_FULLNAME = 'SITI FATIMAH'
+
 def get_employee_hierarchy_data(user):
     """
     Mendapatkan data hierarchy employee dari database SDBM berdasarkan user yang login
+    ENHANCED: Special handling untuk SITI FATIMAH
     
     Returns:
         dict: Data hierarchy employee atau None jika tidak ditemukan
@@ -72,7 +88,7 @@ def get_employee_hierarchy_data(user):
             row = cursor.fetchone()
             
             if row:
-                return {
+                employee_data = {
                     'employee_id': row[0],
                     'fullname': row[1],
                     'nickname': row[2],
@@ -94,6 +110,19 @@ def get_employee_hierarchy_data(user):
                     'is_general_manager': row[18],
                     'is_bod': row[19]
                 }
+                
+                # ENHANCED: Special privileges untuk SITI FATIMAH
+                if employee_data['employee_number'] == REVIEWER_EMPLOYEE_NUMBER:
+                    employee_data.update({
+                        'is_reviewer': True,
+                        'has_full_access': True,
+                        'can_access_all_pengajuan': True,
+                        'review_authority': 'ALL_SECTIONS',
+                        'special_role': 'REVIEWER_SITI_FATIMAH'
+                    })
+                    logger.info(f"Enhanced privileges granted to SITI FATIMAH: {employee_data['fullname']}")
+                
+                return employee_data
             else:
                 logger.warning(f"Employee data not found for user: {user.username}")
                 return None
@@ -106,6 +135,7 @@ def get_employee_hierarchy_data(user):
 def can_user_approve(user_hierarchy, target_user_hierarchy):
     """
     Mengecek apakah user dapat melakukan approve terhadap target user berdasarkan hierarchy
+    ENHANCED: Special handling untuk SITI FATIMAH
     
     Args:
         user_hierarchy (dict): Data hierarchy user yang akan melakukan approve
@@ -116,6 +146,11 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
     """
     if not user_hierarchy or not target_user_hierarchy:
         return False
+    
+    # ENHANCED: SITI FATIMAH dapat approve semua pengajuan
+    if user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
+        logger.info(f"SITI FATIMAH approval privilege granted for user: {target_user_hierarchy.get('fullname')}")
+        return True
     
     # Supervisor/Manager/GM/BOD dapat approve
     user_title = str(user_hierarchy.get('title_name', '')).upper()
@@ -170,13 +205,13 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
     
     # Jika user adalah manager/supervisor berdasarkan flag database
     if is_manager:
-        user_level = max(user_level, 7)
+        user_level = max(user_level, 12)
     elif is_supervisor:
-        user_level = max(user_level, 6)
-    elif is_general_manager:
-        user_level = max(user_level, 8)
-    elif is_bod:
         user_level = max(user_level, 9)
+    elif is_general_manager:
+        user_level = max(user_level, 13)
+    elif is_bod:
+        user_level = max(user_level, 15)
     
     # Tentukan level target user
     target_level = 0
@@ -185,9 +220,9 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
             target_level = max(target_level, level)
     
     if target_is_manager:
-        target_level = max(target_level, 7)
+        target_level = max(target_level, 12)
     elif target_is_supervisor:
-        target_level = max(target_level, 6)
+        target_level = max(target_level, 9)
     
     # User dapat approve jika levelnya lebih tinggi dari target
     level_check = user_level > target_level
@@ -214,6 +249,7 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
 def get_subordinate_employee_numbers(user_hierarchy):
     """
     Mendapatkan daftar employee_number dari bawahan berdasarkan hierarchy
+    ENHANCED: SITI FATIMAH mendapat akses ke semua pengajuan
     
     Args:
         user_hierarchy (dict): Data hierarchy user
@@ -223,6 +259,25 @@ def get_subordinate_employee_numbers(user_hierarchy):
     """
     if not user_hierarchy:
         return []
+    
+    # ENHANCED: SITI FATIMAH dapat mengakses SEMUA pengajuan
+    if user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
+        try:
+            with connections['SDBM'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT DISTINCT e.employee_number
+                    FROM [hrbp].[employees] e
+                    WHERE e.is_active = 1
+                """)
+                
+                all_employees = [row[0] for row in cursor.fetchall() if row[0]]
+                logger.info(f"SITI FATIMAH granted access to ALL {len(all_employees)} employees")
+                return all_employees
+                
+        except Exception as e:
+            logger.error(f"Error getting all employees for SITI FATIMAH: {e}")
+            # Fallback: return large list untuk ensure access
+            return ['*']  # Special indicator untuk all access
     
     try:
         employee_numbers = []
@@ -406,17 +461,146 @@ def get_employee_by_number(employee_number):
         logger.error(f"Error getting employee by number {employee_number}: {e}")
         return None
 
+def get_supervisors_by_section_and_level(section_mapping_key, min_level='assistant_supervisor'):
+    """
+    Mendapatkan supervisors berdasarkan section mapping dan minimum level
+    ENHANCED: Untuk mendukung SITI FATIMAH assignment berdasarkan level
+    
+    Args:
+        section_mapping_key (str): Key section mapping (it, elektrik, mekanik, utility)
+        min_level (str): Minimum level supervisor yang dibutuhkan
+        
+    Returns:
+        list: Daftar supervisors yang memenuhi kriteria
+    """
+    if not section_mapping_key:
+        return []
+    
+    try:
+        # Get section mapping
+        section_mapping = get_sdbm_section_mapping()
+        target_mapping = section_mapping.get(section_mapping_key)
+        
+        if not target_mapping:
+            logger.warning(f"No section mapping found for: {section_mapping_key}")
+            return []
+        
+        department_name = target_mapping['department_name']
+        section_name = target_mapping['section_name']
+        
+        # Define minimum levels
+        level_hierarchy = {
+            'assistant_supervisor': 8,
+            'supervisor': 9,
+            'senior_supervisor': 10,
+            'manager': 12,
+            'general_manager': 13,
+            'director': 14
+        }
+        
+        min_level_value = level_hierarchy.get(min_level, 8)
+        
+        supervisors = []
+        
+        with connections['SDBM'].cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT
+                    e.employee_number,
+                    e.fullname,
+                    e.nickname,
+                    t.Name as title_name,
+                    t.is_supervisor,
+                    t.is_manager,
+                    t.is_generalManager,
+                    t.is_bod,
+                    s.name as section_name,
+                    d.name as department_name,
+                    e.job_status
+                    
+                FROM [hrbp].[employees] e
+                INNER JOIN [hrbp].[position] p ON e.id = p.employeeId
+                LEFT JOIN [hr].[department] d ON p.departmentId = d.id
+                LEFT JOIN [hr].[section] s ON p.sectionId = s.id
+                LEFT JOIN [hr].[title] t ON p.titleId = t.id
+                
+                WHERE e.is_active = 1
+                    AND p.is_active = 1
+                    AND (d.is_active IS NULL OR d.is_active = 1)
+                    AND (s.is_active IS NULL OR s.is_active = 1)
+                    AND (t.is_active IS NULL OR t.is_active = 1)
+                    AND UPPER(d.name) = UPPER(%s)
+                    AND UPPER(s.name) = UPPER(%s)
+                    AND (
+                        t.is_supervisor = 1 OR 
+                        t.is_manager = 1 OR 
+                        t.is_generalManager = 1 OR 
+                        t.is_bod = 1 OR
+                        UPPER(t.Name) LIKE '%SUPERVISOR%' OR
+                        UPPER(t.Name) LIKE '%MANAGER%' OR
+                        UPPER(t.Name) LIKE '%DIRECTOR%' OR
+                        UPPER(t.Name) LIKE '%SPV%' OR
+                        UPPER(t.Name) LIKE '%MGR%' OR
+                        UPPER(t.Name) LIKE '%ASSISTANT SUPERVISOR%'
+                    )
+                    
+                ORDER BY 
+                    CASE 
+                        WHEN t.is_bod = 1 OR UPPER(t.Name) LIKE '%DIRECTOR%' THEN 15
+                        WHEN t.is_generalManager = 1 OR UPPER(t.Name) LIKE '%GENERAL%' THEN 13
+                        WHEN t.is_manager = 1 OR UPPER(t.Name) LIKE '%MANAGER%' THEN 12
+                        WHEN UPPER(t.Name) LIKE '%SENIOR SUPERVISOR%' THEN 10
+                        WHEN t.is_supervisor = 1 OR UPPER(t.Name) LIKE '%SUPERVISOR%' THEN 9
+                        WHEN UPPER(t.Name) LIKE '%ASSISTANT SUPERVISOR%' THEN 8
+                        ELSE 8
+                    END DESC,
+                    e.fullname
+            """, [department_name, section_name])
+            
+            rows = cursor.fetchall()
+            
+            for row in rows:
+                # Tentukan level berdasarkan title
+                title_name = str(row[3] or '').upper()
+                level = get_title_level(title_name)
+                
+                # Filter berdasarkan minimum level
+                if level >= min_level_value:
+                    supervisors.append({
+                        'employee_number': row[0],
+                        'fullname': row[1],
+                        'nickname': row[2],
+                        'title_name': row[3],
+                        'is_supervisor': row[4],
+                        'is_manager': row[5],
+                        'is_general_manager': row[6],
+                        'is_bod': row[7],
+                        'section_name': row[8],
+                        'department_name': row[9],
+                        'job_status': row[10],
+                        'level': level,
+                        'level_description': get_level_description(level),
+                        'section_mapping_key': section_mapping_key
+                    })
+                    
+            logger.info(f"Found {len(supervisors)} supervisors (min level: {min_level}) for {section_mapping_key} in {department_name}/{section_name}")
+            return supervisors
+            
+    except Exception as e:
+        logger.error(f"Error getting supervisors for section {section_mapping_key} with min level {min_level}: {e}")
+        return []
 
-def get_target_section_supervisors(section_tujuan_id, exclude_employee_numbers=None):
+def get_target_section_supervisors(section_tujuan_id, exclude_employee_numbers=None, min_level='assistant_supervisor'):
     """
     Mendapatkan daftar assistant supervisor+ di section tujuan untuk assignment pengajuan
+    ENHANCED: dengan minimum level filtering
     
     Args:
         section_tujuan_id (int): ID section tujuan (IT, Elektrik, Mekanik, Utility)
         exclude_employee_numbers (list): List employee number yang dikecualikan
+        min_level (str): Minimum level supervisor yang dibutuhkan
         
     Returns:
-        list: Daftar employee dengan level assistant supervisor ke atas di section tujuan
+        list: Daftar employee dengan level minimum yang ditentukan di section tujuan
     """
     if not section_tujuan_id:
         return []
@@ -426,6 +610,18 @@ def get_target_section_supervisors(section_tujuan_id, exclude_employee_numbers=N
     
     try:
         supervisors = []
+        
+        # Level hierarchy
+        level_hierarchy = {
+            'assistant_supervisor': 8,
+            'supervisor': 9,
+            'senior_supervisor': 10,
+            'manager': 12,
+            'general_manager': 13,
+            'director': 14
+        }
+        
+        min_level_value = level_hierarchy.get(min_level, 8)
         
         with connections['SDBM'].cursor() as cursor:
             # Query untuk mendapatkan supervisor+ di section tujuan
@@ -492,8 +688,8 @@ def get_target_section_supervisors(section_tujuan_id, exclude_employee_numbers=N
                 title_name = str(row[3] or '').upper()
                 level = get_title_level(title_name)
                 
-                # Hanya ambil yang level assistant supervisor ke atas (>= 8)
-                if level >= 8:
+                # Filter berdasarkan minimum level
+                if level >= min_level_value:
                     supervisors.append({
                         'employee_number': row[0],
                         'fullname': row[1],
@@ -505,10 +701,11 @@ def get_target_section_supervisors(section_tujuan_id, exclude_employee_numbers=N
                         'is_bod': row[7],
                         'section_name': row[8],
                         'department_name': row[9],
-                        'level': level
+                        'level': level,
+                        'level_description': get_level_description(level)
                     })
                     
-            logger.debug(f"Found {len(supervisors)} assistant supervisors+ in section {section_tujuan_id}")
+            logger.debug(f"Found {len(supervisors)} supervisors (min level: {min_level}) in section {section_tujuan_id}")
             return supervisors
             
     except Exception as e:
@@ -566,21 +763,22 @@ def get_title_level(title_name):
     return 1
 
 
-def assign_pengajuan_to_section_supervisors(history_id, section_tujuan_id, approved_by_employee_number):
+def assign_pengajuan_to_section_supervisors(history_id, section_tujuan_id, approved_by_employee_number, min_level='assistant_supervisor'):
     """
-    Assign pengajuan yang sudah di-approve ke assistant supervisor+ di section tujuan
-    GRACEFUL FALLBACK: Auto-create table jika belum ada
+    Assign pengajuan yang sudah di-approve ke supervisor berdasarkan level minimum di section tujuan
+    ENHANCED: dengan minimum level filtering dan graceful fallback
     
     Args:
         history_id (str): ID pengajuan
         section_tujuan_id (int): ID section tujuan
         approved_by_employee_number (str): Employee number yang meng-approve
+        min_level (str): Minimum level supervisor untuk assignment
         
     Returns:
         list: Daftar employee number yang di-assign pengajuan
     """
     try:
-        logger.info(f"Starting assignment process for {history_id} to section {section_tujuan_id}")
+        logger.info(f"Starting assignment process for {history_id} to section {section_tujuan_id} (min level: {min_level})")
         
         # ===== CEK DAN BUAT TABLE JIKA PERLU =====
         table_created = ensure_assignment_tables_exist()
@@ -588,17 +786,18 @@ def assign_pengajuan_to_section_supervisors(history_id, section_tujuan_id, appro
             logger.error("Failed to create assignment tables")
             return []
         
-        # Dapatkan daftar assistant supervisor+ di section tujuan
+        # Dapatkan daftar supervisor berdasarkan minimum level di section tujuan
         target_supervisors = get_target_section_supervisors(
             section_tujuan_id, 
-            exclude_employee_numbers=[approved_by_employee_number]
+            exclude_employee_numbers=[approved_by_employee_number],
+            min_level=min_level
         )
         
         if not target_supervisors:
-            logger.warning(f"No assistant supervisors+ found in section {section_tujuan_id} for assignment")
+            logger.warning(f"No supervisors (min level: {min_level}) found in section {section_tujuan_id} for assignment")
             return []
         
-        logger.info(f"Found {len(target_supervisors)} potential targets: {[s['employee_number'] for s in target_supervisors]}")
+        logger.info(f"Found {len(target_supervisors)} potential targets (min level: {min_level}): {[s['employee_number'] for s in target_supervisors]}")
         
         assigned_employees = []
         
@@ -621,7 +820,7 @@ def assign_pengajuan_to_section_supervisors(history_id, section_tujuan_id, appro
                 existing_employees = [row[0] for row in cursor.fetchall()]
                 return existing_employees
             
-            # Assign ke setiap assistant supervisor+ di section tujuan
+            # Assign ke setiap supervisor berdasarkan level minimum di section tujuan
             for supervisor in target_supervisors:
                 try:
                     cursor.execute("""
@@ -632,18 +831,18 @@ def assign_pengajuan_to_section_supervisors(history_id, section_tujuan_id, appro
                         history_id,
                         supervisor['employee_number'],
                         approved_by_employee_number,
-                        f"Auto-assigned after approval to {supervisor['section_name']} {supervisor['title_name']}"
+                        f"Auto-assigned after approval to {supervisor['section_name']} {supervisor['title_name']} (Level: {supervisor['level_description']})"
                     ])
                     
                     assigned_employees.append(supervisor['employee_number'])
                     
-                    logger.info(f"Successfully assigned pengajuan {history_id} to {supervisor['fullname']} ({supervisor['employee_number']})")
+                    logger.info(f"Successfully assigned pengajuan {history_id} to {supervisor['fullname']} ({supervisor['employee_number']}) - {supervisor['level_description']}")
                     
                 except Exception as assign_error:
                     logger.error(f"Error assigning to {supervisor['employee_number']}: {assign_error}")
                     continue
         
-        logger.info(f"Successfully assigned pengajuan {history_id} to {len(assigned_employees)} assistant supervisors+ in section {section_tujuan_id}")
+        logger.info(f"Successfully assigned pengajuan {history_id} to {len(assigned_employees)} supervisors (min level: {min_level}) in section {section_tujuan_id}")
         return assigned_employees
         
     except Exception as e:
@@ -734,6 +933,26 @@ def get_assigned_pengajuan_for_user(employee_number):
     """
     if not employee_number:
         return []
+    
+    # ENHANCED: SITI FATIMAH mendapat akses ke semua pengajuan yang sudah approved
+    if employee_number == REVIEWER_EMPLOYEE_NUMBER:
+        try:
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # FIXED: Query dengan status A dan approve Y
+                cursor.execute("""
+                    SELECT DISTINCT history_id
+                    FROM [DB_Maintenance].[dbo].[tabel_pengajuan]
+                    WHERE status = %s AND approve = %s
+                    ORDER BY tgl_insert DESC
+                """, [STATUS_APPROVED, APPROVE_YES])
+                
+                approved_pengajuan = [row[0] for row in cursor.fetchall() if row[0]]
+                logger.info(f"SITI FATIMAH granted access to {len(approved_pengajuan)} approved pengajuan (status=A, approve=Y)")
+                return approved_pengajuan
+                
+        except Exception as e:
+            logger.error(f"Error getting approved pengajuan for SITI FATIMAH: {e}")
+            return []
     
     try:
         # Cek apakah table assignment ada
@@ -1566,6 +1785,7 @@ def get_level_description(level):
     
     return level_descriptions.get(level, f'Level {level}')
 
+
 def assign_pengajuan_after_siti_review(history_id, target_section, reviewer_employee, review_notes=None):
     """
     Auto-assign pengajuan ke SDBM supervisors setelah review oleh SITI FATIMAH
@@ -2121,16 +2341,54 @@ def ensure_enhanced_assignment_tables():
 def get_assigned_pengajuan_for_sdbm_user(employee_number):
     """
     Get pengajuan yang di-assign ke user berdasarkan SDBM employee number
-    FIXED: Dengan fallback untuk tabel yang belum enhanced
+    ENHANCED: Special handling untuk SITI FATIMAH
     
     Args:
         employee_number (str): Employee number user
         
     Returns:
-        list: Daftar history_id pengajuan yang di-assign
+        list: Daftar pengajuan yang di-assign
     """
     if not employee_number:
         return []
+    
+    # ENHANCED: SITI FATIMAH mendapat akses ke semua approved pengajuan
+    if employee_number == REVIEWER_EMPLOYEE_NUMBER:
+        try:
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # FIXED: Query dengan status A dan approve Y
+                cursor.execute("""
+                    SELECT DISTINCT 
+                        history_id,
+                        'SITI_REVIEWER' as assignment_type,
+                        'all' as target_section,
+                        'QC' as department_name,
+                        'Quality Control' as section_name,
+                        tgl_insert as assignment_date
+                    FROM tabel_pengajuan 
+                    WHERE status = %s AND approve = %s
+                    ORDER BY tgl_insert DESC
+                """, [STATUS_APPROVED, APPROVE_YES])
+                
+                rows = cursor.fetchall()
+                
+                assigned_pengajuan = []
+                for row in rows:
+                    assigned_pengajuan.append({
+                        'history_id': row[0],
+                        'assignment_type': row[1],
+                        'target_section': row[2], 
+                        'department_name': row[3],
+                        'section_name': row[4],
+                        'assignment_date': row[5]
+                    })
+                
+                logger.info(f"SITI FATIMAH granted access to {len(assigned_pengajuan)} approved pengajuan via special privilege")
+                return assigned_pengajuan
+                
+        except Exception as e:
+            logger.error(f"Error getting SDBM assignments for SITI FATIMAH: {e}")
+            return []
     
     try:
         assigned_history_ids = []
@@ -2209,21 +2467,80 @@ def get_assigned_pengajuan_for_sdbm_user(employee_number):
             else:
                 logger.debug(f"Assignment table not found - no assignments for {employee_number}")
             
-            # ENHANCED: Also check if user should have access based on section mapping
-            additional_assignments = get_section_based_assignments(employee_number)
-            
-            # Merge without duplicates
-            existing_history_ids = {item['history_id'] for item in assigned_history_ids if isinstance(item, dict)}
-            
-            for additional in additional_assignments:
-                if additional['history_id'] not in existing_history_ids:
-                    assigned_history_ids.append(additional)
-            
             return assigned_history_ids
         
     except Exception as e:
         logger.error(f"Error getting SDBM assignments for {employee_number}: {e}")
         return []
+
+def convert_legacy_status_to_actual(legacy_status):
+    """
+    Convert legacy status values (1,2,3,4) ke actual values (A,2,3,4)
+    
+    Args:
+        legacy_status (str): Legacy status value
+        
+    Returns:
+        str: Actual status value untuk database
+    """
+    conversion_map = {
+        '1': STATUS_APPROVED,    # '1' -> 'A'
+        '0': STATUS_PENDING,     # '0' -> '0'
+        '2': STATUS_REJECTED,    # '2' -> '2'
+        '3': STATUS_IN_PROGRESS, # '3' -> '3'
+        '4': STATUS_COMPLETED    # '4' -> '4'
+    }
+    
+    return conversion_map.get(legacy_status, legacy_status)
+
+
+def convert_legacy_approve_to_actual(legacy_approve):
+    """
+    Convert legacy approve values (1,2,0) ke actual values (Y,2,0)
+    
+    Args:
+        legacy_approve (str): Legacy approve value
+        
+    Returns:
+        str: Actual approve value untuk database
+    """
+    conversion_map = {
+        '1': APPROVE_YES,        # '1' -> 'Y'
+        '0': APPROVE_NO,         # '0' -> '0'
+        '2': APPROVE_REJECTED    # '2' -> '2'
+    }
+    
+    return conversion_map.get(legacy_approve, legacy_approve)
+
+
+# Export all functions and constants
+__all__ = [
+    'get_employee_hierarchy_data',
+    'can_user_approve', 
+    'get_subordinate_employee_numbers',
+    'get_employee_by_number',
+    'get_supervisors_by_section_and_level',
+    'get_target_section_supervisors',
+    'get_title_level',
+    'get_level_description',
+    'assign_pengajuan_to_section_supervisors',
+    'ensure_assignment_tables_exist',
+    'get_assigned_pengajuan_for_user',
+    'get_sdbm_section_mapping',
+    'get_assigned_pengajuan_for_sdbm_user',
+    'convert_legacy_status_to_actual',
+    'convert_legacy_approve_to_actual',
+    'STATUS_PENDING',
+    'STATUS_APPROVED',
+    'STATUS_REJECTED',
+    'STATUS_IN_PROGRESS', 
+    'STATUS_COMPLETED',
+    'APPROVE_NO',
+    'APPROVE_YES',
+    'APPROVE_REJECTED',
+    'REVIEWER_EMPLOYEE_NUMBER',
+    'REVIEWER_FULLNAME'
+]
 
 def get_section_based_assignments(employee_number):
     """

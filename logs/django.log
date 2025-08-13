@@ -4478,3 +4478,404 @@ INFO 2025-08-13 11:13:56,265 autoreload 1408 16236 C:\xampp7.2\htdocs\wo_mainten
 INFO 2025-08-13 11:13:58,139 autoreload 6608 15712 Watching for file changes with StatReloader
 INFO 2025-08-13 11:14:18,748 autoreload 16116 17292 Watching for file changes with StatReloader
 INFO 2025-08-13 11:14:33,433 autoreload 18316 15244 Watching for file changes with StatReloader
+INFO 2025-08-13 11:14:40,569 utils 18316 5344 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:14:40,703 views 18316 5344 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:14:40,909 basehttp 18316 5344 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 34539
+WARNING 2025-08-13 11:14:51,194 views 18316 3760 User TUMPAL BERLIN HARIANJA tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 11:14:51,196 basehttp 18316 3760 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:14:51,290 utils 18316 3760 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:14:51,363 views 18316 3760 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:14:51,427 basehttp 18316 3760 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34844
+INFO 2025-08-13 11:14:53,490 utils 18316 3760 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:14:53,491 views 18316 3760 SDBM assigned mode: 1 assignments
+INFO 2025-08-13 11:14:53,515 views 18316 3760 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:14:53,574 basehttp 18316 3760 "GET /wo-maintenance/daftar/?mode=assigned HTTP/1.1" 200 37685
+WARNING 2025-08-13 11:15:06,922 views 18316 15904 User TUMPAL BERLIN HARIANJA tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 11:15:06,924 basehttp 18316 15904 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:15:07,007 utils 18316 15904 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:15:07,080 views 18316 15904 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:15:07,151 basehttp 18316 15904 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34844
+INFO 2025-08-13 11:15:10,684 utils 18316 16104 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:15:10,686 views 18316 16104 SDBM assigned mode: 1 assignments
+INFO 2025-08-13 11:15:10,708 views 18316 16104 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:15:10,774 basehttp 18316 16104 "GET /wo-maintenance/daftar/?mode=assigned HTTP/1.1" 200 37685
+INFO 2025-08-13 11:15:12,221 utils 18316 16104 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:15:12,297 views 18316 16104 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:15:12,369 basehttp 18316 16104 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 34539
+INFO 2025-08-13 11:15:19,025 utils 18316 14408 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:15:19,107 views 18316 14408 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:15:19,173 basehttp 18316 14408 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34539
+WARNING 2025-08-13 11:15:29,434 views 18316 16944 User TUMPAL BERLIN HARIANJA tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 11:15:29,436 basehttp 18316 16944 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:15:29,529 utils 18316 16944 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:15:29,604 views 18316 16944 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:15:29,668 basehttp 18316 16944 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34844
+INFO 2025-08-13 11:15:34,801 utils 18316 13880 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:15:34,874 views 18316 13880 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:15:34,938 basehttp 18316 13880 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34539
+INFO 2025-08-13 11:16:08,135 utils 18316 17796 Found 0 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:16:08,213 views 18316 17796 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:16:08,291 basehttp 18316 17796 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+INFO 2025-08-13 11:16:11,079 utils 18316 17796 Found 0 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:16:11,165 views 18316 17796 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:16:11,236 basehttp 18316 17796 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+INFO 2025-08-13 11:16:15,595 basehttp 18316 17756 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:16:15,647 basehttp 18316 17756 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:16:15,747 basehttp 18316 17756 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:16:21,639 views 18316 17888 LOGIN ATTEMPT: 002186
+INFO 2025-08-13 11:16:21,651 authentication 18316 17888 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-13 11:16:21,658 views 18316 17888 LOGIN: Using existing session data for 002186
+INFO 2025-08-13 11:16:21,659 views 18316 17888 LOGIN REDIRECT: 002186 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:16:21,663 basehttp 18316 17888 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:16:21,770 views 18316 17888 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:16:21,838 basehttp 18316 17888 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30785
+INFO 2025-08-13 11:16:28,518 basehttp 18316 14080 "GET /wo-maintenance/input/ HTTP/1.1" 200 47177
+INFO 2025-08-13 11:16:33,537 basehttp 18316 10716 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755058588857 HTTP/1.1" 200 292
+INFO 2025-08-13 11:16:55,623 forms 18316 14508 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-13 11:16:55,644 views 18316 14508 SAVE: Inserting pengajuan WO20250813001
+INFO 2025-08-13 11:16:55,647 views 18316 14508 SUCCESS: Pengajuan WO20250813001 berhasil disimpan
+INFO 2025-08-13 11:16:55,649 basehttp 18316 14508 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:16:55,775 views 18316 14508 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:16:55,848 basehttp 18316 14508 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34884
+INFO 2025-08-13 11:17:00,310 basehttp 18316 12068 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:17:00,362 basehttp 18316 12068 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:17:00,467 basehttp 18316 12068 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:17:13,981 views 18316 15408 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 11:17:13,993 authentication 18316 15408 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 11:17:14,000 views 18316 15408 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 11:17:14,000 views 18316 15408 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:17:14,005 basehttp 18316 15408 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:17:14,087 utils 18316 15408 Found 0 section-based assignments for 002104 in ENGINEERING-IT
+INFO 2025-08-13 11:17:14,131 views 18316 15408 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:17:14,195 basehttp 18316 15408 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 37280
+INFO 2025-08-13 11:17:19,421 basehttp 18316 15408 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 34822
+INFO 2025-08-13 11:17:24,845 views 18316 18372 Pengajuan WO20250813001 approved by BADRI KIMAN - sent to review queue
+INFO 2025-08-13 11:17:24,856 views 18316 18372 Review tables and columns verified/created successfully
+INFO 2025-08-13 11:17:24,865 views 18316 18372 Pengajuan WO20250813001 disetujui by BADRI KIMAN
+INFO 2025-08-13 11:17:24,868 basehttp 18316 18372 "POST /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:17:25,200 basehttp 18316 18372 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 31417
+INFO 2025-08-13 11:17:34,589 basehttp 18316 6456 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:17:34,644 basehttp 18316 6456 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:17:34,741 basehttp 18316 6456 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:17:46,772 views 18316 17804 LOGIN ATTEMPT: 002182
+INFO 2025-08-13 11:17:46,785 authentication 18316 17804 Updated Django user data for 002182
+INFO 2025-08-13 11:17:46,785 authentication 18316 17804 Successful SDBM authentication for 002182 - KHANIF KAHARUDIN
+INFO 2025-08-13 11:17:46,793 views 18316 17804 LOGIN: Using existing session data for 002182
+INFO 2025-08-13 11:17:46,793 views 18316 17804 LOGIN REDIRECT: 002182 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 11:17:46,800 basehttp 18316 17804 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+WARNING 2025-08-13 11:17:46,887 views 18316 17804 User KHANIF KAHARUDIN tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 11:17:46,891 basehttp 18316 17804 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:17:46,998 views 18316 17804 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:17:47,073 basehttp 18316 17804 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33492
+INFO 2025-08-13 11:17:50,989 basehttp 18316 17804 "GET /wo-maintenance/input/ HTTP/1.1" 200 49182
+INFO 2025-08-13 11:17:54,921 basehttp 18316 14428 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755058671325 HTTP/1.1" 200 292
+INFO 2025-08-13 11:18:14,385 forms 18316 12084 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-13 11:18:14,402 views 18316 12084 SAVE: Inserting pengajuan WO20250813002
+INFO 2025-08-13 11:18:14,408 views 18316 12084 SUCCESS: Pengajuan WO20250813002 berhasil disimpan
+INFO 2025-08-13 11:18:14,410 basehttp 18316 12084 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:18:14,513 views 18316 12084 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:18:14,573 basehttp 18316 12084 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 37309
+INFO 2025-08-13 11:18:18,728 basehttp 18316 12084 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:18:18,778 basehttp 18316 12084 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:18:18,875 basehttp 18316 12084 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:18:31,100 views 18316 15284 LOGIN ATTEMPT: 002120
+INFO 2025-08-13 11:18:31,116 authentication 18316 15284 Updated Django user data for 002120
+INFO 2025-08-13 11:18:31,116 authentication 18316 15284 Successful SDBM authentication for 002120 - JUAN SETIAWAN
+INFO 2025-08-13 11:18:31,124 views 18316 15284 LOGIN: Using existing session data for 002120
+INFO 2025-08-13 11:18:31,124 views 18316 15284 LOGIN REDIRECT: 002120 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:18:31,128 basehttp 18316 15284 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:18:31,216 utils 18316 15284 Found 0 section-based assignments for 002120 in ENGINEERING-IT
+INFO 2025-08-13 11:18:31,259 views 18316 15284 Enhanced SDBM query executed successfully - Found 2 records
+INFO 2025-08-13 11:18:31,327 basehttp 18316 15284 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 40732
+INFO 2025-08-13 11:18:40,062 basehttp 18316 17952 "GET /wo-maintenance/detail/WO20250813002/ HTTP/1.1" 200 34848
+INFO 2025-08-13 11:18:45,507 views 18316 324 Pengajuan WO20250813002 approved by JUAN SETIAWAN - sent to review queue
+INFO 2025-08-13 11:18:45,510 views 18316 324 Review tables and columns verified/created successfully
+INFO 2025-08-13 11:18:45,515 views 18316 324 Pengajuan WO20250813002 disetujui by JUAN SETIAWAN
+INFO 2025-08-13 11:18:45,516 basehttp 18316 324 "POST /wo-maintenance/detail/WO20250813002/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:18:45,676 basehttp 18316 324 "GET /wo-maintenance/detail/WO20250813002/ HTTP/1.1" 200 31443
+INFO 2025-08-13 11:18:48,948 basehttp 18316 324 "GET /logout/?next=/wo-maintenance/detail/WO20250813002/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:18:49,010 basehttp 18316 324 "GET /wo-maintenance/detail/WO20250813002/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:18:49,103 basehttp 18316 324 "GET /login/?next=/wo-maintenance/detail/WO20250813002/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:18:57,198 views 18316 6576 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 11:18:57,212 authentication 18316 6576 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 11:18:57,213 authentication 18316 6576 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 11:18:57,218 views 18316 6576 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 11:18:57,219 views 18316 6576 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250813002/
+INFO 2025-08-13 11:18:57,224 basehttp 18316 6576 "POST /login/?next=/wo-maintenance/detail/WO20250813002/ HTTP/1.1" 302 0
+WARNING 2025-08-13 11:18:57,310 views 18316 6576 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813002
+INFO 2025-08-13 11:18:57,313 basehttp 18316 6576 "GET /wo-maintenance/detail/WO20250813002/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:18:57,421 views 18316 6576 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:18:57,491 basehttp 18316 6576 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33844
+INFO 2025-08-13 11:19:03,580 views 18316 836 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 11:19:03,592 views 18316 836 Enhanced SDBM query executed successfully - Found 2 records
+INFO 2025-08-13 11:19:03,659 basehttp 18316 836 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 41682
+INFO 2025-08-13 11:19:10,812 forms 18316 836 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 11:19:10,821 utils 18316 836 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:19:10,826 utils 18316 836 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:19:10,830 utils 18316 836 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:19:10,834 utils 18316 836 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 11:19:10,905 basehttp 18316 836 "GET /wo-maintenance/review/pengajuan/WO20250813002/ HTTP/1.1" 200 33736
+INFO 2025-08-13 11:21:03,496 forms 18316 11768 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 11:21:03,506 utils 18316 11768 FIXED: Starting SITI review assignment for WO20250813002 to mekanik
+INFO 2025-08-13 11:21:03,517 utils 18316 11768 FIXED: Updated section for WO20250813002 to section ID 4
+INFO 2025-08-13 11:21:03,518 utils 18316 11768 ENHANCED: Searching supervisors for mekanik -> ENGINEERING/ENGINEERING-MECHANIC
+WARNING 2025-08-13 11:21:03,528 utils 18316 11768 ENHANCED: Query 1 failed for mekanik: unsupported format character 'S' (0x53) at index 1502
+WARNING 2025-08-13 11:21:03,532 utils 18316 11768 ENHANCED: Query 2 failed for mekanik: unsupported format character 'M' (0x4d) at index 1010
+ERROR 2025-08-13 11:21:03,533 utils 18316 11768 ENHANCED: Error getting supervisors for target section mekanik: cannot access local variable 'rows' where it is not associated with a value
+WARNING 2025-08-13 11:21:03,533 utils 18316 11768 FIXED: No SDBM supervisors found for mekanik
+WARNING 2025-08-13 11:21:03,534 views 18316 11768 SITI REVIEW: WO20250813002 processed but no SDBM supervisors found for mekanik
+ERROR 2025-08-13 11:21:03,535 views 18316 11768 SITI REVIEW ERROR for WO20250813002: No supervisors found for section mekanik
+INFO 2025-08-13 11:21:03,537 utils 18316 11768 Enhanced review tables verified/created successfully
+ERROR 2025-08-13 11:21:03,541 utils 18316 11768 Error logging enhanced review action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'priority_level'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 11:21:03,543 basehttp 18316 11768 "POST /wo-maintenance/review/pengajuan/WO20250813002/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:21:03,618 forms 18316 11768 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 11:21:03,632 utils 18316 11768 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:03,638 utils 18316 11768 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:03,644 utils 18316 11768 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:03,650 utils 18316 11768 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 11:21:03,710 basehttp 18316 11768 "GET /wo-maintenance/review/pengajuan/WO20250813002/ HTTP/1.1" 200 31459
+ERROR 2025-08-13 11:21:14,024 views 18316 3684 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 11:21:14,025 basehttp 18316 3684 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 11:21:14,092 views 18316 3684 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 11:21:14,094 basehttp 18316 3684 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:21:14,259 basehttp 18316 3684 "GET /wo-maintenance/ HTTP/1.1" 200 28317
+INFO 2025-08-13 11:21:16,997 views 18316 3684 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:21:17,068 basehttp 18316 3684 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33874
+INFO 2025-08-13 11:21:18,482 views 18316 10852 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 11:21:18,495 views 18316 10852 Enhanced SDBM query executed successfully - Found 2 records
+INFO 2025-08-13 11:21:18,567 basehttp 18316 10852 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 41177
+WARNING 2025-08-13 11:21:27,392 views 18316 10852 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 11:21:27,394 basehttp 18316 10852 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:21:27,509 views 18316 10852 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:21:27,573 basehttp 18316 10852 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33575
+INFO 2025-08-13 11:21:31,911 views 18316 17020 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 11:21:31,920 views 18316 17020 Enhanced SDBM query executed successfully - Found 2 records
+INFO 2025-08-13 11:21:31,992 basehttp 18316 17020 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 41177
+INFO 2025-08-13 11:21:34,278 forms 18316 17020 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 11:21:34,285 utils 18316 17020 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:34,290 utils 18316 17020 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:34,294 utils 18316 17020 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:34,298 utils 18316 17020 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 11:21:34,359 basehttp 18316 17020 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33721
+INFO 2025-08-13 11:21:50,705 forms 18316 17704 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 11:21:50,715 utils 18316 17704 FIXED: Starting SITI review assignment for WO20250813001 to elektrik
+INFO 2025-08-13 11:21:50,723 utils 18316 17704 FIXED: Updated section for WO20250813001 to section ID 5
+INFO 2025-08-13 11:21:50,724 utils 18316 17704 ENHANCED: Searching supervisors for elektrik -> ENGINEERING/ENGINEERING-ELECTRIC
+WARNING 2025-08-13 11:21:50,729 utils 18316 17704 ENHANCED: Query 1 failed for elektrik: unsupported format character 'S' (0x53) at index 1502
+WARNING 2025-08-13 11:21:50,731 utils 18316 17704 ENHANCED: Query 2 failed for elektrik: must be real number, not str
+ERROR 2025-08-13 11:21:50,732 utils 18316 17704 ENHANCED: Error getting supervisors for target section elektrik: cannot access local variable 'rows' where it is not associated with a value
+WARNING 2025-08-13 11:21:50,732 utils 18316 17704 FIXED: No SDBM supervisors found for elektrik
+WARNING 2025-08-13 11:21:50,733 views 18316 17704 SITI REVIEW: WO20250813001 processed but no SDBM supervisors found for elektrik
+ERROR 2025-08-13 11:21:50,734 views 18316 17704 SITI REVIEW ERROR for WO20250813001: No supervisors found for section elektrik
+INFO 2025-08-13 11:21:50,736 utils 18316 17704 Enhanced review tables verified/created successfully
+ERROR 2025-08-13 11:21:50,739 utils 18316 17704 Error logging enhanced review action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'priority_level'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 11:21:50,742 basehttp 18316 17704 "POST /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:21:50,816 forms 18316 17704 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 11:21:50,825 utils 18316 17704 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:50,831 utils 18316 17704 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:50,836 utils 18316 17704 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:21:50,840 utils 18316 17704 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 11:21:50,910 basehttp 18316 17704 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 31452
+INFO 2025-08-13 11:22:00,001 views 18316 16896 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:22:00,067 basehttp 18316 16896 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33270
+INFO 2025-08-13 11:22:02,904 views 18316 16896 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 11:22:02,917 views 18316 16896 Enhanced SDBM query executed successfully - Found 2 records
+INFO 2025-08-13 11:22:02,983 basehttp 18316 16896 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 40678
+INFO 2025-08-13 11:22:09,456 basehttp 18316 1224 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:22:09,504 basehttp 18316 1224 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:22:09,601 basehttp 18316 1224 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:22:16,708 views 18316 1224 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 11:22:16,723 authentication 18316 1224 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 11:22:16,731 views 18316 1224 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 11:22:16,732 views 18316 1224 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:22:16,737 basehttp 18316 1224 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:22:16,820 utils 18316 1224 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:22:16,893 views 18316 1224 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:22:16,969 basehttp 18316 1224 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34824
+INFO 2025-08-13 11:22:28,093 basehttp 18316 18164 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:22:28,145 basehttp 18316 18164 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:22:28,241 basehttp 18316 18164 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:22:33,790 views 18316 18164 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 11:22:33,803 authentication 18316 18164 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 11:22:33,811 views 18316 18164 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 11:22:33,811 views 18316 18164 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:22:33,818 basehttp 18316 18164 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:22:33,908 utils 18316 18164 Found 0 section-based assignments for 002104 in ENGINEERING-IT
+INFO 2025-08-13 11:22:33,951 views 18316 18164 Enhanced SDBM query executed successfully - Found 2 records
+INFO 2025-08-13 11:22:34,011 basehttp 18316 18164 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 40118
+INFO 2025-08-13 11:22:41,732 basehttp 18316 1700 "GET /wo-maintenance/input/ HTTP/1.1" 200 49182
+INFO 2025-08-13 11:22:44,002 utils 18316 1700 Found 0 section-based assignments for 002104 in ENGINEERING-IT
+INFO 2025-08-13 11:22:44,044 views 18316 1700 Enhanced SDBM query executed successfully - Found 2 records
+INFO 2025-08-13 11:22:44,106 basehttp 18316 1700 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 39834
+INFO 2025-08-13 11:23:20,078 basehttp 18316 2224 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:23:20,139 basehttp 18316 2224 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:23:20,247 basehttp 18316 2224 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:23:23,158 views 18316 2224 LOGIN ATTEMPT: 001182
+INFO 2025-08-13 11:23:23,171 authentication 18316 2224 Successful SDBM authentication for 001182 - NUROHMAN
+INFO 2025-08-13 11:23:23,179 views 18316 2224 LOGIN: Using existing session data for 001182
+INFO 2025-08-13 11:23:23,179 views 18316 2224 LOGIN REDIRECT: 001182 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:23:23,184 basehttp 18316 2224 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:23:23,264 utils 18316 2224 Found 1 section-based assignments for 001182 in ENGINEERING-MECHANIC
+INFO 2025-08-13 11:23:23,372 views 18316 2224 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:23:23,444 basehttp 18316 2224 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34788
+INFO 2025-08-13 11:26:02,102 basehttp 18316 17120 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:26:02,156 basehttp 18316 17120 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:26:02,263 basehttp 18316 17120 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:26:05,088 views 18316 17120 LOGIN ATTEMPT: 008089
+INFO 2025-08-13 11:26:05,120 authentication 18316 17120 Updated Django user data for 008089
+INFO 2025-08-13 11:26:05,121 authentication 18316 17120 Successful SDBM authentication for 008089 - MUHAMMAD BINTANG RAFID MARHAND
+INFO 2025-08-13 11:26:05,134 views 18316 17120 LOGIN: Using existing session data for 008089
+INFO 2025-08-13 11:26:05,134 views 18316 17120 LOGIN REDIRECT: 008089 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:26:05,142 basehttp 18316 17120 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:26:05,255 views 18316 17120 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:26:05,333 basehttp 18316 17120 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30837
+INFO 2025-08-13 11:26:08,637 basehttp 18316 16076 "GET /wo-maintenance/input/ HTTP/1.1" 200 47222
+INFO 2025-08-13 11:26:17,739 basehttp 18316 16076 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755059168984 HTTP/1.1" 200 292
+INFO 2025-08-13 11:26:36,389 forms 18316 18324 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-13 11:26:36,414 views 18316 18324 SAVE: Inserting pengajuan WO20250813001
+INFO 2025-08-13 11:26:36,427 views 18316 18324 SUCCESS: Pengajuan WO20250813001 berhasil disimpan
+INFO 2025-08-13 11:26:36,429 basehttp 18316 18324 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:26:36,556 views 18316 18324 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:26:36,621 basehttp 18316 18324 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34950
+INFO 2025-08-13 11:26:52,883 basehttp 18316 13144 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:26:52,940 basehttp 18316 13144 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:26:53,037 basehttp 18316 13144 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:26:58,740 views 18316 384 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 11:26:58,759 authentication 18316 384 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 11:26:58,766 views 18316 384 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 11:26:58,766 views 18316 384 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:26:58,771 basehttp 18316 384 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:26:58,866 utils 18316 384 Found 0 section-based assignments for 002104 in ENGINEERING-IT
+INFO 2025-08-13 11:26:58,908 views 18316 384 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:26:58,969 basehttp 18316 384 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33210
+INFO 2025-08-13 11:27:04,050 basehttp 18316 1656 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:27:04,107 basehttp 18316 1656 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:27:04,202 basehttp 18316 1656 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:27:08,037 views 18316 1656 LOGIN ATTEMPT: 001145
+INFO 2025-08-13 11:27:08,052 authentication 18316 1656 Successful SDBM authentication for 001145 - TUMIN
+INFO 2025-08-13 11:27:08,063 views 18316 1656 LOGIN: Using existing session data for 001145
+INFO 2025-08-13 11:27:08,064 views 18316 1656 LOGIN REDIRECT: 001145 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:27:08,072 basehttp 18316 1656 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:27:08,284 views 18316 1656 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:27:08,346 basehttp 18316 1656 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34901
+INFO 2025-08-13 11:27:13,297 basehttp 18316 11908 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 32891
+INFO 2025-08-13 11:27:17,277 views 18316 16832 Pengajuan WO20250813001 approved by TUMIN - sent to review queue
+INFO 2025-08-13 11:27:17,284 views 18316 16832 Review tables and columns verified/created successfully
+INFO 2025-08-13 11:27:17,297 views 18316 16832 Pengajuan WO20250813001 disetujui by TUMIN
+INFO 2025-08-13 11:27:17,298 basehttp 18316 16832 "POST /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:27:17,466 basehttp 18316 16832 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29486
+INFO 2025-08-13 11:27:30,438 basehttp 18316 14496 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:27:30,495 basehttp 18316 14496 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:27:30,592 basehttp 18316 14496 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:27:37,436 views 18316 11916 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 11:27:37,453 authentication 18316 11916 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 11:27:37,453 authentication 18316 11916 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 11:27:37,459 views 18316 11916 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 11:27:37,460 views 18316 11916 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 11:27:37,464 basehttp 18316 11916 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+WARNING 2025-08-13 11:27:37,547 views 18316 11916 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 11:27:37,550 basehttp 18316 11916 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:27:37,660 views 18316 11916 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:27:37,730 basehttp 18316 11916 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33844
+INFO 2025-08-13 11:27:40,176 views 18316 11916 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 11:27:40,181 views 18316 11916 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:27:40,251 basehttp 18316 11916 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 37692
+INFO 2025-08-13 11:27:43,031 forms 18316 11916 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 11:27:43,046 utils 18316 11916 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:27:43,052 utils 18316 11916 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:27:43,059 utils 18316 11916 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:27:43,064 utils 18316 11916 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 11:27:43,120 basehttp 18316 11916 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33757
+INFO 2025-08-13 11:27:55,499 forms 18316 12116 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 11:27:55,509 utils 18316 12116 FIXED: Starting SITI review assignment for WO20250813001 to elektrik
+INFO 2025-08-13 11:27:55,516 utils 18316 12116 FIXED: Updated section for WO20250813001 to section ID 5
+INFO 2025-08-13 11:27:55,517 utils 18316 12116 ENHANCED: Searching supervisors for elektrik -> ENGINEERING/ENGINEERING-ELECTRIC
+WARNING 2025-08-13 11:27:55,527 utils 18316 12116 ENHANCED: Query 1 failed for elektrik: unsupported format character 'S' (0x53) at index 1502
+WARNING 2025-08-13 11:27:55,529 utils 18316 12116 ENHANCED: Query 2 failed for elektrik: must be real number, not str
+ERROR 2025-08-13 11:27:55,530 utils 18316 12116 ENHANCED: Error getting supervisors for target section elektrik: cannot access local variable 'rows' where it is not associated with a value
+WARNING 2025-08-13 11:27:55,532 utils 18316 12116 FIXED: No SDBM supervisors found for elektrik
+WARNING 2025-08-13 11:27:55,533 views 18316 12116 SITI REVIEW: WO20250813001 processed but no SDBM supervisors found for elektrik
+ERROR 2025-08-13 11:27:55,534 views 18316 12116 SITI REVIEW ERROR for WO20250813001: No supervisors found for section elektrik
+INFO 2025-08-13 11:27:55,535 utils 18316 12116 Enhanced review tables verified/created successfully
+ERROR 2025-08-13 11:27:55,539 utils 18316 12116 Error logging enhanced review action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'priority_level'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 11:27:55,541 basehttp 18316 12116 "POST /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:27:55,624 forms 18316 12116 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 11:27:55,638 utils 18316 12116 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:27:55,643 utils 18316 12116 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:27:55,649 utils 18316 12116 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 11:27:55,653 utils 18316 12116 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 11:27:55,712 basehttp 18316 12116 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 31488
+ERROR 2025-08-13 11:28:10,398 views 18316 17524 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 11:28:10,400 basehttp 18316 17524 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 11:28:10,468 views 18316 17524 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 11:28:10,470 basehttp 18316 17524 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:28:10,642 basehttp 18316 17524 "GET /wo-maintenance/ HTTP/1.1" 200 28282
+INFO 2025-08-13 11:28:14,788 views 18316 12544 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:28:14,851 basehttp 18316 12544 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33874
+INFO 2025-08-13 11:28:18,256 views 18316 12544 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 11:28:18,264 views 18316 12544 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:28:18,339 basehttp 18316 12544 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 37193
+WARNING 2025-08-13 11:28:20,678 views 18316 12544 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 11:28:20,681 basehttp 18316 12544 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:28:20,783 views 18316 12544 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:28:20,852 basehttp 18316 12544 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33575
+INFO 2025-08-13 11:28:32,971 basehttp 18316 17068 "GET /wo-maintenance/input/ HTTP/1.1" 200 47181
+INFO 2025-08-13 11:28:41,173 basehttp 18316 10484 "GET /logout/?next=/wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:28:41,225 basehttp 18316 10484 "GET /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:28:41,324 basehttp 18316 10484 "GET /login/?next=/wo-maintenance/input/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:28:47,489 views 18316 13916 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 11:28:47,503 authentication 18316 13916 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 11:28:47,510 views 18316 13916 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 11:28:47,511 views 18316 13916 LOGIN REDIRECT: 002104 -> /wo-maintenance/input/
+INFO 2025-08-13 11:28:47,515 basehttp 18316 13916 "POST /login/?next=/wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:28:47,654 basehttp 18316 13916 "GET /wo-maintenance/input/ HTTP/1.1" 200 49322
+INFO 2025-08-13 11:28:50,534 utils 18316 13916 Found 0 section-based assignments for 002104 in ENGINEERING-IT
+INFO 2025-08-13 11:28:50,584 views 18316 13916 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 11:28:50,655 basehttp 18316 13916 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 32926
+INFO 2025-08-13 11:28:56,546 basehttp 18316 12744 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:28:56,593 basehttp 18316 12744 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:28:56,687 basehttp 18316 12744 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:29:04,820 views 18316 11416 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 11:29:04,854 authentication 18316 11416 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 11:29:04,862 views 18316 11416 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 11:29:04,863 views 18316 11416 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:29:04,867 basehttp 18316 11416 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:29:04,944 utils 18316 11416 Found 1 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-13 11:29:05,017 views 18316 11416 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:29:05,082 basehttp 18316 11416 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34842
+INFO 2025-08-13 11:29:18,385 basehttp 18316 16300 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:29:18,440 basehttp 18316 16300 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:29:18,541 basehttp 18316 16300 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:29:26,068 views 18316 17564 LOGIN ATTEMPT: 001145
+INFO 2025-08-13 11:29:26,087 authentication 18316 17564 Successful SDBM authentication for 001145 - TUMIN
+INFO 2025-08-13 11:29:26,093 views 18316 17564 LOGIN: Using existing session data for 001145
+INFO 2025-08-13 11:29:26,094 views 18316 17564 LOGIN REDIRECT: 001145 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:29:26,099 basehttp 18316 17564 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:29:26,300 views 18316 17564 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:29:26,374 basehttp 18316 17564 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34424
+INFO 2025-08-13 11:35:50,491 basehttp 18316 2884 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:35:50,541 basehttp 18316 2884 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:35:50,635 basehttp 18316 2884 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 11:36:10,079 views 18316 12084 LOGIN ATTEMPT: 001145
+INFO 2025-08-13 11:36:10,096 authentication 18316 12084 Successful SDBM authentication for 001145 - TUMIN
+INFO 2025-08-13 11:36:10,103 views 18316 12084 LOGIN: Using existing session data for 001145
+INFO 2025-08-13 11:36:10,104 views 18316 12084 LOGIN REDIRECT: 001145 -> /wo-maintenance/daftar/
+INFO 2025-08-13 11:36:10,110 basehttp 18316 12084 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 11:36:10,280 views 18316 12084 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:36:10,354 basehttp 18316 12084 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34424
+INFO 2025-08-13 11:36:16,073 basehttp 18316 12084 "GET /wo-maintenance/input/ HTTP/1.1" 200 47188
+INFO 2025-08-13 11:36:21,858 views 18316 12192 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:36:21,921 basehttp 18316 12192 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34140
+INFO 2025-08-13 11:51:28,816 views 18316 14868 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:51:28,907 basehttp 18316 14868 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34140
+INFO 2025-08-13 11:51:35,831 views 18316 17796 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:51:35,893 basehttp 18316 17796 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34140
+INFO 2025-08-13 11:52:01,596 views 18316 17468 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 11:52:01,674 basehttp 18316 17468 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34143
+INFO 2025-08-13 12:01:17,491 views 18316 5316 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 12:01:17,555 basehttp 18316 5316 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34143
+INFO 2025-08-13 12:04:11,268 views 18316 17588 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 12:04:11,332 basehttp 18316 17588 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 34143
+INFO 2025-08-13 12:51:14,899 autoreload 18316 15244 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 12:51:17,368 autoreload 17132 18392 Watching for file changes with StatReloader
+INFO 2025-08-13 13:05:37,225 autoreload 10048 15372 Watching for file changes with StatReloader

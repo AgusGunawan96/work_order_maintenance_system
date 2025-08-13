@@ -5,6 +5,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# ===== FIXED STATUS CONSTANTS =====
+STATUS_PENDING = '0'      # Pending
+STATUS_APPROVED = 'A'     # FIXED: Approved menggunakan 'A' bukan '1'
+STATUS_REJECTED = '2'     # Rejected
+STATUS_IN_PROGRESS = '3'  # In Progress
+STATUS_COMPLETED = '4'    # Completed
+
+APPROVE_NO = '0'          # Not Approved
+APPROVE_YES = 'Y'         # FIXED: Approved menggunakan 'Y' bukan '1'
+APPROVE_REJECTED = '2'    # Rejected
+
+
 class PengajuanMaintenanceForm(forms.Form):
     """Form untuk input pengajuan maintenance baru - FIXED"""
     
@@ -249,13 +261,14 @@ class PengajuanMaintenanceForm(forms.Form):
 class PengajuanFilterForm(forms.Form):
     """Form untuk filter daftar pengajuan"""
     
+     # FIXED: Status choices dengan mapping yang benar
     STATUS_CHOICES = [
         ('', 'Semua Status'),
-        ('0', 'Pending'),
-        ('1', 'Approved'),
-        ('2', 'Rejected'),
-        ('3', 'In Progress'),
-        ('4', 'Completed'),
+        ('0', 'Pending'),           # Pending tetap '0'
+        ('A', 'Approved'),          # FIXED: Approved menggunakan 'A' 
+        ('2', 'Rejected'),          # Rejected tetap '2'
+        ('3', 'In Progress'),       # In Progress tetap '3'
+        ('4', 'Completed'),         # Completed tetap '4'
     ]
     
     tanggal_dari = forms.DateField(
@@ -400,6 +413,47 @@ class ReviewFilterForm(forms.Form):
         
         # Load additional sections from database if needed
         self.load_additional_section_choices()
+
+    def load_additional_section_choices(self):
+        """Load additional section choices dari database"""
+        try:
+            current_choices = list(self.fields['section_filter'].choices)
+            
+            with connections['DB_Maintenance'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT DISTINCT id_section, seksi 
+                    FROM tabel_msection 
+                    WHERE (status = 'A' OR status IS NULL) 
+                        AND seksi IS NOT NULL
+                        AND seksi != ''
+                    ORDER BY seksi
+                """)
+                
+                for row in cursor.fetchall():
+                    section_id = int(float(row[0]))
+                    section_name = str(row[1]).strip().upper()
+                    
+                    # Skip jika sudah ada di choices
+                    existing_keys = [choice[0] for choice in current_choices]
+                    
+                    # Map section berdasarkan kata kunci yang belum ada
+                    section_key = None
+                    if 'IT' in section_name and 'it' not in existing_keys:
+                        section_key = 'it'
+                    elif 'ELEKTRIK' in section_name and 'elektrik' not in existing_keys:
+                        section_key = 'elektrik'
+                    elif 'UTILITY' in section_name and 'utility' not in existing_keys:
+                        section_key = 'utility'
+                    elif 'MEKANIK' in section_name and 'mekanik' not in existing_keys:
+                        section_key = 'mekanik'
+                    
+                    if section_key and section_key not in existing_keys:
+                        current_choices.append((section_key, f'🎯 {section_name}'))
+                
+                self.fields['section_filter'].choices = current_choices
+                
+        except Exception as e:
+            logger.error(f"Error loading additional section choices: {e}")
 
 # wo_maintenance_app/forms.py - FIXED ReviewForm
 
@@ -730,11 +784,11 @@ class EnhancedPengajuanFilterForm(forms.Form):
     
     STATUS_CHOICES = [
         ('', 'Semua Status'),
-        ('0', 'Pending'),
-        ('1', 'Approved'),
-        ('2', 'Rejected'),
-        ('3', 'In Progress'),
-        ('4', 'Completed'),
+        ('0', 'Pending'),           # Pending tetap '0'
+        ('A', 'Approved'),          # FIXED: Approved menggunakan 'A'
+        ('2', 'Rejected'),          # Rejected tetap '2'
+        ('3', 'In Progress'),       # In Progress tetap '3'
+        ('4', 'Completed'),         # Completed tetap '4'
     ]
     
     ACCESS_TYPE_CHOICES = [
@@ -972,3 +1026,159 @@ class EnhancedReviewFilterForm(ReviewFilterForm):
         except Exception as e:
             logger.error(f"Error loading target section choices: {e}")
             self.fields['target_section_filter'].choices = [('', 'Semua Target Section')]
+
+class SupervisorAccessFilterForm(forms.Form):
+    """
+    Form untuk filter pengajuan berdasarkan level supervisor dan section
+    """
+    
+    SUPERVISOR_LEVEL_CHOICES = [
+        ('', 'Semua Level'),
+        ('assistant_supervisor', 'Assistant Supervisor'),
+        ('supervisor', 'Supervisor'),
+        ('senior_supervisor', 'Senior Supervisor'),
+        ('manager', 'Manager'),
+        ('general_manager', 'General Manager'),
+        ('director', 'Director'),
+    ]
+    
+    supervisor_level = forms.ChoiceField(
+        label='Level Minimum',
+        choices=SUPERVISOR_LEVEL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        }),
+        help_text='Filter berdasarkan level minimum supervisor yang dapat mengakses'
+    )
+    
+    target_section = forms.ChoiceField(
+        label='Target Section',
+        choices=[
+            ('', 'Semua Section'),
+            ('it', '💻 IT'),
+            ('elektrik', '⚡ Elektrik'),
+            ('utility', '🏭 Utility'),
+            ('mekanik', '🔧 Mekanik'),
+        ],
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        }),
+        help_text='Filter berdasarkan target section untuk assignment'
+    )
+    
+    show_siti_access = forms.BooleanField(
+        label='Tampilkan Akses SITI FATIMAH',
+        required=False,
+        initial=True,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input'
+        }),
+        help_text='Tampilkan pengajuan yang dapat diakses oleh SITI FATIMAH (007522)'
+    )
+
+
+# Helper function untuk mapping status
+def map_form_status_to_db(form_status):
+    """
+    Map form status values ke database values
+    
+    Args:
+        form_status (str): Status dari form (legacy values)
+        
+    Returns:
+        str: Status untuk database (actual values)
+    """
+    status_mapping = {
+        '0': STATUS_PENDING,     # '0' -> '0' 
+        '1': STATUS_APPROVED,    # '1' -> 'A'  (FIXED)
+        '2': STATUS_REJECTED,    # '2' -> '2'
+        '3': STATUS_IN_PROGRESS, # '3' -> '3'
+        '4': STATUS_COMPLETED,   # '4' -> '4'
+    }
+    
+    return status_mapping.get(form_status, form_status)
+
+
+def map_form_approve_to_db(form_approve):
+    """
+    Map form approve values ke database values
+    
+    Args:
+        form_approve (str): Approve dari form (legacy values)
+        
+    Returns:
+        str: Approve untuk database (actual values)
+    """
+    approve_mapping = {
+        '0': APPROVE_NO,         # '0' -> '0'
+        '1': APPROVE_YES,        # '1' -> 'Y'  (FIXED)
+        '2': APPROVE_REJECTED,   # '2' -> '2'
+    }
+    
+    return approve_mapping.get(form_approve, form_approve)
+
+
+def get_status_display_name(status_value):
+    """
+    Get display name untuk status value
+    
+    Args:
+        status_value (str): Status value dari database
+        
+    Returns:
+        str: Display name untuk status
+    """
+    status_display = {
+        '0': 'Pending',
+        'A': 'Approved',         # FIXED
+        '2': 'Rejected',
+        '3': 'In Progress',
+        '4': 'Completed'
+    }
+    
+    return status_display.get(status_value, 'Unknown')
+
+
+def get_approve_display_name(approve_value):
+    """
+    Get display name untuk approve value
+    
+    Args:
+        approve_value (str): Approve value dari database
+        
+    Returns:
+        str: Display name untuk approve
+    """
+    approve_display = {
+        '0': 'Not Approved',
+        'Y': 'Approved',         # FIXED
+        '2': 'Rejected'
+    }
+    
+    return approve_display.get(approve_value, 'Unknown')
+
+
+# Export constants untuk digunakan di views dan templates
+__all__ = [
+    'PengajuanMaintenanceForm',
+    'PengajuanFilterForm', 
+    'ApprovalForm',
+    'ReviewFilterForm',
+    'ReviewForm',
+    'EnhancedPengajuanFilterForm',
+    'SupervisorAccessFilterForm',
+    'STATUS_PENDING',
+    'STATUS_APPROVED',
+    'STATUS_REJECTED', 
+    'STATUS_IN_PROGRESS',
+    'STATUS_COMPLETED',
+    'APPROVE_NO',
+    'APPROVE_YES',
+    'APPROVE_REJECTED',
+    'map_form_status_to_db',
+    'map_form_approve_to_db',
+    'get_status_display_name',
+    'get_approve_display_name'
+]
