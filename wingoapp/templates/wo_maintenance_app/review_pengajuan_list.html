@@ -1,151 +1,410 @@
-<!-- web_seiwa/wingoapp/templates/wo_maintenance_app/review_pengajuan_list.html -->
+<!-- wo_maintenance_app/templates/wo_maintenance_app/review_pengajuan_list.html -->
 {% extends 'starter_kit/base.html' %}
 {% load static %}
 {% load sass_tags %}
 {% load widget_tweaks %}
 
 {% block css %}
-<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
 <style>
     .page-body {
         padding-top: 20px;
     }
     
-    .card-header {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    /* SITI FATIMAH Header */
+    .siti-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         color: white;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .siti-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 200%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(180deg); }
+    }
+    
+    .siti-header .content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .siti-header h3 {
+        margin-bottom: 8px;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+    
+    .siti-header .subtitle {
+        opacity: 0.9;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+    
+    .siti-header .stats-row {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.15);
+        padding: 8px 15px;
+        border-radius: 20px;
         font-weight: 600;
     }
     
-    .reviewer-info {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-    
+    /* Filter Section */
     .filter-section {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        border-left: 4px solid #ff6b6b;
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left: 5px solid #28a745;
     }
     
-    .search-section {
-        background: white;
-        padding: 15px;
-        border-radius: 8px;
+    .filter-title {
+        color: #28a745;
+        font-weight: 600;
         margin-bottom: 20px;
-        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left: 5px solid #ffc107;
+    }
+    
+    .quick-actions h6 {
+        color: #ffc107;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .action-button {
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 5px;
+    }
+    
+    .action-button:hover {
+        transform: translateY(-2px);
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .btn-review-approve {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+    
+    .btn-review-info {
+        background: linear-gradient(135deg, #17a2b8, #007bff);
+        color: white;
+    }
+    
+    .btn-review-dashboard {
+        background: linear-gradient(135deg, #6f42c1, #e83e8c);
+        color: white;
+    }
+    
+    /* Table Section */
+    .table-section {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left: 5px solid #28a745;
+    }
+    
+    .table-header {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 20px 25px;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+    }
+    
+    .table-title {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    
+    .table-stats {
+        font-size: 0.9rem;
+        opacity: 0.9;
     }
     
     .table-responsive {
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-radius: 0;
     }
     
     .table th {
-        background: #ff6b6b;
-        color: white;
+        background: #f8f9fa;
+        color: #495057;
         font-weight: 600;
         border: none;
-        padding: 15px 10px;
+        padding: 15px 12px;
         font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .table td {
-        padding: 12px 10px;
+        padding: 15px 12px;
         vertical-align: middle;
         border-bottom: 1px solid #e9ecef;
     }
     
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+    
     .table tbody tr:hover {
-        background-color: #fff5f5;
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .status-badge {
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-    
-    .status-approved {
-        background: #d1ecf1;
-        color: #0c5460;
-    }
-    
-    .priority-badge {
-        padding: 3px 6px;
-        border-radius: 10px;
-        font-size: 0.7rem;
-        font-weight: 600;
-    }
-    
-    .priority-high {
-        background: #ff6b6b;
-        color: white;
+    /* Priority Rows */
+    .priority-urgent {
+        background: linear-gradient(90deg, #fff3cd 0%, transparent 100%);
+        border-left: 4px solid #ffc107;
     }
     
     .priority-normal {
-        background: #74b9ff;
-        color: white;
+        border-left: 4px solid #28a745;
     }
     
+    /* Status Badges */
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
+        white-space: nowrap;
+    }
+    
+    .status-pending-review {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        color: #856404;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    .status-approved {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        color: #155724;
+    }
+    
+    .status-rejected {
+        background: linear-gradient(135deg, #f8d7da, #f1c2c7);
+        color: #721c24;
+    }
+    
+    /* Action Buttons */
     .action-btn {
         margin: 2px;
-        padding: 4px 8px;
+        padding: 6px 12px;
         font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
     }
     
-    .btn-review {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-        border: none;
+    .action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .btn-review-now {
+        background: linear-gradient(135deg, #28a745, #20c997);
         color: white;
+        border: none;
     }
     
-    .btn-filter {
-        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-        border: none;
+    .btn-view-detail {
+        background: linear-gradient(135deg, #007bff, #0056b3);
         color: white;
-    }
-    
-    .btn-reset {
-        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
         border: none;
-        color: #2d3436;
     }
     
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
+    .btn-view-history {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
+        border: none;
+    }
+    
+    /* Pagination */
+    .pagination-section {
+        background: #f8f9fa;
+        padding: 20px 25px;
+        border-top: 1px solid #e9ecef;
     }
     
     .pagination-info {
         font-size: 0.9rem;
         color: #6c757d;
+        font-weight: 500;
     }
     
-    .reviewer-name {
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 2px;
         font-weight: 600;
-        font-size: 1.1rem;
+        border: 1px solid #dee2e6;
+        color: #28a745;
     }
     
-    .pending-indicator {
-        animation: pulse 2s infinite;
+    .pagination .page-link:hover {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
     }
     
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.7; }
-        100% { opacity: 1; }
+    .pagination .page-item.active .page-link {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+    }
+    
+    .empty-state i {
+        font-size: 64px;
+        color: #28a745;
+        margin-bottom: 20px;
+        opacity: 0.7;
+    }
+    
+    .empty-state h5 {
+        color: #495057;
+        margin-bottom: 15px;
+    }
+    
+    .empty-state p {
+        color: #6c757d;
+        max-width: 400px;
+        margin: 0 auto 20px;
+    }
+    
+    /* Loading States */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #28a745;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .siti-header {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .siti-header .stats-row {
+            justify-content: center;
+        }
+        
+        .filter-section, .quick-actions, .table-section {
+            padding: 20px;
+        }
+        
+        .action-button {
+            width: 100%;
+            justify-content: center;
+            margin: 5px 0;
+        }
+        
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+        
+        .action-btn {
+            padding: 4px 8px;
+            font-size: 0.7rem;
+        }
+    }
+    
+    /* Success Animation */
+    @keyframes success-bounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .success-animation {
+        animation: success-bounce 0.6s ease-in-out;
     }
 </style>
 {% endblock css %}
@@ -154,7 +413,34 @@
 <div class="page-body">
     {% include 'starter_kit/layout/breadcrumb.html' %}
 
-    <!-- Notifikasi untuk pesan -->
+    <!-- SITI FATIMAH Header -->
+    <div class="siti-header">
+        <div class="content">
+            <h3>🎯 Review Center - SITI FATIMAH</h3>
+            <p class="subtitle">Kelola review dan distribusi pengajuan work order maintenance</p>
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span>📋</span>
+                    <span>Total: {{ total_records }}</span>
+                </div>
+                <div class="stat-item">
+                    <span>⏳</span>
+                    <span>Pending: {{ total_records }}</span>
+                </div>
+                <div class="stat-item">
+                    <span>👤</span>
+                    <span>{{ reviewer_name }}</span>
+                </div>
+                <div class="stat-item">
+                    <span>📅</span>
+                    <span>{{ "now"|date:"d M Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
     {% if messages %}
         {% for message in messages %}
             <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
@@ -164,34 +450,32 @@
         {% endfor %}
     {% endif %}
 
-    <!-- Reviewer Info -->
-    <div class="reviewer-info">
-        <div class="reviewer-name">👩‍💼 {{ reviewer_name }}</div>
-        <div>📋 Daftar Pengajuan untuk Review & Distribusi</div>
-    </div>
-
-    <!-- Search Section -->
-    <div class="search-section">
-        <form method="get" class="row g-3">
-            <div class="col-md-8">
-                <div class="input-group">
-                    <span class="input-group-text"><i data-feather="search"></i></span>
-                    <input type="text" class="form-control" name="search" 
-                           value="{{ search_query }}" 
-                           placeholder="Cari history ID, pengaju, mesin, atau deskripsi...">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i data-feather="search"></i> Cari
-                </button>
-            </div>
-        </form>
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h6>⚡ Quick Actions</h6>
+        <div class="d-flex flex-wrap">
+            <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="action-button btn-review-dashboard">
+                <i data-feather="home"></i> Review Dashboard
+            </a>
+            <a href="{% url 'wo_maintenance_app:review_history' %}" class="action-button btn-review-info">
+                <i data-feather="clock"></i> Review History
+            </a>
+            <a href="{% url 'wo_maintenance_app:daftar_laporan' %}?mode=approved" class="action-button btn-review-approve">
+                <i data-feather="check-circle"></i> All Approved View
+            </a>
+            <a href="#" onclick="refreshPendingCount()" class="action-button btn-review-info">
+                <i data-feather="refresh-cw"></i> Refresh Data
+            </a>
+        </div>
     </div>
 
     <!-- Filter Section -->
     <div class="filter-section">
-        <h6 class="mb-3"><i data-feather="filter"></i> Filter Data</h6>
+        <h6 class="filter-title">
+            <i data-feather="filter"></i>
+            Filter Pengajuan untuk Review
+        </h6>
+        
         <form method="get" id="filterForm">
             {% if search_query %}
                 <input type="hidden" name="search" value="{{ search_query }}">
@@ -207,211 +491,232 @@
                     {{ filter_form.tanggal_sampai|add_class:"form-control" }}
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Status Review</label>
-                    {{ filter_form.review_status|add_class:"form-control" }}
+                    <label class="form-label">Section Filter</label>
+                    {{ filter_form.section_filter|add_class:"form-control select2" }}
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Section Filter</label>
-                    {{ filter_form.section_filter|add_class:"form-control" }}
+                    <label class="form-label">Search</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" 
+                               value="{{ search_query }}" 
+                               placeholder="Cari history ID, pengaju, mesin...">
+                        <button type="submit" class="btn btn-outline-success">
+                            <i data-feather="search"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             
             <div class="row mt-3">
-                <div class="col-md-12 d-flex justify-content-end">
-                    <button type="submit" class="btn btn-filter me-2">
-                        <i data-feather="filter"></i> Filter
+                <div class="col-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i data-feather="filter"></i> Apply Filter
                     </button>
-                    <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" class="btn btn-reset">
+                    <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" class="btn btn-outline-secondary">
                         <i data-feather="refresh-cw"></i> Reset
                     </a>
                 </div>
             </div>
         </form>
     </div>
-    
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h5><i data-feather="clipboard"></i> Pengajuan untuk Review</h5>
-                    <p class="mb-0 text-muted">
-                        Total: {{ total_records }} pengajuan menunggu review
-                    </p>
-                </div>
-                <div>
-                    <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="btn btn-light">
-                        <i data-feather="home"></i> Dashboard Review
-                    </a>
-                    <a href="{% url 'wo_maintenance_app:review_history' %}" class="btn btn-outline-light">
-                        <i data-feather="clock"></i> History
-                    </a>
+
+    <!-- Table Section -->
+    <div class="table-section">
+        <div class="table-header">
+            <div>
+                <h5 class="table-title">📋 Pengajuan Pending Review</h5>
+                <div class="table-stats">
+                    Total {{ total_records }} pengajuan menunggu review Anda
                 </div>
             </div>
         </div>
         
-        <div class="card-body p-0">
-            {% if pengajuan_list %}
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th style="width: 120px;">History ID</th>
-                                <th style="width: 150px;">Pengaju</th>
-                                <th style="width: 120px;">Line</th>
-                                <th style="width: 180px;">Mesin</th>
-                                <th style="width: 120px;">Section Tujuan</th>
-                                <th style="width: 130px;">Jenis Pekerjaan</th>
-                                <th>Deskripsi</th>
-                                <th style="width: 100px;">Status</th>
-                                <th style="width: 130px;">Tanggal</th>
-                                <th style="width: 120px;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for pengajuan in pengajuan_list %}
-                            <tr {% if pengajuan.12 == '0' or pengajuan.12 is None %}class="pending-indicator"{% endif %}>
-                                <td>
-                                    <strong class="text-primary">{{ pengajuan.0|default:"-" }}</strong>
-                                    <br><small class="text-muted">{{ pengajuan.9|default:"-" }}</small>
-                                    {% if pengajuan.12 == '0' or pengajuan.12 is None %}
-                                        <br><span class="priority-badge priority-high">🔥 PRIORITY</span>
+        {% if pengajuan_list %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">History ID</th>
+                        <th style="width: 150px;">Pengaju</th>
+                        <th style="width: 120px;">Line</th>
+                        <th style="width: 160px;">Mesin</th>
+                        <th style="width: 130px;">Section Original</th>
+                        <th style="width: 120px;">Pekerjaan</th>
+                        <th>Deskripsi</th>
+                        <th style="width: 100px;">Status</th>
+                        <th style="width: 110px;">Tanggal</th>
+                        <th style="width: 140px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pengajuan in pengajuan_list %}
+                    <tr class="{% if pengajuan.15 == '0' or pengajuan.15 is None %}priority-urgent{% else %}priority-normal{% endif %}">
+                        <td>
+                            <strong style="color: #28a745;">{{ pengajuan.0|default:"-" }}</strong>
+                            <br><small class="text-muted">{{ pengajuan.9|default:"-" }}</small>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">{{ pengajuan.1|default:"-" }}</div>
+                            {% if pengajuan.8 %}
+                                <small class="text-muted">{{ pengajuan.8 }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if pengajuan.10 %}
+                                <span class="badge bg-info">{{ pengajuan.10 }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                {{ pengajuan.2|default:"-" }}
+                            </div>
+                        </td>
+                        <td>{{ pengajuan.3|default:"-" }}</td>
+                        <td>{{ pengajuan.4|default:"-" }}</td>
+                        <td>
+                            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                {{ pengajuan.5|default:"-"|truncatechars:50 }}
+                            </div>
+                        </td>
+                        <td>
+                            {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                                <span class="status-badge status-pending-review">⏳ Pending Review</span>
+                            {% elif pengajuan.15 == '1' %}
+                                <span class="status-badge status-approved">✅ Reviewed</span>
+                                {% if pengajuan.18 %}
+                                    <br><small class="text-success">→ {{ pengajuan.18 }}</small>
+                                {% endif %}
+                            {% elif pengajuan.15 == '2' %}
+                                <span class="status-badge status-rejected">❌ Rejected</span>
+                            {% endif %}
+                            
+                            {% if pengajuan.17 %}
+                                <br><small class="text-muted">{{ pengajuan.17|date:"d/m H:i" }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if pengajuan.7 %}
+                                <div style="font-weight: 600;">{{ pengajuan.7|date:"d/m/Y" }}</div>
+                                <small class="text-muted">{{ pengajuan.7|date:"H:i" }}</small>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                {% if pengajuan.0 %}
+                                    {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                                        <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                                           class="action-btn btn-review-now" title="Review Sekarang">
+                                            <i data-feather="clipboard"></i> Review
+                                        </a>
                                     {% endif %}
-                                </td>
-                                <td>
-                                    {{ pengajuan.1|default:"-" }}
-                                    {% if pengajuan.8 %}
-                                        <br><small class="text-muted">{{ pengajuan.8 }}</small>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if pengajuan.10 %}
-                                        <span class="badge bg-info">{{ pengajuan.10 }}</span>
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
-                                <td>{{ pengajuan.2|default:"-" }}</td>
-                                <td>{{ pengajuan.3|default:"-" }}</td>
-                                <td>{{ pengajuan.4|default:"-" }}</td>
-                                <td>
-                                    <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                                        {{ pengajuan.5|default:"-"|truncatechars:50 }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="status-badge status-approved">✅ Approved</span>
                                     
-                                    <!-- Review Status -->
-                                    {% if pengajuan.12 == '0' or pengajuan.12 is None %}
-                                        <br><small class="text-warning">⏳ Pending Review</small>
-                                    {% elif pengajuan.12 == '1' %}
-                                        <br><small class="text-success">✅ Reviewed</small>
-                                    {% elif pengajuan.12 == '2' %}
-                                        <br><small class="text-danger">❌ Rejected</small>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if pengajuan.7 %}
-                                        {{ pengajuan.7|date:"d/m/Y" }}
-                                        <br><small class="text-muted">{{ pengajuan.7|date:"H:i" }}</small>
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <div class="btn-group-vertical" role="group">
-                                        {% if pengajuan.0 %}
-                                            <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
-                                               class="btn btn-sm btn-review action-btn" title="Review">
-                                                {% if pengajuan.12 == '0' or pengajuan.12 is None %}
-                                                    <i data-feather="edit"></i> REVIEW
-                                                {% else %}
-                                                    <i data-feather="eye"></i> Detail
-                                                {% endif %}
-                                            </a>
-                                        {% else %}
-                                            <span class="btn btn-sm btn-outline-secondary action-btn disabled">
-                                                <i data-feather="eye"></i> Detail
-                                            </span>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Pagination -->
-                {% if total_pages > 1 %}
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="pagination-info">
-                            Halaman {{ page_number }} dari {{ total_pages }} 
-                            ({{ total_records }} total data)
-                        </div>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination pagination-sm mb-0">
-                                {% if has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
-                                            <i data-feather="chevron-left"></i> Previous
+                                    <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" 
+                                       class="action-btn btn-view-detail" title="Lihat Detail">
+                                        <i data-feather="eye"></i> Detail
+                                    </a>
+                                    
+                                    {% if pengajuan.15 in '12' %}
+                                        <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                                           class="action-btn btn-view-history" title="Lihat History Review">
+                                            <i data-feather="clock"></i> History
                                         </a>
-                                    </li>
-                                {% endif %}
-                                
-                                <!-- Page numbers -->
-                                {% for page_num in "123456789"|make_list %}
-                                    {% if page_num|add:0 <= total_pages %}
-                                        {% if page_num|add:0 == page_number %}
-                                            <li class="page-item active">
-                                                <span class="page-link">{{ page_num }}</span>
-                                            </li>
-                                        {% else %}
-                                            <li class="page-item">
-                                                <a class="page-link" href="?page={{ page_num }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
-                                                    {{ page_num }}
-                                                </a>
-                                            </li>
-                                        {% endif %}
                                     {% endif %}
-                                {% endfor %}
-                                
-                                {% if has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
-                                            Next <i data-feather="chevron-right"></i>
-                                        </a>
-                                    </li>
+                                {% else %}
+                                    <span class="action-btn btn-secondary disabled">
+                                        <i data-feather="eye"></i> N/A
+                                    </span>
                                 {% endif %}
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-                {% endif %}
-            {% else %}
-                <div class="empty-state">
-                    <i data-feather="inbox" style="width: 48px; height: 48px; color: #6c757d;"></i>
-                    <h5 class="mt-3 text-muted">Tidak ada pengajuan untuk review</h5>
-                    <p class="text-muted">
-                        {% if search_query %}
-                            Tidak ditemukan hasil untuk pencarian "{{ search_query }}"
-                        {% else %}
-                            Semua pengajuan sudah direview atau belum ada pengajuan yang di-approve
-                        {% endif %}
-                    </p>
-                    <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="btn btn-primary">
-                        <i data-feather="home"></i> Kembali ke Dashboard
-                    </a>
-                </div>
-            {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+        <div class="pagination-section">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="pagination-info">
+                    Halaman {{ page_number }} dari {{ total_pages }} 
+                    ({{ total_records }} total pengajuan)
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% if has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                    <i data-feather="chevron-left"></i> Previous
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page_num in "12345"|make_list %}
+                            {% if page_num|add:0 <= total_pages %}
+                                {% if page_num|add:0 == page_number %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_num }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                    Next <i data-feather="chevron-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="empty-state">
+            <i data-feather="check-circle" style="width: 64px; height: 64px; color: #28a745;"></i>
+            <h5>Tidak Ada Pengajuan Pending Review</h5>
+            <p>
+                {% if search_query %}
+                    Tidak ditemukan pengajuan untuk pencarian "{{ search_query }}"
+                {% else %}
+                    Semua pengajuan approved telah direview!<br>
+                    Bagus sekali, SITI FATIMAH! 🎉
+                {% endif %}
+            </p>
+            <div class="d-flex gap-2 justify-content-center">
+                <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="btn btn-success">
+                    <i data-feather="home"></i> Review Dashboard
+                </a>
+                <a href="{% url 'wo_maintenance_app:review_history' %}" class="btn btn-outline-primary">
+                    <i data-feather="clock"></i> Review History
+                </a>
+            </div>
+        </div>
+        {% endif %}
     </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-spinner"></div>
 </div>
 {% endblock content %}
 
 {% block scriptcontent %}
-<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<!-- Plugins JS start-->
 <script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
 
 <script>
@@ -419,22 +724,20 @@ $(document).ready(function() {
     // Initialize Feather Icons
     feather.replace();
     
-    // Initialize Select2 for filter form
-    $('#id_review_status, #id_section_filter').select2({
+    // Initialize Select2
+    $('.select2').select2({
         width: '100%',
-        placeholder: function() {
-            return $(this).data('placeholder') || 'Pilih...';
-        }
+        placeholder: 'Pilih opsi...',
+        allowClear: true
     });
     
-    // Auto submit filter form on change
-    $('#id_review_status, #id_section_filter').on('change', function() {
+    // Auto submit filter form on select change
+    $('.select2').on('change', function() {
         $('#filterForm').submit();
     });
     
-    // Date picker for filter
+    // Date picker auto submit
     $('input[type="date"]').on('change', function() {
-        // Auto submit when both dates are selected
         const tanggalDari = $('input[name="tanggal_dari"]').val();
         const tanggalSampai = $('input[name="tanggal_sampai"]').val();
         
@@ -450,31 +753,114 @@ $(document).ready(function() {
         }
     });
     
-    // Tooltip for action buttons
+    // Show loading on form submit
+    $('#filterForm').on('submit', function() {
+        showLoading();
+    });
+    
+    // Show loading on page navigation
+    $('.page-link, .action-btn').on('click', function() {
+        showLoading();
+    });
+    
+    // Tooltip initialization
     $('[title]').tooltip();
     
-    // Confirm before reset
-    $('.btn-reset').on('click', function(e) {
-        if ($('#filterForm input, #filterForm select').filter(function() {
-            return $(this).val() !== '';
-        }).length > 0) {
-            if (!confirm('Apakah Anda yakin ingin menghapus semua filter?')) {
-                e.preventDefault();
+    // Auto dismiss alerts
+    $('.alert').delay(6000).fadeOut();
+    
+    // Row hover effects
+    $('tbody tr').hover(
+        function() { $(this).addClass('shadow-sm'); },
+        function() { $(this).removeClass('shadow-sm'); }
+    );
+    
+    // Periodic refresh for pending count
+    setInterval(function() {
+        updatePendingCount();
+    }, 30000); // Every 30 seconds
+    
+    console.log('🎯 SITI FATIMAH Review List Loaded');
+    console.log('Total Records: {{ total_records }}');
+    console.log('Search Query: "{{ search_query }}"');
+});
+
+function showLoading() {
+    $('#loadingOverlay').fadeIn(200);
+}
+
+function hideLoading() {
+    $('#loadingOverlay').fadeOut(200);
+}
+
+function refreshPendingCount() {
+    showLoading();
+    location.reload();
+}
+
+function updatePendingCount() {
+    // AJAX call to get updated pending count
+    $.ajax({
+        url: '{% url "wo_maintenance_app:get_pending_review_count" %}',
+        type: 'GET',
+        success: function(response) {
+            if (response.success) {
+                // Update pending count in stats
+                const currentCount = {{ total_records }};
+                if (response.count !== currentCount) {
+                    // Show notification if count changed
+                    if (response.count > currentCount) {
+                        showNotification('🔔 Ada pengajuan baru untuk direview!', 'info');
+                    }
+                }
             }
+        },
+        error: function() {
+            console.log('Failed to update pending count');
         }
     });
+}
 
-    // Auto dismiss alerts
-    $('.alert').delay(5000).fadeOut();
+function showNotification(message, type) {
+    const alertClass = type === 'success' ? 'alert-success' : 
+                      type === 'error' ? 'alert-danger' : 'alert-info';
     
-    // Auto refresh every 2 minutes for pending count
-    setInterval(function() {
-        if (!document.hidden) {
-            window.location.reload();
-        }
-    }, 120000); // 2 minutes
+    const alert = $(`
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `);
+    
+    $('.page-body').prepend(alert);
+    
+    // Auto dismiss
+    setTimeout(function() {
+        alert.fadeOut();
+    }, 5000);
+}
 
-    console.log('Review Pengajuan List loaded for {{ reviewer_name }}');
+// Keyboard shortcuts
+$(document).keydown(function(e) {
+    // F5 to refresh
+    if (e.keyCode === 116) {
+        e.preventDefault();
+        refreshPendingCount();
+    }
+    
+    // Ctrl+F to focus search
+    if (e.ctrlKey && e.keyCode === 70) {
+        e.preventDefault();
+        $('input[name="search"]').focus();
+    }
+});
+
+// Page visibility API untuk auto refresh saat kembali ke tab
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        // Tab menjadi aktif, refresh count
+        setTimeout(updatePendingCount, 1000);
+    }
 });
 </script>
 {% endblock scriptcontent %}

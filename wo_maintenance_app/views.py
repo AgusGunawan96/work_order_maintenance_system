@@ -15,7 +15,7 @@ from functools import wraps
 from django.http import JsonResponse
 
 
-from wo_maintenance_app.forms import PengajuanMaintenanceForm, PengajuanFilterForm, ApprovalForm
+from wo_maintenance_app.forms import PengajuanMaintenanceForm, PengajuanFilterForm, ApprovalForm, ReviewForm
 from wo_maintenance_app.utils import (
     get_employee_hierarchy_data, 
     can_user_approve, 
@@ -394,13 +394,22 @@ def initialize_review_data():
         logger.error(f"Error initializing review data: {e}")
         return False
 
+# wo_maintenance_app/views.py - UPDATE review_pengajuan_detail view
+
 @login_required
 @reviewer_required
 def review_pengajuan_detail(request, nomor_pengajuan):
     """
-    Detail pengajuan untuk review oleh SITI FATIMAH
+    Detail pengajuan untuk review oleh SITI FATIMAH - ENHANCED dengan section selection
     """
     try:
+        # Ambil employee data dari session atau SDBM
+        employee_data = get_employee_data_for_request(request)
+        
+        if not employee_data:
+            messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
+            return redirect('login')
+        
         # Ambil data pengajuan
         pengajuan = None
         
@@ -426,7 +435,8 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                     tp.review_date,
                     tp.review_notes,
                     tp.final_section_id,
-                    final_section.seksi as final_section_name
+                    final_section.seksi as final_section_name,
+                    tp.status_pekerjaan
                 FROM tabel_pengajuan tp
                 LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
                 LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
@@ -462,7 +472,8 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                 'review_date': row[16],
                 'review_notes': row[17],
                 'final_section_id': row[18],
-                'final_section_name': row[19]
+                'final_section_name': row[19],
+                'status_pekerjaan': row[20]
             }
         
         # Cek apakah pengajuan sudah di-approve dan belum direview
@@ -481,10 +492,20 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                 action = review_form.cleaned_data['action']
                 final_section = review_form.cleaned_data['final_section']
                 review_notes = review_form.cleaned_data['review_notes']
+                priority_level = review_form.cleaned_data['priority_level']
                 
                 try:
                     with connections['DB_Maintenance'].cursor() as cursor:
                         if action == 'approve':
+                            # Get section info untuk logging
+                            cursor.execute("""
+                                SELECT seksi FROM tabel_msection 
+                                WHERE id_section = %s
+                            """, [float(final_section)])
+                            
+                            section_info = cursor.fetchone()
+                            section_name = section_info[0] if section_info else 'Unknown Section'
+                            
                             # Update pengajuan dengan review approval
                             cursor.execute("""
                                 UPDATE tabel_pengajuan
@@ -500,13 +521,13 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                             try:
                                 cursor.execute("""
                                     INSERT INTO tabel_review_log 
-                                    (history_id, reviewer_employee, action, final_section_id, review_notes, review_date)
-                                    VALUES (%s, %s, %s, %s, %s, GETDATE())
-                                """, [nomor_pengajuan, REVIEWER_EMPLOYEE_NUMBER, 'approve', float(final_section), review_notes])
+                                    (history_id, reviewer_employee, action, final_section_id, review_notes, review_date, priority_level)
+                                    VALUES (%s, %s, %s, %s, %s, GETDATE(), %s)
+                                """, [nomor_pengajuan, REVIEWER_EMPLOYEE_NUMBER, 'approve', float(final_section), review_notes, priority_level])
                             except Exception as log_error:
                                 logger.warning(f"Failed to log review action: {log_error}")
                             
-                            # Auto-assign ke supervisors di final section
+                            # ENHANCED: Auto-assign ke supervisors di final section
                             try:
                                 from .utils import assign_pengajuan_to_section_supervisors
                                 assigned_employees = assign_pengajuan_to_section_supervisors(
@@ -516,11 +537,25 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                 )
                                 
                                 if assigned_employees:
-                                    messages.info(request, f'Pengajuan telah di-assign ke {len(assigned_employees)} supervisor di section tujuan.')
+                                    assignment_count = len(assigned_employees)
+                                    messages.success(request, 
+                                        f'✅ Pengajuan {nomor_pengajuan} berhasil di-approve dan didistribusikan ke '
+                                        f'section {section_name}! Otomatis di-assign ke {assignment_count} supervisor.'
+                                    )
+                                else:
+                                    messages.success(request, 
+                                        f'✅ Pengajuan {nomor_pengajuan} berhasil di-approve dan didistribusikan ke '
+                                        f'section {section_name}.'
+                                    )
+                                    
                             except Exception as assign_error:
                                 logger.error(f"Failed to auto-assign after review: {assign_error}")
+                                messages.success(request, 
+                                    f'✅ Pengajuan {nomor_pengajuan} berhasil di-approve dan didistribusikan ke '
+                                    f'section {section_name}. (Auto-assignment gagal, perlu manual assignment)'
+                                )
                             
-                            messages.success(request, f'Pengajuan {nomor_pengajuan} berhasil di-approve dan didistribusikan ke section tujuan.')
+                            logger.info(f"Review APPROVE for {nomor_pengajuan} by {REVIEWER_FULLNAME} -> {section_name}")
                             
                         elif action == 'reject':
                             # Update pengajuan dengan review rejection
@@ -538,29 +573,49 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                             try:
                                 cursor.execute("""
                                     INSERT INTO tabel_review_log 
-                                    (history_id, reviewer_employee, action, review_notes, review_date)
-                                    VALUES (%s, %s, %s, %s, GETDATE())
-                                """, [nomor_pengajuan, REVIEWER_EMPLOYEE_NUMBER, 'reject', review_notes])
+                                    (history_id, reviewer_employee, action, review_notes, review_date, priority_level)
+                                    VALUES (%s, %s, %s, %s, GETDATE(), %s)
+                                """, [nomor_pengajuan, REVIEWER_EMPLOYEE_NUMBER, 'reject', review_notes, priority_level])
                             except Exception as log_error:
                                 logger.warning(f"Failed to log review action: {log_error}")
                             
-                            messages.success(request, f'Pengajuan {nomor_pengajuan} berhasil ditolak.')
+                            messages.success(request, f'❌ Pengajuan {nomor_pengajuan} berhasil ditolak dengan alasan: {review_notes}')
+                            logger.info(f"Review REJECT for {nomor_pengajuan} by {REVIEWER_FULLNAME}")
                     
-                    logger.info(f"Review {action} for {nomor_pengajuan} by {REVIEWER_FULLNAME}")
                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
                     
                 except Exception as update_error:
                     logger.error(f"Error processing review for {nomor_pengajuan}: {update_error}")
-                    messages.error(request, 'Terjadi kesalahan saat memproses review.')
+                    messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
+            else:
+                # Form validation error
+                logger.warning(f"Review form validation failed for {nomor_pengajuan}: {review_form.errors}")
+                messages.error(request, 'Form review tidak valid. Periksa kembali input Anda.')
         else:
             review_form = ReviewForm()
+        
+        # Get available sections untuk context (for informational display)
+        available_sections = []
+        try:
+            with connections['DB_Maintenance'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT id_section, seksi 
+                    FROM tabel_msection 
+                    WHERE (status = 'A' OR status IS NULL) AND seksi IS NOT NULL
+                    ORDER BY seksi
+                """)
+                available_sections = [{'id': int(float(row[0])), 'name': row[1]} for row in cursor.fetchall()]
+        except Exception as e:
+            logger.error(f"Error getting available sections: {e}")
         
         context = {
             'pengajuan': pengajuan,
             'review_form': review_form,
             'already_reviewed': already_reviewed,
-            'reviewer_name': REVIEWER_FULLNAME,
-            'page_title': f'Review Pengajuan {nomor_pengajuan}'
+            'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
+            'available_sections': available_sections,
+            'employee_data': employee_data,
+            'page_title': f'Review Pengajuan {nomor_pengajuan} - {employee_data.get("fullname", REVIEWER_FULLNAME)}'
         }
         
         return render(request, 'wo_maintenance_app/review_pengajuan_detail.html', context)

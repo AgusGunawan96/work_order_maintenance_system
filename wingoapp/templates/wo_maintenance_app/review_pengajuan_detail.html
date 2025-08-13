@@ -1,203 +1,193 @@
-<!-- web_seiwa/wingoapp/templates/wo_maintenance_app/review_pengajuan_detail.html -->
+<!-- wo_maintenance_app/templates/wo_maintenance_app/review_pengajuan_detail.html -->
 {% extends 'starter_kit/base.html' %}
 {% load static %}
 {% load sass_tags %}
 {% load widget_tweaks %}
 
 {% block css %}
-<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
+<!-- Plugins css Ends-->
 <style>
     .page-body {
         padding-top: 20px;
     }
     
-    .card-header {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    /* SITI FATIMAH Theme */
+    .siti-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         color: white;
-        font-weight: 600;
-    }
-    
-    .reviewer-info {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-    
-    .detail-section {
-        background: #f8f9fa;
         padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        border-left: 4px solid #ff6b6b;
+        border-radius: 10px;
+        margin-bottom: 25px;
     }
     
-    .detail-section h5 {
-        color: #ff6b6b;
+    .siti-header h4 {
+        margin-bottom: 5px;
         font-weight: 600;
-        margin-bottom: 15px;
-        border-bottom: 2px solid #e9ecef;
-        padding-bottom: 8px;
     }
     
+    .siti-header .reviewer-info {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+    
+    /* Cards */
+    .pengajuan-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+        border-left: 5px solid #28a745;
+    }
+    
+    .review-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left: 5px solid #ffc107;
+        position: sticky;
+        top: 20px;
+    }
+    
+    .already-reviewed-card {
+        background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+        border-left: 5px solid #28a745;
+        text-align: center;
+        padding: 40px 25px;
+    }
+    
+    /* Detail Items */
     .detail-item {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .detail-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
     }
     
     .detail-label {
         font-weight: 600;
         color: #495057;
-        display: block;
+        font-size: 0.9rem;
+        text-transform: uppercase;
         margin-bottom: 5px;
+        display: block;
     }
     
     .detail-value {
-        background: white;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #dee2e6;
-        min-height: 40px;
+        color: #333;
+        font-size: 1rem;
+        line-height: 1.5;
         display: flex;
         align-items: center;
+        min-height: 30px;
     }
     
+    .detail-value strong {
+        color: #28a745;
+    }
+    
+    /* Status Badges */
     .status-badge {
-        padding: 5px 10px;
-        border-radius: 15px;
+        padding: 6px 12px;
+        border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
+        display: inline-block;
     }
     
     .status-approved {
-        background: #d1ecf1;
-        color: #0c5460;
-    }
-    
-    .review-status-pending {
-        background: #fff3cd;
-        color: #856404;
-    }
-    
-    .review-status-approved {
         background: #d4edda;
         color: #155724;
     }
     
-    .review-status-rejected {
-        background: #f8d7da;
-        color: #721c24;
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
     }
     
-    .review-form-section {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-        border: 2px solid #ff6b6b;
+    .status-reviewed {
+        background: #cce7ff;
+        color: #004085;
     }
     
-    .review-form-section h5 {
-        color: #ff6b6b;
-        font-weight: 700;
-        margin-bottom: 20px;
-        text-align: center;
+    /* Review Form Styles */
+    .review-form-title {
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        color: white;
+        padding: 15px 20px;
+        margin: -25px -25px 25px -25px;
+        border-radius: 12px 12px 0 0;
+        font-weight: 600;
     }
     
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
     
+    .form-group label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    /* Radio Group for Action */
     .radio-group {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 10px;
     }
     
     .radio-option {
-        margin-bottom: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
     }
     
     .radio-option:hover {
-        background: #e9ecef;
+        border-color: #28a745;
+        background: #f8f9fa;
     }
     
-    .radio-option input[type="radio"] {
-        margin-right: 10px;
-        transform: scale(1.2);
-    }
-    
-    .radio-approve {
+    .radio-option.radio-approve {
         border-left: 4px solid #28a745;
     }
     
-    .radio-reject {
+    .radio-option.radio-reject {
         border-left: 4px solid #dc3545;
     }
     
-    .btn-submit {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-        border: none;
-        color: white;
-        padding: 12px 30px;
+    .radio-option input[type="radio"]:checked + label,
+    .radio-option:has(input[type="radio"]:checked) {
+        background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+        border-color: #28a745;
         font-weight: 600;
-        border-radius: 8px;
-        font-size: 1.1rem;
     }
     
-    .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-        color: white;
-    }
-    
-    .already-reviewed {
-        background: #e9ecef;
-        color: #6c757d;
+    /* Section Selection */
+    .section-selection {
+        background: #f8f9fa;
         padding: 20px;
         border-radius: 10px;
-        text-align: center;
-        margin: 20px 0;
+        border-left: 4px solid #28a745;
+        margin-top: 15px;
     }
     
-    .workflow-indicator {
-        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-        color: white;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
-    
-    .workflow-step {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 2px;
-        border-radius: 15px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-    
-    .workflow-completed {
-        background: rgba(255, 255, 255, 0.3);
-    }
-    
-    .workflow-current {
-        background: rgba(255, 255, 255, 0.8);
-        color: #0984e3;
-    }
-    
-    .workflow-pending {
-        background: rgba(255, 255, 255, 0.1);
-    }
-    
-    .final-section-warning {
+    .section-warning {
         background: #fff3cd;
         border: 1px solid #ffeaa7;
         border-radius: 8px;
@@ -205,9 +195,120 @@
         margin-bottom: 15px;
     }
     
-    .reviewer-name {
+    .section-warning strong {
+        color: #856404;
+    }
+    
+    /* Priority Selection */
+    .priority-selection select {
+        background-color: white;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 10px 15px;
+    }
+    
+    .priority-selection select:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+    
+    /* Submit Button */
+    .submit-button {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
         font-weight: 600;
         font-size: 1.1rem;
+        width: 100%;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+    
+    .submit-button:disabled {
+        background: #6c757d;
+        transform: none;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+    
+    /* Navigation Buttons */
+    .nav-button {
+        padding: 12px 25px;
+        border-radius: 20px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-button:hover {
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+    
+    .btn-back {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn-dashboard {
+        background: #007bff;
+        color: white;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .pengajuan-card, .review-card {
+            padding: 20px;
+        }
+        
+        .siti-header {
+            padding: 15px;
+        }
+        
+        .radio-group {
+            gap: 10px;
+        }
+        
+        .radio-option {
+            padding: 12px;
+        }
+        
+        .review-card {
+            position: static;
+            margin-top: 20px;
+        }
+    }
+    
+    /* Loading State */
+    .loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+    
+    .loading .submit-button {
+        background: #6c757d;
+    }
+    
+    /* Success Animation */
+    @keyframes success-bounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .success-animation {
+        animation: success-bounce 0.6s ease-in-out;
     }
 </style>
 {% endblock css %}
@@ -216,7 +317,17 @@
 <div class="page-body">
     {% include 'starter_kit/layout/breadcrumb.html' %}
 
-    <!-- Notifikasi untuk pesan -->
+    <!-- SITI FATIMAH Header -->
+    <div class="siti-header">
+        <h4>🎯 Review Pengajuan WO Maintenance</h4>
+        <div class="reviewer-info">
+            Reviewer: <strong>{{ reviewer_name }}</strong> | 
+            Pengajuan: <strong>{{ pengajuan.history_id }}</strong> |
+            <span class="badge bg-light text-dark">{{ pengajuan.oleh }}</span>
+        </div>
+    </div>
+
+    <!-- Messages -->
     {% if messages %}
         {% for message in messages %}
             <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
@@ -226,273 +337,196 @@
         {% endfor %}
     {% endif %}
 
-    <!-- Reviewer Info -->
-    <div class="reviewer-info">
-        <div class="reviewer-name">👩‍💼 {{ reviewer_name }}</div>
-        <div>📋 Review & Distribusi Pengajuan: {{ pengajuan.history_id }}</div>
-    </div>
-
-    <!-- Workflow Indicator -->
-    <div class="workflow-indicator">
-        <div class="text-center">
-            <h6 class="mb-2">🔄 Workflow Status</h6>
-            <div>
-                <span class="workflow-step workflow-completed">✅ Dibuat</span>
-                <span class="workflow-step workflow-completed">✅ Approved Atasan</span>
-                {% if already_reviewed %}
-                    {% if pengajuan.review_status == '1' %}
-                        <span class="workflow-step workflow-completed">✅ Reviewed & Distributed</span>
-                        <span class="workflow-step workflow-current">📋 Di Section: {{ pengajuan.final_section_name|default:"Unknown" }}</span>
-                    {% elif pengajuan.review_status == '2' %}
-                        <span class="workflow-step workflow-completed">❌ Rejected by Reviewer</span>
-                    {% endif %}
-                {% else %}
-                    <span class="workflow-step workflow-current">⏳ Pending Review</span>
-                    <span class="workflow-step workflow-pending">📋 Distribusi ke Section</span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
     <div class="row">
         <!-- Detail Pengajuan -->
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5><i data-feather="file-text"></i> Detail Pengajuan</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Informasi Dasar -->
-                    <div class="detail-section">
-                        <h5>📄 Informasi Dasar</h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">History ID</span>
-                                    <div class="detail-value">
-                                        <strong class="text-primary">{{ pengajuan.history_id }}</strong>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Number WO</span>
-                                    <div class="detail-value">{{ pengajuan.number_wo|default:"-" }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Tanggal Dibuat</span>
-                                    <div class="detail-value">
-                                        {% if pengajuan.tgl_insert %}
-                                            {{ pengajuan.tgl_insert|date:"d M Y H:i" }}
-                                        {% else %}
-                                            -
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Status Approval</span>
-                                    <div class="detail-value">
-                                        <span class="status-badge status-approved">✅ Approved by Atasan</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Informasi Pengaju -->
-                    <div class="detail-section">
-                        <h5>👤 Informasi Pengaju</h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Nama Pengaju</span>
-                                    <div class="detail-value">{{ pengajuan.oleh|default:"-" }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Employee Number</span>
-                                    <div class="detail-value">{{ pengajuan.user_insert|default:"-" }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Informasi Mesin & Lokasi -->
-                    <div class="detail-section">
-                        <h5>🔧 Informasi Mesin & Lokasi</h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Line</span>
-                                    <div class="detail-value">
-                                        {% if pengajuan.line_name %}
-                                            <span class="badge bg-info">{{ pengajuan.line_name }}</span>
-                                        {% else %}
-                                            -
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Nama Mesin</span>
-                                    <div class="detail-value">{{ pengajuan.mesin|default:"-" }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Section Tujuan (Original)</span>
-                                    <div class="detail-value">{{ pengajuan.section_tujuan|default:"-" }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Jenis Pekerjaan</span>
-                                    <div class="detail-value">{{ pengajuan.pekerjaan|default:"-" }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Deskripsi Pekerjaan -->
-                    <div class="detail-section">
-                        <h5>📝 Deskripsi Pekerjaan</h5>
+        <div class="col-lg-8">
+            <div class="pengajuan-card">
+                <h5 style="color: #28a745; margin-bottom: 25px;">📋 Detail Pengajuan</h5>
+                
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="detail-item">
-                            <div class="detail-value" style="min-height: 80px; align-items: flex-start;">
-                                {{ pengajuan.deskripsi_perbaikan|default:"-"|linebreaks }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Review Status -->
-                    {% if already_reviewed %}
-                    <div class="detail-section">
-                        <h5>📋 Status Review</h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Status Review</span>
-                                    <div class="detail-value">
-                                        {% if pengajuan.review_status == '1' %}
-                                            <span class="status-badge review-status-approved">✅ Approved & Distributed</span>
-                                        {% elif pengajuan.review_status == '2' %}
-                                            <span class="status-badge review-status-rejected">❌ Rejected</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="detail-item">
-                                    <span class="detail-label">Tanggal Review</span>
-                                    <div class="detail-value">
-                                        {% if pengajuan.review_date %}
-                                            {{ pengajuan.review_date|date:"d M Y H:i" }}
-                                        {% else %}
-                                            -
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% if pengajuan.final_section_name %}
-                        <div class="detail-item">
-                            <span class="detail-label">Final Section Assignment</span>
+                            <div class="detail-label">History ID</div>
                             <div class="detail-value">
-                                <span class="badge bg-success">{{ pengajuan.final_section_name }}</span>
+                                <strong>{{ pengajuan.history_id }}</strong>
                             </div>
                         </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Number WO</div>
+                            <div class="detail-value">{{ pengajuan.number_wo|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Pengaju</div>
+                            <div class="detail-value">
+                                <strong>{{ pengajuan.oleh }}</strong>
+                                <small class="text-muted">({{ pengajuan.user_insert }})</small>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Tanggal Pengajuan</div>
+                            <div class="detail-value">
+                                {{ pengajuan.tgl_insert|date:"d M Y H:i"|default:"-" }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <div class="detail-label">Line</div>
+                            <div class="detail-value">{{ pengajuan.line_name|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Mesin</div>
+                            <div class="detail-value">{{ pengajuan.mesin|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Section Pengaju</div>
+                            <div class="detail-value">{{ pengajuan.section_tujuan|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Jenis Pekerjaan</div>
+                            <div class="detail-value">{{ pengajuan.pekerjaan|default:"-" }}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Deskripsi Perbaikan</div>
+                    <div class="detail-value" style="min-height: 60px; align-items: flex-start;">
+                        {{ pengajuan.deskripsi_perbaikan|linebreaks }}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <div class="detail-label">Status Pengajuan</div>
+                            <div class="detail-value">
+                                {% if pengajuan.status == '1' %}
+                                    <span class="status-badge status-approved">✅ Approved</span>
+                                {% else %}
+                                    <span class="status-badge status-pending">⏳ {{ pengajuan.status }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <div class="detail-label">Status Review</div>
+                            <div class="detail-value">
+                                {% if pengajuan.review_status == '1' %}
+                                    <span class="status-badge status-approved">✅ Reviewed (Approved)</span>
+                                {% elif pengajuan.review_status == '2' %}
+                                    <span class="status-badge" style="background: #f8d7da; color: #721c24;">❌ Reviewed (Rejected)</span>
+                                {% else %}
+                                    <span class="status-badge status-pending">⏳ Pending Review</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if already_reviewed %}
+                <div class="detail-item">
+                    <div class="detail-label">Review Details</div>
+                    <div class="detail-value" style="flex-direction: column; align-items: flex-start;">
+                        <div><strong>Reviewer:</strong> {{ pengajuan.reviewed_by|default:"-" }}</div>
+                        <div><strong>Tanggal Review:</strong> {{ pengajuan.review_date|date:"d M Y H:i"|default:"-" }}</div>
+                        {% if pengajuan.final_section_name and pengajuan.review_status == '1' %}
+                            <div><strong>Didistribusikan ke:</strong> {{ pengajuan.final_section_name }}</div>
                         {% endif %}
                         {% if pengajuan.review_notes %}
-                        <div class="detail-item">
-                            <span class="detail-label">Catatan Review</span>
-                            <div class="detail-value" style="min-height: 60px; align-items: flex-start;">
-                                {{ pengajuan.review_notes|linebreaks }}
-                            </div>
-                        </div>
+                            <div><strong>Catatan:</strong> {{ pengajuan.review_notes }}</div>
                         {% endif %}
                     </div>
-                    {% endif %}
                 </div>
+                {% endif %}
             </div>
         </div>
 
         <!-- Review Form -->
-        <div class="col-md-4">
+        <div class="col-lg-4">
             {% if not already_reviewed %}
-            <div class="review-form-section">
-                <h5>📋 Review Pengajuan</h5>
+            <div class="review-card">
+                <div class="review-form-title">
+                    🎯 Form Review
+                </div>
                 
                 <form method="post" id="reviewForm">
                     {% csrf_token %}
                     
                     <!-- Action Selection -->
                     <div class="form-group">
-                        <label class="detail-label">Keputusan Review <span class="text-danger">*</span></label>
+                        <label>Keputusan Review <span class="text-danger">*</span></label>
                         <div class="radio-group">
                             {% for choice in review_form.action %}
                                 <div class="radio-option {% if choice.choice_value == 'approve' %}radio-approve{% else %}radio-reject{% endif %}">
                                     {{ choice.tag }}
-                                    <label for="{{ choice.id_for_label }}" style="font-weight: normal; margin-left: 5px;">
+                                    <label for="{{ choice.id_for_label }}" style="font-weight: normal; margin-left: 10px; cursor: pointer;">
                                         {% if choice.choice_value == 'approve' %}
-                                            ✅ Approve & Assign to Section
+                                            ✅ Approve & Distribute to Section
                                         {% else %}
-                                            ❌ Reject
+                                            ❌ Reject Pengajuan
                                         {% endif %}
                                     </label>
                                 </div>
                             {% endfor %}
                         </div>
                         {% if review_form.action.errors %}
-                            <div class="text-danger">{{ review_form.action.errors.0 }}</div>
+                            <div class="text-danger mt-2">{{ review_form.action.errors.0 }}</div>
                         {% endif %}
                     </div>
                     
-                    <!-- Final Section Selection -->
-                    <div class="form-group" id="final-section-group">
-                        <label class="detail-label">Final Section Assignment <span class="text-danger">*</span></label>
-                        <div class="final-section-warning">
-                            <small><strong>📍 Penting:</strong> Pilih section final yang akan menangani pengajuan ini (IT, Elektrik, Mekanik, atau Utility)</small>
+                    <!-- Section Selection (conditional) -->
+                    <div id="sectionSelection" class="form-group" style="display: none;">
+                        <div class="section-warning">
+                            <strong>📍 Penting:</strong> Pilih section final yang akan menangani pengajuan ini
                         </div>
-                        {{ review_form.final_section|add_class:"form-control select2" }}
+                        <label>{{ review_form.final_section.label }} <span class="text-danger">*</span></label>
+                        {{ review_form.final_section|add_class:"form-control select2-section" }}
                         {% if review_form.final_section.errors %}
-                            <div class="text-danger">{{ review_form.final_section.errors.0 }}</div>
+                            <div class="text-danger mt-2">{{ review_form.final_section.errors.0 }}</div>
                         {% endif %}
+                        <small class="text-muted mt-1">{{ review_form.final_section.help_text }}</small>
+                    </div>
+                    
+                    <!-- Priority Level -->
+                    <div class="form-group priority-selection">
+                        <label>{{ review_form.priority_level.label }}</label>
+                        {{ review_form.priority_level|add_class:"form-control" }}
+                        <small class="text-muted">{{ review_form.priority_level.help_text }}</small>
                     </div>
                     
                     <!-- Review Notes -->
                     <div class="form-group">
-                        <label class="detail-label">Catatan Review</label>
+                        <label>{{ review_form.review_notes.label }}</label>
                         {{ review_form.review_notes|add_class:"form-control" }}
                         {% if review_form.review_notes.errors %}
                             <div class="text-danger">{{ review_form.review_notes.errors.0 }}</div>
                         {% endif %}
-                        <small class="text-muted">Opsional: Tambahkan catatan untuk keputusan review</small>
+                        <small class="text-muted">{{ review_form.review_notes.help_text }}</small>
                     </div>
                     
                     <!-- Submit Button -->
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-submit" id="submitButton">
-                            <i data-feather="check-circle"></i> Proses Review
-                        </button>
-                    </div>
+                    <button type="submit" class="submit-button" id="submitButton">
+                        <i data-feather="check-circle"></i> Proses Review
+                    </button>
                 </form>
             </div>
             {% else %}
-            <div class="already-reviewed">
+            <div class="review-card already-reviewed-card">
                 <i data-feather="check-circle" style="width: 48px; height: 48px; color: #28a745;"></i>
-                <h5 class="mt-3">Pengajuan Sudah Direview</h5>
+                <h5 class="mt-3 mb-3">Pengajuan Sudah Direview</h5>
                 <p>
                     {% if pengajuan.review_status == '1' %}
-                        Pengajuan telah di-approve dan didistribusikan ke section: <strong>{{ pengajuan.final_section_name|default:"Unknown" }}</strong>
+                        Pengajuan telah di-approve dan didistribusikan ke:<br>
+                        <strong>{{ pengajuan.final_section_name|default:"Unknown Section" }}</strong>
                     {% elif pengajuan.review_status == '2' %}
                         Pengajuan telah ditolak
                     {% endif %}
@@ -508,26 +542,56 @@
     <!-- Navigation -->
     <div class="row mt-4">
         <div class="col-12">
-            <div class="d-flex justify-content-between">
-                <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" class="btn btn-secondary">
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+                <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" class="nav-button btn-back">
                     <i data-feather="arrow-left"></i> Kembali ke Daftar
                 </a>
-                <div>
-                    <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="btn btn-outline-primary">
-                        <i data-feather="home"></i> Dashboard Review
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="nav-button btn-dashboard">
+                        <i data-feather="home"></i> Review Dashboard
                     </a>
-                    <a href="{% url 'wo_maintenance_app:review_history' %}" class="btn btn-outline-secondary">
-                        <i data-feather="clock"></i> History Review
+                    {% if available_sections %}
+                    <a href="#" class="nav-button" style="background: #17a2b8; color: white;" onclick="showSectionInfo()">
+                        <i data-feather="info"></i> Section Info
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Section Info Modal -->
+{% if available_sections %}
+<div class="modal fade" id="sectionInfoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #28a745; color: white;">
+                <h5 class="modal-title">📋 Available Sections for Distribution</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    {% for section in available_sections %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ section.name }}</h6>
+                                <small class="text-muted">ID: {{ section.id }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock content %}
 
 {% block scriptcontent %}
-<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
+<!-- Plugins JS start-->
 <script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
 
 <script>
@@ -535,86 +599,124 @@ $(document).ready(function() {
     // Initialize Feather Icons
     feather.replace();
     
-    // Initialize Select2
-    $('#id_final_section').select2({
+    // Initialize Select2 for section selection
+    $('.select2-section').select2({
         width: '100%',
-        placeholder: 'Pilih Section Final'
+        placeholder: 'Pilih section untuk distribusi...',
+        allowClear: true
     });
     
-    // Show/hide final section based on action selection
+    // Handle action radio button changes
     $('input[name="action"]').on('change', function() {
-        const selectedAction = $(this).val();
-        const finalSectionGroup = $('#final-section-group');
-        const finalSectionSelect = $('#id_final_section');
-        
-        if (selectedAction === 'approve') {
-            finalSectionGroup.show();
-            finalSectionSelect.prop('required', true);
-        } else {
-            finalSectionGroup.hide();
-            finalSectionSelect.prop('required', false);
-            finalSectionSelect.val(null).trigger('change');
-        }
-        
-        // Update submit button text
+        const action = $(this).val();
+        const sectionSelection = $('#sectionSelection');
         const submitButton = $('#submitButton');
-        if (selectedAction === 'approve') {
+        
+        if (action === 'approve') {
+            sectionSelection.slideDown(300);
             submitButton.html('<i data-feather="check-circle"></i> Approve & Distribute');
+            submitButton.css('background', 'linear-gradient(135deg, #28a745 0%, #20c997 100%)');
         } else {
+            sectionSelection.slideUp(300);
             submitButton.html('<i data-feather="x-circle"></i> Reject Pengajuan');
+            submitButton.css('background', 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)');
         }
         feather.replace();
     });
     
     // Form validation
     $('#reviewForm').on('submit', function(e) {
-        const selectedAction = $('input[name="action"]:checked').val();
-        const finalSection = $('#id_final_section').val();
+        const action = $('input[name="action"]:checked').val();
+        const finalSection = $('select[name="final_section"]').val();
         
-        if (!selectedAction) {
+        if (action === 'approve' && !finalSection) {
             e.preventDefault();
-            alert('Pilih keputusan review (Approve atau Reject)');
+            alert('⚠️ Pilih section final untuk distribusi pengajuan!');
+            $('.select2-section').focus();
             return false;
         }
         
-        if (selectedAction === 'approve' && !finalSection) {
-            e.preventDefault();
-            alert('Pilih final section assignment untuk approval');
-            $('#id_final_section').focus();
-            return false;
-        }
+        // Show loading state
+        const submitButton = $('#submitButton');
+        const originalText = submitButton.html();
         
-        // Confirmation
-        const confirmMessage = selectedAction === 'approve' 
-            ? 'Yakin akan meng-approve dan mendistribusikan pengajuan ini ke section yang dipilih?'
-            : 'Yakin akan menolak pengajuan ini?';
-            
-        if (!confirm(confirmMessage)) {
-            e.preventDefault();
-            return false;
-        }
+        submitButton.prop('disabled', true);
+        submitButton.html('<i class="fa fa-spinner fa-spin"></i> Processing...');
         
-        // Disable submit button to prevent double submission
-        $('#submitButton').prop('disabled', true).text('Processing...');
+        // Add loading class
+        $('.review-card').addClass('loading');
+        
+        // If not prevented, form will submit normally
+        // Reset button after a delay as fallback
+        setTimeout(function() {
+            submitButton.prop('disabled', false);
+            submitButton.html(originalText);
+            $('.review-card').removeClass('loading');
+            feather.replace();
+        }, 5000);
     });
     
-    // Initial state
-    const initialAction = $('input[name="action"]:checked').val();
-    if (!initialAction || initialAction === 'reject') {
-        $('#final-section-group').hide();
-        $('#id_final_section').prop('required', false);
+    // Confirm reject action
+    $('input[value="reject"]').on('change', function() {
+        if ($(this).is(':checked')) {
+            const confirm = window.confirm('⚠️ Anda yakin ingin menolak pengajuan ini?');
+            if (!confirm) {
+                $('input[value="approve"]').prop('checked', true).trigger('change');
+            }
+        }
+    });
+    
+    // Auto-save draft (optional)
+    let draftTimeout;
+    $('textarea[name="review_notes"]').on('input', function() {
+        clearTimeout(draftTimeout);
+        draftTimeout = setTimeout(function() {
+            // Save draft to localStorage
+            localStorage.setItem('review_draft_{{ pengajuan.history_id }}', $('textarea[name="review_notes"]').val());
+        }, 1000);
+    });
+    
+    // Load draft on page load
+    const savedDraft = localStorage.getItem('review_draft_{{ pengajuan.history_id }}');
+    if (savedDraft) {
+        $('textarea[name="review_notes"]').val(savedDraft);
     }
     
-    // Auto-resize textarea
-    $('textarea').each(function() {
-        this.style.height = 'auto';
-        this.style.height = this.scrollHeight + 'px';
-    }).on('input', function() {
-        this.style.height = 'auto';
-        this.style.height = this.scrollHeight + 'px';
-    });
+    // Clear draft after successful submission
+    {% if messages %}
+    localStorage.removeItem('review_draft_{{ pengajuan.history_id }}');
+    {% endif %}
     
-    console.log('Review Detail loaded for {{ reviewer_name }} - Pengajuan: {{ pengajuan.history_id }}');
+    // Enhanced tooltips
+    $('[title]').tooltip();
+    
+    // Success animation for messages
+    $('.alert-success').addClass('success-animation');
+    
+    // Auto-dismiss alerts
+    $('.alert').delay(8000).fadeOut();
+    
+    console.log('🎯 SITI FATIMAH Review System Loaded');
+    console.log('Pengajuan: {{ pengajuan.history_id }}');
+    console.log('Available Sections: {{ available_sections|length }}');
+});
+
+// Section info modal function
+function showSectionInfo() {
+    $('#sectionInfoModal').modal('show');
+}
+
+// Keyboard shortcuts
+$(document).keydown(function(e) {
+    // Ctrl+Enter to submit form
+    if (e.ctrlKey && e.keyCode === 13) {
+        $('#reviewForm').submit();
+    }
+    
+    // Escape to go back
+    if (e.keyCode === 27) {
+        window.location.href = "{% url 'wo_maintenance_app:review_pengajuan_list' %}";
+    }
 });
 </script>
 {% endblock scriptcontent %}
