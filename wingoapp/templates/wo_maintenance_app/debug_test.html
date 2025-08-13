@@ -1,0 +1,409 @@
+<!-- wo_maintenance_app/templates/wo_maintenance_app/debug_test.html -->
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+
+{% block css %}
+<style>
+    .debug-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .debug-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .debug-result {
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 4px;
+        font-family: monospace;
+    }
+    
+    .debug-ok {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .debug-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    
+    .sample-data {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 15px;
+        margin-top: 10px;
+    }
+    
+    .sample-data table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .sample-data th,
+    .sample-data td {
+        padding: 8px;
+        border: 1px solid #dee2e6;
+        text-align: left;
+    }
+    
+    .sample-data th {
+        background: #e9ecef;
+        font-weight: 600;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="debug-container">
+    <h1>🔧 Database Debug Test - User 007522</h1>
+    
+    <div class="debug-card">
+        <h3>Connection Tests</h3>
+        
+        {% for test_name, result in debug_results.items %}
+            {% if test_name != 'sample_data' %}
+                <div class="debug-result {% if 'ERROR' in result %}debug-error{% else %}debug-ok{% endif %}">
+                    <strong>{{ test_name|title }}:</strong> {{ result }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    
+    {% if debug_results.sample_data %}
+    <div class="debug-card">
+        <h3>Sample Data</h3>
+        <div class="sample-data">
+            <table>
+                <thead>
+                    <tr>
+                        <th>History ID</th>
+                        <th>Oleh</th>
+                        <th>Status</th>
+                        <th>Approve</th>
+                        <th>Tanggal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in debug_results.sample_data %}
+                    <tr>
+                        <td>{{ row.0|default:"-" }}</td>
+                        <td>{{ row.1|default:"-" }}</td>
+                        <td>{{ row.2|default:"-" }}</td>
+                        <td>{{ row.3|default:"-" }}</td>
+                        <td>{{ row.4|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="debug-card">
+        <h3>Next Steps</h3>
+        {% if debug_results.connection == 'OK' %}
+            <div class="debug-result debug-ok">
+                ✅ Database connection is working
+            </div>
+            {% if debug_results.approved_count and 'OK' in debug_results.approved_count %}
+                <div class="debug-result debug-ok">
+                    ✅ Approved pengajuan data found
+                </div>
+                <p><strong>Ready to test:</strong></p>
+                <ul>
+                    <li><a href="{% url 'wo_maintenance_app:minimal_approved_view' %}" class="btn btn-success">Test Minimal Approved View</a></li>
+                    <li><a href="{% url 'wo_maintenance_app:daftar_laporan' %}?mode=approved" class="btn btn-primary">Test Full Approved Mode</a></li>
+                </ul>
+            {% else %}
+                <div class="debug-result debug-error">
+                    ❌ No approved pengajuan found. Create some test data first.
+                </div>
+                <p><strong>Create test data:</strong></p>
+                <code>python manage.py setup_user_007522 --create-user --test-data</code>
+            {% endif %}
+        {% else %}
+            <div class="debug-result debug-error">
+                ❌ Database connection failed. Check settings and connection.
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="debug-card">
+        <h3>User Info</h3>
+        <div class="debug-result {% if debug_results.is_007522 == 'YES' %}debug-ok{% else %}debug-error{% endif %}">
+            <strong>Current User:</strong> {{ debug_results.current_user|default:"Unknown" }}
+        </div>
+        <div class="debug-result {% if debug_results.is_007522 == 'YES' %}debug-ok{% else %}debug-error{% endif %}">
+            <strong>Is User 007522:</strong> {{ debug_results.is_007522|default:"Unknown" }}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+---
+
+<!-- wo_maintenance_app/templates/wo_maintenance_app/minimal_approved.html -->
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+
+{% block css %}
+<style>
+    .minimal-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .header-card {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    
+    .stats-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+    
+    .stats-label {
+        color: #6c757d;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .table-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .table-header {
+        background: #28a745;
+        color: white;
+        padding: 15px 20px;
+        font-weight: 600;
+    }
+    
+    .table-responsive {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    
+    .minimal-table {
+        width: 100%;
+        margin: 0;
+    }
+    
+    .minimal-table th {
+        background: #f8f9fa;
+        padding: 12px;
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .minimal-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+    }
+    
+    .minimal-table tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-approved {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .review-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .review-completed {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+    
+    .action-buttons {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .btn-action {
+        margin: 5px;
+        padding: 10px 20px;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="minimal-container">
+    
+    <!-- Header -->
+    <div class="header-card">
+        <h2>✅ Minimal Approved View</h2>
+        <p><strong>SITI FATIMAH (007522)</strong> - Testing Database Compatibility</p>
+        <p>Menampilkan pengajuan approved dengan query paling sederhana</p>
+    </div>
+    
+    <!-- Stats -->
+    <div class="stats-card">
+        <div class="stats-number">{{ total_approved }}</div>
+        <div class="stats-label">Total Approved Pengajuan</div>
+    </div>
+    
+    <!-- Table -->
+    <div class="table-card">
+        <div class="table-header">
+            📋 Daftar Pengajuan Approved (TOP 50)
+        </div>
+        
+        {% if pengajuan_list %}
+            <div class="table-responsive">
+                <table class="minimal-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 150px;">History ID</th>
+                            <th style="width: 200px;">Pengaju</th>
+                            <th>Deskripsi</th>
+                            <th style="width: 120px;">Status Review</th>
+                            <th style="width: 130px;">Tanggal</th>
+                            <th style="width: 100px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pengajuan in pengajuan_list %}
+                        <tr>
+                            <td>
+                                <strong class="text-success">{{ pengajuan.0|default:"-" }}</strong>
+                                {% if pengajuan.7 %}
+                                    <br><small class="text-muted">{{ pengajuan.7 }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ pengajuan.1|default:"-" }}
+                                {% if pengajuan.6 %}
+                                    <br><small class="text-muted">{{ pengajuan.6 }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
+                                    {{ pengajuan.2|default:"-"|truncatechars:80 }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if pengajuan.8 == '0' or pengajuan.8 is None %}
+                                    <span class="status-badge review-pending">⏳ Pending Review</span>
+                                {% elif pengajuan.8 == '1' %}
+                                    <span class="status-badge review-completed">✅ Reviewed</span>
+                                {% elif pengajuan.8 == '2' %}
+                                    <span class="status-badge status-rejected">❌ Rejected</span>
+                                {% else %}
+                                    <span class="status-badge status-approved">✅ Approved</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if pengajuan.5 %}
+                                    {{ pengajuan.5|date:"d/m/Y" }}
+                                    <br><small class="text-muted">{{ pengajuan.5|date:"H:i" }}</small>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if pengajuan.0 %}
+                                    <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" 
+                                       class="btn btn-sm btn-outline-primary" title="Detail">
+                                        <i data-feather="eye"></i>
+                                    </a>
+                                {% else %}
+                                    <span class="btn btn-sm btn-outline-secondary disabled">
+                                        <i data-feather="eye"></i>
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i data-feather="inbox" style="width: 48px; height: 48px; color: #6c757d;"></i>
+                <h5 class="mt-3 text-muted">Tidak ada pengajuan approved</h5>
+                <p class="text-muted">Belum ada pengajuan work order yang telah di-approve</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="{% url 'wo_maintenance_app:debug_test_view' %}" class="btn btn-info btn-action">
+            <i data-feather="settings"></i> Debug Test
+        </a>
+        <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="btn btn-secondary btn-action">
+            <i data-feather="arrow-left"></i> Kembali ke Daftar
+        </a>
+        <a href="{% url 'wo_maintenance_app:daftar_laporan' %}?mode=approved" class="btn btn-success btn-action">
+            <i data-feather="check-circle"></i> Try Full Mode
+        </a>
+    </div>
+    
+</div>
+
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    console.log('Minimal Approved View loaded - Testing database compatibility');
+    console.log('Total approved: {{ total_approved }}');
+    console.log('Pengajuan count: {{ pengajuan_list|length }}');
+});
+</script>
+{% endblock content %}

@@ -1,30 +1,35 @@
-# wo_maintenance_app/urls.py - FIXED VERSION
+# wo_maintenance_app/urls.py - TAMBAHKAN URLs untuk debugging
+
 from django.urls import path
 from wo_maintenance_app import views
 
-app_name = 'wo_maintenance_app'  # Namespace untuk aplikasi
+app_name = 'wo_maintenance_app'
 
 urlpatterns = [
     # ===== DASHBOARD & OVERVIEW =====
-    path('', views.dashboard_index, name='dashboard'),  # Root URL untuk WO Maintenance
-    path('dashboard/', views.dashboard_index, name='dashboard_index'),  # Alternative dashboard URL
+    path('', views.dashboard_index, name='dashboard'),
+    path('dashboard/', views.dashboard_index, name='dashboard_index'),
     
     # ===== INPUT LAPORAN =====
     path('input/', views.input_laporan, name='input_laporan'),
-    path('input-laporan/', views.input_laporan, name='input_pengajuan'),  # Alternative URL
+    path('input-laporan/', views.input_laporan, name='input_pengajuan'),
     
     # ===== DAFTAR LAPORAN =====
     path('daftar/', views.daftar_laporan, name='daftar_laporan'),
-    path('daftar-pengajuan/', views.daftar_laporan, name='daftar_pengajuan'),  # Alternative URL
-    path('list/', views.daftar_laporan, name='pengajuan_list'),  # Alternative URL
+    path('daftar-pengajuan/', views.daftar_laporan, name='daftar_pengajuan'),
+    path('list/', views.daftar_laporan, name='pengajuan_list'),
     
     # ===== DETAIL LAPORAN =====
     path('detail/<str:nomor_pengajuan>/', views.detail_laporan, name='detail_laporan'),
-    path('detail-pengajuan/<str:nomor_pengajuan>/', views.detail_laporan, name='detail_pengajuan'),  # Alternative URL
+    path('detail-pengajuan/<str:nomor_pengajuan>/', views.detail_laporan, name='detail_pengajuan'),
+    
+    # ===== DEBUG & TESTING VIEWS (untuk troubleshooting database) =====
+    path('debug-test/', views.debug_test_view, name='debug_test_view'),
+    path('minimal-approved/', views.minimal_approved_view, name='minimal_approved_view'),
     
     # ===== REVIEW SYSTEM - SITI FATIMAH =====
-    path('review/', views.review_dashboard, name='review_dashboard'),  # Main review dashboard
-    path('review/dashboard/', views.review_dashboard, name='review_dashboard_alt'),  # Alternative
+    path('review/', views.review_dashboard, name='review_dashboard'),
+    path('review/dashboard/', views.review_dashboard, name='review_dashboard_alt'),
     path('review/pengajuan/', views.review_pengajuan_list, name='review_pengajuan_list'),
     path('review/pengajuan/<str:nomor_pengajuan>/', views.review_pengajuan_detail, name='review_pengajuan_detail'),
     path('review/history/', views.review_history, name='review_history'),
@@ -40,6 +45,11 @@ urlpatterns = [
     # ===== ASSIGNMENT SYSTEM =====
     path('create-assignment-tables/', views.create_assignment_tables, name='create_assignment_tables'),
     
+    # ===== REVIEW SYSTEM AJAX ENDPOINTS =====
+    path('ajax/pending-review-count/', views.get_pending_review_count, name='get_pending_review_count'),
+    path('ajax/force-review-init/', views.force_review_initialization, name='force_review_initialization'),
+    path('ajax/review-stats/', views.quick_review_stats, name='quick_review_stats'),
+    
     # ===== DEBUG ENDPOINTS (SUPERUSER ONLY) =====
     path('debug/assignment-status/', views.debug_assignment_status, name='debug_assignment_status'),
     path('debug/test-assignment/<str:history_id>/<int:section_id>/<str:approver>/', views.debug_test_assignment, name='debug_test_assignment'),
@@ -47,11 +57,5 @@ urlpatterns = [
     path('debug/form-validation/', views.debug_form_validation, name='debug_form_validation'),
     path('debug/ajax-response/', views.debug_ajax_mesin_response, name='debug_ajax_response'),  
     path('debug/form-choices/', views.debug_form_choices, name='debug_form_choices'),
-
-    # ===== UPDATE URLs.py untuk AJAX endpoints baru =====
-# Tambahkan ke urls.py:
-path('ajax/pending-review-count/', views.get_pending_review_count, name='get_pending_review_count'),
-path('ajax/force-review-init/', views.force_review_initialization, name='force_review_initialization'),
-path('ajax/review-stats/', views.quick_review_stats, name='quick_review_stats'),
-path('debug/review-flow/<str:history_id>/', views.debug_review_flow, name='debug_review_flow'),
+    path('debug/review-flow/<str:history_id>/', views.debug_review_flow, name='debug_review_flow'),
 ]

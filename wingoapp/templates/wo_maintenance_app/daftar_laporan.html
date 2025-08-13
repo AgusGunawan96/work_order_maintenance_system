@@ -1,4 +1,4 @@
-<!-- web_seiwa/wingoapp/templates/wo_maintenance_app/daftar_laporan.html -->
+<!-- web_seiwa/wingoapp/templates/wo_maintenance_app/daftar_laporan.html - MODIFIED for 007522 -->
 {% extends 'starter_kit/base.html' %}
 {% load static %}
 {% load sass_tags %}
@@ -21,12 +21,21 @@
         font-weight: 600;
     }
     
+    /* SITI FATIMAH Special Header */
+    .card-header.siti-mode {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+    
     .filter-section {
         background: #f8f9fa;
         padding: 20px;
         border-radius: 8px;
         margin-bottom: 20px;
         border-left: 4px solid #667eea;
+    }
+    
+    .filter-section.siti-mode {
+        border-left-color: #28a745;
     }
     
     .table-responsive {
@@ -42,6 +51,10 @@
         border: none;
         padding: 15px 10px;
         font-size: 0.85rem;
+    }
+    
+    .table th.siti-mode {
+        background: #28a745;
     }
     
     .table td {
@@ -87,6 +100,22 @@
         color: #004085;
     }
     
+    /* Review status badges */
+    .review-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .review-approved {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .review-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
     .action-btn {
         margin: 2px;
         padding: 4px 8px;
@@ -130,6 +159,10 @@
         justify-content: space-between;
     }
     
+    .hierarchy-info.siti-mode {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+    
     .hierarchy-info .info-text {
         font-size: 0.9rem;
     }
@@ -147,6 +180,99 @@
         font-size: 0.75rem;
         font-weight: 600;
         margin-left: 10px;
+    }
+
+    /* ===== SITI FATIMAH MODE SWITCHING ===== */
+    .mode-switch {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    
+    .mode-switch h6 {
+        margin-bottom: 15px;
+        color: #495057;
+        font-weight: 600;
+    }
+    
+    .mode-buttons .btn {
+        margin: 0 5px;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .mode-buttons .btn.active {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    /* ===== SITI STATS CARDS ===== */
+    .siti-stats {
+        margin-bottom: 25px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        border-left: 4px solid #28a745;
+        transition: transform 0.3s ease;
+        height: 100%;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .stat-card .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 5px;
+    }
+    
+    .stat-card .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    
+    .stat-card.pending {
+        border-left-color: #ffc107;
+    }
+    
+    .stat-card.pending .stat-number {
+        color: #ffc107;
+    }
+    
+    .stat-card.approved {
+        border-left-color: #28a745;
+    }
+    
+    .stat-card.rejected {
+        border-left-color: #dc3545;
+    }
+    
+    .stat-card.rejected .stat-number {
+        color: #dc3545;
+    }
+
+    /* Priority row highlighting */
+    .priority-urgent {
+        background-color: #fff3cd !important;
+        border-left: 3px solid #ffc107;
+    }
+    
+    .priority-normal {
+        border-left: 3px solid #28a745;
     }
 
     /* Debug panel styles */
@@ -221,6 +347,11 @@
             margin-left: 0;
             margin-top: 5px;
         }
+        
+        .mode-buttons .btn {
+            margin: 5px 2px;
+            width: 100%;
+        }
     }
 </style>
 {% endblock css %}
@@ -241,9 +372,14 @@
 
     <!-- Hierarchy User Info -->
     {% if employee_data %}
-    <div class="hierarchy-info">
+    <div class="hierarchy-info{% if is_siti_fatimah and view_mode == 'approved' %} siti-mode{% endif %}">
         <div>
-            <div class="user-name">{{ employee_data.fullname|default:employee_data.nickname }}</div>
+            <div class="user-name">
+                {{ employee_data.fullname|default:employee_data.nickname }}
+                {% if is_siti_fatimah and view_mode == 'approved' %}
+                    <span style="font-size: 0.9rem; opacity: 0.9;"> - Mode Approved Pengajuan</span>
+                {% endif %}
+            </div>
             <div class="info-text">
                 {{ employee_data.department_name|default:"-" }} 
                 {% if employee_data.section_name %}> {{ employee_data.section_name }}{% endif %}
@@ -252,6 +388,9 @@
             <div class="info-text">{{ employee_data.title_name|default:"-" }}</div>
         </div>
         <div>
+            {% if is_siti_fatimah %}
+                <span class="role-badge">🎯 SITI FATIMAH - REVIEWER</span>
+            {% endif %}
             {% if employee_data.has_approval_role %}
                 <span class="role-badge">🎯 Can Approve</span>
             {% endif %}
@@ -264,11 +403,80 @@
     </div>
     {% endif %}
 
+    <!-- Mode Switch khusus untuk SITI FATIMAH -->
+    {% if is_siti_fatimah %}
+    <div class="mode-switch">
+        <h6>📋 Mode Tampilan Pengajuan - SITI FATIMAH</h6>
+        <div class="mode-buttons">
+            <a href="{% url 'wo_maintenance_app:daftar_laporan' %}?mode=normal" 
+               class="btn {% if view_mode == 'normal' %}btn-primary active{% else %}btn-outline-primary{% endif %}">
+                <i data-feather="list"></i> Mode Normal
+            </a>
+            <a href="{% url 'wo_maintenance_app:daftar_laporan' %}?mode=approved" 
+               class="btn {% if view_mode == 'approved' %}btn-success active{% else %}btn-outline-success{% endif %}">
+                <i data-feather="check-circle"></i> Semua Approved ({{ siti_stats.total_approved|default:0 }})
+            </a>
+            <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" 
+               class="btn btn-outline-warning">
+                <i data-feather="clipboard"></i> Mode Review
+            </a>
+            <a href="{% url 'wo_maintenance_app:review_dashboard' %}" 
+               class="btn btn-outline-info">
+                <i data-feather="home"></i> Review Dashboard
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Stats Cards khusus untuk SITI FATIMAH mode approved -->
+    {% if is_siti_fatimah and view_mode == 'approved' and siti_stats %}
+    <div class="siti-stats">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ siti_stats.total_approved|default:0 }}</div>
+                    <div class="stat-label">Total Approved</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card pending">
+                    <div class="stat-number">{{ siti_stats.pending_review|default:0 }}</div>
+                    <div class="stat-label">Pending Review</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card approved">
+                    <div class="stat-number">{{ siti_stats.already_reviewed|default:0 }}</div>
+                    <div class="stat-label">Sudah Direview</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ siti_stats.approved_today|default:0 }}</div>
+                    <div class="stat-label">Approved Hari Ini</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Debug Panel (only for superuser) -->
     {% if debug_info and user.is_superuser %}
     <div class="debug-panel">
-        <h6>🔧 Debug Info - Hierarchy Filter (Superuser Only)</h6>
+        <h6>🔧 Debug Info - Enhanced for SITI FATIMAH (Superuser Only)</h6>
         <div class="debug-info">
+            <div class="debug-item">
+                <span class="debug-label">Is SITI FATIMAH:</span>
+                <span class="debug-value">{{ debug_info.is_siti_fatimah|yesno:"Yes,No" }}</span>
+            </div>
+            <div class="debug-item">
+                <span class="debug-label">View Mode:</span>
+                <span class="debug-value">{{ debug_info.view_mode }}</span>
+            </div>
+            <div class="debug-item">
+                <span class="debug-label">Query Mode:</span>
+                <span class="debug-value">{{ debug_info.special_query_mode }}</span>
+            </div>
             <div class="debug-item">
                 <span class="debug-label">User Role:</span>
                 <span class="debug-value">{{ debug_info.user_role }}</span>
@@ -292,12 +500,15 @@
     <!-- Search Section -->
     <div class="search-section">
         <form method="get" class="row g-3">
+            {% if view_mode != 'normal' %}
+                <input type="hidden" name="mode" value="{{ view_mode }}">
+            {% endif %}
             <div class="col-md-8">
                 <div class="input-group">
                     <span class="input-group-text"><i data-feather="search"></i></span>
                     <input type="text" class="form-control" name="search" 
                            value="{{ search_query }}" 
-                           placeholder="Cari history ID, mesin, pengaju, atau deskripsi...">
+                           placeholder="{% if view_mode == 'approved' %}Cari dalam approved pengajuan...{% else %}Cari history ID, mesin, pengaju, atau deskripsi...{% endif %}">
                 </div>
             </div>
             <div class="col-md-4">
@@ -309,11 +520,17 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="filter-section">
-        <h6 class="mb-3"><i data-feather="filter"></i> Filter Data</h6>
+    <div class="filter-section{% if is_siti_fatimah and view_mode == 'approved' %} siti-mode{% endif %}">
+        <h6 class="mb-3">
+            <i data-feather="filter"></i> 
+            {% if view_mode == 'approved' %}Filter Approved Pengajuan{% else %}Filter Data{% endif %}
+        </h6>
         <form method="get" id="filterForm">
             {% if search_query %}
                 <input type="hidden" name="search" value="{{ search_query }}">
+            {% endif %}
+            {% if view_mode != 'normal' %}
+                <input type="hidden" name="mode" value="{{ view_mode }}">
             {% endif %}
             
             <div class="row g-3">
@@ -325,10 +542,12 @@
                     <label class="form-label">Tanggal Sampai</label>
                     {{ filter_form.tanggal_sampai|add_class:"form-control" }}
                 </div>
+                {% if view_mode != 'approved' %}
                 <div class="col-md-2">
                     <label class="form-label">Status</label>
                     {{ filter_form.status|add_class:"form-control" }}
                 </div>
+                {% endif %}
                 <div class="col-md-2">
                     <label class="form-label">Nama Mesin</label>
                     {{ filter_form.nama_mesin|add_class:"form-control" }}
@@ -348,7 +567,7 @@
                     <button type="submit" class="btn btn-filter me-2">
                         <i data-feather="filter"></i> Filter
                     </button>
-                    <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="btn btn-reset">
+                    <a href="{% url 'wo_maintenance_app:daftar_laporan' %}{% if view_mode != 'normal' %}?mode={{ view_mode }}{% endif %}" class="btn btn-reset">
                         <i data-feather="refresh-cw"></i> Reset
                     </a>
                 </div>
@@ -357,20 +576,39 @@
     </div>
     
     <div class="card">
-        <div class="card-header">
+        <div class="card-header{% if is_siti_fatimah and view_mode == 'approved' %} siti-mode{% endif %}">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h5><i data-feather="list"></i> Daftar Pengajuan Maintenance</h5>
+                    <h5>
+                        <i data-feather="{% if view_mode == 'approved' %}check-circle{% else %}list{% endif %}"></i> 
+                        {% if view_mode == 'approved' %}
+                            Semua Pengajuan Approved - SITI FATIMAH
+                        {% else %}
+                            Daftar Pengajuan Maintenance
+                        {% endif %}
+                    </h5>
                     <p class="mb-0 text-muted">
                         Total: {{ total_records }} pengajuan
-                        {% if employee_data.has_approval_role %}
+                        {% if view_mode == 'approved' %}
+                            (Semua pengajuan yang telah di-approve)
+                            {% if siti_stats.pending_review > 0 %}
+                                | 🔔 {{ siti_stats.pending_review }} pending review
+                            {% endif %}
+                        {% elif employee_data.has_approval_role %}
                             | Dapat dikelola: {{ debug_info.allowed_employee_count|default:total_records }} karyawan
                         {% endif %}
                     </p>
                 </div>
-                <a href="{% url 'wo_maintenance_app:input_laporan' %}" class="btn btn-light">
-                    <i data-feather="plus"></i> Tambah Pengajuan
-                </a>
+                <div>
+                    {% if view_mode == 'approved' %}
+                        <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" class="btn btn-warning me-2">
+                            <i data-feather="clipboard"></i> Mode Review
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'wo_maintenance_app:input_laporan' %}" class="btn btn-light">
+                        <i data-feather="plus"></i> Tambah Pengajuan
+                    </a>
+                </div>
             </div>
         </div>
         
@@ -380,23 +618,25 @@
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th style="width: 120px;">History ID</th>
-                                <th style="width: 150px;">Pengaju</th>
-                                <th style="width: 120px;">Line/Section</th>
-                                <th style="width: 180px;">Mesin</th>
-                                <th style="width: 120px;">Section Tujuan</th>
-                                <th style="width: 130px;">Jenis Pekerjaan</th>
-                                <th>Deskripsi</th>
-                                <th style="width: 100px;">Status</th>
-                                <th style="width: 130px;">Tanggal</th>
-                                <th style="width: 120px;">Aksi</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 120px;">History ID</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 150px;">Pengaju</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 120px;">Line/Section</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 180px;">Mesin</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 120px;">Section Tujuan</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 130px;">Jenis Pekerjaan</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}">Deskripsi</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 120px;">
+                                    {% if view_mode == 'approved' %}Status Review{% else %}Status{% endif %}
+                                </th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 130px;">Tanggal</th>
+                                <th class="{% if is_siti_fatimah and view_mode == 'approved' %}siti-mode{% endif %}" style="width: 120px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for pengajuan in pengajuan_list %}
-                            <tr>
+                            <tr class="{% if view_mode == 'approved' and pengajuan.15 == '0' or pengajuan.15 is None %}priority-urgent{% else %}priority-normal{% endif %}">
                                 <td>
-                                    <strong class="text-primary">{{ pengajuan.0|default:"-" }}</strong>
+                                    <strong class="{% if view_mode == 'approved' %}text-success{% else %}text-primary{% endif %}">{{ pengajuan.0|default:"-" }}</strong>
                                     <br><small class="text-muted">{{ pengajuan.9|default:"-" }}</small>
                                 </td>
                                 <td>
@@ -405,10 +645,12 @@
                                         <br><small class="text-muted">{{ pengajuan.8 }}</small>
                                     {% endif %}
                                     <!-- Tampilkan badge assignment status -->
-                                    {% if pengajuan.15 == 'ASSIGNED' %}
+                                    {% if pengajuan.19 == 'ASSIGNED' %}
                                         <br><span class="badge bg-success">📋 Assigned to You</span>
-                                    {% elif pengajuan.15 == 'SUBORDINATE' %}
+                                    {% elif pengajuan.19 == 'SUBORDINATE' %}
                                         <br><span class="badge bg-info">👥 From Subordinate</span>
+                                    {% elif pengajuan.19 == 'ALL_APPROVED' %}
+                                        <br><span class="badge bg-warning">✅ All Approved</span>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -427,27 +669,49 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {% if pengajuan.6 == '0' %}
-                                        <span class="status-badge status-pending">Pending</span>
-                                    {% elif pengajuan.6 == '1' %}
-                                        <span class="status-badge status-approved">Approved</span>
-                                    {% elif pengajuan.6 == '2' %}
-                                        <span class="status-badge status-rejected">Rejected</span>
-                                    {% elif pengajuan.6 == '3' %}
-                                        <span class="status-badge status-progress">In Progress</span>
-                                    {% elif pengajuan.6 == '4' %}
-                                        <span class="status-badge status-completed">Completed</span>
+                                    {% if view_mode == 'approved' %}
+                                        <!-- Review Status untuk mode approved -->
+                                        {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                                            <span class="status-badge review-pending">⏳ Pending Review</span>
+                                        {% elif pengajuan.15 == '1' %}
+                                            <span class="status-badge review-approved">✅ Reviewed (Approved)</span>
+                                            {% if pengajuan.18 %}
+                                                <br><small class="text-success">→ {{ pengajuan.18 }}</small>
+                                            {% endif %}
+                                        {% elif pengajuan.15 == '2' %}
+                                            <span class="status-badge review-rejected">❌ Reviewed (Rejected)</span>
+                                        {% else %}
+                                            <span class="status-badge">{{ pengajuan.15|default:"Unknown" }}</span>
+                                        {% endif %}
+                                        
+                                        <!-- Review Date -->
+                                        {% if pengajuan.17 %}
+                                            <br><small class="text-muted">{{ pengajuan.17|date:"d/m/Y H:i" }}</small>
+                                        {% endif %}
                                     {% else %}
-                                        <span class="status-badge">{{ pengajuan.6|default:"Unknown" }}</span>
-                                    {% endif %}
-                                    
-                                    <!-- Tampilkan approval status juga -->
-                                    {% if pengajuan.11 == '1' %}
-                                        <br><small class="text-success">✓ Approved</small>
-                                    {% elif pengajuan.11 == '2' %}
-                                        <br><small class="text-danger">✗ Rejected</small>
-                                    {% elif pengajuan.11 == '0' %}
-                                        <br><small class="text-warning">⏳ Pending</small>
+                                        <!-- Normal Status -->
+                                        {% if pengajuan.6 == '0' %}
+                                            <span class="status-badge status-pending">Pending</span>
+                                        {% elif pengajuan.6 == '1' %}
+                                            <span class="status-badge status-approved">Approved</span>
+                                        {% elif pengajuan.6 == '2' %}
+                                            <span class="status-badge status-rejected">Rejected</span>
+                                        {% elif pengajuan.6 == '3' %}
+                                            <span class="status-badge status-progress">In Progress</span>
+                                        {% elif pengajuan.6 == '4' %}
+                                            <span class="status-badge status-completed">Completed</span>
+                                        {% else %}
+                                            <span class="status-badge">{{ pengajuan.6|default:"Unknown" }}</span>
+                                        {% endif %}
+                                        
+                                        <!-- Tampilkan approval status juga -->
+                                        {% if pengajuan.11 == '1' %}
+                                            <br><small class="text-success">✓ Approved</small>
+                                        {% elif pengajuan.11 == '2' %}
+                                            <br><small class="text-danger">✗ Rejected</small>
+                                        {% elif pengajuan.11 == '0' %}
+                                            <br><small class="text-warning">⏳ Pending</small>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                                 <td>
@@ -466,12 +730,29 @@
                                                 <i data-feather="eye"></i> Detail
                                             </a>
                                             
-                                            <!-- Show approve button if user can approve and status is pending -->
-                                            {% if can_approve and pengajuan.6 == '0' and pengajuan.11 == '0' %}
-                                                <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}#approval" 
-                                                   class="btn btn-sm btn-outline-success action-btn" title="Approve">
-                                                    <i data-feather="check-circle"></i> Approve
-                                                </a>
+                                            {% if view_mode == 'approved' %}
+                                                <!-- Action buttons untuk mode approved -->
+                                                {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                                                    <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                                                       class="btn btn-sm btn-outline-success action-btn" title="Review">
+                                                        <i data-feather="clipboard"></i> Review
+                                                    </a>
+                                                {% endif %}
+                                                
+                                                {% if pengajuan.15 in '12' %}
+                                                    <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                                                       class="btn btn-sm btn-outline-info action-btn" title="History Review">
+                                                        <i data-feather="clock"></i> History
+                                                    </a>
+                                                {% endif %}
+                                            {% else %}
+                                                <!-- Action buttons untuk mode normal -->
+                                                {% if can_approve and pengajuan.6 == '0' and pengajuan.11 == '0' %}
+                                                    <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}#approval" 
+                                                       class="btn btn-sm btn-outline-success action-btn" title="Approve">
+                                                        <i data-feather="check-circle"></i> Approve
+                                                    </a>
+                                                {% endif %}
                                             {% endif %}
                                         {% else %}
                                             <span class="btn btn-sm btn-outline-secondary action-btn disabled">
@@ -492,13 +773,13 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="pagination-info">
                             Halaman {{ page_number }} dari {{ total_pages }} 
-                            ({{ total_records }} total data)
+                            ({{ total_records }} total {% if view_mode == 'approved' %}approved{% endif %} data)
                         </div>
                         <nav aria-label="Page navigation">
                             <ul class="pagination pagination-sm mb-0">
                                 {% if has_previous %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                        <a class="page-link" href="?page={{ previous_page_number }}{% if view_mode != 'normal' %}&mode={{ view_mode }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
                                             <i data-feather="chevron-left"></i> Previous
                                         </a>
                                     </li>
@@ -513,7 +794,7 @@
                                             </li>
                                         {% else %}
                                             <li class="page-item">
-                                                <a class="page-link" href="?page={{ page_num }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                                <a class="page-link" href="?page={{ page_num }}{% if view_mode != 'normal' %}&mode={{ view_mode }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
                                                     {{ page_num }}
                                                 </a>
                                             </li>
@@ -523,7 +804,7 @@
                                 
                                 {% if has_next %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                        <a class="page-link" href="?page={{ next_page_number }}{% if view_mode != 'normal' %}&mode={{ view_mode }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
                                             Next <i data-feather="chevron-right"></i>
                                         </a>
                                     </li>
@@ -535,11 +816,19 @@
                 {% endif %}
             {% else %}
                 <div class="empty-state">
-                    <i data-feather="inbox" style="width: 48px; height: 48px; color: #6c757d;"></i>
-                    <h5 class="mt-3 text-muted">Tidak ada data pengajuan</h5>
+                    <i data-feather="{% if view_mode == 'approved' %}check-circle{% else %}inbox{% endif %}" style="width: 48px; height: 48px; color: {% if view_mode == 'approved' %}#28a745{% else %}#6c757d{% endif %};"></i>
+                    <h5 class="mt-3 text-muted">
+                        {% if view_mode == 'approved' %}
+                            Tidak ada pengajuan approved
+                        {% else %}
+                            Tidak ada data pengajuan
+                        {% endif %}
+                    </h5>
                     <p class="text-muted">
                         {% if search_query %}
                             Tidak ditemukan hasil untuk pencarian "{{ search_query }}"
+                        {% elif view_mode == 'approved' %}
+                            Belum ada pengajuan work order yang telah di-approve
                         {% else %}
                             {% if employee_data.has_approval_role %}
                                 Belum ada pengajuan maintenance dari karyawan yang dapat Anda kelola
@@ -621,7 +910,41 @@ $(document).ready(function() {
         $(this).next('.debug-info').slideToggle();
     });
 
-    console.log('WO Maintenance - Daftar Laporan loaded with hierarchy filter');
+    // Stats cards animation untuk SITI FATIMAH
+    {% if is_siti_fatimah and view_mode == 'approved' %}
+    $('.stat-number').each(function() {
+        const $this = $(this);
+        const countTo = parseInt($this.text());
+        
+        $({ countNum: 0 }).animate(
+            { countNum: countTo },
+            {
+                duration: 1000,
+                easing: 'linear',
+                step: function() {
+                    $this.text(Math.floor(this.countNum));
+                },
+                complete: function() {
+                    $this.text(this.countNum);
+                }
+            }
+        );
+    });
+    {% endif %}
+
+    // Highlight pending review rows
+    $('.priority-urgent').css('border-left', '3px solid #ffc107');
+
+    // Mode switch animation
+    $('.mode-buttons .btn').on('click', function() {
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+
+    // Log untuk debugging
+    console.log('WO Maintenance - Enhanced for SITI FATIMAH (007522)');
+    console.log('View Mode: {{ view_mode }}');
+    console.log('Is SITI FATIMAH: {{ is_siti_fatimah|yesno:"true,false" }}');
+    console.log('Special Query Mode: {{ special_query_mode }}');
 });
 </script>
 {% endblock scriptcontent %}

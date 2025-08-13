@@ -3817,3 +3817,251 @@ INFO 2025-08-12 16:02:40,947 views 10552 5668 Found 1 pengajuan for user JUAN SE
 INFO 2025-08-12 16:02:41,016 basehttp 10552 5668 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 28295
 INFO 2025-08-12 16:02:45,865 basehttp 10552 5668 "GET /wo-maintenance/detail/WO20250812001/ HTTP/1.1" 200 31049
 INFO 2025-08-12 16:16:19,252 basehttp 10552 14344 "GET /wo-maintenance/input/ HTTP/1.1" 200 49183
+INFO 2025-08-12 16:42:50,681 autoreload 9772 11136 Watching for file changes with StatReloader
+INFO 2025-08-12 18:28:58,295 autoreload 13864 9448 Watching for file changes with StatReloader
+INFO 2025-08-12 18:29:08,183 basehttp 13864 2468 "GET /logout/?next=/wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:29:08,303 basehttp 13864 2468 "GET /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:29:08,439 basehttp 13864 2468 "GET /login/?next=/wo-maintenance/input/ HTTP/1.1" 200 10284
+INFO 2025-08-12 18:29:14,979 views 13864 1160 LOGIN ATTEMPT: 007522
+INFO 2025-08-12 18:29:15,025 authentication 13864 1160 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-12 18:29:15,026 authentication 13864 1160 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-12 18:29:15,033 views 13864 1160 LOGIN: Using existing session data for 007522
+INFO 2025-08-12 18:29:15,033 views 13864 1160 LOGIN REDIRECT: 007522 -> /wo-maintenance/input/
+INFO 2025-08-12 18:29:15,037 basehttp 13864 1160 "POST /login/?next=/wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:29:15,230 basehttp 13864 1160 "GET /wo-maintenance/input/ HTTP/1.1" 200 47320
+INFO 2025-08-12 18:29:19,772 views 13864 9704 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+ERROR 2025-08-12 18:29:19,803 views 13864 9704 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:29:19,898 basehttp 13864 9704 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 27047
+INFO 2025-08-12 18:29:31,694 views 13864 16752 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:29:31,694 views 13864 16752 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:29:31,722 views 13864 16752 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:29:31,806 basehttp 13864 16752 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28887
+ERROR 2025-08-12 18:29:38,075 views 13864 12312 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-12 18:29:38,078 basehttp 13864 12312 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-12 18:29:38,143 views 13864 12312 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-12 18:29:38,144 basehttp 13864 12312 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:29:38,313 basehttp 13864 12312 "GET /wo-maintenance/ HTTP/1.1" 200 28257
+INFO 2025-08-12 18:29:41,947 views 13864 2284 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:29:41,947 views 13864 2284 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:29:41,967 views 13864 2284 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:29:42,050 basehttp 13864 2284 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 29463
+INFO 2025-08-12 18:29:44,072 views 13864 2284 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:29:44,072 views 13864 2284 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:29:44,086 views 13864 2284 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:29:44,167 basehttp 13864 2284 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28887
+INFO 2025-08-12 18:29:45,818 views 13864 16520 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:29:45,819 views 13864 16520 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:29:45,833 views 13864 16520 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:29:45,910 basehttp 13864 16520 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28887
+INFO 2025-08-12 18:29:47,244 views 13864 16520 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+ERROR 2025-08-12 18:29:47,267 views 13864 16520 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:29:47,332 basehttp 13864 16520 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 27047
+INFO 2025-08-12 18:29:48,424 views 13864 16520 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:29:48,425 views 13864 16520 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:29:48,441 views 13864 16520 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:29:48,639 basehttp 13864 16520 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28887
+INFO 2025-08-12 18:30:52,828 basehttp 13864 264 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:30:52,884 basehttp 13864 264 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:30:52,978 basehttp 13864 264 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-12 18:30:58,455 views 13864 16832 LOGIN ATTEMPT: 002104
+INFO 2025-08-12 18:30:58,483 authentication 13864 16832 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-12 18:30:58,491 views 13864 16832 LOGIN: Using existing session data for 002104
+INFO 2025-08-12 18:30:58,492 views 13864 16832 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-12 18:30:58,498 basehttp 13864 16832 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-12 18:30:58,618 views 13864 16832 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:30:58,677 basehttp 13864 16832 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 29825
+ERROR 2025-08-12 18:31:02,069 views 13864 15216 Database error in daftar_laporan: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'STRING_SPLIT'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-12 18:31:02,135 basehttp 13864 15216 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 29562
+INFO 2025-08-12 18:32:22,586 autoreload 13864 9448 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-12 18:32:24,492 autoreload 17056 988 Watching for file changes with StatReloader
+INFO 2025-08-12 18:32:27,148 basehttp 17056 13476 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:32:27,256 basehttp 17056 13476 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:32:27,400 basehttp 17056 13476 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-12 18:32:33,748 views 17056 3688 LOGIN ATTEMPT: 007522
+INFO 2025-08-12 18:32:33,787 authentication 17056 3688 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-12 18:32:33,787 authentication 17056 3688 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-12 18:32:33,800 views 17056 3688 LOGIN: Using existing session data for 007522
+INFO 2025-08-12 18:32:33,800 views 17056 3688 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-12 18:32:33,805 basehttp 17056 3688 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:32:33,865 views 17056 3688 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+ERROR 2025-08-12 18:32:33,901 views 17056 3688 Database error in daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-12 18:32:34,016 basehttp 17056 3688 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 27342
+INFO 2025-08-12 18:32:39,025 views 17056 3688 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:32:39,025 views 17056 3688 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:32:39,044 views 17056 3688 Database error in daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-12 18:32:39,115 basehttp 17056 3688 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28920
+INFO 2025-08-12 18:33:40,001 autoreload 17056 988 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-12 18:33:41,971 autoreload 14248 15240 Watching for file changes with StatReloader
+INFO 2025-08-12 18:33:49,973 autoreload 2004 16664 Watching for file changes with StatReloader
+INFO 2025-08-12 18:33:56,586 autoreload 17016 14828 Watching for file changes with StatReloader
+INFO 2025-08-12 18:34:16,767 autoreload 16988 12636 Watching for file changes with StatReloader
+INFO 2025-08-12 18:34:24,071 basehttp 16988 13612 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:34:24,189 basehttp 16988 13612 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-12 18:34:24,301 basehttp 16988 13612 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-12 18:34:26,381 basehttp 16988 16640 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-12 18:34:32,367 views 16988 12468 LOGIN ATTEMPT: 007522
+INFO 2025-08-12 18:34:32,406 authentication 16988 12468 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-12 18:34:32,406 authentication 16988 12468 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-12 18:34:32,413 views 16988 12468 LOGIN: Using existing session data for 007522
+INFO 2025-08-12 18:34:32,414 views 16988 12468 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-12 18:34:32,418 basehttp 16988 12468 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-12 18:34:32,521 views 16988 12468 Database error in simple daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-12 18:34:32,638 basehttp 16988 12468 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 27342
+ERROR 2025-08-12 18:34:36,171 views 16988 12468 Database error in simple daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-12 18:34:36,255 basehttp 16988 12468 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28920
+INFO 2025-08-12 18:34:51,161 autoreload 16988 12636 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-12 18:34:53,099 autoreload 16104 512 Watching for file changes with StatReloader
+INFO 2025-08-12 18:35:02,182 views 16104 12956 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:35:02,183 views 16104 12956 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:35:02,216 views 16104 12956 Database error in daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-12 18:35:02,430 basehttp 16104 12956 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28920
+INFO 2025-08-12 18:36:05,245 views 16104 2572 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:36:05,245 views 16104 2572 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:36:05,259 views 16104 2572 Database error in daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-12 18:36:05,344 basehttp 16104 2572 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28920
+INFO 2025-08-12 18:36:07,607 views 16104 2572 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-12 18:36:07,607 views 16104 2572 SITI FATIMAH accessing ALL APPROVED pengajuan
+ERROR 2025-08-12 18:36:07,619 views 16104 2572 Database error in daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-12 18:36:07,707 basehttp 16104 2572 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28920
+INFO 2025-08-13 06:50:25,552 autoreload 16104 512 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 06:50:27,516 autoreload 16936 12420 Watching for file changes with StatReloader
+INFO 2025-08-13 06:51:59,110 autoreload 16936 12420 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-13 06:52:01,015 autoreload 17844 11504 Watching for file changes with StatReloader
+INFO 2025-08-13 06:52:16,982 basehttp 17844 15044 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 302 0
+INFO 2025-08-13 06:52:17,110 basehttp 17844 15044 "GET /login/?next=/wo-maintenance/daftar/%3Fmode%3Dapproved HTTP/1.1" 200 10284
+INFO 2025-08-13 06:52:25,188 views 17844 15104 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 06:52:25,230 authentication 17844 15104 Updated Django user data for 007522
+INFO 2025-08-13 06:52:25,230 authentication 17844 15104 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 06:52:25,231 authentication 17844 15104 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 06:52:25,239 views 17844 15104 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 06:52:25,240 views 17844 15104 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/?mode=approved
+INFO 2025-08-13 06:52:25,244 basehttp 17844 15104 "POST /login/?next=/wo-maintenance/daftar/%3Fmode%3Dapproved HTTP/1.1" 302 0
+INFO 2025-08-13 06:52:25,316 views 17844 15104 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 06:52:25,337 views 17844 15104 SITI FATIMAH mode: querying ALL approved pengajuan
+ERROR 2025-08-13 06:52:25,343 views 17844 15104 Database error in ultra simple daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]A TOP can not be used in the same query or sub-query as a OFFSET. (10741) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 06:52:25,464 basehttp 17844 15104 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 29171
+INFO 2025-08-13 06:52:31,789 views 17844 16856 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+ERROR 2025-08-13 06:52:31,807 views 17844 16856 Database error in ultra simple daftar_laporan: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]A TOP can not be used in the same query or sub-query as a OFFSET. (10741) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 06:52:31,886 basehttp 17844 16856 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 27069
+INFO 2025-08-13 07:44:10,196 autoreload 17844 11504 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 07:44:12,240 autoreload 6508 2276 Watching for file changes with StatReloader
+INFO 2025-08-13 07:44:16,457 views 6508 5324 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+ERROR 2025-08-13 07:44:16,497 views 6508 5324 Database error in ultra compatible daftar_laporan: ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 3 of 'ranked'. (8155) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 4 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 5 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 11 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 19 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 20 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 07:44:16,752 basehttp 6508 5324 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 27745
+ERROR 2025-08-13 07:45:16,790 views 6508 17948 Debug test error: 'block' tag with name 'css' appears more than once
+INFO 2025-08-13 07:45:16,792 basehttp 6508 17948 "GET /wo-maintenance/debug-test/ HTTP/1.1" 200 63
+ERROR 2025-08-13 07:45:19,951 views 6508 368 Debug test error: 'block' tag with name 'css' appears more than once
+INFO 2025-08-13 07:45:19,953 basehttp 6508 368 "GET /wo-maintenance/debug-test/ HTTP/1.1" 200 63
+ERROR 2025-08-13 07:45:45,293 views 6508 11344 Error in minimal approved view: wo_maintenance_app/minimal_approved.html
+INFO 2025-08-13 07:45:45,295 basehttp 6508 11344 "GET /wo-maintenance/minimal-approved/ HTTP/1.1" 200 47
+INFO 2025-08-13 07:47:39,110 views 6508 17084 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 07:47:39,123 views 6508 17084 SITI FATIMAH mode: querying ALL approved pengajuan
+ERROR 2025-08-13 07:47:39,134 views 6508 17084 Database error in ultra compatible daftar_laporan: ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 3 of 'ranked'. (8155) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 4 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 5 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 11 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 19 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No column name was specified for column 20 of 'ranked'. (8155); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 07:47:39,214 basehttp 6508 17084 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 29585
+INFO 2025-08-13 08:06:07,781 autoreload 6508 2276 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 08:06:09,696 autoreload 13536 17624 Watching for file changes with StatReloader
+INFO 2025-08-13 08:06:14,262 basehttp 13536 15240 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 302 0
+INFO 2025-08-13 08:06:14,422 basehttp 13536 15240 "GET /login/?next=/wo-maintenance/daftar/%3Fmode%3Dapproved HTTP/1.1" 200 10284
+INFO 2025-08-13 08:06:20,748 basehttp 13536 11560 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 302 0
+INFO 2025-08-13 08:06:22,429 basehttp 13536 11560 "GET /login/?next=/wo-maintenance/daftar/%3Fmode%3Dapproved HTTP/1.1" 200 10284
+INFO 2025-08-13 08:06:29,589 views 13536 17252 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 08:06:29,631 authentication 13536 17252 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 08:06:29,632 authentication 13536 17252 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 08:06:29,638 views 13536 17252 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 08:06:29,639 views 13536 17252 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/?mode=approved
+INFO 2025-08-13 08:06:29,644 basehttp 13536 17252 "POST /login/?next=/wo-maintenance/daftar/%3Fmode%3Dapproved HTTP/1.1" 302 0
+INFO 2025-08-13 08:06:29,711 views 13536 17252 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:06:29,732 views 13536 17252 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:06:29,756 views 13536 17252 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:06:29,898 basehttp 13536 17252 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 36734
+INFO 2025-08-13 08:06:37,198 views 13536 18348 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:06:37,206 views 13536 18348 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:06:37,217 views 13536 18348 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:06:37,305 basehttp 13536 18348 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 36458
+INFO 2025-08-13 08:06:38,725 views 13536 18348 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 08:06:38,766 views 13536 18348 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:06:38,836 basehttp 13536 18348 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 26495
+INFO 2025-08-13 08:06:41,321 views 13536 9712 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:06:41,326 views 13536 9712 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:06:41,336 views 13536 9712 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:06:41,424 basehttp 13536 9712 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 36458
+INFO 2025-08-13 08:07:20,085 basehttp 13536 18180 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:20,143 basehttp 13536 18180 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:20,242 basehttp 13536 18180 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 08:07:23,779 views 13536 18180 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 08:07:23,807 authentication 13536 18180 Updated Django user data for 001605
+INFO 2025-08-13 08:07:23,808 authentication 13536 18180 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 08:07:23,819 views 13536 18180 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 08:07:23,819 views 13536 18180 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-13 08:07:23,826 basehttp 13536 18180 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:23,975 views 13536 18180 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:07:24,061 basehttp 13536 18180 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 25915
+INFO 2025-08-13 08:07:27,300 views 13536 13780 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:07:27,366 basehttp 13536 13780 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 25637
+INFO 2025-08-13 08:07:30,970 basehttp 13536 18016 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:31,024 basehttp 13536 18016 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:31,125 basehttp 13536 18016 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 08:07:37,517 views 13536 17516 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 08:07:37,534 authentication 13536 17516 Updated Django user data for 002104
+INFO 2025-08-13 08:07:37,535 authentication 13536 17516 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 08:07:37,545 views 13536 17516 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 08:07:37,545 views 13536 17516 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 08:07:37,550 basehttp 13536 17516 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:37,675 views 13536 17516 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:07:37,746 basehttp 13536 17516 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 36445
+INFO 2025-08-13 08:07:51,740 basehttp 13536 384 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:51,793 basehttp 13536 384 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:51,890 basehttp 13536 384 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 08:07:59,298 views 13536 18428 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 08:07:59,331 authentication 13536 18428 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 08:07:59,331 authentication 13536 18428 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 08:07:59,339 views 13536 18428 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 08:07:59,340 views 13536 18428 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-13 08:07:59,344 basehttp 13536 18428 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:07:59,422 views 13536 18428 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 08:07:59,453 views 13536 18428 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:07:59,530 basehttp 13536 18428 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26771
+INFO 2025-08-13 08:08:03,530 views 13536 18428 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:08:03,534 views 13536 18428 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:08:03,543 views 13536 18428 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:08:03,626 basehttp 13536 18428 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 36458
+ERROR 2025-08-13 08:08:06,421 views 13536 13648 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:08:06,422 basehttp 13536 13648 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 08:08:06,493 views 13536 13648 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:08:06,494 basehttp 13536 13648 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:08:06,671 basehttp 13536 13648 "GET /wo-maintenance/ HTTP/1.1" 200 28181
+INFO 2025-08-13 08:11:53,193 autoreload 13536 17624 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 08:11:55,144 autoreload 13432 11908 Watching for file changes with StatReloader
+INFO 2025-08-13 08:12:12,196 autoreload 16376 324 Watching for file changes with StatReloader
+INFO 2025-08-13 08:12:36,913 autoreload 16396 15504 Watching for file changes with StatReloader
+INFO 2025-08-13 08:12:39,588 views 16396 5316 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:12:39,613 views 16396 5316 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:12:39,654 views 16396 5316 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:12:39,866 basehttp 16396 5316 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 33334
+INFO 2025-08-13 08:12:48,819 views 16396 16876 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:12:48,841 views 16396 16876 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:12:48,851 views 16396 16876 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:12:48,949 basehttp 16396 16876 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32744
+INFO 2025-08-13 08:12:51,643 views 16396 13008 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 08:12:51,699 views 16396 13008 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:12:51,768 basehttp 16396 13008 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26495
+INFO 2025-08-13 08:12:54,241 views 16396 13008 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:12:54,246 views 16396 13008 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:12:54,258 views 16396 13008 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:12:54,340 basehttp 16396 13008 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32744
+ERROR 2025-08-13 08:13:09,197 views 16396 16960 Error in review pengajuan detail: name 'ReviewForm' is not defined
+INFO 2025-08-13 08:13:09,199 basehttp 16396 16960 "GET /wo-maintenance/review/pengajuan/WO20250812001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 08:13:09,270 views 16396 16960 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:13:09,271 basehttp 16396 16960 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 08:13:09,328 views 16396 16960 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:13:09,330 basehttp 16396 16960 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:13:09,528 basehttp 16396 16960 "GET /wo-maintenance/ HTTP/1.1" 200 28173
+WARNING 2025-08-13 08:13:13,971 views 16396 17656 User SITI FATIMAH tried to access unauthorized pengajuan WO20250812001
+INFO 2025-08-13 08:13:13,973 basehttp 16396 17656 "GET /wo-maintenance/detail/WO20250812001/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:13:14,048 views 16396 17656 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 08:13:14,079 views 16396 17656 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:13:14,147 basehttp 16396 17656 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 27657
+INFO 2025-08-13 08:13:22,501 views 16396 13212 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:13:22,505 views 16396 13212 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:13:22,516 views 16396 13212 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:13:22,587 basehttp 16396 13212 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32744

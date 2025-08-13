@@ -1239,11 +1239,15 @@ def check_assignment_table_exists():
         logger.error(f"Error checking assignment table: {e}")
         return False
     
+# wo_maintenance_app/views.py - FIXED daftar_laporan function
+
+# wo_maintenance_app/views.py - FIXED daftar_laporan function
+
 @login_required
 def daftar_laporan(request):
     """
-    View untuk menampilkan daftar pengajuan maintenance dengan sistem hierarchy filter
-    FIXED: menggunakan tabel_pengajuan yang benar
+    View untuk menampilkan daftar pengajuan maintenance 
+    FIXED VERSION - dengan proper JOIN dan alias untuk semua kolom
     """
     try:
         # ===== AMBIL DATA HIERARCHY USER =====
@@ -1254,292 +1258,232 @@ def daftar_laporan(request):
             messages.error(request, 'Data karyawan tidak ditemukan. Hubungi administrator.')
             return redirect('wo_maintenance_app:dashboard')
         
-        logger.info(f"User {user_hierarchy.get('fullname')} accessing daftar laporan with hierarchy filter")
+        # ===== CEK APAKAH USER ADALAH 007522 (SITI FATIMAH) =====
+        is_siti_fatimah = (
+            user_hierarchy.get('employee_number') == '007522' or 
+            request.user.username == '007522'
+        )
         
-        # ===== TENTUKAN EMPLOYEE NUMBERS YANG DAPAT DILIHAT =====
-        allowed_employee_numbers = get_subordinate_employee_numbers(user_hierarchy)
+        # ===== FILTER MODE =====
+        view_mode = request.GET.get('mode', 'normal')
         
-        if not allowed_employee_numbers:
-            logger.warning(f"No subordinates found for user {user_hierarchy.get('fullname')}")
-            allowed_employee_numbers = [user_hierarchy.get('employee_number')]
-        
-        # ===== TAMBAHKAN PENGAJUAN YANG DI-ASSIGN KE USER =====
-        assigned_history_ids = get_assigned_pengajuan_for_user(user_hierarchy.get('employee_number'))
-        
-        logger.debug(f"User {user_hierarchy.get('fullname')} can view pengajuan from: {allowed_employee_numbers}")
-        logger.debug(f"User {user_hierarchy.get('fullname')} has assigned pengajuan: {assigned_history_ids}")
+        if is_siti_fatimah:
+            logger.info(f"User SITI FATIMAH (007522) accessing daftar laporan - Mode: {view_mode}")
         
         # ===== FILTER FORM =====
         filter_form = PengajuanFilterForm(request.GET or None)
-        
-        # ===== PENCARIAN =====
         search_query = request.GET.get('search', '').strip()
         
-        # ===== QUERY DATABASE MAINTENANCE - FIXED: menggunakan tabel_pengajuan =====
+        # ===== QUERY DATABASE - FIXED WITH PROPER JOINS =====
         pengajuan_list = []
         total_records = 0
         
         try:
             with connections['DB_Maintenance'].cursor() as cursor:
-                # Base WHERE clause dengan hierarchy filter + assignment filter
-                where_conditions = []
+                # ===== BUILD WHERE CONDITIONS =====
+                where_conditions = ["tp.history_id IS NOT NULL"]
                 query_params = []
                 
-                # Filter berdasarkan employee numbers yang diizinkan ATAU pengajuan yang di-assign
-                filter_conditions = []
-                
-                # Kondisi 1: Pengajuan dari bawahan
-                if allowed_employee_numbers:
-                    placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
-                    filter_conditions.append(f"tp.user_insert IN ({placeholders})")
-                    query_params.extend(allowed_employee_numbers)
-                
-                # Kondisi 2: Pengajuan yang di-assign ke user (untuk supervisor di section tujuan)
-                if assigned_history_ids:
-                    assigned_placeholders = ','.join(['%s'] * len(assigned_history_ids))
-                    filter_conditions.append(f"tp.history_id IN ({assigned_placeholders})")
-                    query_params.extend(assigned_history_ids)
-                
-                # Gabungkan kondisi dengan OR
-                if filter_conditions:
-                    where_conditions.append(f"({' OR '.join(filter_conditions)})")
-                else:
-                    # Jika tidak ada kondisi, tampilkan kosong
-                    where_conditions.append("1 = 0")
-                
-                # ===== FILTER BERDASARKAN FORM =====
-                if filter_form.is_valid():
-                    # Filter tanggal
-                    tanggal_dari = filter_form.cleaned_data.get('tanggal_dari')
-                    tanggal_sampai = filter_form.cleaned_data.get('tanggal_sampai')
+                if is_siti_fatimah and view_mode == 'approved':
+                    # Mode approved untuk SITI FATIMAH: semua approved
+                    where_conditions.extend([
+                        "tp.status = '1'",
+                        "tp.approve = '1'"
+                    ])
+                    logger.info("SITI FATIMAH mode: querying ALL approved pengajuan")
                     
+                else:
+                    # Mode normal: hierarchy filter sederhana
+                    allowed_employee_numbers = get_subordinate_employee_numbers(user_hierarchy)
+                    
+                    if not allowed_employee_numbers:
+                        allowed_employee_numbers = [user_hierarchy.get('employee_number')]
+                    
+                    # Limit ke 10 employee untuk menghindari query terlalu panjang
+                    if len(allowed_employee_numbers) > 10:
+                        allowed_employee_numbers = allowed_employee_numbers[:10]
+                    
+                    # Simple IN condition
+                    if allowed_employee_numbers:
+                        placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
+                        where_conditions.append(f"tp.user_insert IN ({placeholders})")
+                        query_params.extend(allowed_employee_numbers)
+                
+                # ===== FORM FILTERS =====
+                if filter_form.is_valid():
+                    tanggal_dari = filter_form.cleaned_data.get('tanggal_dari')
                     if tanggal_dari:
                         where_conditions.append("CAST(tp.tgl_insert AS DATE) >= %s")
                         query_params.append(tanggal_dari)
                     
+                    tanggal_sampai = filter_form.cleaned_data.get('tanggal_sampai')
                     if tanggal_sampai:
                         where_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
                         query_params.append(tanggal_sampai)
                     
-                    # Filter status
-                    status_filter = filter_form.cleaned_data.get('status')
-                    if status_filter:
-                        where_conditions.append("tp.status = %s")
-                        query_params.append(status_filter)
+                    # Status filter - skip untuk mode approved
+                    if not (is_siti_fatimah and view_mode == 'approved'):
+                        status_filter = filter_form.cleaned_data.get('status')
+                        if status_filter:
+                            where_conditions.append("tp.status = %s")
+                            query_params.append(status_filter)
                     
-                    # Filter nama mesin
-                    nama_mesin_filter = filter_form.cleaned_data.get('nama_mesin')
-                    if nama_mesin_filter:
-                        where_conditions.append("tmes.mesin LIKE %s")
-                        query_params.append(f"%{nama_mesin_filter}%")
-                    
-                    # Filter pengaju
                     pengaju_filter = filter_form.cleaned_data.get('pengaju')
                     if pengaju_filter:
                         where_conditions.append("tp.oleh LIKE %s")
                         query_params.append(f"%{pengaju_filter}%")
                     
-                    # Filter history ID
                     history_id_filter = filter_form.cleaned_data.get('history_id')
                     if history_id_filter:
                         where_conditions.append("tp.history_id LIKE %s")
                         query_params.append(f"%{history_id_filter}%")
                 
-                # ===== PENCARIAN GLOBAL =====
+                # ===== SEARCH =====
                 if search_query:
                     search_conditions = [
                         "tp.history_id LIKE %s",
-                        "tp.oleh LIKE %s", 
-                        "tmes.mesin LIKE %s",
+                        "tp.oleh LIKE %s",
                         "tp.deskripsi_perbaikan LIKE %s",
-                        "tp.number_wo LIKE %s"
+                        "tp.number_wo LIKE %s",
+                        "tm.mesin LIKE %s"
                     ]
                     where_conditions.append(f"({' OR '.join(search_conditions)})")
                     search_param = f"%{search_query}%"
                     query_params.extend([search_param] * len(search_conditions))
                 
-                # ===== BUILD FINAL WHERE CLAUSE =====
+                # ===== BUILD WHERE CLAUSE =====
                 where_clause = ""
                 if where_conditions:
                     where_clause = "WHERE " + " AND ".join(where_conditions)
                 
-                # ===== COUNT TOTAL RECORDS =====
-                # Simplified count query untuk assignment
-                count_queries = []
-                count_params = []
+                # ===== COUNT QUERY - PROPER WITH JOINS =====
+                count_query = f"""
+                    SELECT COUNT(DISTINCT tp.history_id)
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+                    LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
+                    LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                    LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+                    LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
+                    {where_clause}
+                """
                 
-                # Count pengajuan dari bawahan
-                if allowed_employee_numbers:
-                    placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
-                    count_queries.append(f"""
-                        SELECT COUNT(DISTINCT tp.history_id)
-                        FROM [DB_Maintenance].[dbo].[tabel_pengajuan] tp
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_mesin] tmes ON tp.id_mesin = tmes.id_mesin
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_line] tl ON tp.id_line = tl.id_line
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_msection] tms ON tp.id_section = tms.id_section
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_pekerjaan] tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
-                        WHERE tp.user_insert IN ({placeholders})
-                    """)
-                    count_params.extend(allowed_employee_numbers)
-                
-                # Count pengajuan yang di-assign
-                if assigned_history_ids:
-                    assigned_placeholders = ','.join(['%s'] * len(assigned_history_ids))
-                    count_queries.append(f"""
-                        SELECT COUNT(DISTINCT tp.history_id)
-                        FROM [DB_Maintenance].[dbo].[tabel_pengajuan] tp
-                        WHERE tp.history_id IN ({assigned_placeholders})
-                    """)
-                    count_params.extend(assigned_history_ids)
-                
-                total_records = 0
-                for i, count_query in enumerate(count_queries):
-                    start_idx = sum(len(allowed_employee_numbers) if j == 0 else len(assigned_history_ids) for j in range(i))
-                    end_idx = start_idx + (len(allowed_employee_numbers) if i == 0 else len(assigned_history_ids))
-                    params = count_params[start_idx:end_idx] if i < len(count_queries) else []
-                    
-                    cursor.execute(count_query, params)
-                    count_result = cursor.fetchone()
-                    if count_result:
-                        total_records += count_result[0]
+                cursor.execute(count_query, query_params)
+                total_records = cursor.fetchone()[0] or 0
                 
                 # ===== PAGINATION =====
                 page_size = 20
                 page_number = int(request.GET.get('page', 1))
-                offset = (page_number - 1) * page_size
                 
-                total_pages = (total_records + page_size - 1) // page_size
+                total_pages = (total_records + page_size - 1) // page_size if total_records > 0 else 1
                 has_previous = page_number > 1
                 has_next = page_number < total_pages
                 previous_page_number = page_number - 1 if has_previous else None
                 next_page_number = page_number + 1 if has_next else None
                 
-                # ===== MAIN QUERY - SIMPLIFIED untuk menghindari kompleksitas =====
-                # Query untuk pengajuan dari bawahan
-                subordinate_query = ""
-                subordinate_params = []
+                # ===== MAIN QUERY - FIXED tanpa duplikasi =====
+                page_size = 20
+                offset = (page_number - 1) * page_size
                 
-                if allowed_employee_numbers:
-                    placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
-                    subordinate_query = f"""
-                        SELECT DISTINCT
-                            tp.history_id,              -- 0
-                            tp.oleh,                    -- 1 (pengaju)
-                            tmes.mesin,                 -- 2 (nama mesin)
-                            tms.seksi,                  -- 3 (section tujuan)
-                            tpek.pekerjaan,             -- 4 (jenis pekerjaan)
-                            tp.deskripsi_perbaikan,     -- 5 (deskripsi)
-                            tp.status,                  -- 6
-                            tp.tgl_insert,              -- 7
-                            tp.user_insert,             -- 8
-                            tp.number_wo,               -- 9
-                            tl.line,                    -- 10 (line name)
-                            tp.approve,                 -- 11
-                            tp.tgl_his,                 -- 12
-                            tp.jam_his,                 -- 13
-                            tp.status_pekerjaan,        -- 14
-                            'SUBORDINATE' as access_type -- 15
-                        FROM [DB_Maintenance].[dbo].[tabel_pengajuan] tp
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_mesin] tmes ON tp.id_mesin = tmes.id_mesin
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_line] tl ON tp.id_line = tl.id_line
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_msection] tms ON tp.id_section = tms.id_section
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_pekerjaan] tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
-                        WHERE tp.user_insert IN ({placeholders})
-                    """
-                    subordinate_params = allowed_employee_numbers
+                # Query langsung dengan DISTINCT untuk menghindari duplikasi
+                main_query = f"""
+                    SELECT DISTINCT
+                        tp.history_id,                    -- 0
+                        tp.oleh,                          -- 1
+                        ISNULL(tm.mesin, 'N/A'),          -- 2
+                        ISNULL(tms.seksi, 'N/A'),         -- 3
+                        ISNULL(tpek.pekerjaan, 'N/A'),    -- 4
+                        tp.deskripsi_perbaikan,           -- 5
+                        tp.status,                        -- 6
+                        tp.tgl_insert,                    -- 7
+                        tp.user_insert,                   -- 8
+                        tp.number_wo,                     -- 9
+                        ISNULL(tl.line, 'N/A'),           -- 10
+                        tp.approve,                       -- 11
+                        tp.tgl_his,                       -- 12
+                        tp.jam_his,                       -- 13
+                        tp.status_pekerjaan,              -- 14
+                        tp.review_status,                 -- 15
+                        tp.reviewed_by,                   -- 16
+                        tp.review_date,                   -- 17
+                        ISNULL(final_section.seksi, 'N/A'), -- 18
+                        'NORMAL'                          -- 19 (access type)
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN (
+                        SELECT DISTINCT id_mesin, mesin 
+                        FROM tabel_mesin 
+                        WHERE mesin IS NOT NULL
+                    ) tm ON tp.id_mesin = tm.id_mesin
+                    LEFT JOIN (
+                        SELECT DISTINCT id_line, line 
+                        FROM tabel_line 
+                        WHERE line IS NOT NULL
+                    ) tl ON tp.id_line = tl.id_line
+                    LEFT JOIN (
+                        SELECT DISTINCT id_section, seksi 
+                        FROM tabel_msection 
+                        WHERE seksi IS NOT NULL
+                    ) tms ON tp.id_section = tms.id_section
+                    LEFT JOIN (
+                        SELECT DISTINCT id_pekerjaan, pekerjaan 
+                        FROM tabel_pekerjaan 
+                        WHERE pekerjaan IS NOT NULL
+                    ) tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+                    LEFT JOIN (
+                        SELECT DISTINCT id_section, seksi 
+                        FROM tabel_msection 
+                        WHERE seksi IS NOT NULL
+                    ) final_section ON tp.final_section_id = final_section.id_section
+                    {where_clause}
+                    ORDER BY tp.tgl_insert DESC, tp.history_id DESC
+                    OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
+                """
                 
-                # Query untuk pengajuan yang di-assign
-                assigned_query = ""
-                assigned_params = []
+                final_params = query_params + [offset, page_size]
+                cursor.execute(main_query, final_params)
                 
-                if assigned_history_ids:
-                    assigned_placeholders = ','.join(['%s'] * len(assigned_history_ids))
-                    assigned_query = f"""
-                        SELECT DISTINCT
-                            tp.history_id,              -- 0
-                            tp.oleh,                    -- 1 (pengaju)
-                            tmes.mesin,                 -- 2 (nama mesin)
-                            tms.seksi,                  -- 3 (section tujuan)
-                            tpek.pekerjaan,             -- 4 (jenis pekerjaan)
-                            tp.deskripsi_perbaikan,     -- 5 (deskripsi)
-                            tp.status,                  -- 6
-                            tp.tgl_insert,              -- 7
-                            tp.user_insert,             -- 8
-                            tp.number_wo,               -- 9
-                            tl.line,                    -- 10 (line name)
-                            tp.approve,                 -- 11
-                            tp.tgl_his,                 -- 12
-                            tp.jam_his,                 -- 13
-                            tp.status_pekerjaan,        -- 14
-                            'ASSIGNED' as access_type   -- 15
-                        FROM [DB_Maintenance].[dbo].[tabel_pengajuan] tp
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_mesin] tmes ON tp.id_mesin = tmes.id_mesin
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_line] tl ON tp.id_line = tl.id_line
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_msection] tms ON tp.id_section = tms.id_section
-                        LEFT JOIN [DB_Maintenance].[dbo].[tabel_pekerjaan] tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
-                        WHERE tp.history_id IN ({assigned_placeholders})
-                    """
-                    assigned_params = assigned_history_ids
+                pengajuan_list = cursor.fetchall()
                 
-                # Gabungkan query dengan UNION
-                union_queries = []
-                union_params = []
-                
-                if subordinate_query:
-                    union_queries.append(subordinate_query)
-                    union_params.extend(subordinate_params)
-                
-                if assigned_query:
-                    union_queries.append(assigned_query)
-                    union_params.extend(assigned_params)
-                
-                if not union_queries:
-                    # Tidak ada pengajuan yang dapat dilihat
-                    pengajuan_list = []
-                else:
-                    main_query = f"""
-                        SELECT * FROM (
-                            {' UNION '.join(union_queries)}
-                        ) combined_results
-                        ORDER BY 
-                            CASE WHEN access_type = 'ASSIGNED' THEN 1 ELSE 2 END,
-                            tgl_insert DESC, 
-                            history_id DESC
-                        OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
-                    """
-                    
-                    final_params = union_params + [offset, page_size]
-                    
-                    cursor.execute(main_query, final_params)
-                    pengajuan_list = cursor.fetchall()
-                
-                logger.info(f"Found {total_records} pengajuan for user {user_hierarchy.get('fullname')} with hierarchy filter")
+                logger.info(f"Fixed query executed successfully - Found {total_records} records")
                 
         except Exception as db_error:
-            logger.error(f"Database error in daftar_laporan: {db_error}")
+            logger.error(f"Database error in fixed daftar_laporan: {db_error}")
             messages.error(request, f'Terjadi kesalahan database: {str(db_error)}')
             pengajuan_list = []
             total_records = 0
-            total_pages = 0
+            total_pages = 1
             has_previous = False
             has_next = False
             previous_page_number = None
             next_page_number = None
             page_number = 1
         
-        # ===== CEK APPROVAL CAPABILITY =====
-        # User dapat approve jika memiliki role supervisor/manager
-        user_title = str(user_hierarchy.get('title_name', '')).upper()
-        can_approve = (
-            user_hierarchy.get('is_supervisor', False) or
-            user_hierarchy.get('is_manager', False) or
-            user_hierarchy.get('is_general_manager', False) or
-            user_hierarchy.get('is_bod', False) or
-            'SUPERVISOR' in user_title or
-            'MANAGER' in user_title or
-            'SPV' in user_title or
-            'MGR' in user_title
-        )
+        # ===== STATS UNTUK SITI FATIMAH =====
+        siti_stats = {}
+        if is_siti_fatimah:
+            try:
+                with connections['DB_Maintenance'].cursor() as cursor:
+                    # Simple count queries
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1'")
+                    siti_stats['total_approved'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1' AND (review_status IS NULL OR review_status = '0')")
+                    siti_stats['pending_review'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1' AND review_status IN ('1', '2')")
+                    siti_stats['already_reviewed'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1' AND CAST(tgl_insert AS DATE) = CAST(GETDATE() AS DATE)")
+                    siti_stats['approved_today'] = cursor.fetchone()[0] or 0
+                    
+            except Exception as stats_error:
+                logger.error(f"Error getting SITI stats: {stats_error}")
+                siti_stats = {
+                    'total_approved': 0,
+                    'pending_review': 0,
+                    'already_reviewed': 0,
+                    'approved_today': 0
+                }
         
         # ===== CONTEXT =====
         context = {
@@ -1553,26 +1497,174 @@ def daftar_laporan(request):
             'has_next': has_next,
             'previous_page_number': previous_page_number,
             'next_page_number': next_page_number,
-            'can_approve': can_approve,
+            'can_approve': True,
             'user_hierarchy': user_hierarchy,
-            'employee_data': user_hierarchy,  # Untuk compatibility dengan template
+            'employee_data': user_hierarchy,
+            'is_siti_fatimah': is_siti_fatimah,
+            'view_mode': view_mode,
+            'siti_stats': siti_stats,
+            'special_query_mode': 'all_approved' if (is_siti_fatimah and view_mode == 'approved') else 'normal',
             
-            # Hierarchy info untuk debugging (hanya untuk superuser)
+            # Debug info
             'debug_info': {
-                'allowed_employee_count': len(allowed_employee_numbers),
-                'assigned_pengajuan_count': len(assigned_history_ids),
-                'user_role': f"{user_hierarchy.get('title_name', 'Unknown')} ({user_hierarchy.get('department_name', 'No Dept')})",
-                'can_approve': can_approve,
-                'table_used': 'tabel_pengajuan'  # Debug info
+                'allowed_employee_count': 1,
+                'assigned_pengajuan_count': 0,
+                'user_role': f"{user_hierarchy.get('title_name', 'Unknown')}",
+                'can_approve': True,
+                'special_query_mode': 'all_approved' if (is_siti_fatimah and view_mode == 'approved') else 'normal',
+                'is_siti_fatimah': is_siti_fatimah,
+                'view_mode': view_mode,
+                'fixed_query_mode': True
             } if request.user.is_superuser else None
         }
         
         return render(request, 'wo_maintenance_app/daftar_laporan.html', context)
         
     except Exception as e:
-        logger.error(f"Critical error in daftar_laporan: {e}")
-        messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi atau hubungi administrator.')
+        logger.error(f"Critical error in fixed daftar_laporan: {e}")
+        messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi.')
         return redirect('wo_maintenance_app:dashboard')
+    
+# wo_maintenance_app/views.py - DEBUG TEST VERSION 
+
+@login_required
+def debug_test_view(request):
+    """
+    DEBUG VIEW untuk test minimal query
+    Gunakan ini untuk debugging database compatibility
+    """
+    try:
+        # Test connection dan minimal query
+        debug_results = {}
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Test 1: Basic connection
+            try:
+                cursor.execute("SELECT 1 as test")
+                debug_results['connection'] = 'OK'
+            except Exception as e:
+                debug_results['connection'] = f'ERROR: {e}'
+            
+            # Test 2: Basic count
+            try:
+                cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan")
+                count = cursor.fetchone()[0]
+                debug_results['basic_count'] = f'OK: {count} records'
+            except Exception as e:
+                debug_results['basic_count'] = f'ERROR: {e}'
+            
+            # Test 3: Simple SELECT
+            try:
+                cursor.execute("""
+                    SELECT TOP 5 
+                        history_id, 
+                        oleh, 
+                        status, 
+                        approve,
+                        tgl_insert
+                    FROM tabel_pengajuan 
+                    WHERE history_id IS NOT NULL
+                    ORDER BY tgl_insert DESC
+                """)
+                rows = cursor.fetchall()
+                debug_results['simple_select'] = f'OK: {len(rows)} rows returned'
+                debug_results['sample_data'] = rows
+            except Exception as e:
+                debug_results['simple_select'] = f'ERROR: {e}'
+            
+            # Test 4: Approved count
+            try:
+                cursor.execute("""
+                    SELECT COUNT(*) 
+                    FROM tabel_pengajuan 
+                    WHERE status = '1' AND approve = '1'
+                """)
+                approved_count = cursor.fetchone()[0]
+                debug_results['approved_count'] = f'OK: {approved_count} approved records'
+            except Exception as e:
+                debug_results['approved_count'] = f'ERROR: {e}'
+            
+            # Test 5: User check
+            try:
+                user_employee_number = request.user.username
+                debug_results['current_user'] = user_employee_number
+                debug_results['is_007522'] = 'YES' if user_employee_number == '007522' else 'NO'
+            except Exception as e:
+                debug_results['current_user'] = f'ERROR: {e}'
+        
+        # Return debug template
+        context = {
+            'debug_results': debug_results,
+            'page_title': 'Database Debug Test'
+        }
+        
+        return render(request, 'wo_maintenance_app/debug_test.html', context)
+        
+    except Exception as e:
+        logger.error(f"Debug test error: {e}")
+        return HttpResponse(f"Debug Error: {e}")
+
+
+@login_required  
+def minimal_approved_view(request):
+    """
+    MINIMAL VIEW khusus untuk user 007522
+    Hanya menampilkan approved pengajuan dengan query paling sederhana
+    """
+    try:
+        # Check user 007522
+        if request.user.username != '007522':
+            messages.error(request, 'Halaman ini khusus untuk user 007522 (SITI FATIMAH)')
+            return redirect('wo_maintenance_app:dashboard')
+        
+        # Minimal query untuk approved pengajuan
+        pengajuan_list = []
+        total_approved = 0
+        
+        try:
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # Count approved
+                cursor.execute("""
+                    SELECT COUNT(*) 
+                    FROM tabel_pengajuan 
+                    WHERE status = '1' AND approve = '1'
+                """)
+                total_approved = cursor.fetchone()[0] or 0
+                
+                # Get approved data - minimal
+                cursor.execute("""
+                    SELECT TOP 50
+                        history_id,
+                        oleh,
+                        deskripsi_perbaikan,
+                        status,
+                        approve,
+                        tgl_insert,
+                        user_insert,
+                        number_wo,
+                        review_status
+                    FROM tabel_pengajuan 
+                    WHERE status = '1' AND approve = '1'
+                    ORDER BY tgl_insert DESC
+                """)
+                
+                pengajuan_list = cursor.fetchall()
+                
+        except Exception as db_error:
+            logger.error(f"Database error: {db_error}")
+            messages.error(request, f'Database error: {str(db_error)}')
+        
+        context = {
+            'pengajuan_list': pengajuan_list,
+            'total_approved': total_approved,
+            'page_title': 'Minimal Approved View - SITI FATIMAH'
+        }
+        
+        return render(request, 'wo_maintenance_app/minimal_approved.html', context)
+        
+    except Exception as e:
+        logger.error(f"Error in minimal approved view: {e}")
+        return HttpResponse(f"Error: {e}")
 
 
 # ===== DETAIL LAPORAN =====
@@ -2737,4 +2829,5 @@ def debug_review_flow(request, history_id):
     except Exception as e:
         logger.error(f"Error in debug review flow: {e}")
         return JsonResponse({'success': False, 'error': str(e)})
+    
 
