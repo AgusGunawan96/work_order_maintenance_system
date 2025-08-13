@@ -4879,3 +4879,784 @@ INFO 2025-08-13 12:04:11,332 basehttp 18316 17588 "GET /wo-maintenance/daftar/?m
 INFO 2025-08-13 12:51:14,899 autoreload 18316 15244 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
 INFO 2025-08-13 12:51:17,368 autoreload 17132 18392 Watching for file changes with StatReloader
 INFO 2025-08-13 13:05:37,225 autoreload 10048 15372 Watching for file changes with StatReloader
+INFO 2025-08-13 13:05:45,055 basehttp 10048 16048 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:05:45,406 basehttp 10048 16048 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:05:52,589 views 10048 16048 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 13:05:52,652 authentication 10048 16048 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 13:05:52,652 authentication 10048 16048 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 13:05:52,662 views 10048 16048 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 13:05:52,662 views 10048 16048 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-13 13:05:52,685 basehttp 10048 16048 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:05:52,763 utils 10048 16048 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:05:52,891 utils 10048 16048 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:05:52,894 views 10048 16048 SITI FATIMAH mode: accessing ALL pengajuan without hierarchy restriction
+ERROR 2025-08-13 13:05:53,094 views 10048 16048 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:05:53,379 basehttp 10048 16048 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34406
+INFO 2025-08-13 13:06:00,241 utils 10048 16048 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:06:00,360 utils 10048 16048 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:06:00,363 views 10048 16048 SDBM assigned mode: 11606 assignments
+ERROR 2025-08-13 13:06:00,491 views 10048 16048 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:06:00,582 basehttp 10048 16048 "GET /wo-maintenance/daftar/?mode=assigned HTTP/1.1" 200 36248
+INFO 2025-08-13 13:06:04,731 utils 10048 14524 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:06:04,837 utils 10048 14524 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:06:04,843 views 10048 14524 SITI FATIMAH mode: accessing ALL pengajuan without hierarchy restriction
+ERROR 2025-08-13 13:06:05,042 views 10048 14524 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:06:05,126 basehttp 10048 14524 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34137
+INFO 2025-08-13 13:06:06,705 utils 10048 14524 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:06:06,807 utils 10048 14524 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:06:06,810 views 10048 14524 SITI FATIMAH mode: querying ALL approved pengajuan with status A and approve Y
+ERROR 2025-08-13 13:06:07,015 views 10048 14524 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:06:07,102 basehttp 10048 14524 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 34274
+INFO 2025-08-13 13:06:13,239 utils 10048 15704 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:06:13,346 utils 10048 15704 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:06:13,349 views 10048 15704 SDBM assigned mode: 11606 assignments
+ERROR 2025-08-13 13:06:13,484 views 10048 15704 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:06:13,571 basehttp 10048 15704 "GET /wo-maintenance/daftar/?mode=assigned HTTP/1.1" 200 36248
+INFO 2025-08-13 13:06:19,440 utils 10048 15704 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:06:19,567 utils 10048 15704 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:06:19,570 views 10048 15704 SITI FATIMAH mode: querying ALL approved pengajuan with status A and approve Y
+ERROR 2025-08-13 13:06:19,757 views 10048 15704 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:06:19,835 basehttp 10048 15704 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 34274
+INFO 2025-08-13 13:06:21,540 views 10048 15704 Auto-initialized 11581 approved pengajuan for review (status=A, approve=Y)
+ERROR 2025-08-13 13:06:21,542 views 10048 15704 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:06:21,545 basehttp 10048 15704 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:06:21,610 views 10048 15704 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:06:21,612 basehttp 10048 15704 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:06:21,887 basehttp 10048 15704 "GET /wo-maintenance/ HTTP/1.1" 200 28251
+INFO 2025-08-13 13:06:29,894 basehttp 10048 16500 "GET /wo-maintenance/input/ HTTP/1.1" 200 47497
+INFO 2025-08-13 13:06:32,673 utils 10048 16500 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:06:32,785 utils 10048 16500 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:06:32,788 views 10048 16500 SITI FATIMAH mode: accessing ALL pengajuan without hierarchy restriction
+ERROR 2025-08-13 13:06:32,975 views 10048 16500 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:06:33,074 basehttp 10048 16500 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34137
+INFO 2025-08-13 13:07:06,698 utils 10048 17564 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:07:06,805 utils 10048 17564 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:07:06,808 views 10048 17564 SDBM assigned mode: 11606 assignments
+ERROR 2025-08-13 13:07:06,946 views 10048 17564 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:07:07,038 basehttp 10048 17564 "GET /wo-maintenance/daftar/?mode=assigned HTTP/1.1" 200 36248
+INFO 2025-08-13 13:07:16,906 utils 10048 18208 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:07:17,010 utils 10048 18208 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:07:17,013 views 10048 18208 SITI FATIMAH mode: querying ALL approved pengajuan with status A and approve Y
+ERROR 2025-08-13 13:07:17,203 views 10048 18208 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:07:17,282 basehttp 10048 18208 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 34274
+INFO 2025-08-13 13:24:39,095 autoreload 10048 15372 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 13:24:41,044 autoreload 17772 17332 Watching for file changes with StatReloader
+INFO 2025-08-13 13:25:04,195 autoreload 16932 12772 Watching for file changes with StatReloader
+INFO 2025-08-13 13:25:11,473 utils 16932 10916 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:25:11,474 views 16932 10916 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: approved
+INFO 2025-08-13 13:25:11,595 utils 16932 10916 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:25:11,599 views 16932 10916 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 13:25:11,853 views 16932 10916 Enhanced query executed successfully - Found 11308 records for view_mode: approved
+INFO 2025-08-13 13:25:12,076 basehttp 16932 10916 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 116422
+INFO 2025-08-13 13:25:26,000 utils 16932 17500 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:25:26,001 views 16932 17500 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: approved
+INFO 2025-08-13 13:25:26,122 utils 16932 17500 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:25:26,125 views 16932 17500 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 13:25:26,293 views 16932 17500 Enhanced query executed successfully - Found 11308 records for view_mode: approved
+INFO 2025-08-13 13:25:26,395 basehttp 16932 17500 "GET /wo-maintenance/daftar/?page=2&mode=approved HTTP/1.1" 200 116716
+INFO 2025-08-13 13:25:33,752 utils 16932 12608 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:25:33,754 views 16932 12608 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: approved
+INFO 2025-08-13 13:25:33,865 utils 16932 12608 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:25:33,869 views 16932 12608 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 13:25:34,036 views 16932 12608 Enhanced query executed successfully - Found 11308 records for view_mode: approved
+INFO 2025-08-13 13:25:34,138 basehttp 16932 12608 "GET /wo-maintenance/daftar/?page=1&mode=approved HTTP/1.1" 200 116422
+INFO 2025-08-13 13:25:37,493 utils 16932 17984 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 13:25:37,536 utils 16932 17984 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 13:25:37,698 basehttp 16932 17984 "GET /wo-maintenance/detail/25-08-0222/ HTTP/1.1" 200 28423
+INFO 2025-08-13 13:25:54,246 utils 16932 17804 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 13:25:54,269 utils 16932 17804 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 13:25:54,332 basehttp 16932 17804 "GET /wo-maintenance/detail/25-08-0222/ HTTP/1.1" 200 28423
+INFO 2025-08-13 13:25:59,149 basehttp 16932 360 "GET /wo-maintenance/review/pengajuan/25-08-0222/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:25:59,234 views 16932 360 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:25:59,236 basehttp 16932 360 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:25:59,293 views 16932 360 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:25:59,296 basehttp 16932 360 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:25:59,459 basehttp 16932 360 "GET /wo-maintenance/ HTTP/1.1" 200 28251
+INFO 2025-08-13 13:26:08,100 utils 16932 13744 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:26:08,101 views 16932 13744 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: approved
+INFO 2025-08-13 13:26:08,202 utils 16932 13744 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:26:08,210 views 16932 13744 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 13:26:08,393 views 16932 13744 Enhanced query executed successfully - Found 11308 records for view_mode: approved
+INFO 2025-08-13 13:26:08,488 basehttp 16932 13744 "GET /wo-maintenance/daftar/?page=9&mode=approved HTTP/1.1" 200 117659
+INFO 2025-08-13 13:26:16,843 utils 16932 14192 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:26:16,844 views 16932 14192 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: assigned
+INFO 2025-08-13 13:26:16,946 utils 16932 14192 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:26:16,950 views 16932 14192 SDBM assigned mode: 11606 assignments
+ERROR 2025-08-13 13:26:17,078 views 16932 14192 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+ERROR 2025-08-13 13:26:17,172 views 16932 14192 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.Error: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 864, in enhanced_daftar_laporan
+    cursor.execute(count_query, query_params)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.Error: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+
+INFO 2025-08-13 13:26:17,273 basehttp 16932 14192 "GET /wo-maintenance/daftar/?mode=assigned HTTP/1.1" 200 36152
+INFO 2025-08-13 13:26:21,520 utils 16932 14984 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:26:21,521 views 16932 14984 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: approved
+INFO 2025-08-13 13:26:21,631 utils 16932 14984 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:26:21,634 views 16932 14984 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 13:26:21,811 views 16932 14984 Enhanced query executed successfully - Found 11308 records for view_mode: approved
+INFO 2025-08-13 13:26:21,902 basehttp 16932 14984 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 116422
+INFO 2025-08-13 13:26:24,588 basehttp 16932 14984 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:26:24,651 basehttp 16932 14984 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:26:24,777 basehttp 16932 14984 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:26:35,472 views 16932 15324 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 13:26:35,485 authentication 16932 15324 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 13:26:35,493 views 16932 15324 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 13:26:35,493 views 16932 15324 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-13 13:26:35,498 basehttp 16932 15324 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:26:35,717 views 16932 15324 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:26:35,782 basehttp 16932 15324 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30842
+INFO 2025-08-13 13:26:39,430 views 16932 15324 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:26:39,496 basehttp 16932 15324 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30557
+INFO 2025-08-13 13:26:42,006 basehttp 16932 16444 "GET /wo-maintenance/input/ HTTP/1.1" 200 47213
+INFO 2025-08-13 13:29:21,342 autoreload 16932 12772 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-13 13:29:23,239 autoreload 10584 5308 Watching for file changes with StatReloader
+INFO 2025-08-13 13:30:52,549 autoreload 12044 17636 Watching for file changes with StatReloader
+INFO 2025-08-13 13:31:00,199 basehttp 12044 1700 "GET /wo-maintenance/input/ HTTP/1.1" 200 47213
+INFO 2025-08-13 13:31:02,357 views 12044 1700 Enhanced query executed successfully - Found 0 records for view_mode: normal
+ERROR 2025-08-13 13:31:02,442 views 12044 1700 Critical error in enhanced daftar_laporan: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+ERROR 2025-08-13 13:31:02,678 views 12044 1700 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 1031, in enhanced_daftar_laporan
+    return render(request, 'wo_maintenance_app/enhanced_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+
+INFO 2025-08-13 13:31:02,682 basehttp 12044 1700 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:31:02,871 basehttp 12044 1700 "GET /wo-maintenance/ HTTP/1.1" 200 28312
+INFO 2025-08-13 13:31:08,746 views 12044 1700 Enhanced query executed successfully - Found 0 records for view_mode: normal
+ERROR 2025-08-13 13:31:08,810 views 12044 1700 Critical error in enhanced daftar_laporan: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+ERROR 2025-08-13 13:31:08,812 views 12044 1700 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 1031, in enhanced_daftar_laporan
+    return render(request, 'wo_maintenance_app/enhanced_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+
+INFO 2025-08-13 13:31:08,815 basehttp 12044 1700 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:31:08,985 basehttp 12044 1700 "GET /wo-maintenance/ HTTP/1.1" 200 28312
+INFO 2025-08-13 13:31:13,505 views 12044 15180 Enhanced query executed successfully - Found 0 records for view_mode: normal
+ERROR 2025-08-13 13:31:13,566 views 12044 15180 Critical error in enhanced daftar_laporan: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+ERROR 2025-08-13 13:31:13,568 views 12044 15180 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 1031, in enhanced_daftar_laporan
+    return render(request, 'wo_maintenance_app/enhanced_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+
+INFO 2025-08-13 13:31:13,571 basehttp 12044 15180 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:31:13,761 basehttp 12044 15180 "GET /wo-maintenance/ HTTP/1.1" 200 28312
+INFO 2025-08-13 13:31:18,325 basehttp 12044 15180 "GET /wo-maintenance/input/ HTTP/1.1" 200 47375
+INFO 2025-08-13 13:31:20,630 views 12044 17552 Enhanced query executed successfully - Found 0 records for view_mode: normal
+ERROR 2025-08-13 13:31:20,694 views 12044 17552 Critical error in enhanced daftar_laporan: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+ERROR 2025-08-13 13:31:20,697 views 12044 17552 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 1031, in enhanced_daftar_laporan
+    return render(request, 'wo_maintenance_app/enhanced_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+
+INFO 2025-08-13 13:31:20,700 basehttp 12044 17552 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:31:20,862 basehttp 12044 17552 "GET /wo-maintenance/ HTTP/1.1" 200 28312
+INFO 2025-08-13 13:31:25,668 basehttp 12044 17552 "GET /logout/?next=/wo-maintenance/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:31:25,724 basehttp 12044 17552 "GET /wo-maintenance/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:31:25,834 basehttp 12044 17552 "GET /login/?next=/wo-maintenance/ HTTP/1.1" 200 10614
+INFO 2025-08-13 13:32:08,273 basehttp 12044 14868 "GET /login/?next=/wo-maintenance/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:32:09,258 basehttp 12044 14868 "GET /login/?next=/wo-maintenance/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:32:14,858 views 12044 17968 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 13:32:14,885 authentication 12044 17968 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 13:32:14,886 authentication 12044 17968 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 13:32:14,894 views 12044 17968 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 13:32:14,894 views 12044 17968 LOGIN REDIRECT: 007522 -> /wo-maintenance/
+INFO 2025-08-13 13:32:14,899 basehttp 12044 17968 "POST /login/?next=/wo-maintenance/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:32:15,100 basehttp 12044 17968 "GET /wo-maintenance/ HTTP/1.1" 200 28200
+INFO 2025-08-13 13:32:18,713 utils 12044 17048 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:32:18,713 views 12044 17048 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:32:18,790 utils 12044 17048 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:32:18,793 views 12044 17048 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:32:19,004 views 12044 17048 Enhanced query executed successfully - Found 11333 records for view_mode: normal
+ERROR 2025-08-13 13:32:19,078 views 12044 17048 Critical error in enhanced daftar_laporan: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+ERROR 2025-08-13 13:32:19,084 views 12044 17048 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 1031, in enhanced_daftar_laporan
+    return render(request, 'wo_maintenance_app/enhanced_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'enhanced_daftar_laporan' not found. 'enhanced_daftar_laporan' is not a valid view function or pattern name.
+
+INFO 2025-08-13 13:32:19,087 basehttp 12044 17048 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:32:19,260 basehttp 12044 17048 "GET /wo-maintenance/ HTTP/1.1" 200 28200
+INFO 2025-08-13 13:33:10,889 autoreload 12044 17636 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-13 13:33:12,776 autoreload 13728 15052 Watching for file changes with StatReloader
+INFO 2025-08-13 13:33:21,571 autoreload 15008 9652 Watching for file changes with StatReloader
+INFO 2025-08-13 13:33:30,713 utils 15008 14432 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:33:30,714 views 15008 14432 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:33:30,797 utils 15008 14432 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:33:30,800 views 15008 14432 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:33:30,985 views 15008 14432 Enhanced query executed successfully - Found 11333 records for view_mode: normal
+INFO 2025-08-13 13:33:31,191 basehttp 15008 14432 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 89029
+INFO 2025-08-13 13:33:46,102 basehttp 15008 17916 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:33:46,157 basehttp 15008 17916 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:33:46,264 basehttp 15008 17916 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:33:53,498 views 15008 16008 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 13:33:53,526 authentication 15008 16008 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 13:33:53,536 views 15008 16008 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 13:33:53,537 views 15008 16008 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-13 13:33:53,543 basehttp 15008 16008 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:33:53,683 views 15008 16008 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:33:53,756 basehttp 15008 16008 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 25893
+INFO 2025-08-13 13:33:58,163 views 15008 16008 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:33:58,223 basehttp 15008 16008 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 25582
+INFO 2025-08-13 13:34:22,135 views 15008 17624 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:34:22,220 basehttp 15008 17624 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+INFO 2025-08-13 13:34:29,198 views 15008 17624 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:34:29,264 basehttp 15008 17624 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+INFO 2025-08-13 13:34:32,467 basehttp 15008 9788 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:34:32,520 basehttp 15008 9788 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:34:32,621 basehttp 15008 9788 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:34:39,962 views 15008 9788 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 13:34:39,981 authentication 15008 9788 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 13:34:39,981 authentication 15008 9788 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 13:34:39,989 views 15008 9788 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 13:34:39,990 views 15008 9788 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-13 13:34:39,995 basehttp 15008 9788 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:34:40,075 utils 15008 9788 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:34:40,075 views 15008 9788 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:34:40,142 utils 15008 9788 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:34:40,149 views 15008 9788 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:34:40,325 views 15008 9788 Enhanced query executed successfully - Found 11333 records for view_mode: normal
+INFO 2025-08-13 13:34:40,416 basehttp 15008 9788 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 101115
+INFO 2025-08-13 13:34:58,433 utils 15008 16592 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:34:58,434 views 15008 16592 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:34:58,503 utils 15008 16592 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:34:58,506 views 15008 16592 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:34:58,606 views 15008 16592 Enhanced query executed successfully - Found 185 records for view_mode: normal
+INFO 2025-08-13 13:34:58,699 basehttp 15008 16592 "GET /wo-maintenance/daftar/?tanggal_dari=2025-08-03&tanggal_sampai=&status=A&pengaju=&history_id= HTTP/1.1" 200 100847
+INFO 2025-08-13 13:35:09,984 utils 15008 1548 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:35:09,985 views 15008 1548 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:35:10,056 utils 15008 1548 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:35:10,059 views 15008 1548 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:35:10,101 views 15008 1548 Enhanced query executed successfully - Found 49 records for view_mode: normal
+INFO 2025-08-13 13:35:10,193 basehttp 15008 1548 "GET /wo-maintenance/daftar/?tanggal_dari=2025-08-12&tanggal_sampai=2025-08-13&status=A&pengaju=&history_id= HTTP/1.1" 200 98860
+INFO 2025-08-13 13:35:17,518 utils 15008 11640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:35:17,519 views 15008 11640 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:35:17,584 utils 15008 11640 SITI FATIMAH granted access to 11606 approved pengajuan via special privilege
+INFO 2025-08-13 13:35:17,587 views 15008 11640 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:35:17,762 views 15008 11640 Enhanced query executed successfully - Found 11333 records for view_mode: normal
+INFO 2025-08-13 13:35:17,855 basehttp 15008 11640 "GET /wo-maintenance/daftar/?page=2 HTTP/1.1" 200 101177
+INFO 2025-08-13 13:35:46,127 utils 15008 18264 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 13:35:46,161 utils 15008 18264 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 13:35:46,224 basehttp 15008 18264 "GET /wo-maintenance/detail/25-08-0203/ HTTP/1.1" 200 28494
+INFO 2025-08-13 13:36:21,969 basehttp 15008 11032 "GET /logout/?next=/wo-maintenance/detail/25-08-0203/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:36:22,031 basehttp 15008 11032 "GET /wo-maintenance/detail/25-08-0203/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:36:22,128 basehttp 15008 11032 "GET /login/?next=/wo-maintenance/detail/25-08-0203/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:36:31,144 views 15008 2284 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 13:36:31,166 authentication 15008 2284 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 13:36:31,176 views 15008 2284 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 13:36:31,176 views 15008 2284 LOGIN REDIRECT: 001605 -> /wo-maintenance/detail/25-08-0203/
+INFO 2025-08-13 13:36:31,181 basehttp 15008 2284 "POST /login/?next=/wo-maintenance/detail/25-08-0203/ HTTP/1.1" 302 0
+WARNING 2025-08-13 13:36:31,292 views 15008 2284 User TUMPAL BERLIN HARIANJA tried to access unauthorized pengajuan 25-08-0203
+INFO 2025-08-13 13:36:31,294 basehttp 15008 2284 "GET /wo-maintenance/detail/25-08-0203/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:36:31,461 views 15008 2284 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:36:31,525 basehttp 15008 2284 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31130
+INFO 2025-08-13 13:36:37,642 views 15008 2284 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:36:37,706 basehttp 15008 2284 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+INFO 2025-08-13 13:36:51,084 basehttp 15008 16760 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:36:51,130 basehttp 15008 16760 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:36:51,230 basehttp 15008 16760 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:36:54,194 views 15008 16760 LOGIN ATTEMPT: 001145
+INFO 2025-08-13 13:36:54,209 authentication 15008 16760 Successful SDBM authentication for 001145 - TUMIN
+INFO 2025-08-13 13:36:54,218 views 15008 16760 LOGIN: Using existing session data for 001145
+INFO 2025-08-13 13:36:54,219 views 15008 16760 LOGIN REDIRECT: 001145 -> /wo-maintenance/daftar/
+INFO 2025-08-13 13:36:54,226 basehttp 15008 16760 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:36:54,425 views 15008 16760 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 13:36:54,485 basehttp 15008 16760 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30813
+INFO 2025-08-13 13:36:57,504 basehttp 15008 1248 "GET /wo-maintenance/input/ HTTP/1.1" 200 47188
+INFO 2025-08-13 13:37:02,564 basehttp 15008 17224 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755067017815 HTTP/1.1" 200 292
+INFO 2025-08-13 13:37:19,776 forms 15008 15220 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-13 13:37:19,795 views 15008 15220 SAVE: Inserting pengajuan WO20250813001
+INFO 2025-08-13 13:37:19,799 views 15008 15220 SUCCESS: Pengajuan WO20250813001 berhasil disimpan
+INFO 2025-08-13 13:37:19,801 basehttp 15008 15220 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:37:19,971 views 15008 15220 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-13 13:37:20,033 basehttp 15008 15220 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34787
+INFO 2025-08-13 13:37:31,651 basehttp 15008 11412 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29058
+INFO 2025-08-13 13:37:39,958 views 15008 12084 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-13 13:37:40,020 basehttp 15008 12084 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34475
+INFO 2025-08-13 13:37:42,946 basehttp 15008 13736 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29058
+INFO 2025-08-13 13:38:03,248 basehttp 15008 14224 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:38:03,299 basehttp 15008 14224 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:38:03,395 basehttp 15008 14224 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:38:06,411 views 15008 16912 LOGIN ATTEMPT: 000024
+INFO 2025-08-13 13:38:06,450 authentication 15008 16912 Updated Django user data for 000024
+INFO 2025-08-13 13:38:06,451 authentication 15008 16912 Successful SDBM authentication for 000024 - MEGUMU NODA
+INFO 2025-08-13 13:38:06,461 views 15008 16912 LOGIN: Using existing session data for 000024
+INFO 2025-08-13 13:38:06,462 views 15008 16912 LOGIN REDIRECT: 000024 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 13:38:06,470 basehttp 15008 16912 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:38:06,630 basehttp 15008 16912 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29311
+INFO 2025-08-13 13:38:10,838 views 15008 16912 Enhanced query executed successfully - Found 7 records for view_mode: normal
+INFO 2025-08-13 13:38:10,912 basehttp 15008 16912 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 53581
+INFO 2025-08-13 13:38:27,628 basehttp 15008 10888 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29033
+INFO 2025-08-13 13:38:32,750 basehttp 15008 17640 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29033
+INFO 2025-08-13 13:38:44,672 views 15008 13544 Enhanced query executed successfully - Found 7 records for view_mode: normal
+INFO 2025-08-13 13:38:44,750 basehttp 15008 13544 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 53581
+INFO 2025-08-13 13:40:38,184 autoreload 15008 9652 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-13 13:40:40,091 autoreload 348 10764 Watching for file changes with StatReloader
+INFO 2025-08-13 13:41:37,820 autoreload 348 10764 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 13:41:39,805 autoreload 13744 14192 Watching for file changes with StatReloader
+INFO 2025-08-13 13:41:48,410 autoreload 13500 15300 Watching for file changes with StatReloader
+INFO 2025-08-13 13:41:59,149 basehttp 13500 4212 "GET /wo-maintenance/input/ HTTP/1.1" 200 47171
+INFO 2025-08-13 13:42:01,429 views 13500 4212 Enhanced SDBM query executed successfully - Found 7 records
+INFO 2025-08-13 13:42:01,517 basehttp 13500 4212 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 54400
+INFO 2025-08-13 13:42:04,956 basehttp 13500 4212 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29033
+INFO 2025-08-13 13:42:23,343 basehttp 13500 17544 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:42:23,395 basehttp 13500 17544 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:42:23,509 basehttp 13500 17544 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:42:31,359 views 13500 15024 LOGIN ATTEMPT: 002186
+INFO 2025-08-13 13:42:31,381 authentication 13500 15024 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-13 13:42:31,387 views 13500 15024 LOGIN: Using existing session data for 002186
+INFO 2025-08-13 13:42:31,388 views 13500 15024 LOGIN REDIRECT: 002186 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 13:42:31,392 basehttp 13500 15024 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:42:31,497 basehttp 13500 15024 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:42:31,618 views 13500 15024 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-13 13:42:31,681 basehttp 13500 15024 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31059
+INFO 2025-08-13 13:42:36,486 basehttp 13500 12516 "GET /wo-maintenance/input/ HTTP/1.1" 200 47177
+INFO 2025-08-13 13:42:41,658 basehttp 13500 12516 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755067356789 HTTP/1.1" 200 292
+INFO 2025-08-13 13:42:56,029 forms 13500 16276 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-13 13:42:56,049 views 13500 16276 SAVE: Inserting pengajuan WO20250813001
+INFO 2025-08-13 13:42:56,052 views 13500 16276 SUCCESS: Pengajuan WO20250813001 berhasil disimpan
+INFO 2025-08-13 13:42:56,054 basehttp 13500 16276 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:42:56,154 views 13500 16276 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 13:42:56,219 basehttp 13500 16276 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34884
+INFO 2025-08-13 13:43:06,558 basehttp 13500 11588 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:43:06,611 basehttp 13500 11588 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:43:06,720 basehttp 13500 11588 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:43:12,621 views 13500 11588 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 13:43:12,639 authentication 13500 11588 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 13:43:12,647 views 13500 11588 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 13:43:12,647 views 13500 11588 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 13:43:12,653 basehttp 13500 11588 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:43:12,790 views 13500 11588 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-13 13:43:12,853 basehttp 13500 11588 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 37280
+INFO 2025-08-13 13:43:18,253 basehttp 13500 15444 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 34822
+INFO 2025-08-13 13:43:41,188 views 13500 13896 Pengajuan WO20250813001 approved by BADRI KIMAN - sent to review queue (status=A, approve=Y)
+INFO 2025-08-13 13:43:41,192 views 13500 13896 Review tables and columns verified/created successfully
+INFO 2025-08-13 13:43:41,197 views 13500 13896 Pengajuan WO20250813001 disetujui by BADRI KIMAN
+INFO 2025-08-13 13:43:41,200 basehttp 13500 13896 "POST /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:43:41,360 basehttp 13500 13896 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 31358
+INFO 2025-08-13 13:43:52,311 basehttp 13500 376 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:43:52,368 basehttp 13500 376 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:43:52,486 basehttp 13500 376 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 13:43:58,170 views 13500 18344 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 13:43:58,182 authentication 13500 18344 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 13:43:58,182 authentication 13500 18344 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 13:43:58,209 views 13500 18344 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 13:43:58,210 views 13500 18344 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 13:43:58,217 basehttp 13500 18344 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:43:58,285 utils 13500 18344 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 13:43:58,310 utils 13500 18344 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 13:43:58,381 basehttp 13500 18344 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29254
+INFO 2025-08-13 13:44:05,009 utils 13500 18344 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:44:05,119 utils 13500 18344 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:44:05,122 views 13500 18344 SITI FATIMAH mode: accessing ALL pengajuan without hierarchy restriction
+ERROR 2025-08-13 13:44:05,364 views 13500 18344 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:44:05,450 basehttp 13500 18344 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34134
+INFO 2025-08-13 13:44:09,979 utils 13500 17552 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:44:10,081 utils 13500 17552 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:44:10,084 views 13500 17552 SDBM assigned mode: 11607 assignments
+ERROR 2025-08-13 13:44:10,219 views 13500 17552 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:44:10,304 basehttp 13500 17552 "GET /wo-maintenance/daftar/?mode=assigned HTTP/1.1" 200 36245
+INFO 2025-08-13 13:44:13,240 utils 13500 17552 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:44:13,344 utils 13500 17552 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:44:13,347 views 13500 17552 SITI FATIMAH mode: querying ALL approved pengajuan with status A and approve Y
+ERROR 2025-08-13 13:44:13,542 views 13500 17552 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+INFO 2025-08-13 13:44:13,625 basehttp 13500 17552 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 34271
+INFO 2025-08-13 13:45:03,699 autoreload 13500 15300 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 13:45:05,746 autoreload 10552 14804 Watching for file changes with StatReloader
+INFO 2025-08-13 13:45:17,203 autoreload 14524 1700 Watching for file changes with StatReloader
+INFO 2025-08-13 13:45:24,687 utils 14524 13728 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:45:24,688 views 14524 13728 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: approved
+INFO 2025-08-13 13:45:24,813 utils 14524 13728 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:45:24,817 views 14524 13728 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 13:45:25,005 views 14524 13728 Enhanced query executed successfully - Found 11309 records for view_mode: approved
+INFO 2025-08-13 13:45:25,213 basehttp 14524 13728 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 116400
+INFO 2025-08-13 13:45:37,895 basehttp 14524 17032 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:45:37,972 views 14524 17032 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:45:37,973 basehttp 14524 17032 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:45:38,041 views 14524 17032 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:45:38,042 basehttp 14524 17032 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:45:38,209 basehttp 14524 17032 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 13:45:46,386 utils 14524 9848 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 13:45:46,428 utils 14524 9848 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 13:45:46,495 basehttp 14524 9848 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29852
+INFO 2025-08-13 13:45:54,967 basehttp 14524 17652 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:45:55,071 views 14524 17652 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:45:55,074 basehttp 14524 17652 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:45:55,127 views 14524 17652 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:45:55,129 basehttp 14524 17652 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:45:55,306 basehttp 14524 17652 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 13:45:57,502 utils 14524 18012 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:45:57,503 views 14524 18012 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: approved
+INFO 2025-08-13 13:45:57,613 utils 14524 18012 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:45:57,622 views 14524 18012 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 13:45:57,800 views 14524 18012 Enhanced query executed successfully - Found 11309 records for view_mode: approved
+INFO 2025-08-13 13:45:57,897 basehttp 14524 18012 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 117295
+INFO 2025-08-13 13:46:43,464 autoreload 14524 1700 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-13 13:46:45,327 autoreload 14028 14016 Watching for file changes with StatReloader
+INFO 2025-08-13 13:46:58,198 autoreload 13956 10216 Watching for file changes with StatReloader
+INFO 2025-08-13 13:47:02,463 utils 13956 4168 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:47:02,464 views 13956 4168 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: approved
+INFO 2025-08-13 13:47:02,615 utils 13956 4168 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:47:02,619 views 13956 4168 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 13:47:02,771 views 13956 4168 Enhanced query executed successfully - Found 11309 records for view_mode: approved
+INFO 2025-08-13 13:47:02,999 basehttp 13956 4168 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 116400
+INFO 2025-08-13 13:47:06,864 basehttp 13956 4168 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:47:06,937 views 13956 4168 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:47:06,939 basehttp 13956 4168 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 13:47:07,007 views 13956 4168 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 13:47:07,008 basehttp 13956 4168 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 13:47:07,192 basehttp 13956 4168 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 13:47:12,072 utils 13956 1548 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 13:47:12,094 utils 13956 1548 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 13:47:12,160 basehttp 13956 1548 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29852
+INFO 2025-08-13 13:48:26,777 utils 13956 17472 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:48:26,778 views 13956 17472 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:48:26,899 utils 13956 17472 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:48:26,903 views 13956 17472 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:48:27,202 views 13956 17472 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 13:48:27,295 basehttp 13956 17472 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100809
+INFO 2025-08-13 13:48:34,941 utils 13956 17472 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:48:34,942 views 13956 17472 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:48:35,055 utils 13956 17472 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:48:35,061 views 13956 17472 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:48:35,235 views 13956 17472 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 13:48:35,324 basehttp 13956 17472 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100809
+INFO 2025-08-13 13:48:39,619 utils 13956 17640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 13:48:39,656 utils 13956 17640 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 13:48:39,738 basehttp 13956 17640 "GET /wo-maintenance/detail/25-08-0217/ HTTP/1.1" 200 28442
+INFO 2025-08-13 13:49:09,212 autoreload 13956 10216 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 13:49:11,101 autoreload 17416 9928 Watching for file changes with StatReloader
+INFO 2025-08-13 13:50:47,352 autoreload 18148 18168 Watching for file changes with StatReloader
+INFO 2025-08-13 13:50:50,055 utils 18148 10764 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 13:50:50,056 views 18148 10764 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 13:50:50,212 utils 18148 10764 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 13:50:50,216 views 18148 10764 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 13:50:50,397 views 18148 10764 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 13:50:50,603 basehttp 18148 10764 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100809

@@ -706,11 +706,13 @@ def review_pengajuan_detail(request, nomor_pengajuan):
 
 # ===== NEW: Enhanced Daftar Laporan dengan SDBM Assignment Filter =====
 
+# wo_maintenance_app/views.py - FIXED enhanced_daftar_laporan function
+
 @login_required
 def enhanced_daftar_laporan(request):
     """
     Enhanced view untuk menampilkan daftar pengajuan dengan SDBM assignment integration
-    FIXED: dengan Status A dan Approve Y + SITI FATIMAH full access
+    FIXED: Simplified query untuk mengatasi SQL syntax error
     """
     try:
         # ===== AMBIL DATA HIERARCHY USER =====
@@ -730,104 +732,111 @@ def enhanced_daftar_laporan(request):
         # ===== FILTER MODE =====
         view_mode = request.GET.get('mode', 'normal')
         
-        # ===== GET SDBM ASSIGNMENTS =====
-        from wo_maintenance_app.utils import get_assigned_pengajuan_for_sdbm_user
+        if is_siti_fatimah:
+            logger.info(f"User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: {view_mode}")
         
-        sdbm_assignments = get_assigned_pengajuan_for_sdbm_user(user_hierarchy.get('employee_number'))
-        assigned_history_ids = [assignment['history_id'] for assignment in sdbm_assignments if isinstance(assignment, dict)]
+        # ===== GET SDBM ASSIGNMENTS DENGAN ERROR HANDLING =====
+        try:
+            from wo_maintenance_app.utils import get_assigned_pengajuan_for_sdbm_user
+            sdbm_assignments = get_assigned_pengajuan_for_sdbm_user(user_hierarchy.get('employee_number'))
+            assigned_history_ids = [assignment['history_id'] for assignment in sdbm_assignments if isinstance(assignment, dict) and assignment.get('history_id')]
+        except Exception as sdbm_error:
+            logger.warning(f"SDBM assignment error for {user_hierarchy.get('employee_number')}: {sdbm_error}")
+            sdbm_assignments = []
+            assigned_history_ids = []
         
         # ===== FILTER FORM =====
         filter_form = PengajuanFilterForm(request.GET or None)
         search_query = request.GET.get('search', '').strip()
         
-        # ===== QUERY DATABASE - Enhanced dengan SDBM dan FIXED Status =====
+        # ===== QUERY DATABASE - SIMPLIFIED =====
         pengajuan_list = []
         total_records = 0
         
         try:
             with connections['DB_Maintenance'].cursor() as cursor:
                 # ===== BUILD WHERE CONDITIONS =====
-                where_conditions = ["tp.history_id IS NOT NULL"]
+                base_conditions = ["tp.history_id IS NOT NULL"]
                 query_params = []
                 
+                # ===== MODE-SPECIFIC LOGIC =====
                 if is_siti_fatimah and view_mode == 'approved':
-                    # FIXED: Mode approved untuk SITI FATIMAH dengan status A dan approve Y
-                    where_conditions.extend([
-                        "tp.status = %s",    # FIXED: 'A' 
-                        "tp.approve = %s"    # FIXED: 'Y'
+                    # SITI FATIMAH - All approved pengajuan
+                    base_conditions.extend([
+                        "tp.status = %s",
+                        "tp.approve = %s"
                     ])
                     query_params.extend([STATUS_APPROVED, APPROVE_YES])
-                    logger.info("SITI FATIMAH mode: querying ALL approved pengajuan with status A and approve Y")
+                    logger.info("SITI FATIMAH mode: querying ALL approved pengajuan")
                     
                 elif view_mode == 'assigned' and assigned_history_ids:
                     # Mode assigned: hanya yang di-assign via SDBM
                     history_placeholders = ','.join(['%s'] * len(assigned_history_ids))
-                    where_conditions.append(f"tp.history_id IN ({history_placeholders})")
+                    base_conditions.append(f"tp.history_id IN ({history_placeholders})")
                     query_params.extend(assigned_history_ids)
                     logger.info(f"SDBM assigned mode: {len(assigned_history_ids)} assignments")
                     
                 elif is_siti_fatimah:
-                    # FIXED: SITI FATIMAH dapat melihat SEMUA pengajuan (tidak dibatasi hierarchy)
-                    logger.info("SITI FATIMAH mode: accessing ALL pengajuan without hierarchy restriction")
-                    # Tidak ada additional filter, semua pengajuan bisa diakses
+                    # SITI FATIMAH normal mode - semua pengajuan
+                    logger.info("SITI FATIMAH mode: accessing ALL pengajuan without restriction")
+                    # Tidak ada additional filter
                     
                 else:
-                    # Mode normal: hierarchy filter + SDBM assignments untuk user lain
+                    # Mode normal: hierarchy filter untuk user lain
                     allowed_employee_numbers = get_subordinate_employee_numbers(user_hierarchy)
                     
                     if not allowed_employee_numbers:
                         allowed_employee_numbers = [user_hierarchy.get('employee_number')]
                     
-                    # Gabungkan hierarchy dan SDBM assignments
-                    all_accessible_conditions = []
+                    # Simplified access control
+                    accessible_conditions = []
                     
-                    # Condition 1: Hierarchy access
+                    # Hierarchy access
                     if allowed_employee_numbers:
                         placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
-                        all_accessible_conditions.append(f"tp.user_insert IN ({placeholders})")
+                        accessible_conditions.append(f"tp.user_insert IN ({placeholders})")
                         query_params.extend(allowed_employee_numbers)
                     
-                    # Condition 2: SDBM assignments
+                    # SDBM assignments (if any)
                     if assigned_history_ids:
                         assignment_placeholders = ','.join(['%s'] * len(assigned_history_ids))
-                        all_accessible_conditions.append(f"tp.history_id IN ({assignment_placeholders})")
+                        accessible_conditions.append(f"tp.history_id IN ({assignment_placeholders})")
                         query_params.extend(assigned_history_ids)
                     
-                    if all_accessible_conditions:
-                        where_conditions.append(f"({' OR '.join(all_accessible_conditions)})")
+                    if accessible_conditions:
+                        base_conditions.append(f"({' OR '.join(accessible_conditions)})")
                 
-                # ===== FORM FILTERS dengan FIXED Status =====
+                # ===== FORM FILTERS =====
                 if filter_form.is_valid():
                     tanggal_dari = filter_form.cleaned_data.get('tanggal_dari')
                     if tanggal_dari:
-                        where_conditions.append("CAST(tp.tgl_insert AS DATE) >= %s")
+                        base_conditions.append("CAST(tp.tgl_insert AS DATE) >= %s")
                         query_params.append(tanggal_dari)
                     
                     tanggal_sampai = filter_form.cleaned_data.get('tanggal_sampai')
                     if tanggal_sampai:
-                        where_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
+                        base_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
                         query_params.append(tanggal_sampai)
                     
-                    # FIXED: Status filter dengan mapping yang benar
+                    # Status filter - skip untuk mode approved
                     if not (is_siti_fatimah and view_mode == 'approved'):
                         status_filter = filter_form.cleaned_data.get('status')
                         if status_filter:
-                            # Map status filter values
-                            if status_filter == '1':  # Form masih menggunakan '1' untuk approved
-                                where_conditions.append("tp.status = %s")
-                                query_params.append(STATUS_APPROVED)  # Gunakan 'A'
+                            if status_filter == '1':
+                                base_conditions.append("tp.status = %s")
+                                query_params.append(STATUS_APPROVED)  # Use 'A'
                             else:
-                                where_conditions.append("tp.status = %s")
+                                base_conditions.append("tp.status = %s")
                                 query_params.append(status_filter)
                     
                     pengaju_filter = filter_form.cleaned_data.get('pengaju')
                     if pengaju_filter:
-                        where_conditions.append("tp.oleh LIKE %s")
+                        base_conditions.append("tp.oleh LIKE %s")
                         query_params.append(f"%{pengaju_filter}%")
                     
                     history_id_filter = filter_form.cleaned_data.get('history_id')
                     if history_id_filter:
-                        where_conditions.append("tp.history_id LIKE %s")
+                        base_conditions.append("tp.history_id LIKE %s")
                         query_params.append(f"%{history_id_filter}%")
                 
                 # ===== SEARCH =====
@@ -836,27 +845,19 @@ def enhanced_daftar_laporan(request):
                         "tp.history_id LIKE %s",
                         "tp.oleh LIKE %s",
                         "tp.deskripsi_perbaikan LIKE %s",
-                        "tp.number_wo LIKE %s",
-                        "tm.mesin LIKE %s"
+                        "tp.number_wo LIKE %s"
                     ]
-                    where_conditions.append(f"({' OR '.join(search_conditions)})")
+                    base_conditions.append(f"({' OR '.join(search_conditions)})")
                     search_param = f"%{search_query}%"
                     query_params.extend([search_param] * len(search_conditions))
                 
                 # ===== BUILD WHERE CLAUSE =====
-                where_clause = ""
-                if where_conditions:
-                    where_clause = "WHERE " + " AND ".join(where_conditions)
+                where_clause = "WHERE " + " AND ".join(base_conditions) if base_conditions else ""
                 
-                # ===== COUNT QUERY =====
+                # ===== COUNT QUERY - SIMPLIFIED =====
                 count_query = f"""
                     SELECT COUNT(DISTINCT tp.history_id)
                     FROM tabel_pengajuan tp
-                    LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
-                    LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
-                    LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
-                    LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
-                    LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
                     {where_clause}
                 """
                 
@@ -873,8 +874,15 @@ def enhanced_daftar_laporan(request):
                 previous_page_number = page_number - 1 if has_previous else None
                 next_page_number = page_number + 1 if has_next else None
                 
-                # ===== MAIN QUERY dengan Assignment Info =====
+                # ===== MAIN QUERY - SIMPLIFIED =====
                 offset = (page_number - 1) * page_size
+                
+                # Determine access type based on mode and assignments
+                access_type_sql = "'HIERARCHY'"
+                if view_mode == 'assigned':
+                    access_type_sql = "'SDBM_ASSIGNED'"
+                elif is_siti_fatimah:
+                    access_type_sql = "'SITI_FATIMAH'"
                 
                 main_query = f"""
                     SELECT DISTINCT
@@ -896,11 +904,8 @@ def enhanced_daftar_laporan(request):
                         tp.review_status,                 -- 15
                         tp.reviewed_by,                   -- 16
                         tp.review_date,                   -- 17
-                        ISNULL(final_section.seksi, 'N/A'), -- 18
-                        CASE 
-                            WHEN tp.history_id IN ({','.join(['%s'] * len(assigned_history_ids)) if assigned_history_ids else "''"}) THEN 'SDBM_ASSIGNED'
-                            ELSE 'HIERARCHY'
-                        END as access_type                -- 19
+                        ISNULL(final_section.seksi, tms.seksi), -- 18
+                        {access_type_sql} as access_type  -- 19
                     FROM tabel_pengajuan tp
                     LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
                     LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
@@ -912,21 +917,17 @@ def enhanced_daftar_laporan(request):
                     OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
                 """
                 
-                # Add assigned history IDs to params if needed
-                final_params = query_params[:]
-                if assigned_history_ids:
-                    final_params.extend(assigned_history_ids)
-                final_params.extend([offset, page_size])
-                
+                final_params = query_params + [offset, page_size]
                 cursor.execute(main_query, final_params)
-                
                 pengajuan_list = cursor.fetchall()
                 
-                logger.info(f"Enhanced SDBM query executed successfully - Found {total_records} records")
+                logger.info(f"Enhanced query executed successfully - Found {total_records} records for view_mode: {view_mode}")
                 
         except Exception as db_error:
             logger.error(f"Database error in enhanced daftar_laporan: {db_error}")
-            messages.error(request, f'Terjadi kesalahan database: {str(db_error)}')
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            messages.error(request, f'Terjadi kesalahan database: Silakan coba lagi atau hubungi administrator.')
             pengajuan_list = []
             total_records = 0
             total_pages = 1
@@ -936,42 +937,54 @@ def enhanced_daftar_laporan(request):
             next_page_number = None
             page_number = 1
         
-        # ===== STATS dengan FIXED Status =====
+        # ===== STATS UNTUK SITI FATIMAH =====
         siti_stats = {}
         if is_siti_fatimah:
             try:
                 with connections['DB_Maintenance'].cursor() as cursor:
-                    # FIXED: Stats dengan status A dan approve Y
-                    cursor.execute("""
-                        SELECT COUNT(*) FROM tabel_pengajuan 
-                        WHERE status = %s AND approve = %s
-                    """, [STATUS_APPROVED, APPROVE_YES])
-                    siti_stats['total_approved'] = cursor.fetchone()[0] or 0
+                    # Simple count queries dengan error handling
+                    try:
+                        cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = %s AND approve = %s", 
+                                     [STATUS_APPROVED, APPROVE_YES])
+                        siti_stats['total_approved'] = cursor.fetchone()[0] or 0
+                    except:
+                        siti_stats['total_approved'] = 0
                     
-                    cursor.execute("""
-                        SELECT COUNT(*) FROM tabel_pengajuan 
-                        WHERE status = %s AND approve = %s 
-                            AND (review_status IS NULL OR review_status = '0')
-                    """, [STATUS_APPROVED, APPROVE_YES])
-                    siti_stats['pending_review'] = cursor.fetchone()[0] or 0
+                    try:
+                        cursor.execute("""SELECT COUNT(*) FROM tabel_pengajuan 
+                                        WHERE status = %s AND approve = %s 
+                                            AND (review_status IS NULL OR review_status = '0')""", 
+                                     [STATUS_APPROVED, APPROVE_YES])
+                        siti_stats['pending_review'] = cursor.fetchone()[0] or 0
+                    except:
+                        siti_stats['pending_review'] = 0
                     
-                    cursor.execute("""
-                        SELECT COUNT(*) FROM tabel_pengajuan 
-                        WHERE status = %s AND approve = %s 
-                            AND review_status IN ('1', '2')
-                    """, [STATUS_APPROVED, APPROVE_YES])
-                    siti_stats['already_reviewed'] = cursor.fetchone()[0] or 0
+                    try:
+                        cursor.execute("""SELECT COUNT(*) FROM tabel_pengajuan 
+                                        WHERE status = %s AND approve = %s 
+                                            AND review_status IN ('1', '2')""", 
+                                     [STATUS_APPROVED, APPROVE_YES])
+                        siti_stats['already_reviewed'] = cursor.fetchone()[0] or 0
+                    except:
+                        siti_stats['already_reviewed'] = 0
                     
-                    cursor.execute("""
-                        SELECT COUNT(*) FROM tabel_pengajuan 
-                        WHERE status = %s AND approve = %s 
-                            AND CAST(tgl_insert AS DATE) = CAST(GETDATE() AS DATE)
-                    """, [STATUS_APPROVED, APPROVE_YES])
-                    siti_stats['approved_today'] = cursor.fetchone()[0] or 0
-                    
+                    try:
+                        cursor.execute("""SELECT COUNT(*) FROM tabel_pengajuan 
+                                        WHERE status = %s AND approve = %s 
+                                            AND CAST(tgl_insert AS DATE) = CAST(GETDATE() AS DATE)""", 
+                                     [STATUS_APPROVED, APPROVE_YES])
+                        siti_stats['approved_today'] = cursor.fetchone()[0] or 0
+                    except:
+                        siti_stats['approved_today'] = 0
+                        
             except Exception as stats_error:
                 logger.error(f"Error getting SITI stats: {stats_error}")
-                siti_stats = {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'approved_today': 0}
+                siti_stats = {
+                    'total_approved': 0,
+                    'pending_review': 0,
+                    'already_reviewed': 0,
+                    'approved_today': 0
+                }
         
         # ===== ENHANCED CONTEXT =====
         context = {
@@ -1000,7 +1013,7 @@ def enhanced_daftar_laporan(request):
                 'sdbm_assigned': len(assigned_history_ids)
             },
             
-            # Debug info
+            # Simplified debug info
             'debug_info': {
                 'sdbm_integration': True,
                 'assigned_pengajuan_count': len(assigned_history_ids),
@@ -1010,7 +1023,8 @@ def enhanced_daftar_laporan(request):
                 'status_values': {
                     'approved': STATUS_APPROVED,
                     'approve_yes': APPROVE_YES
-                }
+                },
+                'query_mode': 'simplified'
             } if request.user.is_superuser else None
         }
         
@@ -1018,6 +1032,8 @@ def enhanced_daftar_laporan(request):
         
     except Exception as e:
         logger.error(f"Critical error in enhanced daftar_laporan: {e}")
+        import traceback
+        logger.error(f"Critical traceback: {traceback.format_exc()}")
         messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi.')
         return redirect('wo_maintenance_app:dashboard')
     
