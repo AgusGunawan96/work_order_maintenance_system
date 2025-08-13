@@ -5851,3 +5851,334 @@ INFO 2025-08-13 14:35:26,786 utils 9816 11468 SITI FATIMAH granted access to 116
 INFO 2025-08-13 14:35:26,794 views 9816 11468 SITI FATIMAH mode: accessing ALL pengajuan without restriction
 INFO 2025-08-13 14:35:27,140 views 9816 11468 Enhanced query executed successfully - Found 11333 records for view_mode: normal
 INFO 2025-08-13 14:35:27,371 basehttp 9816 11468 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100352
+INFO 2025-08-13 14:35:32,493 utils 9816 15928 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 14:35:32,514 utils 9816 15928 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 14:35:32,580 basehttp 9816 15928 "GET /wo-maintenance/detail/25-08-0222/ HTTP/1.1" 200 28423
+INFO 2025-08-13 14:35:40,686 basehttp 9816 18372 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:35:40,736 basehttp 9816 18372 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:35:40,835 basehttp 9816 18372 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 14:35:45,985 views 9816 1672 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 14:35:45,998 authentication 9816 1672 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 14:35:46,007 views 9816 1672 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 14:35:46,007 views 9816 1672 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 14:35:46,011 basehttp 9816 1672 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:35:46,155 views 9816 1672 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 14:35:46,228 basehttp 9816 1672 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33210
+INFO 2025-08-13 14:35:49,620 views 9816 1672 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 14:35:49,690 basehttp 9816 1672 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 32926
+INFO 2025-08-13 14:35:53,716 basehttp 9816 17496 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:35:53,762 basehttp 9816 17496 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:35:53,857 basehttp 9816 17496 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 14:36:02,452 views 9816 2892 LOGIN ATTEMPT: 002186
+INFO 2025-08-13 14:36:02,495 authentication 9816 2892 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-13 14:36:02,504 views 9816 2892 LOGIN: Using existing session data for 002186
+INFO 2025-08-13 14:36:02,504 views 9816 2892 LOGIN REDIRECT: 002186 -> /wo-maintenance/daftar/
+INFO 2025-08-13 14:36:02,514 basehttp 9816 2892 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:36:02,654 views 9816 2892 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 14:36:02,716 basehttp 9816 2892 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30785
+INFO 2025-08-13 14:36:06,745 views 9816 1244 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 14:36:06,818 basehttp 9816 1244 "GET /wo-maintenance/daftar/?mode=normal HTTP/1.1" 200 30502
+INFO 2025-08-13 14:36:08,079 basehttp 9816 1244 "GET /wo-maintenance/input/ HTTP/1.1" 200 47177
+INFO 2025-08-13 14:36:12,820 basehttp 9816 1244 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755070568336 HTTP/1.1" 200 292
+INFO 2025-08-13 14:36:25,825 forms 9816 2868 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-13 14:36:25,844 views 9816 2868 SAVE: Inserting pengajuan WO20250813001
+INFO 2025-08-13 14:36:25,850 views 9816 2868 SUCCESS: Pengajuan WO20250813001 berhasil disimpan
+INFO 2025-08-13 14:36:25,853 basehttp 9816 2868 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:36:25,989 views 9816 2868 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-13 14:36:26,062 basehttp 9816 2868 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34767
+INFO 2025-08-13 14:36:31,680 basehttp 9816 11204 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29017
+INFO 2025-08-13 14:36:35,897 basehttp 9816 11204 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:36:35,952 basehttp 9816 11204 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:36:36,049 basehttp 9816 11204 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 14:36:40,940 views 9816 18340 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 14:36:40,956 authentication 9816 18340 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 14:36:40,963 views 9816 18340 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 14:36:40,963 views 9816 18340 LOGIN REDIRECT: 002104 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 14:36:40,969 basehttp 9816 18340 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:36:41,138 basehttp 9816 18340 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 35099
+INFO 2025-08-13 14:36:44,277 views 9816 18340 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-13 14:36:44,344 basehttp 9816 18340 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 36879
+INFO 2025-08-13 14:36:46,602 basehttp 9816 18340 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 34822
+INFO 2025-08-13 14:36:50,598 views 9816 18340 Pengajuan WO20250813001 approved by BADRI KIMAN - sent to review queue (status=A, approve=Y)
+INFO 2025-08-13 14:36:50,601 views 9816 18340 Review tables and columns verified/created successfully
+INFO 2025-08-13 14:36:50,603 views 9816 18340 Pengajuan WO20250813001 disetujui by BADRI KIMAN
+INFO 2025-08-13 14:36:50,605 basehttp 9816 18340 "POST /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:36:50,757 basehttp 9816 18340 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 31358
+INFO 2025-08-13 14:36:55,352 basehttp 9816 18340 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:36:55,410 basehttp 9816 18340 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:36:55,503 basehttp 9816 18340 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 14:37:01,122 views 9816 18256 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 14:37:01,135 authentication 9816 18256 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 14:37:01,136 authentication 9816 18256 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 14:37:01,145 views 9816 18256 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 14:37:01,145 views 9816 18256 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 14:37:01,151 basehttp 9816 18256 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:37:01,218 utils 9816 18256 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 14:37:01,245 utils 9816 18256 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 14:37:01,316 basehttp 9816 18256 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 29254
+INFO 2025-08-13 14:37:03,946 utils 9816 18256 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 14:37:03,947 views 9816 18256 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 14:37:04,056 utils 9816 18256 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 14:37:04,059 views 9816 18256 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 14:37:04,235 views 9816 18256 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 14:37:04,323 basehttp 9816 18256 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100809
+INFO 2025-08-13 14:45:04,203 autoreload 9816 16864 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 14:45:06,193 autoreload 2888 15376 Watching for file changes with StatReloader
+INFO 2025-08-13 14:45:19,378 utils 2888 18024 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 14:45:19,379 views 2888 18024 User SITI FATIMAH (007522) accessing enhanced daftar laporan - Mode: normal
+INFO 2025-08-13 14:45:19,530 utils 2888 18024 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 14:45:19,534 views 2888 18024 SITI FATIMAH mode: accessing ALL pengajuan without restriction
+INFO 2025-08-13 14:45:19,708 views 2888 18024 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 14:45:19,927 basehttp 2888 18024 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100809
+INFO 2025-08-13 14:45:48,282 autoreload 2888 15376 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 14:45:50,166 autoreload 15772 14016 Watching for file changes with StatReloader
+INFO 2025-08-13 14:47:12,897 autoreload 15772 14016 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 14:47:14,734 autoreload 15848 2468 Watching for file changes with StatReloader
+INFO 2025-08-13 14:52:12,614 autoreload 14220 13140 Watching for file changes with StatReloader
+INFO 2025-08-13 14:52:21,471 utils 14220 17296 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 14:52:21,497 views 14220 17296 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 14:52:21,591 utils 14220 17296 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 14:52:21,640 views 14220 17296 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 14:52:21,787 views 14220 17296 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 14:52:21,808 views 14220 17296 SITI FATIMAH stats: {'total_approved': 11620, 'pending_review': 11620, 'already_reviewed': 0, 'approved_today': 21}
+INFO 2025-08-13 14:52:22,007 basehttp 14220 17296 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 115238
+INFO 2025-08-13 14:52:26,147 basehttp 14220 17296 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 14:52:26,224 views 14220 17296 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 14:52:26,226 basehttp 14220 17296 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 14:52:26,290 views 14220 17296 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 14:52:26,291 basehttp 14220 17296 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:52:26,442 basehttp 14220 17296 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 14:53:36,481 utils 14220 11516 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 14:53:36,495 views 14220 11516 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 14:53:36,599 utils 14220 11516 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 14:53:36,604 views 14220 11516 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 14:53:36,728 views 14220 11516 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 14:53:36,752 views 14220 11516 SITI FATIMAH stats: {'total_approved': 11620, 'pending_review': 11620, 'already_reviewed': 0, 'approved_today': 21}
+INFO 2025-08-13 14:53:36,855 basehttp 14220 11516 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 108529
+INFO 2025-08-13 14:53:39,070 basehttp 14220 14576 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 14:53:39,160 views 14220 14576 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 14:53:39,163 basehttp 14220 14576 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 14:53:39,228 views 14220 14576 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 14:53:39,229 basehttp 14220 14576 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:53:39,400 basehttp 14220 14576 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 14:54:37,611 basehttp 14220 16480 "GET /wo-maintenance/input/ HTTP/1.1" 200 47644
+INFO 2025-08-13 14:54:39,578 utils 14220 16480 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 14:54:39,586 views 14220 16480 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 14:54:39,790 utils 14220 16480 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 14:54:39,796 views 14220 16480 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 14:54:39,920 views 14220 16480 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 14:54:39,935 views 14220 16480 SITI FATIMAH stats: {'total_approved': 11620, 'pending_review': 11620, 'already_reviewed': 0, 'approved_today': 21}
+INFO 2025-08-13 14:54:40,041 basehttp 14220 16480 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 110628
+INFO 2025-08-13 14:54:43,212 basehttp 14220 16480 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 14:54:43,282 views 14220 16480 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 14:54:43,285 basehttp 14220 16480 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 14:54:43,339 views 14220 16480 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 14:54:43,341 basehttp 14220 16480 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:54:43,506 basehttp 14220 16480 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 14:59:06,700 autoreload 14220 13140 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 14:59:08,555 autoreload 17108 18152 Watching for file changes with StatReloader
+INFO 2025-08-13 14:59:41,120 autoreload 1660 15116 Watching for file changes with StatReloader
+INFO 2025-08-13 14:59:48,065 basehttp 1660 9824 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 14:59:50,470 utils 1660 9824 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 14:59:50,485 views 1660 9824 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 14:59:50,589 utils 1660 9824 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 14:59:50,594 views 1660 9824 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 14:59:50,749 views 1660 9824 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 14:59:50,762 views 1660 9824 SITI FATIMAH stats: {'total_approved': 11620, 'pending_review': 11620, 'already_reviewed': 0, 'approved_today': 21}
+INFO 2025-08-13 14:59:50,863 basehttp 1660 9824 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 108547
+INFO 2025-08-13 14:59:55,209 basehttp 1660 9824 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 14:59:55,316 views 1660 9824 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 14:59:55,319 basehttp 1660 9824 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 14:59:55,378 views 1660 9824 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 14:59:55,381 basehttp 1660 9824 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 14:59:55,571 basehttp 1660 9824 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 15:01:20,450 basehttp 1660 9844 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 15:03:35,370 autoreload 1660 15116 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-13 15:03:37,375 autoreload 17628 13800 Watching for file changes with StatReloader
+INFO 2025-08-13 15:05:11,230 autoreload 17628 13800 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-13 15:05:13,087 autoreload 15356 16948 Watching for file changes with StatReloader
+INFO 2025-08-13 15:05:44,566 autoreload 15356 16948 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 15:05:46,408 autoreload 13780 14524 Watching for file changes with StatReloader
+INFO 2025-08-13 15:05:56,639 autoreload 17252 11188 Watching for file changes with StatReloader
+INFO 2025-08-13 15:06:08,008 basehttp 17252 15952 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 15:06:09,536 basehttp 17252 12864 "GET /wo-maintenance/input/ HTTP/1.1" 200 47644
+INFO 2025-08-13 15:06:10,883 utils 17252 12864 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:06:10,896 views 17252 12864 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:06:10,997 utils 17252 12864 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 15:06:11,003 views 17252 12864 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 15:06:11,139 views 17252 12864 Enhanced query executed successfully - Found 11334 records for view_mode: normal
+INFO 2025-08-13 15:06:11,155 views 17252 12864 SITI FATIMAH stats: {'total_approved': 11620, 'pending_review': 11620, 'already_reviewed': 0, 'approved_today': 21}
+INFO 2025-08-13 15:06:11,243 basehttp 17252 12864 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 110628
+INFO 2025-08-13 15:06:13,989 utils 17252 2584 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:06:14,000 views 17252 2584 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:06:14,113 utils 17252 2584 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 15:06:14,119 views 17252 2584 SDBM assigned mode: 11607 assignments
+ERROR 2025-08-13 15:06:14,248 views 17252 2584 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+ERROR 2025-08-13 15:06:14,254 views 17252 2584 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.Error: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 904, in enhanced_daftar_laporan
+    cursor.execute(count_query, query_params)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.Error: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+
+INFO 2025-08-13 15:06:14,279 views 17252 2584 SITI FATIMAH stats: {'total_approved': 11620, 'pending_review': 11620, 'already_reviewed': 0, 'approved_today': 21}
+INFO 2025-08-13 15:06:14,350 basehttp 17252 2584 "GET /wo-maintenance/daftar/?mode=assigned HTTP/1.1" 200 36149
+INFO 2025-08-13 15:06:17,913 utils 17252 2584 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:06:17,920 views 17252 2584 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:06:18,058 utils 17252 2584 SITI FATIMAH granted access to 11607 approved pengajuan via special privilege
+INFO 2025-08-13 15:06:18,066 views 17252 2584 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 15:06:18,223 views 17252 2584 Enhanced query executed successfully - Found 11309 records for view_mode: approved
+INFO 2025-08-13 15:06:18,239 views 17252 2584 SITI FATIMAH stats: {'total_approved': 11620, 'pending_review': 11620, 'already_reviewed': 0, 'approved_today': 21}
+INFO 2025-08-13 15:06:18,321 basehttp 17252 2584 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 118360
+INFO 2025-08-13 15:06:22,283 basehttp 17252 2584 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 15:06:22,361 views 17252 2584 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 15:06:22,362 basehttp 17252 2584 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 15:06:22,429 views 17252 2584 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 15:06:22,431 basehttp 17252 2584 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:06:22,603 basehttp 17252 2584 "GET /wo-maintenance/ HTTP/1.1" 200 28216
+INFO 2025-08-13 15:22:29,360 utils 11164 15380 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:22:29,462 utils 11164 15380 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:22:29,501 utils 11164 15380 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:24:58,262 autoreload 17252 11188 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 15:25:00,176 autoreload 13564 3760 Watching for file changes with StatReloader
+INFO 2025-08-13 15:26:33,610 autoreload 13564 3760 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 15:26:35,451 autoreload 14104 14876 Watching for file changes with StatReloader
+INFO 2025-08-13 15:26:45,530 utils 14104 17476 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:26:45,558 views 14104 17476 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:26:45,660 utils 14104 17476 SITI FATIMAH granted access to 11614 approved pengajuan via special privilege
+INFO 2025-08-13 15:26:45,665 views 14104 17476 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 15:26:45,797 views 14104 17476 Enhanced query executed successfully - Found 11341 records for view_mode: normal
+INFO 2025-08-13 15:26:45,814 views 14104 17476 SITI FATIMAH stats: {'total_approved': 11627, 'pending_review': 11627, 'already_reviewed': 0, 'approved_today': 28}
+INFO 2025-08-13 15:26:46,007 basehttp 14104 17476 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 113789
+ERROR 2025-08-13 15:26:52,120 views 14104 16884 Error in enhanced review pengajuan detail: Reverse for 'review_pengajuan_detail' with no arguments not found. 1 pattern(s) tried: ['wo\\-maintenance/review/pengajuan/(?P<nomor_pengajuan>[^/]+)/\\Z']
+ERROR 2025-08-13 15:26:52,402 log 14104 16884 Internal Server Error: /wo-maintenance/review/pengajuan/WO20250813001/
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 493, in review_pengajuan_detail
+    return redirect('wo_maintenance_app:review_pengajuan_detail')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 48, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 145, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'review_pengajuan_detail' with no arguments not found. 1 pattern(s) tried: ['wo\\-maintenance/review/pengajuan/(?P<nomor_pengajuan>[^/]+)/\\Z']
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 101, in wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 705, in review_pengajuan_detail
+    return redirect('wo_maintenance_app:review_pengajuan_detail')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 48, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 145, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'review_pengajuan_detail' with no arguments not found. 1 pattern(s) tried: ['wo\\-maintenance/review/pengajuan/(?P<nomor_pengajuan>[^/]+)/\\Z']
+ERROR 2025-08-13 15:26:52,408 basehttp 14104 16884 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 500 136969
+INFO 2025-08-13 15:27:32,186 autoreload 14104 14876 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 15:27:34,086 autoreload 11416 13516 Watching for file changes with StatReloader
+INFO 2025-08-13 15:27:44,884 basehttp 11416 5664 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 15:27:44,953 views 11416 5664 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 15:27:44,955 basehttp 11416 5664 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 15:27:45,018 views 11416 5664 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 15:27:45,019 basehttp 11416 5664 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:27:45,220 basehttp 11416 5664 "GET /wo-maintenance/ HTTP/1.1" 200 28226
+INFO 2025-08-13 15:30:22,515 autoreload 11416 13516 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 15:30:24,447 autoreload 14160 16988 Watching for file changes with StatReloader
+INFO 2025-08-13 15:30:41,463 autoreload 14396 12420 Watching for file changes with StatReloader
+INFO 2025-08-13 15:30:45,715 utils 14396 13824 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:30:45,742 views 14396 13824 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:30:45,892 utils 14396 13824 SITI FATIMAH granted access to 11614 approved pengajuan via special privilege
+INFO 2025-08-13 15:30:45,897 views 14396 13824 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 15:30:46,051 views 14396 13824 Enhanced query executed successfully - Found 11341 records for view_mode: normal
+INFO 2025-08-13 15:30:46,067 views 14396 13824 SITI FATIMAH stats: {'total_approved': 11627, 'pending_review': 11627, 'already_reviewed': 0, 'approved_today': 28}
+INFO 2025-08-13 15:30:46,273 basehttp 14396 13824 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 114375
+INFO 2025-08-13 15:30:50,065 basehttp 14396 13824 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 15:30:50,134 views 14396 13824 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 15:30:50,136 basehttp 14396 13824 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 15:30:50,198 views 14396 13824 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 15:30:50,200 basehttp 14396 13824 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:30:50,374 basehttp 14396 13824 "GET /wo-maintenance/ HTTP/1.1" 200 28226
+INFO 2025-08-13 15:30:59,023 autoreload 14396 12420 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 15:31:00,851 autoreload 17736 2584 Watching for file changes with StatReloader
+INFO 2025-08-13 15:33:25,562 autoreload 17436 17904 Watching for file changes with StatReloader
+INFO 2025-08-13 15:33:39,617 autoreload 11352 15728 Watching for file changes with StatReloader
+INFO 2025-08-13 15:33:47,707 basehttp 11352 15184 "GET /wo-maintenance/input/ HTTP/1.1" 200 47644
+INFO 2025-08-13 15:33:50,475 utils 11352 15184 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:33:50,487 views 11352 15184 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:33:50,578 utils 11352 15184 SITI FATIMAH granted access to 11614 approved pengajuan via special privilege
+INFO 2025-08-13 15:33:50,583 views 11352 15184 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 15:33:50,706 views 11352 15184 Enhanced query executed successfully - Found 11341 records for view_mode: normal
+INFO 2025-08-13 15:33:50,722 views 11352 15184 SITI FATIMAH stats: {'total_approved': 11627, 'pending_review': 11627, 'already_reviewed': 0, 'approved_today': 28}
+INFO 2025-08-13 15:33:50,821 basehttp 11352 15184 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 112894
+INFO 2025-08-13 15:33:54,468 basehttp 11352 12560 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 15:33:54,536 views 11352 12560 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 15:33:54,538 basehttp 11352 12560 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 15:33:54,600 views 11352 12560 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 15:33:54,602 basehttp 11352 12560 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:33:54,771 basehttp 11352 12560 "GET /wo-maintenance/ HTTP/1.1" 200 28226
+INFO 2025-08-13 15:34:13,900 autoreload 11352 15728 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 15:34:15,794 autoreload 18132 15220 Watching for file changes with StatReloader
+INFO 2025-08-13 15:50:53,310 autoreload 3188 17456 Watching for file changes with StatReloader
+INFO 2025-08-13 15:50:55,375 views 3188 17456 === STATUS VALIDATION ===
+INFO 2025-08-13 15:50:55,376 views 3188 17456 Expected STATUS_APPROVED: A
+INFO 2025-08-13 15:50:55,376 views 3188 17456 Expected APPROVE_YES: Y
+INFO 2025-08-13 15:50:55,377 views 3188 17456 Actual values in database:
+INFO 2025-08-13 15:50:55,377 views 3188 17456   Status: , Approve: N, Review: None
+INFO 2025-08-13 15:50:55,378 views 3188 17456   Status: A, Approve: N, Review: 0
+INFO 2025-08-13 15:50:55,378 views 3188 17456   Status: A, Approve: T, Review: None
+INFO 2025-08-13 15:50:55,378 views 3188 17456   Status: A, Approve: Y, Review: 0
+INFO 2025-08-13 15:50:55,378 views 3188 17456 === END VALIDATION ===

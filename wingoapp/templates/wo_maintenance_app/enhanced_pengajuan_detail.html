@@ -1,0 +1,648 @@
+<!-- wo_maintenance_app/templates/wo_maintenance_app/enhanced_pengajuan_detail.html -->
+<!-- Enhanced Detail Pengajuan dengan SDBM Integration -->
+
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+{{ block.super }}
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    /* Enhanced Header */
+    .enhanced-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+    
+    .enhanced-header h4 {
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+    
+    .enhanced-header .header-info {
+        opacity: 0.9;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    /* Enhanced Workflow */
+    .enhanced-workflow {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .workflow-steps {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        margin: 20px 0;
+    }
+    
+    .workflow-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        flex: 1;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .workflow-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .workflow-step.completed .workflow-icon {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        transform: scale(1.1);
+    }
+    
+    .workflow-step.active .workflow-icon {
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        animation: pulse 2s infinite;
+    }
+    
+    .workflow-step.pending .workflow-icon {
+        background: #e9ecef;
+        color: #6c757d;
+    }
+    
+    .workflow-step.rejected .workflow-icon {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.8; }
+    }
+    
+    .workflow-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .workflow-step.completed .workflow-label {
+        color: #28a745;
+    }
+    
+    .workflow-step.active .workflow-label {
+        color: #ffc107;
+    }
+    
+    .workflow-step.rejected .workflow-label {
+        color: #dc3545;
+    }
+    
+    /* Enhanced Detail Cards */
+    .detail-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+    }
+    
+    .detail-card.sdbm-enhanced {
+        border-left: 5px solid #28a745;
+    }
+    
+    .detail-card.review-info {
+        border-left: 5px solid #007bff;
+    }
+    
+    .detail-card.assignment-info {
+        border-left: 5px solid #ffc107;
+    }
+    
+    .detail-item {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .detail-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    .detail-value {
+        color: #333;
+        font-size: 1rem;
+        line-height: 1.5;
+        display: flex;
+        align-items: center;
+        min-height: 30px;
+    }
+    
+    /* Enhanced Status Badges */
+    .enhanced-status-badge {
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .status-submitted {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        color: #1565c0;
+    }
+    
+    .status-approved {
+        background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%);
+        color: #2e7d32;
+    }
+    
+    .status-reviewed {
+        background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        color: #7b1fa2;
+    }
+    
+    .status-rejected {
+        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        color: #c62828;
+    }
+    
+    .status-in-progress {
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        color: #f57c00;
+    }
+    
+    .status-completed {
+        background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+        color: #00695c;
+    }
+    
+    /* Action Buttons Enhanced */
+    .enhanced-action-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 25px;
+    }
+    
+    .enhanced-btn {
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .enhanced-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        text-decoration: none;
+    }
+    
+    .btn-review {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+    }
+    
+    .btn-back {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        color: white;
+    }
+    
+    .btn-detail {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+    }
+    
+    /* Assignment Info Panel */
+    .assignment-panel {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border: 1px solid #ffeaa7;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .assignment-panel h6 {
+        color: #856404;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    /* SDBM Integration Info */
+    .sdbm-info-panel {
+        background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+        border: 2px solid #28a745;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .sdbm-info-panel h6 {
+        color: #28a745;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .enhanced-header {
+            padding: 15px;
+        }
+        
+        .header-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .workflow-steps {
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .enhanced-action-buttons {
+            justify-content: center;
+        }
+        
+        .enhanced-btn {
+            flex: 1;
+            min-width: 150px;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- Enhanced Header -->
+    <div class="enhanced-header">
+        <h4>🎯 Enhanced Detail Pengajuan WO Maintenance</h4>
+        <div class="header-info">
+            <span><strong>History ID:</strong> {{ pengajuan.history_id }}</span>
+            <span><strong>Pengaju:</strong> {{ pengajuan.oleh }}</span>
+            {% if is_siti_fatimah %}
+                <span class="badge bg-light text-dark">👑 SITI FATIMAH MODE</span>
+            {% endif %}
+            {% if enhanced_mode %}
+                <span class="badge bg-info">✨ Enhanced</span>
+            {% endif %}
+            {% if sdbm_integration %}
+                <span class="badge bg-success">🎯 SDBM</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                {{ message|linebreaks }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Enhanced Workflow Status -->
+    <div class="enhanced-workflow">
+        <h5 style="color: #495057; margin-bottom: 20px;">📊 Workflow Progress</h5>
+        <div class="workflow-steps">
+            <div class="workflow-step completed">
+                <div class="workflow-icon">1</div>
+                <div class="workflow-label">
+                    <strong>Submitted</strong><br>
+                    <small>{{ pengajuan.tgl_insert|date:"d/m/Y" }}</small>
+                </div>
+            </div>
+            
+            <div class="workflow-step {% if workflow_status.approved %}completed{% elif pengajuan.status == '0' %}active{% elif pengajuan.status == '2' %}rejected{% else %}pending{% endif %}">
+                <div class="workflow-icon">2</div>
+                <div class="workflow-label">
+                    <strong>Approval</strong><br>
+                    <small>
+                        {% if workflow_status.approved %}Approved{% elif pengajuan.status == '2' %}Rejected{% else %}Pending{% endif %}
+                    </small>
+                </div>
+            </div>
+            
+            <div class="workflow-step {% if workflow_status.review_approved %}completed{% elif workflow_status.review_rejected %}rejected{% elif workflow_status.approved and not workflow_status.reviewed %}active{% else %}pending{% endif %}">
+                <div class="workflow-icon">3</div>
+                <div class="workflow-label">
+                    <strong>Review</strong><br>
+                    <small>
+                        {% if workflow_status.review_approved %}Approved{% elif workflow_status.review_rejected %}Rejected{% elif workflow_status.approved %}Pending{% else %}Waiting{% endif %}
+                    </small>
+                </div>
+            </div>
+            
+            <div class="workflow-step {% if workflow_status.completed %}completed{% elif workflow_status.in_progress %}active{% else %}pending{% endif %}">
+                <div class="workflow-icon">4</div>
+                <div class="workflow-label">
+                    <strong>Execution</strong><br>
+                    <small>
+                        {% if workflow_status.completed %}Completed{% elif workflow_status.in_progress %}In Progress{% else %}Waiting{% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Main Detail -->
+        <div class="col-lg-8">
+            <!-- Basic Info -->
+            <div class="detail-card sdbm-enhanced">
+                <h5 style="color: #28a745; margin-bottom: 25px;">📋 Informasi Pengajuan</h5>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <div class="detail-label">History ID</div>
+                            <div class="detail-value">
+                                <strong>{{ pengajuan.history_id }}</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Number WO</div>
+                            <div class="detail-value">{{ pengajuan.number_wo|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Pengaju</div>
+                            <div class="detail-value">
+                                <strong>{{ pengajuan.oleh }}</strong>
+                                <small class="text-muted">({{ pengajuan.user_insert }})</small>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Tanggal Pengajuan</div>
+                            <div class="detail-value">
+                                {{ pengajuan.tgl_insert|date:"d M Y H:i"|default:"-" }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <div class="detail-label">Line</div>
+                            <div class="detail-value">{{ pengajuan.line_name|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Mesin</div>
+                            <div class="detail-value">{{ pengajuan.mesin|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Section Tujuan</div>
+                            <div class="detail-value">
+                                {{ pengajuan.section_tujuan|default:"-" }}
+                                {% if pengajuan.final_section_name and pengajuan.final_section_name != pengajuan.section_tujuan %}
+                                    <br><small class="text-success">→ Updated: {{ pengajuan.final_section_name }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Jenis Pekerjaan</div>
+                            <div class="detail-value">{{ pengajuan.pekerjaan|default:"-" }}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Deskripsi Perbaikan</div>
+                    <div class="detail-value" style="min-height: 60px; align-items: flex-start;">
+                        {{ pengajuan.deskripsi_perbaikan|linebreaks }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Info -->
+            <div class="detail-card">
+                <h5 style="color: #007bff; margin-bottom: 25px;">📊 Status Information</h5>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="detail-item">
+                            <div class="detail-label">Status Pengajuan</div>
+                            <div class="detail-value">
+                                {% if workflow_status.approved %}
+                                    <span class="enhanced-status-badge status-approved">✅ Approved</span>
+                                {% elif pengajuan.status == '2' %}
+                                    <span class="enhanced-status-badge status-rejected">❌ Rejected</span>
+                                {% else %}
+                                    <span class="enhanced-status-badge status-submitted">⏳ Pending</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="detail-item">
+                            <div class="detail-label">Status Review</div>
+                            <div class="detail-value">
+                                {% if workflow_status.review_approved %}
+                                    <span class="enhanced-status-badge status-reviewed">✅ Reviewed</span>
+                                {% elif workflow_status.review_rejected %}
+                                    <span class="enhanced-status-badge status-rejected">❌ Rejected</span>
+                                {% elif workflow_status.approved %}
+                                    <span class="enhanced-status-badge status-in-progress">⏳ Pending Review</span>
+                                {% else %}
+                                    <span class="enhanced-status-badge">⏸️ Waiting</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="detail-item">
+                            <div class="detail-label">Status Pekerjaan</div>
+                            <div class="detail-value">
+                                {% if workflow_status.completed %}
+                                    <span class="enhanced-status-badge status-completed">✅ Completed</span>
+                                {% elif workflow_status.in_progress %}
+                                    <span class="enhanced-status-badge status-in-progress">🔄 In Progress</span>
+                                {% else %}
+                                    <span class="enhanced-status-badge">⏸️ Not Started</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="col-lg-4">
+            <!-- SDBM Integration Info -->
+            {% if sdbm_integration %}
+            <div class="sdbm-info-panel">
+                <h6>
+                    <i data-feather="target"></i>
+                    SDBM Integration Status
+                </h6>
+                <div class="small">
+                    <div><strong>Auto-Assignment:</strong> 
+                        {% if pengajuan.review_status == '1' %}
+                            <span class="text-success">✅ Processed</span>
+                        {% elif is_approved_for_review %}
+                            <span class="text-warning">⏳ Ready</span>
+                        {% else %}
+                            <span class="text-muted">⏸️ Waiting</span>
+                        {% endif %}
+                    </div>
+                    <div><strong>Integration:</strong> <span class="text-success">Active</span></div>
+                    {% if pengajuan.final_section_id %}
+                        <div><strong>Final Section ID:</strong> {{ pengajuan.final_section_id }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Assignment Info -->
+            {% if assignment_info %}
+            <div class="assignment-panel">
+                <h6>📋 Assignment Information</h6>
+                <div class="small">
+                    <div><strong>Assigned By:</strong> {{ assignment_info.assigned_by }}</div>
+                    <div><strong>Date:</strong> {{ assignment_info.assignment_date|date:"d M Y H:i" }}</div>
+                    <div><strong>Type:</strong> {{ assignment_info.assignment_type|upper }}</div>
+                    {% if assignment_info.notes %}
+                        <div><strong>Notes:</strong> {{ assignment_info.notes }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Review Info -->
+            {% if pengajuan.review_status %}
+            <div class="detail-card review-info">
+                <h6 style="color: #007bff; margin-bottom: 15px;">📝 Review Information</h6>
+                <div class="small">
+                    <div><strong>Reviewed By:</strong> {{ pengajuan.reviewed_by|default:"-" }}</div>
+                    <div><strong>Review Date:</strong> {{ pengajuan.review_date|date:"d M Y H:i"|default:"-" }}</div>
+                    <div><strong>Status:</strong> 
+                        {% if pengajuan.review_status == '1' %}
+                            <span class="text-success">Approved</span>
+                        {% elif pengajuan.review_status == '2' %}
+                            <span class="text-danger">Rejected</span>
+                        {% else %}
+                            <span class="text-warning">Pending</span>
+                        {% endif %}
+                    </div>
+                    {% if pengajuan.review_notes %}
+                        <div><strong>Notes:</strong><br>{{ pengajuan.review_notes }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="enhanced-action-buttons">
+                {% if can_review %}
+                    <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.history_id %}" 
+                       class="enhanced-btn btn-review">
+                        <i data-feather="clipboard"></i> Review Pengajuan
+                    </a>
+                {% endif %}
+                
+                <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.history_id %}" 
+                   class="enhanced-btn btn-detail">
+                    <i data-feather="eye"></i> Standard Detail
+                </a>
+                
+                <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" 
+                   class="enhanced-btn btn-back">
+                    <i data-feather="arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Enhanced animations
+    $('.enhanced-status-badge').each(function(index) {
+        $(this).delay(index * 100).fadeIn();
+    });
+    
+    // Workflow animation
+    $('.workflow-step.completed').each(function(index) {
+        $(this).delay(index * 200).animate({opacity: 1}, 500);
+    });
+    
+    // Enhanced tooltips
+    $('[title]').tooltip();
+    
+    // Button hover effects
+    $('.enhanced-btn').hover(
+        function() {
+            $(this).find('i').css('transform', 'scale(1.2)');
+        },
+        function() {
+            $(this).find('i').css('transform', 'scale(1)');
+        }
+    );
+    
+    console.log('🎯 Enhanced Pengajuan Detail Loaded');
+    console.log('History ID: {{ pengajuan.history_id }}');
+    console.log('SDBM Integration: {{ sdbm_integration|yesno:"true,false" }}');
+    console.log('Is SITI FATIMAH: {{ is_siti_fatimah|yesno:"true,false" }}');
+    console.log('Can Review: {{ can_review|yesno:"true,false" }}');
+});
+</script>
+{% endblock scriptcontent %}

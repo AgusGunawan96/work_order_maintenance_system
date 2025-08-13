@@ -2675,7 +2675,283 @@ def convert_legacy_approve_to_actual(legacy_approve):
     
     return conversion_map.get(legacy_approve, legacy_approve)
 
+def initialize_review_data():
+    """
+    Auto-initialize pengajuan approved untuk review dengan status yang benar
+    FIXED: menggunakan status A dan approve Y
+    """
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Ensure review columns exist first
+            try:
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_status')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD review_status varchar(1) NULL DEFAULT '0'
+                    END
+                """)
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'reviewed_by')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD reviewed_by varchar(50) NULL
+                    END
+                """)
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_date')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD review_date datetime NULL
+                    END
+                """)
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_notes')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD review_notes varchar(max) NULL
+                    END
+                """)
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'final_section_id')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD final_section_id float NULL
+                    END
+                """)
+                
+                logger.info("Review columns verified/created successfully")
+                
+            except Exception as col_error:
+                logger.warning(f"Error ensuring review columns: {col_error}")
+            
+            # Check table structure
+            cursor.execute("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_status'")
+            
+            if cursor.fetchone()[0] == 0:
+                logger.warning("Review columns not found. Please run: python manage.py setup_review_system")
+                return False
+            
+            # FIXED: Initialize approved pengajuan untuk review dengan status A dan approve Y
+            cursor.execute("""
+                UPDATE tabel_pengajuan 
+                SET review_status = '0'
+                WHERE status = %s AND approve = %s 
+                    AND (review_status IS NULL OR review_status = '')
+            """, [STATUS_APPROVED, APPROVE_YES])
+            
+            updated_count = cursor.rowcount
+            
+            if updated_count > 0:
+                logger.info(f"Auto-initialized {updated_count} approved pengajuan for review (status=A, approve=Y)")
+            
+            # Log current status for debugging
+            cursor.execute("""
+                SELECT 
+                    COUNT(*) as total_approved,
+                    SUM(CASE WHEN review_status IS NULL OR review_status = '0' THEN 1 ELSE 0 END) as pending_review,
+                    SUM(CASE WHEN review_status = '1' THEN 1 ELSE 0 END) as reviewed_processed,
+                    SUM(CASE WHEN review_status = '2' THEN 1 ELSE 0 END) as reviewed_rejected
+                FROM tabel_pengajuan 
+                WHERE status = %s AND approve = %s
+            """, [STATUS_APPROVED, APPROVE_YES])
+            
+            stats = cursor.fetchone()
+            logger.info(f"Review system stats - Total approved: {stats[0]}, Pending review: {stats[1]}, Processed: {stats[2]}, Rejected: {stats[3]}")
+            
+            return True
+            
+    except Exception as e:
+        logger.error(f"Error initializing review data: {e}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return False
+    
+def ensure_review_system_for_siti():
+    """
+    Special function to ensure review system is ready for SITI FATIMAH
+    Called when SITI FATIMAH accesses the system
+    """
+    try:
+        logger.info("Ensuring review system is ready for SITI FATIMAH...")
+        
+        # Initialize review data
+        initialized = initialize_review_data()
+        
+        if not initialized:
+            logger.error("Failed to initialize review system for SITI FATIMAH")
+            return False
+        
+        # Check current workload
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT COUNT(*) 
+                FROM tabel_pengajuan 
+                WHERE status = %s AND approve = %s 
+                    AND (review_status IS NULL OR review_status = '0')
+            """, [STATUS_APPROVED, APPROVE_YES])
+            
+            pending_count = cursor.fetchone()[0] or 0
+            
+            cursor.execute("""
+                SELECT COUNT(*) 
+                FROM tabel_pengajuan 
+                WHERE reviewed_by = %s 
+                    AND CAST(review_date AS DATE) = CAST(GETDATE() AS DATE)
+            """, [REVIEWER_EMPLOYEE_NUMBER])
+            
+            reviewed_today = cursor.fetchone()[0] or 0
+            
+            logger.info(f"SITI FATIMAH workload - Pending review: {pending_count}, Reviewed today: {reviewed_today}")
+            
+            return {
+                'ready': True,
+                'pending_review': pending_count,
+                'reviewed_today': reviewed_today,
+                'can_review': pending_count > 0
+            }
+        
+    except Exception as e:
+        logger.error(f"Error ensuring review system for SITI FATIMAH: {e}")
+        return {
+            'ready': False,
+            'error': str(e),
+            'pending_review': 0,
+            'reviewed_today': 0,
+            'can_review': False
+        }
 
+def get_review_ready_pengajuan_for_siti():
+    """
+    Get list of pengajuan that are ready for review by SITI FATIMAH
+    """
+    try:
+        pengajuan_list = []
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT 
+                    tp.history_id,
+                    tp.oleh,
+                    tp.tgl_insert,
+                    tm.mesin,
+                    tms.seksi,
+                    tp.deskripsi_perbaikan,
+                    tp.status,
+                    tp.approve,
+                    tp.review_status
+                FROM tabel_pengajuan tp
+                LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+                LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                WHERE tp.status = %s 
+                    AND tp.approve = %s 
+                    AND (tp.review_status IS NULL OR tp.review_status = '0')
+                ORDER BY tp.tgl_insert ASC
+            """, [STATUS_APPROVED, APPROVE_YES])
+            
+            for row in cursor.fetchall():
+                pengajuan_list.append({
+                    'history_id': row[0],
+                    'oleh': row[1],
+                    'tgl_insert': row[2],
+                    'mesin': row[3],
+                    'seksi': row[4],
+                    'deskripsi_perbaikan': row[5],
+                    'status': row[6],
+                    'approve': row[7],
+                    'review_status': row[8]
+                })
+        
+        logger.info(f"Found {len(pengajuan_list)} pengajuan ready for SITI FATIMAH review")
+        return pengajuan_list
+        
+    except Exception as e:
+        logger.error(f"Error getting review-ready pengajuan: {e}")
+        return []
+
+def debug_review_system_status():
+    """
+    Debug function to check review system status
+    """
+    try:
+        debug_info = {
+            'timestamp': timezone.now().isoformat(),
+            'constants': {
+                'STATUS_APPROVED': STATUS_APPROVED,
+                'APPROVE_YES': APPROVE_YES,
+                'REVIEWER_EMPLOYEE_NUMBER': REVIEWER_EMPLOYEE_NUMBER
+            },
+            'database_check': {},
+            'pengajuan_status': {}
+        }
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Check review columns
+            cursor.execute("""
+                SELECT COLUMN_NAME 
+                FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = 'tabel_pengajuan' 
+                    AND COLUMN_NAME IN ('review_status', 'reviewed_by', 'review_date', 'review_notes', 'final_section_id')
+            """)
+            
+            existing_columns = [row[0] for row in cursor.fetchall()]
+            debug_info['database_check']['review_columns'] = existing_columns
+            debug_info['database_check']['all_columns_exist'] = len(existing_columns) == 5
+            
+            # Check pengajuan counts
+            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan")
+            debug_info['pengajuan_status']['total'] = cursor.fetchone()[0]
+            
+            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = %s", [STATUS_APPROVED])
+            debug_info['pengajuan_status']['status_approved'] = cursor.fetchone()[0]
+            
+            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE approve = %s", [APPROVE_YES])
+            debug_info['pengajuan_status']['approve_yes'] = cursor.fetchone()[0]
+            
+            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = %s AND approve = %s", [STATUS_APPROVED, APPROVE_YES])
+            debug_info['pengajuan_status']['fully_approved'] = cursor.fetchone()[0]
+            
+            cursor.execute("""
+                SELECT COUNT(*) FROM tabel_pengajuan 
+                WHERE status = %s AND approve = %s 
+                    AND (review_status IS NULL OR review_status = '0')
+            """, [STATUS_APPROVED, APPROVE_YES])
+            debug_info['pengajuan_status']['pending_review'] = cursor.fetchone()[0]
+            
+            cursor.execute("""
+                SELECT COUNT(*) FROM tabel_pengajuan 
+                WHERE reviewed_by = %s
+            """, [REVIEWER_EMPLOYEE_NUMBER])
+            debug_info['pengajuan_status']['reviewed_by_siti'] = cursor.fetchone()[0]
+            
+            # Sample data
+            cursor.execute("""
+                SELECT TOP 5 history_id, status, approve, review_status
+                FROM tabel_pengajuan 
+                WHERE status = %s AND approve = %s
+                ORDER BY tgl_insert DESC
+            """, [STATUS_APPROVED, APPROVE_YES])
+            
+            debug_info['sample_data'] = [
+                {
+                    'history_id': row[0],
+                    'status': row[1],
+                    'approve': row[2],
+                    'review_status': row[3]
+                } for row in cursor.fetchall()
+            ]
+        
+        return debug_info
+        
+    except Exception as e:
+        return {
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }
 # Export all functions and constants
 __all__ = [
     'get_employee_hierarchy_data',

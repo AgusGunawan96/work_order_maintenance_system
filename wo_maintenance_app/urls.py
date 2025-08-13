@@ -1,4 +1,4 @@
-# wo_maintenance_app/urls.py - ENHANCED dengan SDBM Integration
+# wo_maintenance_app/urls.py - FIXED VERSION dengan Complete Routes
 
 from django.urls import path
 from wo_maintenance_app import views
@@ -25,6 +25,9 @@ urlpatterns = [
     # ===== DETAIL LAPORAN =====
     path('detail/<str:nomor_pengajuan>/', views.detail_laporan, name='detail_laporan'),
     path('detail-pengajuan/<str:nomor_pengajuan>/', views.detail_laporan, name='detail_pengajuan'),
+    
+    # ===== FIXED: Enhanced Detail Route yang sebelumnya missing =====
+    path('enhanced-detail/<str:nomor_pengajuan>/', views.enhanced_pengajuan_detail, name='enhanced_pengajuan_detail'),
     
     # ===== ENHANCED REVIEW SYSTEM - SITI FATIMAH dengan SDBM =====
     path('review/', views.review_dashboard, name='review_dashboard'),
@@ -76,4 +79,65 @@ urlpatterns = [
     path('ajax/review/pending-count/', views.get_pending_review_count, name='get_pending_review_count'),
     path('ajax/review/force-init/', views.force_review_initialization, name='force_review_initialization'),
     path('ajax/review/stats/', views.quick_review_stats, name='quick_review_stats'),
+
+    # ===== ENHANCED DEBUG & TESTING =====
+    path('debug/test-review-button/', views.test_review_button_visibility, name='test_review_button_visibility'),
+    path('debug/quick-fix-review/', views.quick_fix_review_system, name='quick_fix_review_system'),
+    path('debug/status-validation/', views.debug_status_validation, name='debug_status_validation'),
+    
+    # ===== FALLBACK ROUTES untuk Backward Compatibility =====
+    path('enhanced/', views.enhanced_daftar_laporan, name='enhanced_daftar_laporan'),
+    path('review-list/', views.review_pengajuan_list, name='review_list'),
 ]
+
+# ===== URL VALIDATION (untuk debugging) =====
+def validate_url_patterns():
+    """
+    Function untuk validate semua URL patterns
+    """
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    url_map = {}
+    for pattern in urlpatterns:
+        url_map[pattern.name] = pattern.pattern._route if hasattr(pattern.pattern, '_route') else str(pattern.pattern)
+    
+    # Log semua URLs
+    logger.info("=== WO MAINTENANCE URL PATTERNS ===")
+    for name, route in url_map.items():
+        logger.info(f"  {name}: {route}")
+    logger.info("=== END URL PATTERNS ===")
+    
+    return url_map
+
+# Critical URLs yang harus ada
+CRITICAL_URLS = [
+    'dashboard',
+    'daftar_laporan',
+    'detail_laporan', 
+    'review_dashboard',
+    'review_pengajuan_list',
+    'review_pengajuan_detail',
+    'enhanced_pengajuan_detail'  # FIXED: Now exists
+]
+
+def check_critical_urls():
+    """
+    Check apakah semua critical URLs exist
+    """
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    existing_urls = [pattern.name for pattern in urlpatterns]
+    missing_urls = []
+    
+    for critical_url in CRITICAL_URLS:
+        if critical_url not in existing_urls:
+            missing_urls.append(critical_url)
+    
+    if missing_urls:
+        logger.error(f"MISSING CRITICAL URLS: {missing_urls}")
+        return False
+    else:
+        logger.info("All critical URLs exist ✅")
+        return True

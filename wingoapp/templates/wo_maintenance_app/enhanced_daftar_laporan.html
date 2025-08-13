@@ -927,31 +927,125 @@
                             {% endif %}
                         </td>
                         <td>
-                            <div class="d-flex flex-column gap-1">
-                                {% if pengajuan.0 %}
-                                    <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" 
-                                       class="enhanced-action-btn btn-detail" title="Detail">
-                                        <i data-feather="eye"></i> Detail
-                                    </a>
-                                    
-                                    {% if view_mode == 'approved' and is_siti_fatimah %}
-                                        {% if pengajuan.15 == '0' or pengajuan.15 is None %}
-                                            <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
-                                               class="enhanced-action-btn btn-review" title="Review">
-                                                <i data-feather="clipboard"></i> Review
-                                            </a>
-                                        {% endif %}
-                                    {% endif %}
-                                    
-                                    {% if can_approve and pengajuan.6 == '0' and pengajuan.11 == '0' %}
-                                        <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}#approval" 
-                                           class="enhanced-action-btn btn-approve" title="Approve">
-                                            <i data-feather="check-circle"></i> Approve
-                                        </a>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                        </td>
+    <td>
+    <div class="d-flex flex-column gap-1">
+        {% if pengajuan.0 %}
+            <!-- Detail Button - Always Available -->
+            <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" 
+               class="enhanced-action-btn btn-detail" title="Detail">
+                <i data-feather="eye"></i> Detail
+            </a>
+            
+            <!-- FIXED: Review Button Logic untuk SITI FATIMAH -->
+            {% if is_siti_fatimah %}
+                {% comment %}
+                SITI FATIMAH can review if:
+                1. Pengajuan is approved (status='A' AND approve='Y') 
+                2. NOT yet reviewed (review_status is NULL or '0')
+                
+                FIXED: Use proper status constants - 'A' for approved, 'Y' for approve
+                {% endcomment %}
+                
+                <!-- Check if this is approved pengajuan with FIXED status values -->
+                {% if pengajuan.6 == 'A' and pengajuan.11 == 'Y' %}
+                    <!-- Check review status -->
+                    {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                        <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                           class="enhanced-action-btn btn-review" title="Review Pengajuan - SITI FATIMAH">
+                            <i data-feather="clipboard"></i> Review
+                        </a>
+                    {% elif pengajuan.15 == '1' %}
+                        <!-- Already reviewed (processed) -->
+                        <span class="enhanced-action-btn" style="background: #d4edda; color: #155724; cursor: default;" title="Sudah Direview - Processed">
+                            <i data-feather="check-circle"></i> Reviewed
+                        </span>
+                    {% elif pengajuan.15 == '2' %}
+                        <!-- Already reviewed (rejected) -->
+                        <span class="enhanced-action-btn" style="background: #f8d7da; color: #721c24; cursor: default;" title="Sudah Direview - Rejected">
+                            <i data-feather="x-circle"></i> Rejected
+                        </span>
+                    {% endif %}
+                {% else %}
+                    <!-- Not approved yet or different status -->
+                    {% if pengajuan.6 == '0' %}
+                        <!-- Pending approval -->
+                        <span class="enhanced-action-btn" style="background: #fff3cd; color: #856404; cursor: default;" title="Menunggu Approval Atasan">
+                            <i data-feather="clock"></i> Pending
+                        </span>
+                    {% elif pengajuan.6 == '1' and pengajuan.11 == '1' %}
+                        <!-- Legacy support: if still using '1' values -->
+                        {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                            <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                               class="enhanced-action-btn btn-review" title="Review Pengajuan - Legacy Support">
+                                <i data-feather="clipboard"></i> Review
+                            </a>
+                        {% else %}
+                            <span class="enhanced-action-btn" style="background: #d4edda; color: #155724; cursor: default;" title="Already Reviewed">
+                                <i data-feather="check-circle"></i> Reviewed
+                            </span>
+                        {% endif %}
+                    {% elif pengajuan.6 == '2' %}
+                        <!-- Rejected -->
+                        <span class="enhanced-action-btn" style="background: #f8d7da; color: #721c24; cursor: default;" title="Ditolak">
+                            <i data-feather="x-circle"></i> Rejected
+                        </span>
+                    {% else %}
+                        <!-- Unknown status - show debug for troubleshooting -->
+                        {% if user.is_superuser %}
+                            <span class="enhanced-action-btn" style="background: #ffc107; color: #212529; cursor: default;" title="Status: {{ pengajuan.6 }}, Approve: {{ pengajuan.11 }}">
+                                <i data-feather="alert-triangle"></i> Debug
+                            </span>
+                        {% else %}
+                            <span class="enhanced-action-btn" style="background: #6c757d; color: white; cursor: default;" title="Status Tidak Dikenal">
+                                <i data-feather="help-circle"></i> Unknown
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                
+                <!-- Additional: Quick review link for approved mode -->
+                {% if view_mode == 'approved' and pengajuan.20 == 1 %}
+                    <!-- pengajuan.20 is is_approved_for_review flag -->
+                    {% if pengajuan.21 == 1 %}
+                        <!-- pengajuan.21 is needs_review flag -->
+                        <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                           class="enhanced-action-btn" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white;" title="Quick Review - Approved Mode">
+                            <i data-feather="zap"></i> Quick Review
+                        </a>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            
+            <!-- Regular Approval Button for Other Users (Non-SITI FATIMAH) -->
+            {% if can_approve and not is_siti_fatimah %}
+                <!-- Check for pending status that needs approval -->
+                {% if pengajuan.6 == '0' and pengajuan.11 == '0' %}
+                    <!-- Pending and not approved yet -->
+                    <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}#approval" 
+                       class="enhanced-action-btn btn-approve" title="Approve Pengajuan">
+                        <i data-feather="check-circle"></i> Approve
+                    </a>
+                {% elif pengajuan.6 == 'A' and pengajuan.11 == 'Y' %}
+                    <!-- Already approved - show status -->
+                    <span class="enhanced-action-btn" style="background: #d4edda; color: #155724; cursor: default;" title="Sudah Di-approve">
+                        <i data-feather="check-square"></i> Approved
+                    </span>
+                {% endif %}
+            {% endif %}
+            
+            <!-- Debug Button for Superuser - Enhanced dengan Status Info -->
+            {% if user.is_superuser %}
+                <button type="button" 
+                        class="enhanced-action-btn" 
+                        style="background: #6c757d; color: white; font-size: 0.6rem;" 
+                        onclick="showDetailedDebugInfo('{{ pengajuan.0 }}', '{{ pengajuan.6 }}', '{{ pengajuan.11 }}', '{{ pengajuan.15 }}', {{ is_siti_fatimah|yesno:"true,false" }}, {{ view_mode|default:"'normal'" }})"
+                        title="Debug Info - Status: {{ pengajuan.6 }}, Approve: {{ pengajuan.11 }}, Review: {{ pengajuan.15 }}">
+                    <i data-feather="info"></i> Debug
+                </button>
+            {% endif %}
+        {% endif %}
+    </div>
+</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -1166,5 +1260,83 @@ $(document).ready(function() {
     console.log('Is SITI FATIMAH:', {{ is_siti_fatimah|yesno:"true,false" }});
     console.log('Total Records:', {{ total_records }});
 });
+</script>
+
+<script>
+// Enhanced Debug Function
+function showDetailedDebugInfo(historyId, status, approve, reviewStatus, isSitiFatimah, viewMode) {
+    const debugInfo = {
+        'History ID': historyId,
+        'Status': status + ' (Expected: A for approved, 0 for pending, 2 for rejected)',
+        'Approve': approve + ' (Expected: Y for approved, 0/N for not approved)',
+        'Review Status': reviewStatus + ' (Expected: 0/null for pending, 1 for reviewed, 2 for rejected)',
+        'Is SITI FATIMAH': isSitiFatimah,
+        'View Mode': viewMode,
+        'Review Button Should Show': (isSitiFatimah && status === 'A' && approve === 'Y' && (reviewStatus === '0' || reviewStatus === null)),
+        'Approve Button Should Show': (!isSitiFatimah && status === '0' && approve === '0'),
+        'URL Review': '{% url "wo_maintenance_app:review_pengajuan_detail" "PLACEHOLDER" %}'.replace('PLACEHOLDER', historyId),
+        'URL Detail': '{% url "wo_maintenance_app:detail_laporan" "PLACEHOLDER" %}'.replace('PLACEHOLDER', historyId)
+    };
+    
+    let debugText = '🔧 Enhanced Debug Info:\n\n';
+    for (const [key, value] of Object.entries(debugInfo)) {
+        debugText += `${key}: ${value}\n`;
+    }
+    
+    // Check for common issues
+    debugText += '\n🎯 Issue Analysis:\n';
+    
+    if (isSitiFatimah) {
+        if (status !== 'A' || approve !== 'Y') {
+            debugText += '❌ ISSUE: Pengajuan belum approved (status should be A, approve should be Y)\n';
+        } else if (reviewStatus === '1' || reviewStatus === '2') {
+            debugText += '✅ OK: Pengajuan sudah direview\n';
+        } else {
+            debugText += '✅ OK: Pengajuan ready for review\n';
+        }
+    } else {
+        if (status === '0' && approve === '0') {
+            debugText += '✅ OK: Pengajuan pending, ready for approval\n';
+        } else if (status === 'A' && approve === 'Y') {
+            debugText += '✅ OK: Pengajuan sudah approved\n';
+        }
+    }
+    
+    // Show debug window
+    const debugWindow = window.open('', '_blank', 'width=600,height=500,scrollbars=yes');
+    debugWindow.document.write(`
+        <html>
+            <head>
+                <title>Debug Info - ${historyId}</title>
+                <style>
+                    body { 
+                        font-family: monospace; 
+                        padding: 20px; 
+                        background: #f8f9fa; 
+                        line-height: 1.6;
+                    }
+                    .status-ok { color: #28a745; }
+                    .status-error { color: #dc3545; }
+                    .status-warning { color: #ffc107; }
+                </style>
+            </head>
+            <body>
+                <h3>🔧 Enhanced Debug Information</h3>
+                <pre>${debugText}</pre>
+                <hr>
+                <p><strong>Quick Tests:</strong></p>
+                <button onclick="window.open('${debugInfo['URL Detail']}', '_blank')">🔗 Test Detail URL</button>
+                <button onclick="window.open('${debugInfo['URL Review']}', '_blank')">🔗 Test Review URL</button>
+                <br><br>
+                <button onclick="window.close()">Close</button>
+            </body>
+        </html>
+    `);
+}
+
+// Original debug function for backward compatibility
+function showDebugInfo(historyId, status, approve, reviewStatus, isSitiFatimah) {
+    showDetailedDebugInfo(historyId, status, approve, reviewStatus, isSitiFatimah, 'normal');
+}
 </script>
 {% endblock scriptcontent %}
