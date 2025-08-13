@@ -401,23 +401,15 @@ class ReviewFilterForm(forms.Form):
         # Load additional sections from database if needed
         self.load_additional_section_choices()
 
-
-# wo_maintenance_app/forms.py - ADD/UPDATE ReviewForm
+# wo_maintenance_app/forms.py - FIXED ReviewForm
 
 class ReviewForm(forms.Form):
-    """Form untuk review pengajuan oleh SITI FATIMAH - ENHANCED dengan Reject dan Process"""
+    """Form untuk review pengajuan oleh SITI FATIMAH - FIXED ACTION_CHOICES"""
     
+    # FIXED: Action choices yang benar
     ACTION_CHOICES = [
         ('process', 'Process Pengajuan'),
-        ('reject', 'Reject'),
-    ]
-    
-    SECTION_CHOICES = [
-        ('', '-- Pilih Section (Opsional) --'),
-        ('it', '💻 IT'),
-        ('elektrik', '⚡ Elektrik'),
-        ('utility', '🏭 Utility'),
-        ('mekanik', '🔧 Mekanik'),
+        ('reject', 'Reject Pengajuan'),
     ]
     
     action = forms.ChoiceField(
@@ -431,24 +423,19 @@ class ReviewForm(forms.Form):
     
     target_section = forms.ChoiceField(
         label='Tujuan Section (Opsional)',
-        choices=SECTION_CHOICES,
+        choices=[
+            ('', '-- Pilih Section (Opsional) --'),
+            ('it', '💻 IT'),
+            ('elektrik', '⚡ Elektrik'),
+            ('utility', '🏭 Utility'),
+            ('mekanik', '🔧 Mekanik'),
+        ],
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-control select2-section',
             'data-placeholder': 'Pilih section tujuan (opsional)...'
         }),
         help_text='🎯 Opsional: Tentukan section spesifik yang akan menangani pengajuan ini'
-    )
-    
-    review_notes = forms.CharField(
-        label='Catatan Review',
-        required=False,
-        widget=forms.Textarea(attrs={
-            'class': 'form-control',
-            'rows': 4,
-            'placeholder': 'Opsional: Tambahkan catatan untuk keputusan review dan instruksi khusus...'
-        }),
-        help_text='Catatan opsional untuk dokumentasi dan instruksi'
     )
     
     priority_level = forms.ChoiceField(
@@ -463,6 +450,17 @@ class ReviewForm(forms.Form):
             'class': 'form-control'
         }),
         help_text='Tentukan tingkat prioritas pengajuan ini'
+    )
+    
+    review_notes = forms.CharField(
+        label='Catatan Review',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 4,
+            'placeholder': 'Opsional: Tambahkan catatan untuk keputusan review dan instruksi khusus...'
+        }),
+        help_text='Catatan opsional untuk dokumentasi dan instruksi'
     )
     
     def __init__(self, *args, **kwargs):

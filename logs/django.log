@@ -4143,3 +4143,100 @@ INFO 2025-08-13 09:45:26,647 autoreload 17836 16488 C:\xampp7.2\htdocs\wo_mainte
 INFO 2025-08-13 09:45:29,056 autoreload 17664 15824 Watching for file changes with StatReloader
 INFO 2025-08-13 09:46:09,464 autoreload 17664 15824 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
 INFO 2025-08-13 09:46:11,467 autoreload 15608 11048 Watching for file changes with StatReloader
+INFO 2025-08-13 09:48:33,714 autoreload 2288 17816 Watching for file changes with StatReloader
+INFO 2025-08-13 09:49:45,236 autoreload 152 10004 Watching for file changes with StatReloader
+INFO 2025-08-13 09:50:08,853 autoreload 14428 15300 Watching for file changes with StatReloader
+INFO 2025-08-13 09:50:21,123 autoreload 1944 12972 Watching for file changes with StatReloader
+INFO 2025-08-13 09:50:30,745 autoreload 12928 17968 Watching for file changes with StatReloader
+INFO 2025-08-13 09:50:54,471 autoreload 16076 17172 Watching for file changes with StatReloader
+INFO 2025-08-13 09:51:03,395 basehttp 16076 17868 "GET /wo-maintenance/detail/WO20250812001/ HTTP/1.1" 200 29017
+INFO 2025-08-13 09:51:06,526 basehttp 16076 4732 "GET /wo-maintenance/input/ HTTP/1.1" 200 47177
+INFO 2025-08-13 09:51:29,615 basehttp 16076 15504 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755053466824 HTTP/1.1" 200 292
+INFO 2025-08-13 09:51:45,079 forms 16076 15728 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-13 09:51:45,101 views 16076 15728 SAVE: Inserting pengajuan WO20250813001
+INFO 2025-08-13 09:51:45,105 views 16076 15728 SUCCESS: Pengajuan WO20250813001 berhasil disimpan
+INFO 2025-08-13 09:51:45,107 basehttp 16076 15728 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:51:45,195 views 16076 15728 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 09:51:45,296 basehttp 16076 15728 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30111
+INFO 2025-08-13 09:51:49,945 basehttp 16076 15728 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:51:50,003 basehttp 16076 15728 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:51:50,135 basehttp 16076 15728 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 09:51:57,615 views 16076 888 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 09:51:57,633 authentication 16076 888 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 09:51:57,634 authentication 16076 888 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 09:51:57,643 views 16076 888 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 09:51:57,643 views 16076 888 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-13 09:51:57,648 basehttp 16076 888 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:51:57,718 views 16076 888 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 09:51:57,748 views 16076 888 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 09:51:57,820 basehttp 16076 888 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26771
+INFO 2025-08-13 09:52:00,525 views 16076 11184 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 09:52:00,554 views 16076 11184 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 09:52:00,644 basehttp 16076 11184 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26495
+INFO 2025-08-13 09:52:01,795 views 16076 11184 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 09:52:01,806 views 16076 11184 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 09:52:01,812 views 16076 11184 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 09:52:01,901 basehttp 16076 11184 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28250
+INFO 2025-08-13 09:52:05,382 basehttp 16076 18292 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:52:05,439 basehttp 16076 18292 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:52:05,545 basehttp 16076 18292 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 09:52:12,013 views 16076 11780 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 09:52:12,026 authentication 16076 11780 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 09:52:12,032 views 16076 11780 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 09:52:12,033 views 16076 11780 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 09:52:12,038 basehttp 16076 11780 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:52:12,172 views 16076 11780 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 09:52:12,237 basehttp 16076 11780 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33570
+INFO 2025-08-13 09:52:15,699 basehttp 16076 18128 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 34822
+INFO 2025-08-13 09:52:33,595 views 16076 13148 Pengajuan WO20250813001 approved by BADRI KIMAN - sent to review queue
+INFO 2025-08-13 09:52:33,603 views 16076 13148 Review tables and columns verified/created successfully
+INFO 2025-08-13 09:52:33,611 views 16076 13148 Pengajuan WO20250813001 disetujui by BADRI KIMAN
+INFO 2025-08-13 09:52:33,612 basehttp 16076 13148 "POST /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:52:33,764 basehttp 16076 13148 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 31417
+INFO 2025-08-13 09:52:43,353 basehttp 16076 17856 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:52:43,403 basehttp 16076 17856 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:52:43,510 basehttp 16076 17856 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 09:52:51,197 views 16076 14728 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 09:52:51,207 authentication 16076 14728 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 09:52:51,208 authentication 16076 14728 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 09:52:51,215 views 16076 14728 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 09:52:51,216 views 16076 14728 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 09:52:51,221 basehttp 16076 14728 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+WARNING 2025-08-13 09:52:51,298 views 16076 14728 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 09:52:51,300 basehttp 16076 14728 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:52:51,362 views 16076 14728 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 09:52:51,389 views 16076 14728 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 09:52:51,460 basehttp 16076 14728 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 27055
+INFO 2025-08-13 09:52:54,640 views 16076 14728 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 09:52:54,650 views 16076 14728 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 09:52:54,660 views 16076 14728 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 09:52:54,736 basehttp 16076 14728 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32742
+ERROR 2025-08-13 09:52:57,988 views 16076 13424 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 09:52:57,990 basehttp 16076 13424 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 09:52:58,058 views 16076 13424 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 09:52:58,059 basehttp 16076 13424 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 09:52:58,246 basehttp 16076 13424 "GET /wo-maintenance/ HTTP/1.1" 200 28244
+INFO 2025-08-13 09:53:03,562 views 16076 13424 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 09:53:03,590 views 16076 13424 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 09:53:03,672 basehttp 16076 13424 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 27085
+INFO 2025-08-13 09:53:05,453 views 16076 17692 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 09:53:05,457 views 16076 17692 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 09:53:05,468 views 16076 17692 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 09:53:05,546 basehttp 16076 17692 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32742
+INFO 2025-08-13 09:53:08,804 forms 16076 17692 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 09:53:08,889 basehttp 16076 17692 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33635
+INFO 2025-08-13 09:54:08,284 forms 16076 15716 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 09:54:08,362 basehttp 16076 15716 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33636
+INFO 2025-08-13 09:54:50,026 forms 16076 12604 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 09:54:50,108 basehttp 16076 12604 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33636
+INFO 2025-08-13 09:56:37,219 forms 16076 3272 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 09:56:37,304 basehttp 16076 3272 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 32138
+INFO 2025-08-13 09:56:57,158 forms 16076 17732 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 09:56:57,241 basehttp 16076 17732 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33636
+INFO 2025-08-13 10:00:21,088 forms 16076 4904 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 10:00:21,157 basehttp 16076 4904 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33636
+INFO 2025-08-13 10:04:07,043 autoreload 16076 17172 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\forms.py changed, reloading.
+INFO 2025-08-13 10:04:08,979 autoreload 17964 12608 Watching for file changes with StatReloader
+INFO 2025-08-13 10:04:20,502 autoreload 17108 12192 Watching for file changes with StatReloader
+INFO 2025-08-13 10:04:32,063 autoreload 10484 10888 Watching for file changes with StatReloader
+INFO 2025-08-13 10:07:07,490 autoreload 13736 10468 Watching for file changes with StatReloader
