@@ -527,7 +527,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                             # ===== NEW: SDBM Section Update & Assignment =====
                             if target_section:
                                 # Import function dari utils yang sudah enhanced
-                                from .utils import assign_pengajuan_after_siti_review, get_sdbm_section_mapping
+                                from wo_maintenance_app.utils import assign_pengajuan_after_siti_review, get_sdbm_section_mapping
                                 
                                 # Execute SDBM integration
                                 assignment_result = assign_pengajuan_after_siti_review(
@@ -595,7 +595,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                             
                             # ===== Enhanced Review Logging =====
                             try:
-                                from .utils import log_enhanced_review_action
+                                from wo_maintenance_app.utils import log_enhanced_review_action
                                 
                                 log_enhanced_review_action(
                                     nomor_pengajuan,
@@ -623,7 +623,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                             
                             # Enhanced logging untuk reject
                             try:
-                                from .utils import log_enhanced_review_action
+                                from wo_maintenance_app.utils import log_enhanced_review_action
                                 
                                 log_enhanced_review_action(
                                     nomor_pengajuan,
@@ -655,7 +655,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
         # Get available sections dengan SDBM info
         available_sections = []
         try:
-            from .utils import get_sdbm_section_mapping, validate_sdbm_section_mapping
+            from wo_maintenance_app.utils import get_sdbm_section_mapping, validate_sdbm_section_mapping
             
             # Get mapping info
             section_mapping = get_sdbm_section_mapping()
@@ -1048,7 +1048,7 @@ def validate_sdbm_integration(request):
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     
     try:
-        from .utils import validate_sdbm_section_mapping, get_sdbm_section_mapping
+        from wo_maintenance_app.utils import validate_sdbm_section_mapping, get_sdbm_section_mapping
         
         # Validate mapping
         validation_result = validate_sdbm_section_mapping()
@@ -1098,7 +1098,7 @@ def test_sdbm_assignment(request, target_section):
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     
     try:
-        from .utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
+        from wo_maintenance_app.utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
         
         # Get supervisors
         supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
@@ -2460,7 +2460,6 @@ def detail_laporan(request, nomor_pengajuan):
         messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi.')
         return redirect('wo_maintenance_app:daftar_laporan')
 
-
 @login_required 
 def create_assignment_tables(request):
     """
@@ -2471,7 +2470,7 @@ def create_assignment_tables(request):
         return redirect('wo_maintenance_app:daftar_laporan')
     
     try:
-        from .utils import ensure_assignment_tables_exist
+        from wo_maintenance_app.utils import ensure_assignment_tables_exist
         
         success = ensure_assignment_tables_exist()
         
@@ -2575,7 +2574,7 @@ def debug_test_assignment(request, history_id, section_id, approver):
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     
     try:
-        from .utils import assign_pengajuan_to_section_supervisors, get_target_section_supervisors
+        from wo_maintenance_app.utils import assign_pengajuan_to_section_supervisors, get_target_section_supervisors
         
         logger.info(f"DEBUG: Manual test assignment - {history_id} to section {section_id} by {approver}")
         
@@ -2618,7 +2617,7 @@ def debug_section_supervisors(request, section_id):
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     
     try:
-        from .utils import get_target_section_supervisors
+        from wo_maintenance_app.utils import get_target_section_supervisors
         
         supervisors = get_target_section_supervisors(section_id)
         
@@ -3204,6 +3203,7 @@ def force_review_initialization(request):
         logger.error(f"Error in force review initialization: {e}")
         return JsonResponse({'success': False, 'error': str(e)})
 
+
 @login_required
 @reviewer_required
 def quick_review_stats(request):
@@ -3405,7 +3405,7 @@ def ajax_get_sdbm_supervisors(request):
         })
     
     try:
-        from .utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
+        from wo_maintenance_app.utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
         
         # Get supervisors
         supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
@@ -3461,7 +3461,7 @@ def ajax_validate_sdbm_section(request):
     target_section = request.GET.get('target_section', '').strip()
     
     try:
-        from .utils import validate_sdbm_section_mapping, get_sdbm_section_mapping
+        from wo_maintenance_app.utils import validate_sdbm_section_mapping, get_sdbm_section_mapping
         
         if target_section:
             # Validate specific section
@@ -3498,7 +3498,7 @@ def ajax_validate_sdbm_section(request):
                 # Count supervisors
                 supervisor_count = 0
                 if dept_exists and section_exists:
-                    from .utils import get_sdbm_supervisors_by_section_mapping
+                    from wo_maintenance_app.utils import get_sdbm_supervisors_by_section_mapping
                     supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
                     supervisor_count = len(supervisors)
                 
@@ -3547,7 +3547,7 @@ def ajax_sdbm_assignment_status(request):
                 'assignments': []
             })
         
-        from .utils import get_assigned_pengajuan_for_sdbm_user
+        from wo_maintenance_app.utils import get_assigned_pengajuan_for_sdbm_user
         
         employee_number = user_hierarchy.get('employee_number')
         assignments = get_assigned_pengajuan_for_sdbm_user(employee_number)
@@ -3591,7 +3591,7 @@ def sdbm_supervisor_lookup(request, target_section):
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     
     try:
-        from .utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
+        from wo_maintenance_app.utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
         
         # Get section mapping
         section_mapping = get_sdbm_section_mapping()
@@ -3679,7 +3679,7 @@ def sdbm_assignment_preview(request):
         })
     
     try:
-        from .utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping, get_maintenance_section_id_from_target
+        from wo_maintenance_app.utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping, get_maintenance_section_id_from_target
         
         # Get section info
         section_mapping = get_sdbm_section_mapping()
@@ -3776,7 +3776,7 @@ def debug_sdbm_mapping(request):
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     
     try:
-        from .utils import get_sdbm_section_mapping, validate_sdbm_section_mapping
+        from wo_maintenance_app.utils import get_sdbm_section_mapping, validate_sdbm_section_mapping
         
         # Get mapping dan validation
         section_mapping = get_sdbm_section_mapping()
@@ -3836,7 +3836,7 @@ def debug_sdbm_employees(request, target_section):
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     
     try:
-        from .utils import get_sdbm_section_mapping
+        from wo_maintenance_app.utils import get_sdbm_section_mapping
         
         section_mapping = get_sdbm_section_mapping()
         section_info = section_mapping.get(target_section, {})

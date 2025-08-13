@@ -367,6 +367,7 @@ def get_subordinate_employee_numbers(user_hierarchy):
         return [user_hierarchy.get('employee_number')] if user_hierarchy.get('employee_number') else []
 
 
+
 def get_employee_by_number(employee_number):
     """
     Mendapatkan data employee berdasarkan employee_number
@@ -588,7 +589,7 @@ def get_supervisors_by_section_and_level(section_mapping_key, min_level='assista
     except Exception as e:
         logger.error(f"Error getting supervisors for section {section_mapping_key} with min level {min_level}: {e}")
         return []
-
+    
 def get_target_section_supervisors(section_tujuan_id, exclude_employee_numbers=None, min_level='assistant_supervisor'):
     """
     Mendapatkan daftar assistant supervisor+ di section tujuan untuk assignment pengajuan
@@ -1785,7 +1786,6 @@ def get_level_description(level):
     
     return level_descriptions.get(level, f'Level {level}')
 
-
 def assign_pengajuan_after_siti_review(history_id, target_section, reviewer_employee, review_notes=None):
     """
     Auto-assign pengajuan ke SDBM supervisors setelah review oleh SITI FATIMAH
@@ -2473,74 +2473,6 @@ def get_assigned_pengajuan_for_sdbm_user(employee_number):
         logger.error(f"Error getting SDBM assignments for {employee_number}: {e}")
         return []
 
-def convert_legacy_status_to_actual(legacy_status):
-    """
-    Convert legacy status values (1,2,3,4) ke actual values (A,2,3,4)
-    
-    Args:
-        legacy_status (str): Legacy status value
-        
-    Returns:
-        str: Actual status value untuk database
-    """
-    conversion_map = {
-        '1': STATUS_APPROVED,    # '1' -> 'A'
-        '0': STATUS_PENDING,     # '0' -> '0'
-        '2': STATUS_REJECTED,    # '2' -> '2'
-        '3': STATUS_IN_PROGRESS, # '3' -> '3'
-        '4': STATUS_COMPLETED    # '4' -> '4'
-    }
-    
-    return conversion_map.get(legacy_status, legacy_status)
-
-
-def convert_legacy_approve_to_actual(legacy_approve):
-    """
-    Convert legacy approve values (1,2,0) ke actual values (Y,2,0)
-    
-    Args:
-        legacy_approve (str): Legacy approve value
-        
-    Returns:
-        str: Actual approve value untuk database
-    """
-    conversion_map = {
-        '1': APPROVE_YES,        # '1' -> 'Y'
-        '0': APPROVE_NO,         # '0' -> '0'
-        '2': APPROVE_REJECTED    # '2' -> '2'
-    }
-    
-    return conversion_map.get(legacy_approve, legacy_approve)
-
-
-# Export all functions and constants
-__all__ = [
-    'get_employee_hierarchy_data',
-    'can_user_approve', 
-    'get_subordinate_employee_numbers',
-    'get_employee_by_number',
-    'get_supervisors_by_section_and_level',
-    'get_target_section_supervisors',
-    'get_title_level',
-    'get_level_description',
-    'assign_pengajuan_to_section_supervisors',
-    'ensure_assignment_tables_exist',
-    'get_assigned_pengajuan_for_user',
-    'get_sdbm_section_mapping',
-    'get_assigned_pengajuan_for_sdbm_user',
-    'convert_legacy_status_to_actual',
-    'convert_legacy_approve_to_actual',
-    'STATUS_PENDING',
-    'STATUS_APPROVED',
-    'STATUS_REJECTED',
-    'STATUS_IN_PROGRESS', 
-    'STATUS_COMPLETED',
-    'APPROVE_NO',
-    'APPROVE_YES',
-    'APPROVE_REJECTED',
-    'REVIEWER_EMPLOYEE_NUMBER',
-    'REVIEWER_FULLNAME'
-]
 
 def get_section_based_assignments(employee_number):
     """
@@ -2703,3 +2635,72 @@ def validate_sdbm_section_mapping():
             'missing_sections': [],
             'found_supervisors': {}
         }
+
+def convert_legacy_status_to_actual(legacy_status):
+    """
+    Convert legacy status values (1,2,3,4) ke actual values (A,2,3,4)
+    
+    Args:
+        legacy_status (str): Legacy status value
+        
+    Returns:
+        str: Actual status value untuk database
+    """
+    conversion_map = {
+        '1': STATUS_APPROVED,    # '1' -> 'A'
+        '0': STATUS_PENDING,     # '0' -> '0'
+        '2': STATUS_REJECTED,    # '2' -> '2'
+        '3': STATUS_IN_PROGRESS, # '3' -> '3'
+        '4': STATUS_COMPLETED    # '4' -> '4'
+    }
+    
+    return conversion_map.get(legacy_status, legacy_status)
+
+
+def convert_legacy_approve_to_actual(legacy_approve):
+    """
+    Convert legacy approve values (1,2,0) ke actual values (Y,2,0)
+    
+    Args:
+        legacy_approve (str): Legacy approve value
+        
+    Returns:
+        str: Actual approve value untuk database
+    """
+    conversion_map = {
+        '1': APPROVE_YES,        # '1' -> 'Y'
+        '0': APPROVE_NO,         # '0' -> '0'
+        '2': APPROVE_REJECTED    # '2' -> '2'
+    }
+    
+    return conversion_map.get(legacy_approve, legacy_approve)
+
+
+# Export all functions and constants
+__all__ = [
+    'get_employee_hierarchy_data',
+    'can_user_approve', 
+    'get_subordinate_employee_numbers',
+    'get_employee_by_number',
+    'get_supervisors_by_section_and_level',
+    'get_target_section_supervisors',
+    'get_title_level',
+    'get_level_description',
+    'assign_pengajuan_to_section_supervisors',
+    'ensure_assignment_tables_exist',
+    'get_assigned_pengajuan_for_user',
+    'get_sdbm_section_mapping',
+    'get_assigned_pengajuan_for_sdbm_user',
+    'convert_legacy_status_to_actual',
+    'convert_legacy_approve_to_actual',
+    'STATUS_PENDING',
+    'STATUS_APPROVED',
+    'STATUS_REJECTED',
+    'STATUS_IN_PROGRESS', 
+    'STATUS_COMPLETED',
+    'APPROVE_NO',
+    'APPROVE_YES',
+    'APPROVE_REJECTED',
+    'REVIEWER_EMPLOYEE_NUMBER',
+    'REVIEWER_FULLNAME'
+]

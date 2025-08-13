@@ -71,9 +71,6 @@ urlpatterns = [
     path('debug/test/', views.debug_test_view, name='debug_test_view'),
     path('debug/minimal-approved/', views.minimal_approved_view, name='minimal_approved_view'),
     path('debug/review-flow/<str:history_id>/', views.debug_review_flow, name='debug_review_flow'),
-
-    # Tambahkan di wo_maintenance_app/urls.py
-# path('enhanced-daftar-laporan/', views.enhanced_daftar_laporan, name='enhanced_daftar_laporan'),
     
     # ===== REVIEW SYSTEM AJAX =====
     path('ajax/review/pending-count/', views.get_pending_review_count, name='get_pending_review_count'),
