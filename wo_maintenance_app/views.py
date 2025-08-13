@@ -400,7 +400,7 @@ def initialize_review_data():
 @reviewer_required
 def review_pengajuan_detail(request, nomor_pengajuan):
     """
-    Detail pengajuan untuk review oleh SITI FATIMAH - ENHANCED dengan section selection
+    Detail pengajuan untuk review oleh SITI FATIMAH - ENHANCED dengan Process/Reject
     """
     try:
         # Ambil employee data dari session atau SDBM
@@ -490,23 +490,17 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             
             if review_form.is_valid():
                 action = review_form.cleaned_data['action']
-                final_section = review_form.cleaned_data['final_section']
+                target_section = review_form.cleaned_data['target_section']
                 review_notes = review_form.cleaned_data['review_notes']
                 priority_level = review_form.cleaned_data['priority_level']
                 
                 try:
                     with connections['DB_Maintenance'].cursor() as cursor:
-                        if action == 'approve':
-                            # Get section info untuk logging
-                            cursor.execute("""
-                                SELECT seksi FROM tabel_msection 
-                                WHERE id_section = %s
-                            """, [float(final_section)])
+                        if action == 'process':
+                            # Get final section ID dari mapping
+                            final_section_id = review_form.get_final_section_id()
                             
-                            section_info = cursor.fetchone()
-                            section_name = section_info[0] if section_info else 'Unknown Section'
-                            
-                            # Update pengajuan dengan review approval
+                            # Update pengajuan dengan review processing
                             cursor.execute("""
                                 UPDATE tabel_pengajuan
                                 SET review_status = '1',
@@ -515,47 +509,67 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                     review_notes = %s,
                                     final_section_id = %s
                                 WHERE history_id = %s
-                            """, [REVIEWER_EMPLOYEE_NUMBER, review_notes, float(final_section), nomor_pengajuan])
+                            """, [
+                                REVIEWER_EMPLOYEE_NUMBER, 
+                                review_notes, 
+                                float(final_section_id) if final_section_id else None, 
+                                nomor_pengajuan
+                            ])
                             
                             # Log review action
                             try:
                                 cursor.execute("""
                                     INSERT INTO tabel_review_log 
-                                    (history_id, reviewer_employee, action, final_section_id, review_notes, review_date, priority_level)
-                                    VALUES (%s, %s, %s, %s, %s, GETDATE(), %s)
-                                """, [nomor_pengajuan, REVIEWER_EMPLOYEE_NUMBER, 'approve', float(final_section), review_notes, priority_level])
+                                    (history_id, reviewer_employee, action, final_section_id, review_notes, review_date, priority_level, target_section)
+                                    VALUES (%s, %s, %s, %s, %s, GETDATE(), %s, %s)
+                                """, [
+                                    nomor_pengajuan, 
+                                    REVIEWER_EMPLOYEE_NUMBER, 
+                                    'process', 
+                                    float(final_section_id) if final_section_id else None, 
+                                    review_notes, 
+                                    priority_level,
+                                    target_section
+                                ])
                             except Exception as log_error:
                                 logger.warning(f"Failed to log review action: {log_error}")
                             
-                            # ENHANCED: Auto-assign ke supervisors di final section
-                            try:
-                                from .utils import assign_pengajuan_to_section_supervisors
-                                assigned_employees = assign_pengajuan_to_section_supervisors(
-                                    nomor_pengajuan, 
-                                    int(final_section), 
-                                    REVIEWER_EMPLOYEE_NUMBER
+                            # Determine success message
+                            if target_section:
+                                section_display = {
+                                    'it': '💻 IT',
+                                    'elektrik': '⚡ Elektrik',
+                                    'utility': '🏭 Utility',
+                                    'mekanik': '🔧 Mekanik'
+                                }.get(target_section, target_section.title())
+                                
+                                messages.success(request, 
+                                    f'✅ Pengajuan {nomor_pengajuan} berhasil diproses dan diarahkan ke section {section_display}!'
                                 )
                                 
-                                if assigned_employees:
-                                    assignment_count = len(assigned_employees)
-                                    messages.success(request, 
-                                        f'✅ Pengajuan {nomor_pengajuan} berhasil di-approve dan didistribusikan ke '
-                                        f'section {section_name}! Otomatis di-assign ke {assignment_count} supervisor.'
-                                    )
-                                else:
-                                    messages.success(request, 
-                                        f'✅ Pengajuan {nomor_pengajuan} berhasil di-approve dan didistribusikan ke '
-                                        f'section {section_name}.'
-                                    )
-                                    
-                            except Exception as assign_error:
-                                logger.error(f"Failed to auto-assign after review: {assign_error}")
+                                # ENHANCED: Auto-assign ke supervisors di target section jika ada mapping
+                                if final_section_id:
+                                    try:
+                                        from .utils import assign_pengajuan_to_section_supervisors
+                                        assigned_employees = assign_pengajuan_to_section_supervisors(
+                                            nomor_pengajuan, 
+                                            int(final_section_id), 
+                                            REVIEWER_EMPLOYEE_NUMBER
+                                        )
+                                        
+                                        if assigned_employees:
+                                            messages.info(request, 
+                                                f'Otomatis di-assign ke {len(assigned_employees)} supervisor di {section_display}.'
+                                            )
+                                            
+                                    except Exception as assign_error:
+                                        logger.error(f"Failed to auto-assign after review: {assign_error}")
+                            else:
                                 messages.success(request, 
-                                    f'✅ Pengajuan {nomor_pengajuan} berhasil di-approve dan didistribusikan ke '
-                                    f'section {section_name}. (Auto-assignment gagal, perlu manual assignment)'
+                                    f'✅ Pengajuan {nomor_pengajuan} berhasil diproses! Akan ditindaklanjuti sesuai prosedur standar.'
                                 )
                             
-                            logger.info(f"Review APPROVE for {nomor_pengajuan} by {REVIEWER_FULLNAME} -> {section_name}")
+                            logger.info(f"Review PROCESS for {nomor_pengajuan} by {REVIEWER_FULLNAME} -> {target_section or 'standard'}")
                             
                         elif action == 'reject':
                             # Update pengajuan dengan review rejection
@@ -579,7 +593,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                             except Exception as log_error:
                                 logger.warning(f"Failed to log review action: {log_error}")
                             
-                            messages.success(request, f'❌ Pengajuan {nomor_pengajuan} berhasil ditolak dengan alasan: {review_notes}')
+                            messages.success(request, f'❌ Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
                             logger.info(f"Review REJECT for {nomor_pengajuan} by {REVIEWER_FULLNAME}")
                     
                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
@@ -594,19 +608,13 @@ def review_pengajuan_detail(request, nomor_pengajuan):
         else:
             review_form = ReviewForm()
         
-        # Get available sections untuk context (for informational display)
-        available_sections = []
-        try:
-            with connections['DB_Maintenance'].cursor() as cursor:
-                cursor.execute("""
-                    SELECT id_section, seksi 
-                    FROM tabel_msection 
-                    WHERE (status = 'A' OR status IS NULL) AND seksi IS NOT NULL
-                    ORDER BY seksi
-                """)
-                available_sections = [{'id': int(float(row[0])), 'name': row[1]} for row in cursor.fetchall()]
-        except Exception as e:
-            logger.error(f"Error getting available sections: {e}")
+        # Get available sections untuk context
+        available_sections = [
+            {'key': 'it', 'name': '💻 IT', 'description': 'Information Technology & Systems'},
+            {'key': 'elektrik', 'name': '⚡ Elektrik', 'description': 'Electrical & Power Systems'},
+            {'key': 'utility', 'name': '🏭 Utility', 'description': 'Utilities & General Maintenance'},
+            {'key': 'mekanik', 'name': '🔧 Mekanik', 'description': 'Mechanical & Engineering'}
+        ]
         
         context = {
             'pengajuan': pengajuan,

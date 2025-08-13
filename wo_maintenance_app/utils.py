@@ -1077,3 +1077,247 @@ def get_review_statistics_for_siti():
             'rejected_count': 0,
             'section_distribution': []
         }
+
+# wo_maintenance_app/utils.py - ADD enhanced review functions
+
+def ensure_enhanced_review_tables():
+    """
+    Memastikan review tables sudah enhanced dengan kolom target_section
+    """
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Add target_section column to review log if not exists
+            cursor.execute("""
+                IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                              WHERE TABLE_NAME = 'tabel_review_log' AND COLUMN_NAME = 'target_section')
+                BEGIN
+                    ALTER TABLE tabel_review_log ADD target_section varchar(20) NULL
+                END
+            """)
+            
+            logger.info("Enhanced review tables verified/created successfully")
+            return True
+            
+    except Exception as e:
+        logger.error(f"Error ensuring enhanced review tables: {e}")
+        return False
+
+
+def get_section_id_from_target(target_section):
+    """
+    Get section ID dari target section (it, elektrik, utility, mekanik)
+    """
+    if not target_section:
+        return None
+    
+    try:
+        section_mapping = {}
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT id_section, seksi 
+                FROM tabel_msection 
+                WHERE (status = 'A' OR status IS NULL) 
+                    AND seksi IS NOT NULL
+                    AND seksi != ''
+                ORDER BY seksi
+            """)
+            
+            for row in cursor.fetchall():
+                section_id = int(float(row[0]))
+                section_name = str(row[1]).strip().upper()
+                
+                # Map section berdasarkan kata kunci
+                if target_section == 'it' and any(keyword in section_name for keyword in ['IT', 'INFORMATION', 'SYSTEM', 'TEKNOLOGI']):
+                    return section_id
+                elif target_section == 'elektrik' and any(keyword in section_name for keyword in ['ELEKTRIK', 'ELECTRIC', 'LISTRIK']):
+                    return section_id
+                elif target_section == 'utility' and any(keyword in section_name for keyword in ['UTILITY', 'UTILITIES', 'UMUM']):
+                    return section_id
+                elif target_section == 'mekanik' and any(keyword in section_name for keyword in ['MEKANIK', 'MECHANIC', 'MECHANICAL']):
+                    return section_id
+        
+        # Fallback mapping
+        fallback_mapping = {
+            'it': 1,
+            'elektrik': 2,
+            'mekanik': 3,
+            'utility': 4
+        }
+        
+        return fallback_mapping.get(target_section)
+        
+    except Exception as e:
+        logger.error(f"Error getting section ID for {target_section}: {e}")
+        return None
+
+
+def log_enhanced_review_action(history_id, reviewer_employee, action, target_section=None, review_notes=None, priority_level='normal'):
+    """
+    Log enhanced review action dengan target section
+    """
+    try:
+        # Ensure enhanced tables exist
+        ensure_enhanced_review_tables()
+        
+        # Get final section ID
+        final_section_id = get_section_id_from_target(target_section) if target_section else None
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO tabel_review_log 
+                (history_id, reviewer_employee, action, final_section_id, review_notes, review_date, priority_level, target_section)
+                VALUES (%s, %s, %s, %s, %s, GETDATE(), %s, %s)
+            """, [
+                history_id, 
+                reviewer_employee, 
+                action, 
+                float(final_section_id) if final_section_id else None, 
+                review_notes, 
+                priority_level,
+                target_section
+            ])
+            
+            logger.info(f"Enhanced review action logged: {history_id} - {action} by {reviewer_employee} -> {target_section}")
+            return True
+            
+    except Exception as e:
+        logger.error(f"Error logging enhanced review action: {e}")
+        return False
+
+
+def get_enhanced_review_statistics():
+    """
+    Get enhanced review statistics termasuk distribusi section
+    """
+    try:
+        stats = {}
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Basic stats
+            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1'")
+            stats['total_approved'] = cursor.fetchone()[0] or 0
+            
+            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1' AND (review_status IS NULL OR review_status = '0')")
+            stats['pending_review'] = cursor.fetchone()[0] or 0
+            
+            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE reviewed_by = %s", [REVIEWER_EMPLOYEE_NUMBER])
+            stats['total_reviewed'] = cursor.fetchone()[0] or 0
+            
+            # Enhanced stats - by target section
+            cursor.execute("""
+                SELECT target_section, COUNT(*) 
+                FROM tabel_review_log 
+                WHERE reviewer_employee = %s AND action = 'process'
+                GROUP BY target_section
+                ORDER BY COUNT(*) DESC
+            """, [REVIEWER_EMPLOYEE_NUMBER])
+            
+            section_distribution = []
+            for row in cursor.fetchall():
+                target_section = row[0]
+                count = row[1]
+                
+                section_info = {
+                    'section': target_section or 'standard',
+                    'count': count,
+                    'display_name': {
+                        'it': '💻 IT',
+                        'elektrik': '⚡ Elektrik', 
+                        'utility': '🏭 Utility',
+                        'mekanik': '🔧 Mekanik'
+                    }.get(target_section, '📋 Standard Process')
+                }
+                section_distribution.append(section_info)
+            
+            stats['section_distribution'] = section_distribution
+            
+            # Action breakdown
+            cursor.execute("""
+                SELECT action, COUNT(*) 
+                FROM tabel_review_log 
+                WHERE reviewer_employee = %s
+                GROUP BY action
+            """, [REVIEWER_EMPLOYEE_NUMBER])
+            
+            action_breakdown = {row[0]: row[1] for row in cursor.fetchall()}
+            stats['processed_count'] = action_breakdown.get('process', 0)
+            stats['rejected_count'] = action_breakdown.get('reject', 0)
+            
+            # Recent activity
+            cursor.execute("""
+                SELECT TOP 5 history_id, action, target_section, review_date
+                FROM tabel_review_log 
+                WHERE reviewer_employee = %s
+                ORDER BY review_date DESC
+            """, [REVIEWER_EMPLOYEE_NUMBER])
+            
+            recent_activity = []
+            for row in cursor.fetchall():
+                activity = {
+                    'history_id': row[0],
+                    'action': row[1],
+                    'target_section': row[2],
+                    'review_date': row[3],
+                    'display_text': f"{row[1].title()} -> {row[2] or 'Standard'}"
+                }
+                recent_activity.append(activity)
+            
+            stats['recent_activity'] = recent_activity
+        
+        return stats
+        
+    except Exception as e:
+        logger.error(f"Error getting enhanced review statistics: {e}")
+        return {
+            'total_approved': 0,
+            'pending_review': 0,
+            'total_reviewed': 0,
+            'processed_count': 0,
+            'rejected_count': 0,
+            'section_distribution': [],
+            'recent_activity': []
+        }
+
+
+def get_target_section_display_name(target_section):
+    """
+    Get display name untuk target section
+    """
+    display_mapping = {
+        'it': '💻 IT',
+        'elektrik': '⚡ Elektrik',
+        'utility': '🏭 Utility',
+        'mekanik': '🔧 Mekanik'
+    }
+    
+    return display_mapping.get(target_section, f'📋 {target_section.title()}' if target_section else '📋 Standard Process')
+
+
+def validate_target_section(target_section):
+    """
+    Validate target section choice
+    """
+    valid_sections = ['it', 'elektrik', 'utility', 'mekanik']
+    return target_section in valid_sections or target_section == ''
+
+
+# Enhanced constants
+REVIEW_ACTION_DISPLAY = {
+    'process': 'Processed',
+    'reject': 'Rejected'
+}
+
+TARGET_SECTION_CHOICES = [
+    ('it', '💻 IT'),
+    ('elektrik', '⚡ Elektrik'),
+    ('utility', '🏭 Utility'),
+    ('mekanik', '🔧 Mekanik'),
+]
+
+TARGET_SECTION_DESCRIPTIONS = {
+    'it': 'Information Technology & Systems',
+    'elektrik': 'Electrical & Power Systems',
+    'utility': 'Utilities & General Maintenance',
+    'mekanik': 'Mechanical & Engineering'
+}

@@ -466,11 +466,11 @@
                         <label>Keputusan Review <span class="text-danger">*</span></label>
                         <div class="radio-group">
                             {% for choice in review_form.action %}
-                                <div class="radio-option {% if choice.choice_value == 'approve' %}radio-approve{% else %}radio-reject{% endif %}">
+                                <div class="radio-option {% if choice.choice_value == 'process' %}radio-approve{% else %}radio-reject{% endif %}">
                                     {{ choice.tag }}
                                     <label for="{{ choice.id_for_label }}" style="font-weight: normal; margin-left: 10px; cursor: pointer;">
-                                        {% if choice.choice_value == 'approve' %}
-                                            ✅ Approve & Distribute to Section
+                                        {% if choice.choice_value == 'process' %}
+                                            ✅ Process Pengajuan
                                         {% else %}
                                             ❌ Reject Pengajuan
                                         {% endif %}
@@ -483,17 +483,17 @@
                         {% endif %}
                     </div>
                     
-                    <!-- Section Selection (conditional) -->
-                    <div id="sectionSelection" class="form-group" style="display: none;">
+                    <!-- Section Selection (always visible - optional) -->
+                    <div id="sectionSelection" class="form-group">
                         <div class="section-warning">
-                            <strong>📍 Penting:</strong> Pilih section final yang akan menangani pengajuan ini
+                            <strong>📍 Opsional:</strong> Pilih section spesifik untuk distribusi (IT, Elektrik, Utility, Mekanik)
                         </div>
-                        <label>{{ review_form.final_section.label }} <span class="text-danger">*</span></label>
-                        {{ review_form.final_section|add_class:"form-control select2-section" }}
-                        {% if review_form.final_section.errors %}
-                            <div class="text-danger mt-2">{{ review_form.final_section.errors.0 }}</div>
+                        <label>{{ review_form.target_section.label }}</label>
+                        {{ review_form.target_section|add_class:"form-control select2-section" }}
+                        {% if review_form.target_section.errors %}
+                            <div class="text-danger mt-2">{{ review_form.target_section.errors.0 }}</div>
                         {% endif %}
-                        <small class="text-muted mt-1">{{ review_form.final_section.help_text }}</small>
+                        <small class="text-muted mt-1">{{ review_form.target_section.help_text }}</small>
                     </div>
                     
                     <!-- Priority Level -->
@@ -525,12 +525,23 @@
                 <h5 class="mt-3 mb-3">Pengajuan Sudah Direview</h5>
                 <p>
                     {% if pengajuan.review_status == '1' %}
-                        Pengajuan telah di-approve dan didistribusikan ke:<br>
-                        <strong>{{ pengajuan.final_section_name|default:"Unknown Section" }}</strong>
+                        Pengajuan telah <strong>diproses</strong>
+                        {% if pengajuan.final_section_name %}
+                            dan diarahkan ke:<br>
+                            <strong>{{ pengajuan.final_section_name }}</strong>
+                        {% else %}
+                            dengan prosedur standar
+                        {% endif %}
                     {% elif pengajuan.review_status == '2' %}
-                        Pengajuan telah ditolak
+                        Pengajuan telah <strong style="color: #dc3545;">ditolak</strong>
                     {% endif %}
                 </p>
+                {% if pengajuan.review_notes %}
+                    <div class="mt-3 p-3" style="background: #f8f9fa; border-radius: 8px;">
+                        <strong>Catatan Review:</strong><br>
+                        {{ pengajuan.review_notes }}
+                    </div>
+                {% endif %}
                 <small class="text-muted">
                     Direview pada: {{ pengajuan.review_date|date:"d M Y H:i"|default:"-" }}
                 </small>
@@ -612,12 +623,17 @@ $(document).ready(function() {
         const sectionSelection = $('#sectionSelection');
         const submitButton = $('#submitButton');
         
-        if (action === 'approve') {
-            sectionSelection.slideDown(300);
-            submitButton.html('<i data-feather="check-circle"></i> Approve & Distribute');
+        if (action === 'process') {
+            // Section tetap visible tapi optional
+            sectionSelection.show();
+            submitButton.html('<i data-feather="check-circle"></i> Process Pengajuan');
             submitButton.css('background', 'linear-gradient(135deg, #28a745 0%, #20c997 100%)');
+            
+            // Update section warning text
+            $('.section-warning strong').text('📍 Opsional: Pilih section spesifik untuk distribusi');
         } else {
-            sectionSelection.slideUp(300);
+            // Hide section selection for reject
+            sectionSelection.hide();
             submitButton.html('<i data-feather="x-circle"></i> Reject Pengajuan');
             submitButton.css('background', 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)');
         }
@@ -627,12 +643,29 @@ $(document).ready(function() {
     // Form validation
     $('#reviewForm').on('submit', function(e) {
         const action = $('input[name="action"]:checked').val();
-        const finalSection = $('select[name="final_section"]').val();
         
-        if (action === 'approve' && !finalSection) {
+        if (!action) {
             e.preventDefault();
-            alert('⚠️ Pilih section final untuk distribusi pengajuan!');
-            $('.select2-section').focus();
+            alert('⚠️ Pilih keputusan review (Process atau Reject)!');
+            return false;
+        }
+        
+        // Confirmation messages
+        let confirmMessage = '';
+        if (action === 'process') {
+            const targetSection = $('select[name="target_section"]').val();
+            if (targetSection) {
+                const sectionName = $('select[name="target_section"] option:selected').text();
+                confirmMessage = `Yakin akan memproses pengajuan ini dan mengarahkan ke ${sectionName}?`;
+            } else {
+                confirmMessage = 'Yakin akan memproses pengajuan ini dengan prosedur standar?';
+            }
+        } else {
+            confirmMessage = 'Yakin akan menolak pengajuan ini?';
+        }
+        
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
             return false;
         }
         
@@ -646,7 +679,6 @@ $(document).ready(function() {
         // Add loading class
         $('.review-card').addClass('loading');
         
-        // If not prevented, form will submit normally
         // Reset button after a delay as fallback
         setTimeout(function() {
             submitButton.prop('disabled', false);

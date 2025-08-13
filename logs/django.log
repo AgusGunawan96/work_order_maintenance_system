@@ -4065,3 +4065,81 @@ INFO 2025-08-13 08:13:22,501 views 16396 13212 User SITI FATIMAH (007522) access
 INFO 2025-08-13 08:13:22,505 views 16396 13212 SITI FATIMAH mode: querying ALL approved pengajuan
 INFO 2025-08-13 08:13:22,516 views 16396 13212 Fixed query executed successfully - Found 1 records
 INFO 2025-08-13 08:13:22,587 basehttp 16396 13212 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32744
+INFO 2025-08-13 08:46:58,130 autoreload 17836 16488 Watching for file changes with StatReloader
+INFO 2025-08-13 08:47:11,282 views 17836 11688 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:47:11,298 views 17836 11688 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:47:11,304 views 17836 11688 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:47:11,502 basehttp 17836 11688 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32744
+ERROR 2025-08-13 08:47:21,494 forms 17836 18380 Error loading section choices for review: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW)')
+INFO 2025-08-13 08:47:21,579 basehttp 17836 18380 "GET /wo-maintenance/review/pengajuan/WO20250812001/ HTTP/1.1" 200 32862
+ERROR 2025-08-13 08:48:03,385 views 17836 16912 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:48:03,387 basehttp 17836 16912 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:48:03,549 basehttp 17836 16912 "GET /wo-maintenance/ HTTP/1.1" 200 28198
+INFO 2025-08-13 08:48:08,528 views 17836 16912 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 08:48:08,562 views 17836 16912 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:48:08,638 basehttp 17836 16912 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26797
+INFO 2025-08-13 08:48:12,431 views 17836 9700 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:48:12,436 views 17836 9700 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:48:12,446 views 17836 9700 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:48:12,532 basehttp 17836 9700 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32744
+ERROR 2025-08-13 08:48:16,030 views 17836 9700 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:48:16,032 basehttp 17836 9700 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 08:48:16,097 views 17836 9700 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:48:16,098 basehttp 17836 9700 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:48:16,265 basehttp 17836 9700 "GET /wo-maintenance/ HTTP/1.1" 200 28198
+INFO 2025-08-13 08:48:21,134 views 17836 16864 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:48:21,138 views 17836 16864 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:48:21,144 views 17836 16864 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:48:21,231 basehttp 17836 16864 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 33334
+WARNING 2025-08-13 08:48:24,029 views 17836 16864 User SITI FATIMAH tried to access unauthorized pengajuan WO20250812001
+INFO 2025-08-13 08:48:24,031 basehttp 17836 16864 "GET /wo-maintenance/detail/WO20250812001/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:48:24,103 views 17836 16864 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 08:48:24,132 views 17836 16864 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:48:24,198 basehttp 17836 16864 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26793
+INFO 2025-08-13 08:48:29,849 views 17836 16236 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:48:29,854 views 17836 16236 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:48:29,865 views 17836 16236 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:48:29,953 basehttp 17836 16236 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32744
+ERROR 2025-08-13 08:48:36,657 forms 17836 16236 Error loading section choices for review: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW)')
+INFO 2025-08-13 08:48:36,726 basehttp 17836 16236 "GET /wo-maintenance/review/pengajuan/WO20250812001/ HTTP/1.1" 200 32862
+ERROR 2025-08-13 08:52:34,363 forms 17836 17896 Error loading section choices for review: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW)')
+INFO 2025-08-13 08:52:34,597 basehttp 17836 17896 "POST /wo-maintenance/review/pengajuan/WO20250812001/ HTTP/1.1" 200 33390
+ERROR 2025-08-13 08:52:43,477 forms 17836 11032 Error loading section choices for review: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW)')
+WARNING 2025-08-13 08:52:43,490 views 17836 11032 Failed to log review action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'priority_level'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 08:52:43,491 views 17836 11032 Review REJECT for WO20250812001 by SITI FATIMAH
+INFO 2025-08-13 08:52:43,493 basehttp 17836 11032 "POST /wo-maintenance/review/pengajuan/WO20250812001/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:52:43,562 basehttp 17836 11032 "GET /wo-maintenance/review/pengajuan/WO20250812001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 08:52:43,632 views 17836 11032 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:52:43,634 basehttp 17836 11032 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 08:52:43,687 views 17836 11032 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:52:43,688 basehttp 17836 11032 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:52:43,855 basehttp 17836 11032 "GET /wo-maintenance/ HTTP/1.1" 200 28198
+INFO 2025-08-13 08:52:55,146 basehttp 17836 5172 "GET /wo-maintenance/review/pengajuan/WO20250812001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 08:52:55,207 views 17836 5172 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:52:55,209 basehttp 17836 5172 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-13 08:52:55,264 views 17836 5172 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-13 08:52:55,265 basehttp 17836 5172 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:52:55,438 basehttp 17836 5172 "GET /wo-maintenance/ HTTP/1.1" 200 28198
+INFO 2025-08-13 08:52:57,606 views 17836 5172 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 08:52:57,635 views 17836 5172 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:52:57,713 basehttp 17836 5172 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 28561
+INFO 2025-08-13 08:53:07,590 views 17836 2276 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 08:53:07,598 views 17836 2276 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 08:53:07,604 views 17836 2276 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 08:53:07,686 basehttp 17836 2276 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 28250
+INFO 2025-08-13 08:53:19,262 basehttp 17836 18204 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:53:19,322 basehttp 17836 18204 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:53:19,435 basehttp 17836 18204 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 08:53:31,407 views 17836 11936 LOGIN ATTEMPT: 002186
+INFO 2025-08-13 08:53:31,424 authentication 17836 11936 Updated Django user data for 002186
+INFO 2025-08-13 08:53:31,424 authentication 17836 11936 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-13 08:53:31,432 views 17836 11936 LOGIN: Using existing session data for 002186
+INFO 2025-08-13 08:53:31,432 views 17836 11936 LOGIN REDIRECT: 002186 -> /wo-maintenance/daftar/
+INFO 2025-08-13 08:53:31,438 basehttp 17836 11936 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 08:53:31,528 views 17836 11936 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 08:53:31,605 basehttp 17836 11936 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 29649
+INFO 2025-08-13 08:53:36,305 basehttp 17836 11936 "GET /wo-maintenance/detail/WO20250812001/ HTTP/1.1" 200 29017
+INFO 2025-08-13 09:45:26,647 autoreload 17836 16488 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\forms.py changed, reloading.
+INFO 2025-08-13 09:45:29,056 autoreload 17664 15824 Watching for file changes with StatReloader
+INFO 2025-08-13 09:46:09,464 autoreload 17664 15824 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 09:46:11,467 autoreload 15608 11048 Watching for file changes with StatReloader

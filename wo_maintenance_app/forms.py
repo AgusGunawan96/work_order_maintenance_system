@@ -344,12 +344,12 @@ class ApprovalForm(forms.Form):
     )
 
 class ReviewFilterForm(forms.Form):
-    """Form untuk filter review pengajuan"""
+    """Form untuk filter review pengajuan - ENHANCED"""
     
     REVIEW_STATUS_CHOICES = [
         ('', 'Semua Status Review'),
         ('0', 'Pending Review'),
-        ('1', 'Reviewed (Approved)'),
+        ('1', 'Reviewed (Processed)'),
         ('2', 'Reviewed (Rejected)'),
     ]
     
@@ -382,7 +382,13 @@ class ReviewFilterForm(forms.Form):
     
     section_filter = forms.ChoiceField(
         label='Section Filter',
-        choices=[],
+        choices=[
+            ('', 'Semua Section'),
+            ('it', '💻 IT'),
+            ('elektrik', '⚡ Elektrik'),
+            ('utility', '🏭 Utility'),
+            ('mekanik', '🔧 Mekanik'),
+        ],
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-control'
@@ -392,42 +398,26 @@ class ReviewFilterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Load section choices
-        self.load_section_choices()
-    
-    def load_section_choices(self):
-        """Load pilihan section dari database"""
-        try:
-            choices = [('', 'Semua Section')]
-            
-            with connections['DB_Maintenance'].cursor() as cursor:
-                cursor.execute("""
-                    SELECT DISTINCT id_section, seksi 
-                    FROM tabel_msection 
-                    WHERE (status = 'A' OR status IS NULL) AND seksi IS NOT NULL
-                    ORDER BY seksi
-                """)
-                
-                for row in cursor.fetchall():
-                    section_id = int(float(row[0]))
-                    section_name = str(row[1]).strip()
-                    choices.append((str(section_id), section_name))
-            
-            self.fields['section_filter'].choices = choices
-            
-        except Exception as e:
-            logger.error(f"Error loading section choices for review filter: {e}")
-            self.fields['section_filter'].choices = [('', 'Error loading sections')]
+        # Load additional sections from database if needed
+        self.load_additional_section_choices()
 
 
 # wo_maintenance_app/forms.py - ADD/UPDATE ReviewForm
 
 class ReviewForm(forms.Form):
-    """Form untuk review pengajuan oleh SITI FATIMAH dengan section selection"""
+    """Form untuk review pengajuan oleh SITI FATIMAH - ENHANCED dengan Reject dan Process"""
     
     ACTION_CHOICES = [
-        ('approve', 'Approve & Distribute to Section'),
+        ('process', 'Process Pengajuan'),
         ('reject', 'Reject'),
+    ]
+    
+    SECTION_CHOICES = [
+        ('', '-- Pilih Section (Opsional) --'),
+        ('it', '💻 IT'),
+        ('elektrik', '⚡ Elektrik'),
+        ('utility', '🏭 Utility'),
+        ('mekanik', '🔧 Mekanik'),
     ]
     
     action = forms.ChoiceField(
@@ -436,18 +426,18 @@ class ReviewForm(forms.Form):
         widget=forms.RadioSelect(attrs={
             'class': 'form-check-input review-action'
         }),
-        help_text='Pilih approve untuk menyetujui dan mendistribusikan ke section, atau reject untuk menolak'
+        help_text='Pilih "Process Pengajuan" untuk melanjutkan atau "Reject" untuk menolak'
     )
     
-    final_section = forms.ChoiceField(
-        label='Distribusi ke Section Final',
-        choices=[],
-        required=False,  # Will be required dynamically when approve is selected
+    target_section = forms.ChoiceField(
+        label='Tujuan Section (Opsional)',
+        choices=SECTION_CHOICES,
+        required=False,
         widget=forms.Select(attrs={
             'class': 'form-control select2-section',
-            'data-placeholder': 'Pilih section untuk distribusi...'
+            'data-placeholder': 'Pilih section tujuan (opsional)...'
         }),
-        help_text='🎯 Tentukan section final yang akan menangani pengajuan ini'
+        help_text='🎯 Opsional: Tentukan section spesifik yang akan menangani pengajuan ini'
     )
     
     review_notes = forms.CharField(
@@ -458,7 +448,7 @@ class ReviewForm(forms.Form):
             'rows': 4,
             'placeholder': 'Opsional: Tambahkan catatan untuk keputusan review dan instruksi khusus...'
         }),
-        help_text='Catatan opsional untuk dokumentasi dan instruksi kepada section penerima'
+        help_text='Catatan opsional untuk dokumentasi dan instruksi'
     )
     
     priority_level = forms.ChoiceField(
@@ -478,104 +468,82 @@ class ReviewForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Load section choices untuk final assignment
-        self.load_final_section_choices()
+        # Load section choices dari database untuk mapping
+        self.load_section_mapping()
     
-    def load_final_section_choices(self):
-        """Load pilihan section untuk final assignment - fokus ke section utama"""
+    def load_section_mapping(self):
+        """Load mapping section dari database untuk referensi"""
         try:
-            choices = [('', '-- Pilih Section Final --')]
+            self.section_mapping = {}
             
             with connections['DB_Maintenance'].cursor() as cursor:
-                # Query section dengan prioritas khusus untuk IT, Elektrik, Mekanik, Utility
                 cursor.execute("""
                     SELECT DISTINCT id_section, seksi 
                     FROM tabel_msection 
                     WHERE (status = 'A' OR status IS NULL) 
                         AND seksi IS NOT NULL
                         AND seksi != ''
-                    ORDER BY 
-                        CASE 
-                            WHEN seksi LIKE '%IT%' OR seksi LIKE '%INFORMATION%' THEN 1
-                            WHEN seksi LIKE '%ELEKTRIK%' OR seksi LIKE '%ELECTRIC%' THEN 2
-                            WHEN seksi LIKE '%MEKANIK%' OR seksi LIKE '%MECHANIC%' THEN 3
-                            WHEN seksi LIKE '%UTILITY%' OR seksi LIKE '%UTILITIES%' THEN 4
-                            ELSE 5
-                        END,
-                        seksi
+                    ORDER BY seksi
                 """)
                 
                 for row in cursor.fetchall():
                     section_id = int(float(row[0]))
-                    section_name = str(row[1]).strip()
+                    section_name = str(row[1]).strip().upper()
                     
-                    # Add icon berdasarkan jenis section
-                    icon = "🔧"  # default
-                    if any(keyword in section_name.upper() for keyword in ['IT', 'INFORMATION', 'SYSTEM']):
-                        icon = "💻"
-                    elif any(keyword in section_name.upper() for keyword in ['ELEKTRIK', 'ELECTRIC', 'LISTRIK']):
-                        icon = "⚡"
-                    elif any(keyword in section_name.upper() for keyword in ['MEKANIK', 'MECHANIC', 'MECHANICAL']):
-                        icon = "🔧"
-                    elif any(keyword in section_name.upper() for keyword in ['UTILITY', 'UTILITIES', 'UMUM']):
-                        icon = "🏭"
-                    
-                    display_name = f"{icon} {section_name}"
-                    choices.append((str(section_id), display_name))
+                    # Map section berdasarkan kata kunci
+                    if any(keyword in section_name for keyword in ['IT', 'INFORMATION', 'SYSTEM', 'TEKNOLOGI']):
+                        if 'it' not in self.section_mapping:
+                            self.section_mapping['it'] = section_id
+                    elif any(keyword in section_name for keyword in ['ELEKTRIK', 'ELECTRIC', 'LISTRIK']):
+                        if 'elektrik' not in self.section_mapping:
+                            self.section_mapping['elektrik'] = section_id
+                    elif any(keyword in section_name for keyword in ['UTILITY', 'UTILITIES', 'UMUM']):
+                        if 'utility' not in self.section_mapping:
+                            self.section_mapping['utility'] = section_id
+                    elif any(keyword in section_name for keyword in ['MEKANIK', 'MECHANIC', 'MECHANICAL']):
+                        if 'mekanik' not in self.section_mapping:
+                            self.section_mapping['mekanik'] = section_id
             
-            self.fields['final_section'].choices = choices
-            
-            logger.info(f"Loaded {len(choices)-1} section choices for SITI FATIMAH review")
+            logger.info(f"Section mapping loaded: {self.section_mapping}")
             
         except Exception as e:
-            logger.error(f"Error loading section choices for review: {e}")
-            self.fields['final_section'].choices = [
-                ('', 'Error loading sections'),
-                ('1', '💻 IT (Default)'),
-                ('2', '⚡ Elektrik (Default)'),
-                ('3', '🔧 Mekanik (Default)'),
-                ('4', '🏭 Utility (Default)')
-            ]
+            logger.error(f"Error loading section mapping: {e}")
+            # Default mapping sebagai fallback
+            self.section_mapping = {
+                'it': 1,
+                'elektrik': 2,
+                'mekanik': 3,
+                'utility': 4
+            }
+    
+    def get_final_section_id(self):
+        """Get final section ID berdasarkan pilihan target_section"""
+        target_section = self.cleaned_data.get('target_section')
+        
+        if target_section and hasattr(self, 'section_mapping'):
+            return self.section_mapping.get(target_section)
+        
+        return None
     
     def clean(self):
         """Custom validation untuk review form"""
         cleaned_data = super().clean()
         action = cleaned_data.get('action')
-        final_section = cleaned_data.get('final_section')
+        target_section = cleaned_data.get('target_section')
         review_notes = cleaned_data.get('review_notes')
         
-        # Jika approve, final section harus dipilih
-        if action == 'approve':
-            if not final_section:
-                raise forms.ValidationError({
-                    'final_section': '🎯 Final section harus dipilih jika pengajuan di-approve!'
-                })
-            
-            # Validasi final_section ID
-            try:
-                section_id = int(final_section)
-                if section_id <= 0:
-                    raise ValueError("Invalid section ID")
-                    
-                # Verify section exists in database
-                with connections['DB_Maintenance'].cursor() as cursor:
-                    cursor.execute("""
-                        SELECT seksi FROM tabel_msection 
-                        WHERE id_section = %s AND (status = 'A' OR status IS NULL)
-                    """, [float(section_id)])
-                    
-                    if not cursor.fetchone():
-                        raise forms.ValidationError({
-                            'final_section': f'Section dengan ID {section_id} tidak ditemukan atau tidak aktif'
-                        })
-                        
-            except (ValueError, TypeError):
-                raise forms.ValidationError({
-                    'final_section': 'ID section tidak valid'
-                })
+        # Validasi berdasarkan action
+        if action == 'process':
+            # Untuk process, section adalah opsional
+            if not review_notes:
+                cleaned_data['review_notes'] = 'Pengajuan diproses untuk ditindaklanjuti'
         
-        # Jika reject, catatan direkomendasikan
-        elif action == 'reject' and not review_notes:
-            cleaned_data['review_notes'] = 'Pengajuan ditolak oleh reviewer'
+        elif action == 'reject':
+            # Untuk reject, notes direkomendasikan
+            if not review_notes:
+                cleaned_data['review_notes'] = 'Pengajuan ditolak oleh reviewer'
+            
+            # Clear target section jika reject
+            cleaned_data['target_section'] = ''
         
         return cleaned_data
