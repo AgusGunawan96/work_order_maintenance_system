@@ -400,7 +400,7 @@ def initialize_review_data():
 @reviewer_required
 def review_pengajuan_detail(request, nomor_pengajuan):
     """
-    Detail pengajuan untuk review oleh SITI FATIMAH - ENHANCED dengan Process/Reject
+    Detail pengajuan untuk review oleh SITI FATIMAH - ENHANCED dengan SDBM Section Update
     """
     try:
         # Ambil employee data dari session atau SDBM
@@ -436,7 +436,8 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                     tp.review_notes,
                     tp.final_section_id,
                     final_section.seksi as final_section_name,
-                    tp.status_pekerjaan
+                    tp.status_pekerjaan,
+                    tp.id_section as current_section_id
                 FROM tabel_pengajuan tp
                 LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
                 LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
@@ -473,7 +474,8 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                 'review_notes': row[17],
                 'final_section_id': row[18],
                 'final_section_name': row[19],
-                'status_pekerjaan': row[20]
+                'status_pekerjaan': row[20],
+                'current_section_id': row[21]
             }
         
         # Cek apakah pengajuan sudah di-approve dan belum direview
@@ -484,7 +486,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
         # Cek apakah sudah direview
         already_reviewed = pengajuan['review_status'] in ['1', '2']
         
-        # Handle review form submission
+        # Handle review form submission - ENHANCED
         if request.method == 'POST' and not already_reviewed:
             review_form = ReviewForm(request.POST)
             
@@ -497,8 +499,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                 try:
                     with connections['DB_Maintenance'].cursor() as cursor:
                         if action == 'process':
-                            # Get final section ID dari mapping
-                            final_section_id = review_form.get_final_section_id()
+                            # ===== ENHANCED: SDBM Integration =====
                             
                             # Update pengajuan dengan review processing
                             cursor.execute("""
@@ -506,70 +507,98 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                 SET review_status = '1',
                                     reviewed_by = %s,
                                     review_date = GETDATE(),
-                                    review_notes = %s,
-                                    final_section_id = %s
+                                    review_notes = %s
                                 WHERE history_id = %s
                             """, [
                                 REVIEWER_EMPLOYEE_NUMBER, 
                                 review_notes, 
-                                float(final_section_id) if final_section_id else None, 
                                 nomor_pengajuan
                             ])
                             
-                            # Log review action
-                            try:
-                                cursor.execute("""
-                                    INSERT INTO tabel_review_log 
-                                    (history_id, reviewer_employee, action, final_section_id, review_notes, review_date, priority_level, target_section)
-                                    VALUES (%s, %s, %s, %s, %s, GETDATE(), %s, %s)
-                                """, [
-                                    nomor_pengajuan, 
-                                    REVIEWER_EMPLOYEE_NUMBER, 
-                                    'process', 
-                                    float(final_section_id) if final_section_id else None, 
-                                    review_notes, 
-                                    priority_level,
-                                    target_section
-                                ])
-                            except Exception as log_error:
-                                logger.warning(f"Failed to log review action: {log_error}")
-                            
-                            # Determine success message
+                            # ===== NEW: SDBM Section Update & Assignment =====
                             if target_section:
-                                section_display = {
-                                    'it': '💻 IT',
-                                    'elektrik': '⚡ Elektrik',
-                                    'utility': '🏭 Utility',
-                                    'mekanik': '🔧 Mekanik'
-                                }.get(target_section, target_section.title())
+                                # Import function dari utils yang sudah enhanced
+                                from .utils import assign_pengajuan_after_siti_review, get_sdbm_section_mapping
                                 
-                                messages.success(request, 
-                                    f'✅ Pengajuan {nomor_pengajuan} berhasil diproses dan diarahkan ke section {section_display}!'
+                                # Execute SDBM integration
+                                assignment_result = assign_pengajuan_after_siti_review(
+                                    nomor_pengajuan,
+                                    target_section,
+                                    REVIEWER_EMPLOYEE_NUMBER,
+                                    review_notes
                                 )
                                 
-                                # ENHANCED: Auto-assign ke supervisors di target section jika ada mapping
-                                if final_section_id:
-                                    try:
-                                        from .utils import assign_pengajuan_to_section_supervisors
-                                        assigned_employees = assign_pengajuan_to_section_supervisors(
-                                            nomor_pengajuan, 
-                                            int(final_section_id), 
-                                            REVIEWER_EMPLOYEE_NUMBER
+                                # Get section info untuk display
+                                section_mapping = get_sdbm_section_mapping()
+                                section_info = section_mapping.get(target_section, {})
+                                section_display = section_info.get('display_name', target_section.title())
+                                
+                                if assignment_result['assigned_employees']:
+                                    assigned_count = len(assignment_result['assigned_employees'])
+                                    supervisors_info = [
+                                        f"{emp['fullname']} ({emp['level_description']})" 
+                                        for emp in assignment_result['assigned_employees'][:3]  # Show first 3
+                                    ]
+                                    
+                                    success_message = (
+                                        f'✅ Pengajuan {nomor_pengajuan} berhasil diproses dan diarahkan ke {section_display}!\n'
+                                        f'📋 Otomatis di-assign ke {assigned_count} supervisor di SDBM:\n'
+                                        f'• {", ".join(supervisors_info)}'
+                                    )
+                                    
+                                    if assigned_count > 3:
+                                        success_message += f'\n• dan {assigned_count - 3} supervisor lainnya'
+                                    
+                                    if assignment_result['section_updated']:
+                                        success_message += f'\n🎯 Section tujuan diperbarui ke ID {assignment_result["new_section_id"]}'
+                                    
+                                    messages.success(request, success_message)
+                                    
+                                    logger.info(f"SITI REVIEW SUCCESS: {nomor_pengajuan} -> {target_section}, {assigned_count} SDBM assignments")
+                                    
+                                else:
+                                    # Fallback jika tidak ada supervisor ditemukan
+                                    if assignment_result['section_updated']:
+                                        messages.success(request, 
+                                            f'✅ Pengajuan {nomor_pengajuan} berhasil diproses dan section tujuan diperbarui ke {section_display}!\n'
+                                            f'⚠️ Tidak ada supervisor ditemukan di SDBM untuk auto-assignment.'
                                         )
-                                        
-                                        if assigned_employees:
-                                            messages.info(request, 
-                                                f'Otomatis di-assign ke {len(assigned_employees)} supervisor di {section_display}.'
-                                            )
-                                            
-                                    except Exception as assign_error:
-                                        logger.error(f"Failed to auto-assign after review: {assign_error}")
+                                    else:
+                                        messages.warning(request,
+                                            f'✅ Pengajuan {nomor_pengajuan} berhasil diproses ke {section_display}, '
+                                            f'tetapi auto-assignment gagal. Silakan assign manual.'
+                                        )
+                                    
+                                    logger.warning(f"SITI REVIEW: {nomor_pengajuan} processed but no SDBM supervisors found for {target_section}")
+                                
+                                # Log assignment result detail
+                                if assignment_result.get('error'):
+                                    logger.error(f"SITI REVIEW ERROR for {nomor_pengajuan}: {assignment_result['error']}")
+                                
                             else:
+                                # No specific target section - standard processing
                                 messages.success(request, 
-                                    f'✅ Pengajuan {nomor_pengajuan} berhasil diproses! Akan ditindaklanjuti sesuai prosedur standar.'
+                                    f'✅ Pengajuan {nomor_pengajuan} berhasil diproses! '
+                                    f'Akan ditindaklanjuti sesuai prosedur standar.'
                                 )
+                                
+                                logger.info(f"SITI REVIEW: {nomor_pengajuan} processed with standard procedure")
                             
-                            logger.info(f"Review PROCESS for {nomor_pengajuan} by {REVIEWER_FULLNAME} -> {target_section or 'standard'}")
+                            # ===== Enhanced Review Logging =====
+                            try:
+                                from .utils import log_enhanced_review_action
+                                
+                                log_enhanced_review_action(
+                                    nomor_pengajuan,
+                                    REVIEWER_EMPLOYEE_NUMBER,
+                                    'process',
+                                    target_section,
+                                    review_notes,
+                                    priority_level
+                                )
+                                
+                            except Exception as log_error:
+                                logger.warning(f"Failed to log enhanced review action: {log_error}")
                             
                         elif action == 'reject':
                             # Update pengajuan dengan review rejection
@@ -583,23 +612,29 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                 WHERE history_id = %s
                             """, [REVIEWER_EMPLOYEE_NUMBER, review_notes, nomor_pengajuan])
                             
-                            # Log review action
+                            # Enhanced logging untuk reject
                             try:
-                                cursor.execute("""
-                                    INSERT INTO tabel_review_log 
-                                    (history_id, reviewer_employee, action, review_notes, review_date, priority_level)
-                                    VALUES (%s, %s, %s, %s, GETDATE(), %s)
-                                """, [nomor_pengajuan, REVIEWER_EMPLOYEE_NUMBER, 'reject', review_notes, priority_level])
+                                from .utils import log_enhanced_review_action
+                                
+                                log_enhanced_review_action(
+                                    nomor_pengajuan,
+                                    REVIEWER_EMPLOYEE_NUMBER,
+                                    'reject',
+                                    None,  # No target section for reject
+                                    review_notes,
+                                    priority_level
+                                )
+                                
                             except Exception as log_error:
-                                logger.warning(f"Failed to log review action: {log_error}")
+                                logger.warning(f"Failed to log reject action: {log_error}")
                             
                             messages.success(request, f'❌ Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
-                            logger.info(f"Review REJECT for {nomor_pengajuan} by {REVIEWER_FULLNAME}")
+                            logger.info(f"SITI REVIEW REJECT: {nomor_pengajuan}")
                     
                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
                     
                 except Exception as update_error:
-                    logger.error(f"Error processing review for {nomor_pengajuan}: {update_error}")
+                    logger.error(f"Error processing enhanced review for {nomor_pengajuan}: {update_error}")
                     messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
             else:
                 # Form validation error
@@ -608,13 +643,35 @@ def review_pengajuan_detail(request, nomor_pengajuan):
         else:
             review_form = ReviewForm()
         
-        # Get available sections untuk context
-        available_sections = [
-            {'key': 'it', 'name': '💻 IT', 'description': 'Information Technology & Systems'},
-            {'key': 'elektrik', 'name': '⚡ Elektrik', 'description': 'Electrical & Power Systems'},
-            {'key': 'utility', 'name': '🏭 Utility', 'description': 'Utilities & General Maintenance'},
-            {'key': 'mekanik', 'name': '🔧 Mekanik', 'description': 'Mechanical & Engineering'}
-        ]
+        # Get available sections dengan SDBM info
+        available_sections = []
+        try:
+            from .utils import get_sdbm_section_mapping, validate_sdbm_section_mapping
+            
+            # Get mapping info
+            section_mapping = get_sdbm_section_mapping()
+            validation = validate_sdbm_section_mapping()
+            
+            for key, info in section_mapping.items():
+                section_data = {
+                    'key': key,
+                    'name': info['display_name'],
+                    'department': info['department_name'],
+                    'section': info['section_name'],
+                    'supervisors_count': validation['found_supervisors'].get(key, {}).get('count', 0),
+                    'is_valid': key not in [s.lower() for s in validation.get('missing_sections', [])]
+                }
+                available_sections.append(section_data)
+                
+        except Exception as section_error:
+            logger.error(f"Error getting SDBM section info: {section_error}")
+            # Fallback ke basic sections
+            available_sections = [
+                {'key': 'it', 'name': '💻 IT', 'department': 'ENGINEERING', 'section': 'ENGINEERING-IT', 'supervisors_count': 0},
+                {'key': 'elektrik', 'name': '⚡ Elektrik', 'department': 'ENGINEERING', 'section': 'ENGINEERING-ELECTRIC', 'supervisors_count': 0},
+                {'key': 'utility', 'name': '🏭 Utility', 'department': 'ENGINEERING', 'section': 'ENGINEERING-UTILITY', 'supervisors_count': 0},
+                {'key': 'mekanik', 'name': '🔧 Mekanik', 'department': 'ENGINEERING', 'section': 'ENGINEERING-MECHANIC', 'supervisors_count': 0}
+            ]
         
         context = {
             'pengajuan': pengajuan,
@@ -623,16 +680,396 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
             'available_sections': available_sections,
             'employee_data': employee_data,
-            'page_title': f'Review Pengajuan {nomor_pengajuan} - {employee_data.get("fullname", REVIEWER_FULLNAME)}'
+            'page_title': f'Review Pengajuan {nomor_pengajuan} - Enhanced SDBM Integration',
+            
+            # Enhanced context dengan SDBM info
+            'sdbm_integration': True,
+            'current_section_id': pengajuan.get('current_section_id'),
+            'final_section_id': pengajuan.get('final_section_id')
         }
         
         return render(request, 'wo_maintenance_app/review_pengajuan_detail.html', context)
         
     except Exception as e:
-        logger.error(f"Error in review pengajuan detail: {e}")
+        logger.error(f"Error in enhanced review pengajuan detail: {e}")
         messages.error(request, 'Terjadi kesalahan saat memuat detail pengajuan.')
         return redirect('wo_maintenance_app:review_pengajuan_list')
 
+# ===== NEW: Enhanced Daftar Laporan dengan SDBM Assignment Filter =====
+
+@login_required
+def enhanced_daftar_laporan(request):
+    """
+    Enhanced view untuk menampilkan daftar pengajuan dengan SDBM assignment integration
+    """
+    try:
+        # ===== AMBIL DATA HIERARCHY USER =====
+        user_hierarchy = get_employee_hierarchy_data(request.user)
+        
+        if not user_hierarchy:
+            logger.warning(f"User {request.user.username} tidak ditemukan di database SDBM")
+            messages.error(request, 'Data karyawan tidak ditemukan. Hubungi administrator.')
+            return redirect('wo_maintenance_app:dashboard')
+        
+        # ===== CEK APAKAH USER ADALAH 007522 (SITI FATIMAH) =====
+        is_siti_fatimah = (
+            user_hierarchy.get('employee_number') == '007522' or 
+            request.user.username == '007522'
+        )
+        
+        # ===== FILTER MODE =====
+        view_mode = request.GET.get('mode', 'normal')
+        
+        # ===== GET SDBM ASSIGNMENTS =====
+        from .utils import get_assigned_pengajuan_for_sdbm_user
+        
+        sdbm_assignments = get_assigned_pengajuan_for_sdbm_user(user_hierarchy.get('employee_number'))
+        assigned_history_ids = [assignment['history_id'] for assignment in sdbm_assignments if isinstance(assignment, dict)]
+        
+        # ===== FILTER FORM =====
+        filter_form = PengajuanFilterForm(request.GET or None)
+        search_query = request.GET.get('search', '').strip()
+        
+        # ===== QUERY DATABASE - Enhanced dengan SDBM =====
+        pengajuan_list = []
+        total_records = 0
+        
+        try:
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # ===== BUILD WHERE CONDITIONS =====
+                where_conditions = ["tp.history_id IS NOT NULL"]
+                query_params = []
+                
+                if is_siti_fatimah and view_mode == 'approved':
+                    # Mode approved untuk SITI FATIMAH: semua approved
+                    where_conditions.extend([
+                        "tp.status = '1'",
+                        "tp.approve = '1'"
+                    ])
+                    logger.info("SITI FATIMAH mode: querying ALL approved pengajuan")
+                    
+                elif view_mode == 'assigned' and assigned_history_ids:
+                    # Mode assigned: hanya yang di-assign via SDBM
+                    history_placeholders = ','.join(['%s'] * len(assigned_history_ids))
+                    where_conditions.append(f"tp.history_id IN ({history_placeholders})")
+                    query_params.extend(assigned_history_ids)
+                    logger.info(f"SDBM assigned mode: {len(assigned_history_ids)} assignments")
+                    
+                else:
+                    # Mode normal: hierarchy filter + SDBM assignments
+                    allowed_employee_numbers = get_subordinate_employee_numbers(user_hierarchy)
+                    
+                    if not allowed_employee_numbers:
+                        allowed_employee_numbers = [user_hierarchy.get('employee_number')]
+                    
+                    # Gabungkan hierarchy dan SDBM assignments
+                    all_accessible_conditions = []
+                    
+                    # Condition 1: Hierarchy access
+                    if allowed_employee_numbers:
+                        placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
+                        all_accessible_conditions.append(f"tp.user_insert IN ({placeholders})")
+                        query_params.extend(allowed_employee_numbers)
+                    
+                    # Condition 2: SDBM assignments
+                    if assigned_history_ids:
+                        assignment_placeholders = ','.join(['%s'] * len(assigned_history_ids))
+                        all_accessible_conditions.append(f"tp.history_id IN ({assignment_placeholders})")
+                        query_params.extend(assigned_history_ids)
+                    
+                    if all_accessible_conditions:
+                        where_conditions.append(f"({' OR '.join(all_accessible_conditions)})")
+                
+                # ===== FORM FILTERS =====
+                if filter_form.is_valid():
+                    tanggal_dari = filter_form.cleaned_data.get('tanggal_dari')
+                    if tanggal_dari:
+                        where_conditions.append("CAST(tp.tgl_insert AS DATE) >= %s")
+                        query_params.append(tanggal_dari)
+                    
+                    tanggal_sampai = filter_form.cleaned_data.get('tanggal_sampai')
+                    if tanggal_sampai:
+                        where_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
+                        query_params.append(tanggal_sampai)
+                    
+                    # Status filter - skip untuk mode approved
+                    if not (is_siti_fatimah and view_mode == 'approved'):
+                        status_filter = filter_form.cleaned_data.get('status')
+                        if status_filter:
+                            where_conditions.append("tp.status = %s")
+                            query_params.append(status_filter)
+                    
+                    pengaju_filter = filter_form.cleaned_data.get('pengaju')
+                    if pengaju_filter:
+                        where_conditions.append("tp.oleh LIKE %s")
+                        query_params.append(f"%{pengaju_filter}%")
+                    
+                    history_id_filter = filter_form.cleaned_data.get('history_id')
+                    if history_id_filter:
+                        where_conditions.append("tp.history_id LIKE %s")
+                        query_params.append(f"%{history_id_filter}%")
+                
+                # ===== SEARCH =====
+                if search_query:
+                    search_conditions = [
+                        "tp.history_id LIKE %s",
+                        "tp.oleh LIKE %s",
+                        "tp.deskripsi_perbaikan LIKE %s",
+                        "tp.number_wo LIKE %s",
+                        "tm.mesin LIKE %s"
+                    ]
+                    where_conditions.append(f"({' OR '.join(search_conditions)})")
+                    search_param = f"%{search_query}%"
+                    query_params.extend([search_param] * len(search_conditions))
+                
+                # ===== BUILD WHERE CLAUSE =====
+                where_clause = ""
+                if where_conditions:
+                    where_clause = "WHERE " + " AND ".join(where_conditions)
+                
+                # ===== COUNT QUERY =====
+                count_query = f"""
+                    SELECT COUNT(DISTINCT tp.history_id)
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+                    LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
+                    LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                    LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+                    LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
+                    {where_clause}
+                """
+                
+                cursor.execute(count_query, query_params)
+                total_records = cursor.fetchone()[0] or 0
+                
+                # ===== PAGINATION =====
+                page_size = 20
+                page_number = int(request.GET.get('page', 1))
+                
+                total_pages = (total_records + page_size - 1) // page_size if total_records > 0 else 1
+                has_previous = page_number > 1
+                has_next = page_number < total_pages
+                previous_page_number = page_number - 1 if has_previous else None
+                next_page_number = page_number + 1 if has_next else None
+                
+                # ===== MAIN QUERY dengan Assignment Info =====
+                offset = (page_number - 1) * page_size
+                
+                main_query = f"""
+                    SELECT DISTINCT
+                        tp.history_id,                    -- 0
+                        tp.oleh,                          -- 1
+                        ISNULL(tm.mesin, 'N/A'),          -- 2
+                        ISNULL(tms.seksi, 'N/A'),         -- 3
+                        ISNULL(tpek.pekerjaan, 'N/A'),    -- 4
+                        tp.deskripsi_perbaikan,           -- 5
+                        tp.status,                        -- 6
+                        tp.tgl_insert,                    -- 7
+                        tp.user_insert,                   -- 8
+                        tp.number_wo,                     -- 9
+                        ISNULL(tl.line, 'N/A'),           -- 10
+                        tp.approve,                       -- 11
+                        tp.tgl_his,                       -- 12
+                        tp.jam_his,                       -- 13
+                        tp.status_pekerjaan,              -- 14
+                        tp.review_status,                 -- 15
+                        tp.reviewed_by,                   -- 16
+                        tp.review_date,                   -- 17
+                        ISNULL(final_section.seksi, 'N/A'), -- 18
+                        CASE 
+                            WHEN tp.history_id IN ({','.join(['%s'] * len(assigned_history_ids)) if assigned_history_ids else "''"}) THEN 'SDBM_ASSIGNED'
+                            ELSE 'HIERARCHY'
+                        END as access_type                -- 19
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+                    LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
+                    LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                    LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+                    LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
+                    {where_clause}
+                    ORDER BY tp.tgl_insert DESC, tp.history_id DESC
+                    OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
+                """
+                
+                # Add assigned history IDs to params if needed
+                final_params = query_params[:]
+                if assigned_history_ids:
+                    final_params.extend(assigned_history_ids)
+                final_params.extend([offset, page_size])
+                
+                cursor.execute(main_query, final_params)
+                
+                pengajuan_list = cursor.fetchall()
+                
+                logger.info(f"Enhanced SDBM query executed successfully - Found {total_records} records")
+                
+        except Exception as db_error:
+            logger.error(f"Database error in enhanced daftar_laporan: {db_error}")
+            messages.error(request, f'Terjadi kesalahan database: {str(db_error)}')
+            pengajuan_list = []
+            total_records = 0
+            total_pages = 1
+            has_previous = False
+            has_next = False
+            previous_page_number = None
+            next_page_number = None
+            page_number = 1
+        
+        # ===== STATS =====
+        siti_stats = {}
+        if is_siti_fatimah:
+            try:
+                with connections['DB_Maintenance'].cursor() as cursor:
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1'")
+                    siti_stats['total_approved'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1' AND (review_status IS NULL OR review_status = '0')")
+                    siti_stats['pending_review'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1' AND review_status IN ('1', '2')")
+                    siti_stats['already_reviewed'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1' AND CAST(tgl_insert AS DATE) = CAST(GETDATE() AS DATE)")
+                    siti_stats['approved_today'] = cursor.fetchone()[0] or 0
+                    
+            except Exception as stats_error:
+                logger.error(f"Error getting SITI stats: {stats_error}")
+                siti_stats = {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'approved_today': 0}
+        
+        # ===== ENHANCED CONTEXT =====
+        context = {
+            'pengajuan_list': pengajuan_list,
+            'filter_form': filter_form,
+            'search_query': search_query,
+            'total_records': total_records,
+            'total_pages': total_pages,
+            'page_number': page_number,
+            'has_previous': has_previous,
+            'has_next': has_next,
+            'previous_page_number': previous_page_number,
+            'next_page_number': next_page_number,
+            'can_approve': True,
+            'user_hierarchy': user_hierarchy,
+            'employee_data': user_hierarchy,
+            'is_siti_fatimah': is_siti_fatimah,
+            'view_mode': view_mode,
+            'siti_stats': siti_stats,
+            
+            # Enhanced dengan SDBM info
+            'sdbm_assignments': sdbm_assignments,
+            'assigned_count': len(assigned_history_ids),
+            'access_methods': {
+                'hierarchy': len(get_subordinate_employee_numbers(user_hierarchy)) if view_mode == 'normal' else 0,
+                'sdbm_assigned': len(assigned_history_ids)
+            },
+            
+            # Debug info
+            'debug_info': {
+                'sdbm_integration': True,
+                'assigned_pengajuan_count': len(assigned_history_ids),
+                'view_mode': view_mode,
+                'is_siti_fatimah': is_siti_fatimah,
+                'user_role': f"{user_hierarchy.get('title_name', 'Unknown')}",
+            } if request.user.is_superuser else None
+        }
+        
+        return render(request, 'wo_maintenance_app/enhanced_daftar_laporan.html', context)
+        
+    except Exception as e:
+        logger.error(f"Critical error in enhanced daftar_laporan: {e}")
+        messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi.')
+        return redirect('wo_maintenance_app:dashboard')
+    
+# ===== NEW: SDBM Validation & Debug Views =====
+
+@login_required
+def validate_sdbm_integration(request):
+    """
+    View untuk validasi SDBM integration - SUPERUSER ONLY
+    """
+    if not request.user.is_superuser:
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    try:
+        from .utils import validate_sdbm_section_mapping, get_sdbm_section_mapping
+        
+        # Validate mapping
+        validation_result = validate_sdbm_section_mapping()
+        section_mapping = get_sdbm_section_mapping()
+        
+        debug_info = {
+            'timestamp': timezone.now().isoformat(),
+            'validation_result': validation_result,
+            'section_mapping': section_mapping,
+            'sdbm_connection_test': True
+        }
+        
+        # Test SDBM connection
+        try:
+            with connections['SDBM'].cursor() as cursor:
+                cursor.execute("SELECT COUNT(*) FROM [hrbp].[employees] WHERE is_active = 1")
+                active_employees = cursor.fetchone()[0]
+                debug_info['sdbm_active_employees'] = active_employees
+                
+                cursor.execute("SELECT COUNT(*) FROM [hr].[department] WHERE is_active = 1 OR is_active IS NULL")
+                active_departments = cursor.fetchone()[0] 
+                debug_info['sdbm_active_departments'] = active_departments
+                
+                cursor.execute("SELECT COUNT(*) FROM [hr].[section] WHERE is_active = 1 OR is_active IS NULL")
+                active_sections = cursor.fetchone()[0]
+                debug_info['sdbm_active_sections'] = active_sections
+                
+        except Exception as sdbm_error:
+            debug_info['sdbm_connection_test'] = False
+            debug_info['sdbm_error'] = str(sdbm_error)
+        
+        return JsonResponse(debug_info, indent=2)
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }, status=500)
+
+
+@login_required
+def test_sdbm_assignment(request, target_section):
+    """
+    Test SDBM assignment untuk target section - SUPERUSER ONLY
+    """
+    if not request.user.is_superuser:
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    try:
+        from .utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
+        
+        # Get supervisors
+        supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
+        section_mapping = get_sdbm_section_mapping()
+        
+        test_result = {
+            'target_section': target_section,
+            'section_mapping': section_mapping.get(target_section, {}),
+            'supervisors_found': len(supervisors),
+            'supervisors': [
+                {
+                    'employee_number': s['employee_number'],
+                    'fullname': s['fullname'],
+                    'title_name': s['title_name'],
+                    'department_name': s['department_name'],
+                    'section_name': s['section_name'],
+                    'level_description': s['level_description']
+                } for s in supervisors
+            ]
+        }
+        
+        return JsonResponse(test_result, indent=2)
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }, status=500)
 
 @login_required
 @reviewer_required
@@ -2893,4 +3330,562 @@ def debug_review_flow(request, history_id):
         logger.error(f"Error in debug review flow: {e}")
         return JsonResponse({'success': False, 'error': str(e)})
     
+@login_required
+def ajax_get_sdbm_supervisors(request):
+    """
+    AJAX view untuk mendapatkan supervisor SDBM berdasarkan target section
+    """
+    if not is_reviewer(request.user):
+        return JsonResponse({'error': 'Unauthorized - Only SITI FATIMAH can access this'}, status=403)
+    
+    target_section = request.GET.get('target_section', '').strip()
+    
+    if not target_section:
+        return JsonResponse({
+            'success': False,
+            'error': 'Target section required',
+            'supervisors': []
+        })
+    
+    try:
+        from .utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
+        
+        # Get supervisors
+        supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
+        section_mapping = get_sdbm_section_mapping()
+        section_info = section_mapping.get(target_section, {})
+        
+        # Format supervisor data untuk frontend
+        supervisor_list = []
+        for supervisor in supervisors:
+            supervisor_list.append({
+                'employee_number': supervisor['employee_number'],
+                'fullname': supervisor['fullname'],
+                'nickname': supervisor['nickname'],
+                'title_name': supervisor['title_name'],
+                'department_name': supervisor['department_name'],
+                'section_name': supervisor['section_name'],
+                'level_description': supervisor['level_description'],
+                'level': supervisor['level'],
+                'is_manager': supervisor['is_manager'],
+                'is_supervisor': supervisor['is_supervisor']
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'target_section': target_section,
+            'section_info': {
+                'display_name': section_info.get('display_name', target_section),
+                'department_name': section_info.get('department_name'),
+                'section_name': section_info.get('section_name')
+            },
+            'supervisors': supervisor_list,
+            'supervisor_count': len(supervisor_list),
+            'message': f'Found {len(supervisor_list)} supervisors for {section_info.get("display_name", target_section)}'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting SDBM supervisors for {target_section}: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+            'supervisors': [],
+            'supervisor_count': 0
+        })
 
+@login_required
+def ajax_validate_sdbm_section(request):
+    """
+    AJAX view untuk validasi SDBM section mapping
+    """
+    if not is_reviewer(request.user):
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    target_section = request.GET.get('target_section', '').strip()
+    
+    try:
+        from .utils import validate_sdbm_section_mapping, get_sdbm_section_mapping
+        
+        if target_section:
+            # Validate specific section
+            section_mapping = get_sdbm_section_mapping()
+            section_info = section_mapping.get(target_section)
+            
+            if not section_info:
+                return JsonResponse({
+                    'success': False,
+                    'valid': False,
+                    'error': f'Unknown target section: {target_section}',
+                    'section_info': None
+                })
+            
+            # Check SDBM for this specific section
+            with connections['SDBM'].cursor() as cursor:
+                department_name = section_info['department_name']
+                section_name = section_info['section_name']
+                
+                # Check department exists
+                cursor.execute("""
+                    SELECT COUNT(*) FROM [hr].[department] 
+                    WHERE UPPER(name) = UPPER(%s) AND (is_active IS NULL OR is_active = 1)
+                """, [department_name])
+                dept_exists = cursor.fetchone()[0] > 0
+                
+                # Check section exists
+                cursor.execute("""
+                    SELECT COUNT(*) FROM [hr].[section] 
+                    WHERE UPPER(name) = UPPER(%s) AND (is_active IS NULL OR is_active = 1)
+                """, [section_name])
+                section_exists = cursor.fetchone()[0] > 0
+                
+                # Count supervisors
+                supervisor_count = 0
+                if dept_exists and section_exists:
+                    from .utils import get_sdbm_supervisors_by_section_mapping
+                    supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
+                    supervisor_count = len(supervisors)
+                
+                return JsonResponse({
+                    'success': True,
+                    'valid': dept_exists and section_exists,
+                    'target_section': target_section,
+                    'section_info': section_info,
+                    'validation': {
+                        'department_exists': dept_exists,
+                        'section_exists': section_exists,
+                        'supervisor_count': supervisor_count
+                    },
+                    'message': f'Validation complete for {section_info["display_name"]}'
+                })
+        
+        else:
+            # Validate all sections
+            validation_result = validate_sdbm_section_mapping()
+            return JsonResponse({
+                'success': True,
+                'validation_result': validation_result,
+                'message': 'Full SDBM validation complete'
+            })
+        
+    except Exception as e:
+        logger.error(f"Error validating SDBM section {target_section}: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+            'valid': False
+        })   
+
+@login_required
+def ajax_sdbm_assignment_status(request):
+    """
+    AJAX view untuk mendapatkan status assignment SDBM user
+    """
+    try:
+        user_hierarchy = get_employee_hierarchy_data(request.user)
+        
+        if not user_hierarchy:
+            return JsonResponse({
+                'success': False,
+                'error': 'Employee data not found',
+                'assignments': []
+            })
+        
+        from .utils import get_assigned_pengajuan_for_sdbm_user
+        
+        employee_number = user_hierarchy.get('employee_number')
+        assignments = get_assigned_pengajuan_for_sdbm_user(employee_number)
+        
+        # Format assignment data
+        assignment_list = []
+        for assignment in assignments:
+            if isinstance(assignment, dict):
+                assignment_list.append({
+                    'history_id': assignment.get('history_id'),
+                    'assignment_type': assignment.get('assignment_type'),
+                    'target_section': assignment.get('target_section'),
+                    'department_name': assignment.get('department_name'),
+                    'section_name': assignment.get('section_name'),
+                    'assignment_date': assignment.get('assignment_date').isoformat() if assignment.get('assignment_date') else None
+                })
+        
+        return JsonResponse({
+            'success': True,
+            'employee_number': employee_number,
+            'assignments': assignment_list,
+            'assignment_count': len(assignment_list),
+            'message': f'Found {len(assignment_list)} SDBM assignments'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting SDBM assignment status: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+            'assignments': []
+        })
+
+
+@login_required
+def sdbm_supervisor_lookup(request, target_section):
+    """
+    Detailed supervisor lookup untuk target section
+    """
+    if not is_reviewer(request.user):
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    try:
+        from .utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping
+        
+        # Get section mapping
+        section_mapping = get_sdbm_section_mapping()
+        section_info = section_mapping.get(target_section, {})
+        
+        if not section_info:
+            return JsonResponse({
+                'success': False,
+                'error': f'Unknown target section: {target_section}',
+                'supervisors': []
+            })
+        
+        # Get supervisors dengan detail lengkap
+        supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
+        
+        # Enhanced supervisor info
+        enhanced_supervisors = []
+        for supervisor in supervisors:
+            enhanced_supervisors.append({
+                'employee_number': supervisor['employee_number'],
+                'fullname': supervisor['fullname'],
+                'nickname': supervisor['nickname'],
+                'title_name': supervisor['title_name'],
+                'department_name': supervisor['department_name'],
+                'section_name': supervisor['section_name'],
+                'level': supervisor['level'],
+                'level_description': supervisor['level_description'],
+                'is_manager': supervisor['is_manager'],
+                'is_supervisor': supervisor['is_supervisor'],
+                'is_general_manager': supervisor['is_general_manager'],
+                'is_bod': supervisor['is_bod'],
+                'job_status': supervisor.get('job_status'),
+                'management_level': (
+                    'BOD' if supervisor['is_bod'] else
+                    'General Manager' if supervisor['is_general_manager'] else
+                    'Manager' if supervisor['is_manager'] else
+                    'Supervisor' if supervisor['is_supervisor'] else
+                    'Staff'
+                )
+            })
+        
+        # Sort by level (highest first)
+        enhanced_supervisors.sort(key=lambda x: x['level'], reverse=True)
+        
+        return JsonResponse({
+            'success': True,
+            'target_section': target_section,
+            'section_info': section_info,
+            'supervisors': enhanced_supervisors,
+            'supervisor_count': len(enhanced_supervisors),
+            'summary': {
+                'total_supervisors': len(enhanced_supervisors),
+                'managers': len([s for s in enhanced_supervisors if s['is_manager']]),
+                'supervisors': len([s for s in enhanced_supervisors if s['is_supervisor'] and not s['is_manager']]),
+                'general_managers': len([s for s in enhanced_supervisors if s['is_general_manager']]),
+                'bods': len([s for s in enhanced_supervisors if s['is_bod']])
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in supervisor lookup for {target_section}: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+            'supervisors': []
+        })
+
+
+@login_required
+def sdbm_assignment_preview(request):
+    """
+    Preview assignment yang akan dibuat untuk pengajuan tertentu
+    """
+    if not is_reviewer(request.user):
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    history_id = request.GET.get('history_id', '').strip()
+    target_section = request.GET.get('target_section', '').strip()
+    
+    if not history_id or not target_section:
+        return JsonResponse({
+            'success': False,
+            'error': 'history_id and target_section required',
+            'preview': None
+        })
+    
+    try:
+        from .utils import get_sdbm_supervisors_by_section_mapping, get_sdbm_section_mapping, get_maintenance_section_id_from_target
+        
+        # Get section info
+        section_mapping = get_sdbm_section_mapping()
+        section_info = section_mapping.get(target_section, {})
+        
+        # Get maintenance section ID yang akan diupdate
+        new_section_id = get_maintenance_section_id_from_target(target_section)
+        
+        # Get supervisors yang akan receive assignment
+        supervisors = get_sdbm_supervisors_by_section_mapping(target_section, exclude_employee_numbers=[REVIEWER_EMPLOYEE_NUMBER])
+        
+        # Check existing assignments
+        existing_assignments = []
+        try:
+            with connections['DB_Maintenance'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT assigned_to_employee, assignment_date, notes
+                    FROM tabel_pengajuan_assignment
+                    WHERE history_id = %s AND is_active = 1
+                """, [history_id])
+                
+                existing_assignments = [
+                    {
+                        'employee_number': row[0],
+                        'assignment_date': row[1].isoformat() if row[1] else None,
+                        'notes': row[2]
+                    } for row in cursor.fetchall()
+                ]
+        except Exception:
+            # Table mungkin belum ada
+            pass
+        
+        # Build preview
+        preview = {
+            'history_id': history_id,
+            'target_section': target_section,
+            'section_info': section_info,
+            'changes': {
+                'section_id_update': {
+                    'will_update': new_section_id is not None,
+                    'new_section_id': new_section_id,
+                    'description': f'Section tujuan akan diperbarui ke ID {new_section_id}' if new_section_id else 'Section tujuan tidak akan diubah'
+                },
+                'assignments': {
+                    'will_create': len(supervisors) > 0,
+                    'supervisor_count': len(supervisors),
+                    'supervisors': [
+                        {
+                            'employee_number': s['employee_number'],
+                            'fullname': s['fullname'],
+                            'title_name': s['title_name'],
+                            'level_description': s['level_description']
+                        } for s in supervisors[:5]  # Show first 5
+                    ],
+                    'existing_assignments': existing_assignments
+                }
+            },
+            'warnings': []
+        }
+        
+        # Add warnings
+        if len(supervisors) == 0:
+            preview['warnings'].append('Tidak ada supervisor ditemukan untuk auto-assignment')
+        
+        if len(existing_assignments) > 0:
+            preview['warnings'].append(f'Sudah ada {len(existing_assignments)} assignment aktif')
+        
+        if not new_section_id:
+            preview['warnings'].append('Section ID tidak dapat ditentukan dari target section')
+        
+        return JsonResponse({
+            'success': True,
+            'preview': preview,
+            'message': f'Preview generated for {history_id} -> {target_section}'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error generating assignment preview: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+            'preview': None
+        })
+
+
+# ===== ENHANCED DEBUG VIEWS untuk SDBM =====
+
+@login_required
+def debug_sdbm_mapping(request):
+    """
+    Debug view untuk SDBM section mapping - SUPERUSER ONLY
+    """
+    if not request.user.is_superuser:
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    try:
+        from .utils import get_sdbm_section_mapping, validate_sdbm_section_mapping
+        
+        # Get mapping dan validation
+        section_mapping = get_sdbm_section_mapping()
+        validation = validate_sdbm_section_mapping()
+        
+        # Test SDBM connection
+        sdbm_test = {}
+        try:
+            with connections['SDBM'].cursor() as cursor:
+                cursor.execute("SELECT COUNT(*) FROM [hrbp].[employees] WHERE is_active = 1")
+                sdbm_test['active_employees'] = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM [hr].[department]")
+                sdbm_test['total_departments'] = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM [hr].[section]")
+                sdbm_test['total_sections'] = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM [hr].[title] WHERE is_supervisor = 1 OR is_manager = 1")
+                sdbm_test['supervisor_titles'] = cursor.fetchone()[0]
+                
+                sdbm_test['connection'] = 'OK'
+                
+        except Exception as sdbm_error:
+            sdbm_test['connection'] = 'ERROR'
+            sdbm_test['error'] = str(sdbm_error)
+        
+        debug_info = {
+            'timestamp': timezone.now().isoformat(),
+            'section_mapping': section_mapping,
+            'validation_result': validation,
+            'sdbm_connection_test': sdbm_test,
+            'summary': {
+                'total_sections': len(section_mapping),
+                'valid_sections': len([s for s in validation['found_supervisors'].keys() if validation['found_supervisors'][s]['count'] > 0]),
+                'total_supervisors': sum([validation['found_supervisors'][s]['count'] for s in validation['found_supervisors']]),
+                'missing_departments': len(validation.get('missing_departments', [])),
+                'missing_sections': len(validation.get('missing_sections', []))
+            }
+        }
+        
+        return JsonResponse(debug_info, indent=2)
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }, status=500)
+
+
+@login_required
+def debug_sdbm_employees(request, target_section):
+    """
+    Debug view untuk employees di target section - SUPERUSER ONLY
+    """
+    if not request.user.is_superuser:
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    try:
+        from .utils import get_sdbm_section_mapping
+        
+        section_mapping = get_sdbm_section_mapping()
+        section_info = section_mapping.get(target_section, {})
+        
+        if not section_info:
+            return JsonResponse({
+                'error': f'Unknown target section: {target_section}',
+                'available_sections': list(section_mapping.keys())
+            })
+        
+        department_name = section_info['department_name']
+        section_name = section_info['section_name']
+        
+        employees_data = {}
+        
+        with connections['SDBM'].cursor() as cursor:
+            # Get all employees di department/section
+            cursor.execute("""
+                SELECT 
+                    e.employee_number,
+                    e.fullname,
+                    e.nickname,
+                    t.Name as title_name,
+                    t.is_supervisor,
+                    t.is_manager,
+                    t.is_generalManager,
+                    t.is_bod,
+                    d.name as department_name,
+                    s.name as section_name,
+                    e.job_status,
+                    e.is_active
+                FROM [hrbp].[employees] e
+                INNER JOIN [hrbp].[position] p ON e.id = p.employeeId
+                LEFT JOIN [hr].[department] d ON p.departmentId = d.id
+                LEFT JOIN [hr].[section] s ON p.sectionId = s.id
+                LEFT JOIN [hr].[title] t ON p.titleId = t.id
+                WHERE UPPER(d.name) = UPPER(%s)
+                    AND UPPER(s.name) = UPPER(%s)
+                    AND e.is_active = 1
+                    AND p.is_active = 1
+                ORDER BY 
+                    CASE 
+                        WHEN t.is_bod = 1 THEN 1
+                        WHEN t.is_generalManager = 1 THEN 2
+                        WHEN t.is_manager = 1 THEN 3
+                        WHEN t.is_supervisor = 1 THEN 4
+                        ELSE 5
+                    END,
+                    e.fullname
+            """, [department_name, section_name])
+            
+            all_employees = []
+            supervisors = []
+            staff = []
+            
+            for row in cursor.fetchall():
+                employee = {
+                    'employee_number': row[0],
+                    'fullname': row[1],
+                    'nickname': row[2],
+                    'title_name': row[3],
+                    'is_supervisor': row[4],
+                    'is_manager': row[5],
+                    'is_general_manager': row[6],
+                    'is_bod': row[7],
+                    'department_name': row[8],
+                    'section_name': row[9],
+                    'job_status': row[10],
+                    'is_active': row[11]
+                }
+                
+                all_employees.append(employee)
+                
+                # Categorize
+                if employee['is_supervisor'] or employee['is_manager'] or employee['is_general_manager'] or employee['is_bod']:
+                    supervisors.append(employee)
+                else:
+                    staff.append(employee)
+        
+        employees_data = {
+            'target_section': target_section,
+            'section_info': section_info,
+            'query_params': {
+                'department_name': department_name,
+                'section_name': section_name
+            },
+            'statistics': {
+                'total_employees': len(all_employees),
+                'total_supervisors': len(supervisors),
+                'total_staff': len(staff),
+                'managers': len([e for e in supervisors if e['is_manager']]),
+                'supervisors_only': len([e for e in supervisors if e['is_supervisor'] and not e['is_manager']]),
+                'general_managers': len([e for e in supervisors if e['is_general_manager']]),
+                'bods': len([e for e in supervisors if e['is_bod']])
+            },
+            'employees': {
+                'all': all_employees,
+                'supervisors': supervisors,
+                'staff': staff
+            }
+        }
+        
+        return JsonResponse(employees_data, indent=2)
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }, status=500)

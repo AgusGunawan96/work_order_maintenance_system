@@ -1321,3 +1321,568 @@ TARGET_SECTION_DESCRIPTIONS = {
     'utility': 'Utilities & General Maintenance',
     'mekanik': 'Mechanical & Engineering'
 }
+
+def get_sdbm_section_mapping():
+    """
+    Get mapping section target ke department/section di SDBM
+    
+    Returns:
+        dict: Mapping target section ke department dan section SDBM
+    """
+    return {
+        'it': {
+            'department_name': 'ENGINEERING',
+            'section_name': 'ENGINEERING-IT',
+            'display_name': '💻 IT (ENGINEERING-IT)'
+        },
+        'elektrik': {
+            'department_name': 'ENGINEERING', 
+            'section_name': 'ENGINEERING-ELECTRIC',
+            'display_name': '⚡ Elektrik (ENGINEERING-ELECTRIC)'
+        },
+        'mekanik': {
+            'department_name': 'ENGINEERING',
+            'section_name': 'ENGINEERING-MECHANIC', 
+            'display_name': '🔧 Mekanik (ENGINEERING-MECHANIC)'
+        },
+        'utility': {
+            'department_name': 'ENGINEERING',
+            'section_name': 'ENGINEERING-UTILITY',
+            'display_name': '🏭 Utility (ENGINEERING-UTILITY)'
+        }
+    }
+
+def get_maintenance_section_id_from_target(target_section):
+    """
+    Get section ID dari tabel_msection berdasarkan target section yang dipilih
+    
+    Args:
+        target_section (str): Target section (it, elektrik, mekanik, utility)
+        
+    Returns:
+        int: Section ID dari tabel_msection atau None
+    """
+    if not target_section:
+        return None
+    
+    try:
+        section_mapping = {}
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT id_section, seksi 
+                FROM tabel_msection 
+                WHERE (status = 'A' OR status IS NULL) 
+                    AND seksi IS NOT NULL
+                    AND seksi != ''
+                ORDER BY seksi
+            """)
+            
+            for row in cursor.fetchall():
+                section_id = int(float(row[0]))
+                section_name = str(row[1]).strip().upper()
+                
+                # Map section berdasarkan kata kunci
+                if target_section == 'it' and any(keyword in section_name for keyword in ['IT', 'INFORMATION', 'SYSTEM', 'TEKNOLOGI']):
+                    return section_id
+                elif target_section == 'elektrik' and any(keyword in section_name for keyword in ['ELEKTRIK', 'ELECTRIC', 'LISTRIK']):
+                    return section_id
+                elif target_section == 'utility' and any(keyword in section_name for keyword in ['UTILITY', 'UTILITIES', 'UMUM']):
+                    return section_id
+                elif target_section == 'mekanik' and any(keyword in section_name for keyword in ['MEKANIK', 'MECHANIC', 'MECHANICAL']):
+                    return section_id
+        
+        # Fallback mapping jika tidak ditemukan di database
+        fallback_mapping = {
+            'it': 1,
+            'elektrik': 2,
+            'mekanik': 3,
+            'utility': 4
+        }
+        
+        return fallback_mapping.get(target_section)
+        
+    except Exception as e:
+        logger.error(f"Error getting maintenance section ID for {target_section}: {e}")
+        return None
+
+def get_sdbm_supervisors_by_section_mapping(target_section, exclude_employee_numbers=None):
+    """
+    Get assistant supervisor+ dari SDBM berdasarkan mapping department/section
+    
+    Args:
+        target_section (str): Target section (it, elektrik, mekanik, utility)
+        exclude_employee_numbers (list): Employee numbers yang dikecualikan
+        
+    Returns:
+        list: Daftar supervisors dari SDBM
+    """
+    if not target_section:
+        return []
+        
+    if exclude_employee_numbers is None:
+        exclude_employee_numbers = []
+    
+    try:
+        # Get mapping untuk target section
+        section_mapping = get_sdbm_section_mapping()
+        target_mapping = section_mapping.get(target_section)
+        
+        if not target_mapping:
+            logger.warning(f"No SDBM mapping found for target section: {target_section}")
+            return []
+        
+        department_name = target_mapping['department_name']
+        section_name = target_mapping['section_name']
+        
+        supervisors = []
+        
+        with connections['SDBM'].cursor() as cursor:
+            # Build exclude clause
+            exclude_clause = ""
+            query_params = [department_name, section_name]
+            
+            if exclude_employee_numbers:
+                exclude_placeholders = ','.join(['%s'] * len(exclude_employee_numbers))
+                exclude_clause = f"AND e.employee_number NOT IN ({exclude_placeholders})"
+                query_params.extend(exclude_employee_numbers)
+            
+            # Query untuk mendapatkan assistant supervisor+ di department dan section yang sesuai
+            query = f"""
+                SELECT DISTINCT
+                    e.employee_number,
+                    e.fullname,
+                    e.nickname,
+                    t.Name as title_name,
+                    t.is_supervisor,
+                    t.is_manager,
+                    t.is_generalManager,
+                    t.is_bod,
+                    s.name as section_name,
+                    d.name as department_name,
+                    e.job_status
+                    
+                FROM [hrbp].[employees] e
+                INNER JOIN [hrbp].[position] p ON e.id = p.employeeId
+                LEFT JOIN [hr].[department] d ON p.departmentId = d.id
+                LEFT JOIN [hr].[section] s ON p.sectionId = s.id
+                LEFT JOIN [hr].[title] t ON p.titleId = t.id
+                
+                WHERE e.is_active = 1
+                    AND p.is_active = 1
+                    AND (d.is_active IS NULL OR d.is_active = 1)
+                    AND (s.is_active IS NULL OR s.is_active = 1)
+                    AND (t.is_active IS NULL OR t.is_active = 1)
+                    AND UPPER(d.name) = UPPER(%s)
+                    AND UPPER(s.name) = UPPER(%s)
+                    AND (
+                        t.is_supervisor = 1 OR 
+                        t.is_manager = 1 OR 
+                        t.is_generalManager = 1 OR 
+                        t.is_bod = 1 OR
+                        UPPER(t.Name) LIKE '%%SUPERVISOR%%' OR
+                        UPPER(t.Name) LIKE '%%MANAGER%%' OR
+                        UPPER(t.Name) LIKE '%%DIRECTOR%%' OR
+                        UPPER(t.Name) LIKE '%%SPV%%' OR
+                        UPPER(t.Name) LIKE '%%MGR%%' OR
+                        UPPER(t.Name) LIKE '%%ASSISTANT SUPERVISOR%%'
+                    )
+                    {exclude_clause}
+                    
+                ORDER BY 
+                    CASE 
+                        WHEN t.is_bod = 1 OR UPPER(t.Name) LIKE '%%DIRECTOR%%' THEN 15
+                        WHEN t.is_generalManager = 1 OR UPPER(t.Name) LIKE '%%GENERAL%%' THEN 13
+                        WHEN t.is_manager = 1 OR UPPER(t.Name) LIKE '%%MANAGER%%' THEN 12
+                        WHEN UPPER(t.Name) LIKE '%%SENIOR SUPERVISOR%%' THEN 10
+                        WHEN t.is_supervisor = 1 OR UPPER(t.Name) LIKE '%%SUPERVISOR%%' THEN 9
+                        WHEN UPPER(t.Name) LIKE '%%ASSISTANT SUPERVISOR%%' THEN 8
+                        ELSE 8
+                    END DESC,
+                    e.fullname
+            """
+            
+            cursor.execute(query, query_params)
+            rows = cursor.fetchall()
+            
+            for row in rows:
+                # Tentukan level berdasarkan title
+                title_name = str(row[3] or '').upper()
+                level = get_title_level(title_name)
+                
+                # Hanya ambil yang level assistant supervisor ke atas (>= 8)
+                if level >= 8:
+                    supervisors.append({
+                        'employee_number': row[0],
+                        'fullname': row[1],
+                        'nickname': row[2],
+                        'title_name': row[3],
+                        'is_supervisor': row[4],
+                        'is_manager': row[5],
+                        'is_general_manager': row[6],
+                        'is_bod': row[7],
+                        'section_name': row[8],
+                        'department_name': row[9],
+                        'job_status': row[10],
+                        'level': level,
+                        'level_description': get_level_description(level),
+                        'target_section': target_section
+                    })
+                    
+            logger.info(f"Found {len(supervisors)} SDBM supervisors+ for {target_section} in {department_name}/{section_name}")
+            return supervisors
+            
+    except Exception as e:
+        logger.error(f"Error getting SDBM supervisors for target section {target_section}: {e}")
+        return []
+    
+def get_level_description(level):
+    """
+    Get description berdasarkan level hierarchy
+    
+    Args:
+        level (int): Level hierarchy
+        
+    Returns:
+        str: Description level
+    """
+    level_descriptions = {
+        15: 'President Director/BOD',
+        14: 'Director', 
+        13: 'General Manager',
+        12: 'Manager',
+        11: 'Assistant Manager',
+        10: 'Senior Supervisor',
+        9: 'Supervisor',
+        8: 'Assistant Supervisor',
+        7: 'Senior Staff',
+        6: 'Staff',
+        5: 'Junior Staff',
+        4: 'Foreman',
+        3: 'Leader',
+        2: 'Assistant Leader',
+        1: 'Operator'
+    }
+    
+    return level_descriptions.get(level, f'Level {level}')
+
+def assign_pengajuan_after_siti_review(history_id, target_section, reviewer_employee, review_notes=None):
+    """
+    Auto-assign pengajuan ke SDBM supervisors setelah review oleh SITI FATIMAH
+    DAN update section tujuan di tabel_pengajuan
+    
+    Args:
+        history_id (str): ID pengajuan
+        target_section (str): Target section (it, elektrik, mekanik, utility)  
+        reviewer_employee (str): Employee number reviewer (SITI FATIMAH)
+        review_notes (str): Catatan review
+        
+    Returns:
+        dict: Result dengan info assignment dan section update
+    """
+    try:
+        logger.info(f"Starting SITI review assignment for {history_id} to {target_section}")
+        
+        result = {
+            'assigned_employees': [],
+            'section_updated': False,
+            'new_section_id': None,
+            'target_section': target_section,
+            'supervisors_found': 0
+        }
+        
+        # ===== STEP 1: Update Section Tujuan di tabel_pengajuan =====
+        new_section_id = get_maintenance_section_id_from_target(target_section)
+        
+        if new_section_id:
+            try:
+                with connections['DB_Maintenance'].cursor() as cursor:
+                    cursor.execute("""
+                        UPDATE tabel_pengajuan 
+                        SET id_section = %s,
+                            final_section_id = %s
+                        WHERE history_id = %s
+                    """, [float(new_section_id), float(new_section_id), history_id])
+                    
+                    result['section_updated'] = True
+                    result['new_section_id'] = new_section_id
+                    
+                    logger.info(f"Updated section tujuan for {history_id} to section ID {new_section_id}")
+                    
+            except Exception as section_error:
+                logger.error(f"Error updating section for {history_id}: {section_error}")
+        
+        # ===== STEP 2: Get SDBM Supervisors =====
+        sdbm_supervisors = get_sdbm_supervisors_by_section_mapping(
+            target_section, 
+            exclude_employee_numbers=[reviewer_employee]
+        )
+        
+        result['supervisors_found'] = len(sdbm_supervisors)
+        
+        if not sdbm_supervisors:
+            logger.warning(f"No SDBM supervisors found for {target_section}")
+            return result
+        
+        # ===== STEP 3: Ensure Assignment Tables =====
+        ensure_assignment_tables_exist()
+        
+        # ===== STEP 4: Create Assignments =====
+        assigned_employees = []
+        section_mapping = get_sdbm_section_mapping()
+        target_info = section_mapping.get(target_section, {})
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            for supervisor in sdbm_supervisors:
+                try:
+                    # Check if already assigned
+                    cursor.execute("""
+                        SELECT COUNT(*) FROM tabel_pengajuan_assignment
+                        WHERE history_id = %s AND assigned_to_employee = %s AND is_active = 1
+                    """, [history_id, supervisor['employee_number']])
+                    
+                    if cursor.fetchone()[0] > 0:
+                        logger.debug(f"Pengajuan {history_id} already assigned to {supervisor['employee_number']}")
+                        continue
+                    
+                    # Create assignment note
+                    assignment_note = (
+                        f"Auto-assigned by SITI FATIMAH review to {supervisor['level_description']} "
+                        f"in {target_info.get('display_name', target_section)}. "
+                        f"Target: {supervisor['department_name']}/{supervisor['section_name']}"
+                    )
+                    
+                    if review_notes:
+                        assignment_note += f". Review notes: {review_notes[:100]}..."
+                    
+                    # Insert assignment
+                    cursor.execute("""
+                        INSERT INTO tabel_pengajuan_assignment 
+                        (history_id, assigned_to_employee, assigned_by_employee, assignment_date, 
+                         notes, assignment_type, is_active, target_section, department_name, section_name)
+                        VALUES (%s, %s, %s, GETDATE(), %s, %s, 1, %s, %s, %s)
+                    """, [
+                        history_id,
+                        supervisor['employee_number'],
+                        reviewer_employee,
+                        assignment_note,
+                        'SITI_REVIEW',
+                        target_section,
+                        supervisor['department_name'],
+                        supervisor['section_name']
+                    ])
+                    
+                    assigned_employees.append({
+                        'employee_number': supervisor['employee_number'],
+                        'fullname': supervisor['fullname'],
+                        'title_name': supervisor['title_name'],
+                        'department_name': supervisor['department_name'],
+                        'section_name': supervisor['section_name'],
+                        'level_description': supervisor['level_description']
+                    })
+                    
+                    logger.info(f"SITI review: Assigned {history_id} to {supervisor['fullname']} ({supervisor['employee_number']}) - {supervisor['title_name']}")
+                    
+                except Exception as assign_error:
+                    logger.error(f"Error in SITI assignment to {supervisor['employee_number']}: {assign_error}")
+                    continue
+        
+        result['assigned_employees'] = assigned_employees
+        
+        logger.info(f"SITI review completed: {history_id} -> {target_section}, {len(assigned_employees)} assignments, section updated: {result['section_updated']}")
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Error in assign_pengajuan_after_siti_review: {e}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        
+        return {
+            'assigned_employees': [],
+            'section_updated': False,
+            'new_section_id': None,
+            'target_section': target_section,
+            'supervisors_found': 0,
+            'error': str(e)
+        }
+    
+def ensure_enhanced_assignment_tables():
+    """
+    Memastikan assignment tables ada dengan kolom enhanced untuk SDBM mapping
+    """
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Ensure assignment table exists dengan kolom baru
+            cursor.execute("""
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tabel_pengajuan_assignment' AND xtype='U')
+                BEGIN
+                    CREATE TABLE [dbo].[tabel_pengajuan_assignment](
+                        [id] [int] IDENTITY(1,1) NOT NULL,
+                        [history_id] [varchar](15) NULL,
+                        [assigned_to_employee] [varchar](50) NULL,
+                        [assigned_by_employee] [varchar](50) NULL,
+                        [assignment_date] [datetime] NULL,
+                        [is_active] [bit] NULL DEFAULT 1,
+                        [notes] [varchar](max) NULL,
+                        [assignment_type] [varchar](20) NULL,
+                        [target_section] [varchar](20) NULL,
+                        [department_name] [varchar](100) NULL,
+                        [section_name] [varchar](100) NULL,
+                        CONSTRAINT [PK_tabel_pengajuan_assignment] PRIMARY KEY CLUSTERED ([id] ASC)
+                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+                END
+            """)
+            
+            # Add new columns if they don't exist
+            new_columns = [
+                ('assignment_type', 'varchar(20)', 'NULL'),
+                ('target_section', 'varchar(20)', 'NULL'),
+                ('department_name', 'varchar(100)', 'NULL'),
+                ('section_name', 'varchar(100)', 'NULL')
+            ]
+            
+            for column_name, column_type, default_value in new_columns:
+                cursor.execute(f"""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan_assignment' AND COLUMN_NAME = '{column_name}')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan_assignment ADD {column_name} {column_type} DEFAULT {default_value}
+                    END
+                """)
+            
+            logger.info("Enhanced assignment tables with SDBM mapping verified/created successfully")
+            return True
+            
+    except Exception as e:
+        logger.error(f"Error ensuring enhanced assignment tables: {e}")
+        return False
+
+
+def get_assigned_pengajuan_for_sdbm_user(employee_number):
+    """
+    Get pengajuan yang di-assign ke user berdasarkan SDBM employee number
+    Dengan fallback ke assignment table lama
+    
+    Args:
+        employee_number (str): Employee number user
+        
+    Returns:
+        list: Daftar history_id pengajuan yang di-assign
+    """
+    if not employee_number:
+        return []
+    
+    try:
+        assigned_history_ids = []
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Cek apakah table assignment ada
+            cursor.execute("""
+                SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES 
+                WHERE TABLE_NAME = 'tabel_pengajuan_assignment'
+            """)
+            
+            table_exists = cursor.fetchone()[0] > 0
+            
+            if table_exists:
+                # Get assignments dengan info tambahan SDBM
+                cursor.execute("""
+                    SELECT DISTINCT 
+                        history_id,
+                        assignment_type,
+                        target_section,
+                        department_name,
+                        section_name,
+                        assignment_date
+                    FROM tabel_pengajuan_assignment
+                    WHERE assigned_to_employee = %s 
+                        AND is_active = 1
+                    ORDER BY assignment_date DESC
+                """, [employee_number])
+                
+                rows = cursor.fetchall()
+                
+                for row in rows:
+                    assigned_history_ids.append({
+                        'history_id': row[0],
+                        'assignment_type': row[1],
+                        'target_section': row[2], 
+                        'department_name': row[3],
+                        'section_name': row[4],
+                        'assignment_date': row[5]
+                    })
+                
+                logger.debug(f"Found {len(assigned_history_ids)} SDBM assignments for {employee_number}")
+            
+            return assigned_history_ids
+        
+    except Exception as e:
+        logger.error(f"Error getting SDBM assignments for {employee_number}: {e}")
+        return []
+
+
+def validate_sdbm_section_mapping():
+    """
+    Validate mapping section target dengan data actual di SDBM
+    
+    Returns:
+        dict: Validation result
+    """
+    try:
+        validation_result = {
+            'valid': True,
+            'missing_departments': [],
+            'missing_sections': [],
+            'found_supervisors': {}
+        }
+        
+        section_mapping = get_sdbm_section_mapping()
+        
+        with connections['SDBM'].cursor() as cursor:
+            for target, mapping in section_mapping.items():
+                department_name = mapping['department_name']
+                section_name = mapping['section_name']
+                
+                # Check department exists
+                cursor.execute("""
+                    SELECT COUNT(*) FROM [hr].[department] 
+                    WHERE UPPER(name) = UPPER(%s) AND (is_active IS NULL OR is_active = 1)
+                """, [department_name])
+                
+                dept_exists = cursor.fetchone()[0] > 0
+                if not dept_exists:
+                    validation_result['missing_departments'].append(department_name)
+                    validation_result['valid'] = False
+                
+                # Check section exists
+                cursor.execute("""
+                    SELECT COUNT(*) FROM [hr].[section] 
+                    WHERE UPPER(name) = UPPER(%s) AND (is_active IS NULL OR is_active = 1)
+                """, [section_name])
+                
+                section_exists = cursor.fetchone()[0] > 0
+                if not section_exists:
+                    validation_result['missing_sections'].append(section_name)
+                    validation_result['valid'] = False
+                
+                # Count supervisors
+                if dept_exists and section_exists:
+                    supervisors = get_sdbm_supervisors_by_section_mapping(target)
+                    validation_result['found_supervisors'][target] = {
+                        'count': len(supervisors),
+                        'department': department_name,
+                        'section': section_name
+                    }
+        
+        return validation_result
+        
+    except Exception as e:
+        logger.error(f"Error validating SDBM section mapping: {e}")
+        return {
+            'valid': False,
+            'error': str(e),
+            'missing_departments': [],
+            'missing_sections': [],
+            'found_supervisors': {}
+        }

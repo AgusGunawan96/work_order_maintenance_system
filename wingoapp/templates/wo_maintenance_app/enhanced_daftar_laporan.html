@@ -1,0 +1,1170 @@
+<!-- wo_maintenance_app/templates/wo_maintenance_app/enhanced_daftar_laporan.html -->
+<!-- ENHANCED Template dengan SDBM Integration untuk Daftar Laporan -->
+
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+{{ block.super }}
+<style>
+    .page-body {
+        padding-top: 20px;
+    }
+    
+    /* SDBM Integration Styles */
+    .sdbm-integration-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+    
+    .sdbm-integration-header h4 {
+        margin: 0 0 8px 0;
+        font-weight: 600;
+    }
+    
+    .sdbm-integration-header .integration-info {
+        opacity: 0.9;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .integration-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    /* Enhanced View Mode Switcher */
+    .enhanced-mode-switch {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .mode-switch-title {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .mode-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .mode-btn {
+        padding: 12px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        border: 2px solid #e9ecef;
+        background: white;
+        color: #495057;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+    }
+    
+    .mode-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: #495057;
+    }
+    
+    .mode-btn.active {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border-color: #28a745;
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .mode-btn .badge-count {
+        background: rgba(255, 255, 255, 0.9);
+        color: #495057;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 5px;
+    }
+    
+    .mode-btn.active .badge-count {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    
+    /* Enhanced Stats Cards */
+    .sdbm-stats-container {
+        margin-bottom: 25px;
+    }
+    
+    .sdbm-stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        border-left: 4px solid #28a745;
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .sdbm-stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #28a745, #20c997);
+    }
+    
+    .sdbm-stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+    }
+    
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        color: white;
+        font-size: 1.5rem;
+    }
+    
+    .stat-number {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 5px;
+        line-height: 1;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    .stat-description {
+        font-size: 0.8rem;
+        color: #adb5bd;
+        margin-top: 8px;
+        line-height: 1.3;
+    }
+    
+    /* Access Method Indicator */
+    .access-method-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .access-hierarchy {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .access-sdbm {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .access-mixed {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    /* Enhanced Filter Section */
+    .enhanced-filter-section {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-left: 4px solid #28a745;
+    }
+    
+    .filter-title {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    /* Enhanced Table Styles */
+    .enhanced-table-container {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .table-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+    }
+    
+    .table-header.siti-mode {
+        background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%);
+    }
+    
+    .table-title {
+        margin: 0;
+        font-weight: 600;
+        flex: 1;
+    }
+    
+    .table-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .table-responsive {
+        border-radius: 0;
+        box-shadow: none;
+    }
+    
+    .table th {
+        background: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        border: none;
+        padding: 15px 12px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .table td {
+        padding: 15px 12px;
+        vertical-align: middle;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: translateX(2px);
+        transition: all 0.2s ease;
+    }
+    
+    /* Enhanced Status Badges */
+    .enhanced-status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .status-pending {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+    }
+    
+    .status-approved {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+    }
+    
+    .status-rejected {
+        background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
+        color: #721c24;
+    }
+    
+    .status-sdbm-assigned {
+        background: linear-gradient(135deg, #cce7ff 0%, #b3d7ff 100%);
+        color: #004085;
+    }
+    
+    /* Assignment Info */
+    .assignment-info-badge {
+        background: #e8f5e8;
+        color: #155724;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-top: 5px;
+        display: inline-block;
+    }
+    
+    .assignment-sdbm {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .assignment-hierarchy {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    /* Enhanced Action Buttons */
+    .enhanced-action-btn {
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin: 2px;
+    }
+    
+    .enhanced-action-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        text-decoration: none;
+    }
+    
+    .btn-detail {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+    }
+    
+    .btn-review {
+        background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+        color: white;
+    }
+    
+    .btn-approve {
+        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+        color: #212529;
+    }
+    
+    /* Empty State */
+    .enhanced-empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: #6c757d;
+        background: white;
+        border-radius: 12px;
+        margin: 20px 0;
+    }
+    
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+        font-size: 2rem;
+    }
+    
+    /* Enhanced Pagination */
+    .enhanced-pagination {
+        background: white;
+        padding: 20px;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+    }
+    
+    .pagination-info {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 2px;
+        border: none;
+        color: #495057;
+        font-weight: 500;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border-color: #28a745;
+    }
+    
+    /* SDBM Integration Status */
+    .sdbm-status-indicator {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        border-radius: 50px;
+        padding: 10px 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: 2px solid #28a745;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #28a745;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideInUp 0.5s ease-out 1s forwards;
+    }
+    
+    @keyframes slideInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #28a745;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .sdbm-integration-header {
+            padding: 15px;
+        }
+        
+        .integration-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .mode-buttons {
+            justify-content: center;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
+        }
+        
+        .table-header {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .enhanced-action-btn {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+        }
+    }
+    
+    /* Debug Panel (Superuser Only) */
+    .debug-panel {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        font-family: monospace;
+        font-size: 12px;
+    }
+    
+    .debug-panel h6 {
+        color: #495057;
+        margin-bottom: 10px;
+        font-family: sans-serif;
+        font-size: 14px;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- SDBM Integration Header -->
+    <div class="sdbm-integration-header">
+        <h4>🎯 Enhanced WO Maintenance dengan SDBM Integration</h4>
+        <div class="integration-info">
+            <span>Auto-assignment berdasarkan department & section mapping</span>
+            <div class="integration-badge">
+                <div class="status-dot"></div>
+                SDBM Active
+            </div>
+            {% if assigned_count > 0 %}
+            <div class="integration-badge">
+                📋 {{ assigned_count }} SDBM Assignment{{ assigned_count|pluralize }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                {{ message|linebreaks }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- User Hierarchy Info -->
+    {% if employee_data %}
+    <div class="hierarchy-info{% if is_siti_fatimah and view_mode == 'approved' %} siti-mode{% endif %}">
+        <div>
+            <div class="user-name">
+                {{ employee_data.fullname|default:employee_data.nickname }}
+                {% if is_siti_fatimah %}
+                    <span style="font-size: 0.9rem; opacity: 0.9;"> - REVIEWER MODE</span>
+                {% endif %}
+            </div>
+            <div class="info-text">
+                {{ employee_data.department_name|default:"-" }} 
+                {% if employee_data.section_name %}> {{ employee_data.section_name }}{% endif %}
+                {% if employee_data.subsection_name %}> {{ employee_data.subsection_name }}{% endif %}
+            </div>
+        </div>
+        <div>
+            {% if is_siti_fatimah %}
+                <span class="role-badge">🎯 SITI FATIMAH - REVIEWER</span>
+            {% endif %}
+            <span class="role-badge">{{ employee_data.title_name|default:"-" }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Enhanced Mode Switch -->
+    <div class="enhanced-mode-switch">
+        <div class="mode-switch-title">
+            <i data-feather="layers"></i>
+            View Mode Selection
+            {% if is_siti_fatimah %}
+                <span class="badge bg-success ms-2">SITI FATIMAH</span>
+            {% endif %}
+        </div>
+        <div class="mode-buttons">
+            <a href="{% url 'wo_maintenance_app:daftar_laporan' %}?mode=normal" 
+               class="mode-btn {% if view_mode == 'normal' %}active{% endif %}">
+                <i data-feather="list"></i>
+                Normal View
+                <span class="badge-count">{{ access_methods.hierarchy|default:0 }}</span>
+            </a>
+            
+            {% if assigned_count > 0 %}
+            <a href="{% url 'wo_maintenance_app:daftar_laporan' %}?mode=assigned" 
+               class="mode-btn {% if view_mode == 'assigned' %}active{% endif %}">
+                <i data-feather="user-check"></i>
+                SDBM Assigned
+                <span class="badge-count">{{ assigned_count }}</span>
+            </a>
+            {% endif %}
+            
+            {% if is_siti_fatimah %}
+            <a href="{% url 'wo_maintenance_app:daftar_laporan' %}?mode=approved" 
+               class="mode-btn {% if view_mode == 'approved' %}active{% endif %}">
+                <i data-feather="check-circle"></i>
+                All Approved
+                <span class="badge-count">{{ siti_stats.total_approved|default:0 }}</span>
+            </a>
+            
+            <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" 
+               class="mode-btn">
+                <i data-feather="clipboard"></i>
+                Review Mode
+                <span class="badge-count">{{ siti_stats.pending_review|default:0 }}</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Enhanced Stats Cards -->
+    {% if view_mode == 'assigned' or is_siti_fatimah %}
+    <div class="sdbm-stats-container">
+        <div class="row">
+            {% if view_mode == 'assigned' %}
+            <div class="col-md-3 mb-3">
+                <div class="sdbm-stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-number">{{ assigned_count }}</div>
+                    <div class="stat-label">SDBM Assignments</div>
+                    <div class="stat-description">Pengajuan yang di-assign melalui SDBM integration</div>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if is_siti_fatimah %}
+            <div class="col-md-3 mb-3">
+                <div class="sdbm-stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number">{{ siti_stats.total_approved|default:0 }}</div>
+                    <div class="stat-label">Total Approved</div>
+                    <div class="stat-description">Pengajuan yang sudah di-approve atasan</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="sdbm-stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-number">{{ siti_stats.pending_review|default:0 }}</div>
+                    <div class="stat-label">Pending Review</div>
+                    <div class="stat-description">Menunggu review untuk assignment</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="sdbm-stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">{{ siti_stats.already_reviewed|default:0 }}</div>
+                    <div class="stat-label">Reviewed</div>
+                    <div class="stat-description">Sudah direview dan di-assign</div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="col-md-3 mb-3">
+                <div class="sdbm-stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-number">{{ total_records }}</div>
+                    <div class="stat-label">Total Records</div>
+                    <div class="stat-description">
+                        {% if view_mode == 'assigned' %}
+                            Current view total
+                        {% else %}
+                            Accessible pengajuan
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Debug Panel (Superuser Only) -->
+    {% if debug_info and user.is_superuser %}
+    <div class="debug-panel">
+        <h6>🔧 SDBM Integration Debug Info (Superuser Only)</h6>
+        <div class="debug-info">
+            <div><strong>SDBM Integration:</strong> {{ debug_info.sdbm_integration|yesno:"Active,Inactive" }}</div>
+            <div><strong>View Mode:</strong> {{ debug_info.view_mode }}</div>
+            <div><strong>Assigned Pengajuan Count:</strong> {{ debug_info.assigned_pengajuan_count }}</div>
+            <div><strong>User Role:</strong> {{ debug_info.user_role }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Enhanced Filter Section -->
+    <div class="enhanced-filter-section">
+        <div class="filter-title">
+            <i data-feather="filter"></i>
+            Enhanced Filter - SDBM Integration
+        </div>
+        <form method="get" id="enhancedFilterForm">
+            {% if view_mode != 'normal' %}
+                <input type="hidden" name="mode" value="{{ view_mode }}">
+            {% endif %}
+            {% if search_query %}
+                <input type="hidden" name="search" value="{{ search_query }}">
+            {% endif %}
+            
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Tanggal Dari</label>
+                    {{ filter_form.tanggal_dari|add_class:"form-control" }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Tanggal Sampai</label>
+                    {{ filter_form.tanggal_sampai|add_class:"form-control" }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Status</label>
+                    {{ filter_form.status|add_class:"form-control" }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Pengaju</label>
+                    {{ filter_form.pengaju|add_class:"form-control" }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">History ID</label>
+                    {{ filter_form.history_id|add_class:"form-control" }}
+                </div>
+            </div>
+            
+            <!-- Enhanced Filter Row dengan SDBM Options -->
+            {% if view_mode == 'assigned' %}
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <label class="form-label">Access Type</label>
+                    <select name="access_type" class="form-control">
+                        <option value="">All Access Types</option>
+                        <option value="sdbm_assigned">SDBM Assignment</option>
+                        <option value="hierarchy">Hierarchy</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Target Section</label>
+                    <select name="target_section" class="form-control">
+                        <option value="">All Sections</option>
+                        <option value="it">💻 IT</option>
+                        <option value="elektrik">⚡ Elektrik</option>
+                        <option value="utility">🏭 Utility</option>
+                        <option value="mekanik">🔧 Mekanik</option>
+                    </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i data-feather="filter"></i> Apply Filter
+                    </button>
+                    <a href="{% url 'wo_maintenance_app:daftar_laporan' %}{% if view_mode != 'normal' %}?mode={{ view_mode }}{% endif %}" class="btn btn-outline-secondary">
+                        <i data-feather="refresh-cw"></i> Reset
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="row mt-3">
+                <div class="col-md-12 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i data-feather="filter"></i> Apply Filter
+                    </button>
+                    <a href="{% url 'wo_maintenance_app:daftar_laporan' %}{% if view_mode != 'normal' %}?mode={{ view_mode }}{% endif %}" class="btn btn-outline-secondary">
+                        <i data-feather="refresh-cw"></i> Reset
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Enhanced Table Container -->
+    <div class="enhanced-table-container">
+        <div class="table-header{% if is_siti_fatimah and view_mode == 'approved' %} siti-mode{% endif %}">
+            <div class="table-title">
+                <i data-feather="{% if view_mode == 'assigned' %}user-check{% elif view_mode == 'approved' %}check-circle{% else %}list{% endif %}"></i>
+                {% if view_mode == 'assigned' %}
+                    SDBM Assigned Pengajuan
+                {% elif view_mode == 'approved' %}
+                    All Approved Pengajuan - SITI FATIMAH
+                {% else %}
+                    Enhanced Daftar Pengajuan Maintenance
+                {% endif %}
+                <small style="opacity: 0.8; display: block; font-size: 0.8rem; margin-top: 5px;">
+                    Total: {{ total_records }} pengajuan
+                    {% if assigned_count > 0 %} | {{ assigned_count }} SDBM assignments{% endif %}
+                </small>
+            </div>
+            <div class="table-actions">
+                {% if is_siti_fatimah %}
+                <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="btn btn-light btn-sm">
+                    <i data-feather="home"></i> Dashboard
+                </a>
+                {% endif %}
+                <a href="{% url 'wo_maintenance_app:input_laporan' %}" class="btn btn-light btn-sm">
+                    <i data-feather="plus"></i> New
+                </a>
+            </div>
+        </div>
+        
+        {% if pengajuan_list %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">History ID</th>
+                        <th style="width: 150px;">Pengaju</th>
+                        <th style="width: 120px;">Line</th>
+                        <th style="width: 180px;">Mesin</th>
+                        <th style="width: 120px;">Section</th>
+                        <th style="width: 130px;">Pekerjaan</th>
+                        <th>Deskripsi</th>
+                        <th style="width: 120px;">Status</th>
+                        <th style="width: 130px;">Tanggal</th>
+                        <th style="width: 120px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pengajuan in pengajuan_list %}
+                    <tr>
+                        <td>
+                            <div class="position-relative">
+                                <strong class="text-primary">{{ pengajuan.0|default:"-" }}</strong>
+                                <br><small class="text-muted">{{ pengajuan.9|default:"-" }}</small>
+                                
+                                <!-- Access Method Badge -->
+                                {% if pengajuan.19 == 'SDBM_ASSIGNED' %}
+                                    <div class="access-method-badge access-sdbm">SDBM</div>
+                                {% else %}
+                                    <div class="access-method-badge access-hierarchy">Hierarchy</div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <strong>{{ pengajuan.1|default:"-" }}</strong>
+                                {% if pengajuan.8 %}
+                                    <br><small class="text-muted">{{ pengajuan.8 }}</small>
+                                {% endif %}
+                                
+                                <!-- Assignment Info -->
+                                {% if pengajuan.19 == 'SDBM_ASSIGNED' %}
+                                    <div class="assignment-info-badge assignment-sdbm">
+                                        📋 SDBM Assignment
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if pengajuan.10 %}
+                                <span class="badge bg-info">{{ pengajuan.10 }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ pengajuan.2|default:"-" }}</td>
+                        <td>
+                            <div>
+                                {{ pengajuan.3|default:"-" }}
+                                {% if pengajuan.18 and pengajuan.18 != pengajuan.3 %}
+                                    <br><small class="text-success">→ {{ pengajuan.18 }}</small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>{{ pengajuan.4|default:"-" }}</td>
+                        <td>
+                            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                {{ pengajuan.5|default:"-"|truncatechars:50 }}
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                {% if view_mode == 'approved' %}
+                                    <!-- Review Status untuk mode approved -->
+                                    {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                                        <span class="enhanced-status-badge status-pending">
+                                            ⏳ Pending Review
+                                        </span>
+                                    {% elif pengajuan.15 == '1' %}
+                                        <span class="enhanced-status-badge status-approved">
+                                            ✅ Reviewed
+                                        </span>
+                                    {% elif pengajuan.15 == '2' %}
+                                        <span class="enhanced-status-badge status-rejected">
+                                            ❌ Rejected
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <!-- Normal Status -->
+                                    {% if pengajuan.6 == '0' %}
+                                        <span class="enhanced-status-badge status-pending">Pending</span>
+                                    {% elif pengajuan.6 == '1' %}
+                                        <span class="enhanced-status-badge status-approved">Approved</span>
+                                    {% elif pengajuan.6 == '2' %}
+                                        <span class="enhanced-status-badge status-rejected">Rejected</span>
+                                    {% endif %}
+                                {% endif %}
+                                
+                                <!-- SDBM Assignment Status -->
+                                {% if pengajuan.19 == 'SDBM_ASSIGNED' %}
+                                    <br><span class="enhanced-status-badge status-sdbm-assigned">
+                                        🎯 SDBM Assigned
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if pengajuan.7 %}
+                                {{ pengajuan.7|date:"d/m/Y" }}
+                                <br><small class="text-muted">{{ pengajuan.7|date:"H:i" }}</small>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                {% if pengajuan.0 %}
+                                    <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" 
+                                       class="enhanced-action-btn btn-detail" title="Detail">
+                                        <i data-feather="eye"></i> Detail
+                                    </a>
+                                    
+                                    {% if view_mode == 'approved' and is_siti_fatimah %}
+                                        {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                                            <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                                               class="enhanced-action-btn btn-review" title="Review">
+                                                <i data-feather="clipboard"></i> Review
+                                            </a>
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                    {% if can_approve and pengajuan.6 == '0' and pengajuan.11 == '0' %}
+                                        <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}#approval" 
+                                           class="enhanced-action-btn btn-approve" title="Approve">
+                                            <i data-feather="check-circle"></i> Approve
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Enhanced Pagination -->
+        {% if total_pages > 1 %}
+        <div class="enhanced-pagination">
+            <div class="pagination-info">
+                Halaman {{ page_number }} dari {{ total_pages }} 
+                ({{ total_records }} total pengajuan)
+                {% if view_mode == 'assigned' %} | {{ assigned_count }} SDBM assignments{% endif %}
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                    {% if has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ previous_page_number }}{% if view_mode != 'normal' %}&mode={{ view_mode }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                <i data-feather="chevron-left"></i> Previous
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    <!-- Page numbers -->
+                    {% for page_num in "123456789"|make_list %}
+                        {% if page_num|add:0 <= total_pages %}
+                            {% if page_num|add:0 == page_number %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page_num }}</span>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_num }}{% if view_mode != 'normal' %}&mode={{ view_mode }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ next_page_number }}{% if view_mode != 'normal' %}&mode={{ view_mode }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Next <i data-feather="chevron-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+        {% else %}
+        <!-- Enhanced Empty State -->
+        <div class="enhanced-empty-state">
+            <div class="empty-state-icon">
+                {% if view_mode == 'assigned' %}
+                    <i data-feather="user-check"></i>
+                {% elif view_mode == 'approved' %}
+                    <i data-feather="check-circle"></i>
+                {% else %}
+                    <i data-feather="inbox"></i>
+                {% endif %}
+            </div>
+            <h5 class="text-muted">
+                {% if view_mode == 'assigned' %}
+                    Tidak ada SDBM assignments
+                {% elif view_mode == 'approved' %}
+                    Tidak ada pengajuan approved
+                {% else %}
+                    Tidak ada data pengajuan
+                {% endif %}
+            </h5>
+            <p class="text-muted">
+                {% if search_query %}
+                    Tidak ditemukan hasil untuk pencarian "{{ search_query }}"
+                {% elif view_mode == 'assigned' %}
+                    Anda belum memiliki pengajuan yang di-assign melalui SDBM integration
+                {% elif view_mode == 'approved' %}
+                    Belum ada pengajuan work order yang telah di-approve
+                {% else %}
+                    Belum ada pengajuan maintenance yang dapat diakses
+                {% endif %}
+            </p>
+            <a href="{% url 'wo_maintenance_app:input_laporan' %}" class="btn btn-primary">
+                <i data-feather="plus"></i> Buat Pengajuan
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- SDBM Status Indicator -->
+<div class="sdbm-status-indicator">
+    <div class="status-dot"></div>
+    <span>SDBM Integration</span>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Enhanced filter form handling
+    $('#enhancedFilterForm select').on('change', function() {
+        // Auto-submit pada perubahan filter SDBM
+        if ($(this).attr('name') === 'access_type' || $(this).attr('name') === 'target_section') {
+            $('#enhancedFilterForm').submit();
+        }
+    });
+    
+    // Stats animation
+    $('.stat-number').each(function() {
+        const $this = $(this);
+        const countTo = parseInt($this.text()) || 0;
+        
+        if (countTo > 0) {
+            $({ countNum: 0 }).animate(
+                { countNum: countTo },
+                {
+                    duration: 1500,
+                    easing: 'linear',
+                    step: function() {
+                        $this.text(Math.floor(this.countNum));
+                    },
+                    complete: function() {
+                        $this.text(this.countNum);
+                    }
+                }
+            );
+        }
+    });
+    
+    // Enhanced tooltip untuk action buttons
+    $('.enhanced-action-btn').tooltip();
+    
+    // Auto-refresh assignment count every 30 seconds untuk SDBM
+    {% if view_mode == 'assigned' %}
+    setInterval(function() {
+        // Simple AJAX call to check for new assignments
+        fetch('/wo-maintenance/ajax/sdbm/assignment-status/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.assignment_count !== {{ assigned_count }}) {
+                    // Show notification for new assignments
+                    showNotification('New SDBM assignments available', 'info');
+                }
+            })
+            .catch(error => console.log('Assignment check failed:', error));
+    }, 30000);
+    {% endif %}
+    
+    // Mode button hover effects
+    $('.mode-btn').hover(
+        function() {
+            $(this).find('.badge-count').css('transform', 'scale(1.1)');
+        },
+        function() {
+            $(this).find('.badge-count').css('transform', 'scale(1)');
+        }
+    );
+    
+    // Table row click to detail (optional)
+    $('.table tbody tr').on('click', function(e) {
+        if (!$(e.target).closest('a, button').length) {
+            const detailLink = $(this).find('.btn-detail').attr('href');
+            if (detailLink) {
+                window.location.href = detailLink;
+            }
+        }
+    });
+    
+    // Enhanced search with debounce
+    let searchTimeout;
+    $('input[name="search"]').on('input', function() {
+        clearTimeout(searchTimeout);
+        const query = $(this).val();
+        
+        if (query.length > 2) {
+            searchTimeout = setTimeout(function() {
+                // Could add live search preview here
+                console.log('Search:', query);
+            }, 500);
+        }
+    });
+    
+    // Show notification function
+    function showNotification(message, type = 'info') {
+        const alertClass = type === 'info' ? 'alert-info' : 'alert-success';
+        const notification = $(`
+            <div class="alert ${alertClass} alert-dismissible fade show position-fixed" 
+                 style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `);
+        
+        $('body').append(notification);
+        
+        setTimeout(function() {
+            notification.fadeOut();
+        }, 5000);
+    }
+    
+    // Log SDBM integration status
+    console.log('🎯 Enhanced WO Maintenance - SDBM Integration Active');
+    console.log('View Mode:', '{{ view_mode }}');
+    console.log('SDBM Assignments:', {{ assigned_count }});
+    console.log('Is SITI FATIMAH:', {{ is_siti_fatimah|yesno:"true,false" }});
+    console.log('Total Records:', {{ total_records }});
+});
+</script>
+{% endblock scriptcontent %}

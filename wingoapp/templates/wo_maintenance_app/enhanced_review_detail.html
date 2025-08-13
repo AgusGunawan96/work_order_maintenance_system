@@ -1,0 +1,822 @@
+<!-- wo_maintenance_app/templates/wo_maintenance_app/enhanced_review_detail.html -->
+<!-- ENHANCED Template dengan SDBM Integration untuk Review Detail -->
+
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+{{ block.super }}
+<style>
+    /* Enhanced SDBM Styles */
+    .sdbm-integration-banner {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .sdbm-integration-banner .feature-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    /* Enhanced Section Selection */
+    .sdbm-section-selection {
+        background: #f8f9fa;
+        border: 2px solid #28a745;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 15px;
+    }
+    
+    .section-option {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .section-option:hover {
+        border-color: #28a745;
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+    }
+    
+    .section-option.selected {
+        border-color: #28a745;
+        background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+    }
+    
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+    
+    .section-title {
+        font-weight: 600;
+        color: #495057;
+        font-size: 1.1rem;
+    }
+    
+    .supervisor-count {
+        background: #28a745;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .supervisor-count.warning {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .supervisor-count.error {
+        background: #dc3545;
+    }
+    
+    .section-details {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .sdbm-path {
+        font-family: monospace;
+        background: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+    
+    /* Assignment Preview */
+    .assignment-preview {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 15px;
+        display: none;
+    }
+    
+    .assignment-preview.show {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .assignment-preview-title {
+        font-weight: 600;
+        color: #856404;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .supervisor-list {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        padding: 10px;
+        background: white;
+    }
+    
+    .supervisor-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    
+    .supervisor-item:last-child {
+        border-bottom: none;
+    }
+    
+    .supervisor-info {
+        flex: 1;
+    }
+    
+    .supervisor-name {
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .supervisor-title {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+    
+    .supervisor-level {
+        background: #007bff;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    /* Enhanced Alert Styles */
+    .sdbm-alert {
+        border-left: 4px solid #28a745;
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .sdbm-alert.warning {
+        border-left-color: #ffc107;
+        background: #fff3cd;
+    }
+    
+    .sdbm-alert.error {
+        border-left-color: #dc3545;
+        background: #f8d7da;
+    }
+    
+    /* Current Section Display */
+    .current-section-info {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .current-section-info strong {
+        color: #0c5460;
+    }
+    
+    /* Enhanced Submit Button */
+    .enhanced-submit-button {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        width: 100%;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        position: relative;
+    }
+    
+    .enhanced-submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+    
+    .enhanced-submit-button:disabled {
+        background: #6c757d;
+        transform: none;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+    
+    .button-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ffffff;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: none;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* SDBM Integration Status */
+    .integration-status {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left: 4px solid #28a745;
+        z-index: 1000;
+        display: none;
+    }
+    
+    .integration-status.show {
+        display: block;
+        animation: slideInUp 0.3s ease-out;
+    }
+    
+    @keyframes slideInUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .sdbm-integration-banner {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+        }
+        
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+        
+        .supervisor-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- SDBM Integration Banner -->
+    {% if sdbm_integration %}
+    <div class="sdbm-integration-banner">
+        <div>
+            <h5 style="margin: 0;">🎯 Enhanced Review System dengan SDBM Integration</h5>
+            <small>Auto-assignment ke supervisor berdasarkan department & section mapping</small>
+        </div>
+        <div class="feature-badge">
+            SDBM ENABLED
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- SITI FATIMAH Header -->
+    <div class="siti-header">
+        <h4>🎯 Review Pengajuan WO Maintenance - Enhanced</h4>
+        <div class="reviewer-info">
+            Reviewer: <strong>{{ reviewer_name }}</strong> | 
+            Pengajuan: <strong>{{ pengajuan.history_id }}</strong> |
+            <span class="badge bg-light text-dark">{{ pengajuan.oleh }}</span>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                {{ message|linebreaks }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Current Section Info -->
+    {% if pengajuan.section_tujuan %}
+    <div class="current-section-info">
+        <strong>📋 Section Tujuan Saat Ini:</strong> {{ pengajuan.section_tujuan }}
+        {% if current_section_id %}
+            <small class="text-muted">(ID: {{ current_section_id }})</small>
+        {% endif %}
+        {% if sdbm_integration %}
+            <br><small class="text-info">💡 Section akan diperbarui otomatis berdasarkan pilihan review</small>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <!-- Detail Pengajuan (sama seperti sebelumnya) -->
+        <div class="col-lg-8">
+            <div class="pengajuan-card">
+                <h5 style="color: #28a745; margin-bottom: 25px;">📋 Detail Pengajuan</h5>
+                
+                <!-- Detail content same as before... -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <div class="detail-label">History ID</div>
+                            <div class="detail-value">
+                                <strong>{{ pengajuan.history_id }}</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Pengaju</div>
+                            <div class="detail-value">
+                                <strong>{{ pengajuan.oleh }}</strong>
+                                <small class="text-muted">({{ pengajuan.user_insert }})</small>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Mesin</div>
+                            <div class="detail-value">{{ pengajuan.mesin|default:"-" }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <div class="detail-label">Line</div>
+                            <div class="detail-value">{{ pengajuan.line_name|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Jenis Pekerjaan</div>
+                            <div class="detail-value">{{ pengajuan.pekerjaan|default:"-" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-label">Tanggal Pengajuan</div>
+                            <div class="detail-value">
+                                {{ pengajuan.tgl_insert|date:"d M Y H:i"|default:"-" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Deskripsi Perbaikan</div>
+                    <div class="detail-value" style="min-height: 60px; align-items: flex-start;">
+                        {{ pengajuan.deskripsi_perbaikan|linebreaks }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Review Form -->
+        <div class="col-lg-4">
+            {% if not already_reviewed %}
+            <div class="review-card">
+                <div class="review-form-title">
+                    🎯 Enhanced Review Form - SDBM Integration
+                </div>
+                
+                <form method="post" id="enhancedReviewForm">
+                    {% csrf_token %}
+                    
+                    <!-- Action Selection -->
+                    <div class="form-group">
+                        <label>Keputusan Review <span class="text-danger">*</span></label>
+                        <div class="radio-group">
+                            {% for choice in review_form.action %}
+                                <div class="radio-option {% if choice.choice_value == 'process' %}radio-approve{% else %}radio-reject{% endif %}">
+                                    {{ choice.tag }}
+                                    <label for="{{ choice.id_for_label }}" style="font-weight: normal; margin-left: 10px; cursor: pointer;">
+                                        {% if choice.choice_value == 'process' %}
+                                            ✅ Process Pengajuan (dengan SDBM Auto-Assignment)
+                                        {% else %}
+                                            ❌ Reject Pengajuan
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Section Selection dengan SDBM Info -->
+                    <div id="sdbmSectionSelection" class="form-group">
+                        <div class="sdbm-alert">
+                            <strong>🎯 SDBM Auto-Assignment:</strong> Pilih section untuk auto-assignment ke supervisor sesuai mapping ENGINEERING department
+                        </div>
+                        
+                        <label>{{ review_form.target_section.label }}</label>
+                        
+                        <div class="sdbm-section-selection">
+                            {% for section in available_sections %}
+                            <div class="section-option" data-section="{{ section.key }}" data-supervisors="{{ section.supervisors_count }}">
+                                <div class="section-header">
+                                    <div class="section-title">{{ section.name }}</div>
+                                    <div class="supervisor-count {% if section.supervisors_count == 0 %}error{% elif section.supervisors_count < 3 %}warning{% endif %}">
+                                        {% if section.supervisors_count > 0 %}
+                                            {{ section.supervisors_count }} supervisor
+                                        {% else %}
+                                            ⚠️ No supervisors
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="section-details">
+                                    <div><strong>Department:</strong> {{ section.department|default:"ENGINEERING" }}</div>
+                                    <div><strong>Section:</strong> 
+                                        <span class="sdbm-path">{{ section.section|default:"N/A" }}</span>
+                                    </div>
+                                    {% if section.supervisors_count == 0 %}
+                                        <div class="text-danger"><small>⚠️ Tidak ada supervisor ditemukan di SDBM</small></div>
+                                    {% else %}
+                                        <div class="text-success"><small>✅ Auto-assignment akan dibuat ke {{ section.supervisors_count }} supervisor</small></div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                            <!-- Option untuk tidak pilih section -->
+                            <div class="section-option" data-section="" data-supervisors="0">
+                                <div class="section-header">
+                                    <div class="section-title">📋 Prosedur Standar</div>
+                                    <div class="supervisor-count" style="background: #6c757d;">Manual</div>
+                                </div>
+                                <div class="section-details">
+                                    <div>Tidak menggunakan auto-assignment SDBM</div>
+                                    <div><small>Section tujuan tetap menggunakan section original pengajuan</small></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Hidden field untuk form submission -->
+                        {{ review_form.target_section|add_class:"d-none" }}
+                        
+                        <!-- Assignment Preview -->
+                        <div class="assignment-preview" id="assignmentPreview">
+                            <div class="assignment-preview-title">
+                                <i data-feather="users"></i>
+                                Preview Auto-Assignment
+                            </div>
+                            <div id="assignmentContent">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Priority Level -->
+                    <div class="form-group priority-selection">
+                        <label>{{ review_form.priority_level.label }}</label>
+                        {{ review_form.priority_level|add_class:"form-control" }}
+                        <small class="text-muted">{{ review_form.priority_level.help_text }}</small>
+                    </div>
+                    
+                    <!-- Enhanced Review Notes -->
+                    <div class="form-group">
+                        <label>{{ review_form.review_notes.label }}</label>
+                        {{ review_form.review_notes|add_class:"form-control" }}
+                        <small class="text-muted">{{ review_form.review_notes.help_text }}</small>
+                    </div>
+                    
+                    <!-- Enhanced Submit Button -->
+                    <button type="submit" class="enhanced-submit-button" id="enhancedSubmitButton">
+                        <div class="button-content">
+                            <div class="loading-spinner"></div>
+                            <i data-feather="check-circle" class="button-icon"></i>
+                            <span class="button-text">Proses Review dengan SDBM</span>
+                        </div>
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <!-- Already Reviewed Display (enhanced) -->
+            <div class="review-card already-reviewed-card">
+                <i data-feather="check-circle" style="width: 48px; height: 48px; color: #28a745;"></i>
+                <h5 class="mt-3 mb-3">Pengajuan Sudah Direview</h5>
+                <p>
+                    {% if pengajuan.review_status == '1' %}
+                        Pengajuan telah <strong>diproses</strong>
+                        {% if pengajuan.final_section_name %}
+                            dan diarahkan ke:<br>
+                            <strong>{{ pengajuan.final_section_name }}</strong>
+                        {% else %}
+                            dengan prosedur standar
+                        {% endif %}
+                    {% elif pengajuan.review_status == '2' %}
+                        Pengajuan telah <strong style="color: #dc3545;">ditolak</strong>
+                    {% endif %}
+                </p>
+                
+                <!-- Enhanced review info -->
+                {% if sdbm_integration %}
+                <div class="sdbm-alert">
+                    <strong>🎯 SDBM Status:</strong><br>
+                    {% if pengajuan.final_section_id %}
+                        Section tujuan telah diperbarui (ID: {{ pengajuan.final_section_id }})
+                    {% else %}
+                        Menggunakan section original
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+                {% if pengajuan.review_notes %}
+                    <div class="mt-3 p-3" style="background: #f8f9fa; border-radius: 8px;">
+                        <strong>Catatan Review:</strong><br>
+                        {{ pengajuan.review_notes }}
+                    </div>
+                {% endif %}
+                <small class="text-muted">
+                    Direview pada: {{ pengajuan.review_date|date:"d M Y H:i"|default:"-" }}
+                </small>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Navigation (sama seperti sebelumnya) -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+                <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" class="nav-button btn-back">
+                    <i data-feather="arrow-left"></i> Kembali ke Daftar
+                </a>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="nav-button btn-dashboard">
+                        <i data-feather="home"></i> Review Dashboard
+                    </a>
+                    {% if user.is_superuser %}
+                    <a href="#" class="nav-button" style="background: #dc3545; color: white;" onclick="showSDBMDebug()">
+                        <i data-feather="settings"></i> SDBM Debug
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Integration Status Indicator -->
+<div class="integration-status" id="integrationStatus">
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 8px; height: 8px; background: #28a745; border-radius: 50%;"></div>
+        <span>SDBM Integration Active</span>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Show integration status
+    setTimeout(function() {
+        $('#integrationStatus').addClass('show');
+        setTimeout(function() {
+            $('#integrationStatus').removeClass('show');
+        }, 3000);
+    }, 1000);
+    
+    // Section selection handling
+    $('.section-option').on('click', function() {
+        // Remove previous selection
+        $('.section-option').removeClass('selected');
+        
+        // Add selection to clicked option
+        $(this).addClass('selected');
+        
+        // Update hidden field
+        const sectionKey = $(this).data('section');
+        $('select[name="target_section"]').val(sectionKey);
+        
+        // Show/hide assignment preview
+        if (sectionKey && sectionKey !== '') {
+            showAssignmentPreview(sectionKey);
+        } else {
+            hideAssignmentPreview();
+        }
+        
+        // Update submit button text
+        updateSubmitButtonText(sectionKey);
+    });
+    
+    // Action radio button changes
+    $('input[name="action"]').on('change', function() {
+        const action = $(this).val();
+        const sectionSelection = $('#sdbmSectionSelection');
+        const submitButton = $('#enhancedSubmitButton');
+        
+        if (action === 'process') {
+            sectionSelection.show();
+            updateSubmitButtonText($('select[name="target_section"]').val());
+        } else {
+            sectionSelection.hide();
+            $('.section-option').removeClass('selected');
+            $('select[name="target_section"]').val('');
+            hideAssignmentPreview();
+            
+            submitButton.find('.button-text').text('Reject Pengajuan');
+            submitButton.css('background', 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)');
+        }
+        feather.replace();
+    });
+    
+    // Form submission with enhanced validation
+    $('#enhancedReviewForm').on('submit', function(e) {
+        const action = $('input[name="action"]:checked').val();
+        const targetSection = $('select[name="target_section"]').val();
+        
+        if (!action) {
+            e.preventDefault();
+            alert('⚠️ Pilih keputusan review (Process atau Reject)!');
+            return false;
+        }
+        
+        // Enhanced confirmation with SDBM info
+        let confirmMessage = '';
+        if (action === 'process') {
+            if (targetSection) {
+                const selectedOption = $(`.section-option[data-section="${targetSection}"]`);
+                const supervisorCount = selectedOption.data('supervisors');
+                const sectionName = selectedOption.find('.section-title').text();
+                
+                if (supervisorCount > 0) {
+                    confirmMessage = `Yakin akan memproses pengajuan ini dan auto-assign ke ${supervisorCount} supervisor di ${sectionName}?\n\nSection tujuan akan diperbarui secara otomatis.`;
+                } else {
+                    confirmMessage = `Yakin akan memproses pengajuan ini ke ${sectionName}?\n\n⚠️ Warning: Tidak ada supervisor ditemukan untuk auto-assignment.`;
+                }
+            } else {
+                confirmMessage = 'Yakin akan memproses pengajuan ini dengan prosedur standar?\n\nSection tujuan tidak akan diubah.';
+            }
+        } else {
+            confirmMessage = 'Yakin akan menolak pengajuan ini?';
+        }
+        
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Show loading state
+        showLoadingState();
+    });
+    
+    function showAssignmentPreview(sectionKey) {
+        const selectedOption = $(`.section-option[data-section="${sectionKey}"]`);
+        const supervisorCount = selectedOption.data('supervisors');
+        const sectionName = selectedOption.find('.section-title').text();
+        
+        let content = '';
+        if (supervisorCount > 0) {
+            content = `
+                <div class="text-success">
+                    <strong>✅ Auto-assignment akan dibuat:</strong><br>
+                    • Target: ${sectionName}<br>
+                    • Supervisor Count: ${supervisorCount}<br>
+                    • Department: ENGINEERING<br>
+                    • Section akan diperbarui otomatis
+                </div>
+            `;
+        } else {
+            content = `
+                <div class="text-warning">
+                    <strong>⚠️ Warning:</strong><br>
+                    • Target: ${sectionName}<br>
+                    • Tidak ada supervisor ditemukan<br>
+                    • Auto-assignment mungkin gagal<br>
+                    • Section tetap akan diperbarui
+                </div>
+            `;
+        }
+        
+        $('#assignmentContent').html(content);
+        $('#assignmentPreview').addClass('show');
+    }
+    
+    function hideAssignmentPreview() {
+        $('#assignmentPreview').removeClass('show');
+    }
+    
+    function updateSubmitButtonText(targetSection) {
+        const submitButton = $('#enhancedSubmitButton');
+        let text = 'Proses Review dengan SDBM';
+        
+        if (targetSection) {
+            const selectedOption = $(`.section-option[data-section="${targetSection}"]`);
+            const sectionName = selectedOption.find('.section-title').text();
+            text = `Proses & Auto-assign ke ${sectionName}`;
+        }
+        
+        submitButton.find('.button-text').text(text);
+        submitButton.css('background', 'linear-gradient(135deg, #28a745 0%, #20c997 100%)');
+    }
+    
+    function showLoadingState() {
+        const submitButton = $('#enhancedSubmitButton');
+        
+        submitButton.prop('disabled', true);
+        submitButton.find('.button-icon').hide();
+        submitButton.find('.loading-spinner').show();
+        submitButton.find('.button-text').text('Processing SDBM Integration...');
+        
+        $('.review-card').addClass('loading');
+    }
+    
+    // SDBM Debug function (superuser only)
+    window.showSDBMDebug = function() {
+        {% if user.is_superuser %}
+        const debugUrl = `/wo-maintenance/debug/validate-sdbm/`;
+        fetch(debugUrl)
+            .then(response => response.json())
+            .then(data => {
+                const debugContent = JSON.stringify(data, null, 2);
+                const debugWindow = window.open('', '_blank', 'width=800,height=600');
+                debugWindow.document.write(`
+                    <html>
+                        <head><title>SDBM Debug Info</title></head>
+                        <body style="font-family: monospace; padding: 20px;">
+                            <h3>SDBM Integration Debug</h3>
+                            <pre>${debugContent}</pre>
+                        </body>
+                    </html>
+                `);
+            })
+            .catch(error => {
+                alert('Debug error: ' + error);
+            });
+        {% endif %}
+    };
+    
+    // Auto-save draft
+    let draftTimeout;
+    $('textarea[name="review_notes"]').on('input', function() {
+        clearTimeout(draftTimeout);
+        draftTimeout = setTimeout(function() {
+            localStorage.setItem('enhanced_review_draft_{{ pengajuan.history_id }}', $('textarea[name="review_notes"]').val());
+        }, 1000);
+    });
+    
+    // Load draft
+    const savedDraft = localStorage.getItem('enhanced_review_draft_{{ pengajuan.history_id }}');
+    if (savedDraft) {
+        $('textarea[name="review_notes"]').val(savedDraft);
+    }
+    
+    // Clear draft after successful submission
+    {% if messages %}
+    localStorage.removeItem('enhanced_review_draft_{{ pengajuan.history_id }}');
+    {% endif %}
+    
+    console.log('🎯 Enhanced SDBM Review System Loaded');
+    console.log('Available Sections: {{ available_sections|length }}');
+    console.log('SDBM Integration: {{ sdbm_integration|yesno:"true,false" }}');
+});
+</script>
+{% endblock scriptcontent %}

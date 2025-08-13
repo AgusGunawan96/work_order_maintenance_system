@@ -4240,3 +4240,67 @@ INFO 2025-08-13 10:04:08,979 autoreload 17964 12608 Watching for file changes wi
 INFO 2025-08-13 10:04:20,502 autoreload 17108 12192 Watching for file changes with StatReloader
 INFO 2025-08-13 10:04:32,063 autoreload 10484 10888 Watching for file changes with StatReloader
 INFO 2025-08-13 10:07:07,490 autoreload 13736 10468 Watching for file changes with StatReloader
+INFO 2025-08-13 10:07:23,393 basehttp 13736 324 "GET / HTTP/1.1" 200 11488
+INFO 2025-08-13 10:07:27,082 views 13736 17208 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 10:07:27,126 views 13736 17208 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 10:07:27,238 basehttp 13736 17208 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26495
+INFO 2025-08-13 10:07:35,212 views 13736 13132 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 10:07:35,215 views 13736 13132 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:07:35,225 views 13736 13132 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 10:07:35,299 basehttp 13736 13132 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32742
+INFO 2025-08-13 10:07:37,890 forms 13736 384 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 10:07:37,967 basehttp 13736 384 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33636
+INFO 2025-08-13 10:07:57,334 forms 13736 3224 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+WARNING 2025-08-13 10:07:57,347 views 13736 3224 Failed to log review action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'priority_level'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 10:07:57,347 utils 13736 3224 Starting assignment process for WO20250813001 to section 5
+INFO 2025-08-13 10:07:57,366 utils 13736 3224 Assignment tables created successfully
+ERROR 2025-08-13 10:07:57,374 utils 13736 3224 Error getting target section supervisors for section 5: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+WARNING 2025-08-13 10:07:57,375 utils 13736 3224 No assistant supervisors+ found in section 5 for assignment
+INFO 2025-08-13 10:07:57,376 views 13736 3224 Review PROCESS for WO20250813001 by SITI FATIMAH -> elektrik
+INFO 2025-08-13 10:07:57,378 basehttp 13736 3224 "POST /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:07:57,464 forms 13736 3224 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 10:07:57,538 basehttp 13736 3224 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 31183
+INFO 2025-08-13 10:08:23,247 views 13736 2784 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 10:08:23,276 views 13736 2784 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 10:08:23,356 basehttp 13736 2784 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26495
+INFO 2025-08-13 10:08:26,217 views 13736 2784 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 10:08:26,221 views 13736 2784 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:08:26,230 views 13736 2784 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 10:08:26,313 basehttp 13736 2784 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32996
+WARNING 2025-08-13 10:08:42,549 views 13736 17416 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 10:08:42,553 basehttp 13736 17416 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:08:42,625 views 13736 17416 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 10:08:42,646 views 13736 17416 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 10:08:42,712 basehttp 13736 17416 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26793
+INFO 2025-08-13 10:26:07,580 views 13736 2340 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 10:26:07,588 views 13736 2340 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:26:07,593 views 13736 2340 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 10:26:07,657 basehttp 13736 2340 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32996
+WARNING 2025-08-13 10:26:41,042 views 13736 2572 User SITI FATIMAH tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 10:26:41,043 basehttp 13736 2572 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 10:26:41,117 views 13736 2572 User SITI FATIMAH (007522) accessing daftar laporan - Mode: normal
+INFO 2025-08-13 10:26:41,146 views 13736 2572 Fixed query executed successfully - Found 0 records
+INFO 2025-08-13 10:26:41,223 basehttp 13736 2572 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 26793
+INFO 2025-08-13 10:27:25,895 views 13736 16768 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 10:27:25,899 views 13736 16768 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:27:25,910 views 13736 16768 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 10:27:25,987 basehttp 13736 16768 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 32996
+INFO 2025-08-13 10:27:52,018 views 13736 13012 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 10:27:52,023 views 13736 13012 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:27:52,073 views 13736 13012 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 10:27:52,156 basehttp 13736 13012 "GET /wo-maintenance/daftar/?mode=approved&tanggal_dari=2025-08-13&tanggal_sampai=2025-08-14&nama_mesin=&pengaju=&history_id= HTTP/1.1" 200 33034
+INFO 2025-08-13 10:27:54,589 views 13736 13012 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 10:27:54,594 views 13736 13012 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:27:54,605 views 13736 13012 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 10:27:54,680 basehttp 13736 13012 "GET /wo-maintenance/daftar/?mode=approved&search= HTTP/1.1" 200 32996
+INFO 2025-08-13 10:28:05,361 views 13736 18308 User SITI FATIMAH (007522) accessing daftar laporan - Mode: approved
+INFO 2025-08-13 10:28:05,365 views 13736 18308 SITI FATIMAH mode: querying ALL approved pengajuan
+INFO 2025-08-13 10:28:05,376 views 13736 18308 Fixed query executed successfully - Found 1 records
+INFO 2025-08-13 10:28:05,450 basehttp 13736 18308 "GET /wo-maintenance/daftar/?mode=approved&search= HTTP/1.1" 200 32996
+INFO 2025-08-13 10:38:42,022 autoreload 13736 10468 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-13 10:38:43,966 autoreload 328 18316 Watching for file changes with StatReloader
+INFO 2025-08-13 10:45:26,427 autoreload 13048 18228 Watching for file changes with StatReloader
+INFO 2025-08-13 10:51:50,800 autoreload 13048 18228 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-13 10:51:52,718 autoreload 2440 11004 Watching for file changes with StatReloader
+INFO 2025-08-13 10:53:07,506 autoreload 2440 11004 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-13 10:53:09,447 autoreload 1408 16236 Watching for file changes with StatReloader
