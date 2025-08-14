@@ -1836,3 +1836,485 @@ __all__ = [
     'REVIEWER_EMPLOYEE_NUMBER',
     'REVIEWER_FULLNAME'
 ]
+
+# ===== ENHANCED SECTION MAPPING =====
+def get_target_section_to_maintenance_mapping():
+    """
+    Enhanced mapping dari target section pilihan SITI FATIMAH ke id_section database
+    
+    Returns:
+        dict: Mapping target section ke maintenance section info
+    """
+    return {
+        'it': {
+            'maintenance_section_id': 1,  # ID di tabel_msection untuk IT
+            'display_name': '💻 IT (Information Technology)',
+            'department_name': 'ENGINEERING',
+            'section_name': 'ENGINEERING-IT',
+            'keywords': ['IT', 'INFORMATION', 'TECHNOLOGY', 'SISTEM', 'KOMPUTER']
+        },
+        'elektrik': {
+            'maintenance_section_id': 2,  # ID di tabel_msection untuk Elektrik
+            'display_name': '⚡ Elektrik (Electrical Engineering)',
+            'department_name': 'ENGINEERING', 
+            'section_name': 'ENGINEERING-ELECTRIC',
+            'keywords': ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL', 'LISTRIK', 'POWER']
+        },
+        'mekanik': {
+            'maintenance_section_id': 3,  # ID di tabel_msection untuk Mekanik
+            'display_name': '🔧 Mekanik (Mechanical Engineering)',
+            'department_name': 'ENGINEERING',
+            'section_name': 'ENGINEERING-MECHANIC',
+            'keywords': ['MEKANIK', 'MECHANIC', 'MECHANICAL', 'MESIN', 'TEKNIK']
+        },
+        'utility': {
+            'maintenance_section_id': 4,  # ID di tabel_msection untuk Utility
+            'display_name': '🏭 Utility (Utility Systems)',
+            'department_name': 'ENGINEERING',
+            'section_name': 'ENGINEERING-UTILITY', 
+            'keywords': ['UTILITY', 'UTILITIES', 'FASILITAS', 'INFRASTRUKTUR']
+        },
+        'civil': {
+            'maintenance_section_id': 5,  # ID di tabel_msection untuk Civil
+            'display_name': '🏗️ Civil (Civil Engineering)',
+            'department_name': 'ENGINEERING',
+            'section_name': 'ENGINEERING-CIVIL',
+            'keywords': ['CIVIL', 'SIPIL', 'KONSTRUKSI', 'BANGUNAN']
+        }
+    }
+
+def auto_discover_maintenance_sections():
+    """
+    Auto-discover section IDs dari database untuk mapping yang akurat
+    
+    Returns:
+        dict: Mapping target section ke actual section IDs dari database
+    """
+    try:
+        section_mapping = get_target_section_to_maintenance_mapping()
+        discovered_mapping = {}
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Get all sections dari database
+            cursor.execute("""
+                SELECT id_section, seksi 
+                FROM tabel_msection 
+                WHERE (status = 'A' OR status IS NULL) 
+                    AND seksi IS NOT NULL 
+                    AND seksi != ''
+                ORDER BY id_section
+            """)
+            
+            db_sections = cursor.fetchall()
+            
+            # Match dengan keywords
+            for target_section, mapping_info in section_mapping.items():
+                keywords = mapping_info['keywords']
+                
+                for db_row in db_sections:
+                    section_id = int(float(db_row[0]))
+                    section_name = str(db_row[1]).upper()
+                    
+                    # Check if any keyword matches
+                    if any(keyword in section_name for keyword in keywords):
+                        discovered_mapping[target_section] = {
+                            'id_section': section_id,
+                            'section_name': db_row[1],
+                            'display_name': mapping_info['display_name'],
+                            'matched_keyword': next(k for k in keywords if k in section_name)
+                        }
+                        logger.info(f"Auto-discovered: {target_section} -> ID {section_id} ({db_row[1]})")
+                        break
+                
+                # Fallback ke default mapping jika tidak ditemukan
+                if target_section not in discovered_mapping:
+                    discovered_mapping[target_section] = {
+                        'id_section': mapping_info['maintenance_section_id'],
+                        'section_name': f"Section {mapping_info['maintenance_section_id']}",
+                        'display_name': mapping_info['display_name'],
+                        'matched_keyword': 'fallback'
+                    }
+                    logger.warning(f"Fallback mapping: {target_section} -> ID {mapping_info['maintenance_section_id']}")
+        
+        return discovered_mapping
+        
+    except Exception as e:
+        logger.error(f"Error auto-discovering sections: {e}")
+        # Return default mapping
+        default_mapping = get_target_section_to_maintenance_mapping()
+        return {
+            target: {
+                'id_section': info['maintenance_section_id'],
+                'section_name': f"Section {info['maintenance_section_id']}",
+                'display_name': info['display_name'],
+                'matched_keyword': 'default'
+            }
+            for target, info in default_mapping.items()
+        }
+
+def assign_pengajuan_after_siti_review_enhanced(history_id, target_section, reviewer_employee_number, review_notes):
+    """
+    ENHANCED: Assign pengajuan setelah review oleh SITI FATIMAH dengan update section tujuan
+    
+    Args:
+        history_id (str): ID pengajuan
+        target_section (str): Target section yang dipilih SITI FATIMAH (it, elektrik, utility, mekanik)
+        reviewer_employee_number (str): Employee number reviewer (SITI FATIMAH)
+        review_notes (str): Catatan review
+        
+    Returns:
+        dict: Result of assignment process with section update info
+    """
+    try:
+        logger.info(f"SITI REVIEW ENHANCED: Starting assignment for {history_id} to {target_section}")
+        
+        # Get auto-discovered section mapping
+        section_mapping = auto_discover_maintenance_sections()
+        section_info = section_mapping.get(target_section)
+        
+        if not section_info:
+            return {
+                'success': False,
+                'error': f'Unknown target section: {target_section}',
+                'assigned_employees': [],
+                'section_updated': False,
+                'original_section': None,
+                'new_section': None
+            }
+        
+        result = {
+            'success': True,
+            'assigned_employees': [],
+            'section_updated': False,
+            'section_changed': False,
+            'original_section': None,
+            'new_section': None,
+            'final_section_updated': False,
+            'error': None
+        }
+        
+        # STEP 1: Get original section info
+        try:
+            with connections['DB_Maintenance'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT tp.id_section, ms.seksi as current_section_name
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN tabel_msection ms ON tp.id_section = ms.id_section
+                    WHERE tp.history_id = %s
+                """, [history_id])
+                
+                original_row = cursor.fetchone()
+                if original_row:
+                    original_section_id = int(float(original_row[0])) if original_row[0] else None
+                    original_section_name = original_row[1] or 'Unknown'
+                    
+                    result['original_section'] = {
+                        'id': original_section_id,
+                        'name': original_section_name
+                    }
+                    
+                    logger.info(f"SITI REVIEW: Original section - ID: {original_section_id}, Name: {original_section_name}")
+        
+        except Exception as get_error:
+            logger.error(f"SITI REVIEW: Error getting original section: {get_error}")
+            result['error'] = f'Failed to get original section: {str(get_error)}'
+        
+        # STEP 2: Update id_section (section tujuan) DAN final_section_id
+        try:
+            new_section_id = section_info['id_section']
+            
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # ENHANCED: Update BOTH id_section AND final_section_id
+                cursor.execute("""
+                    UPDATE tabel_pengajuan
+                    SET id_section = %s,
+                        final_section_id = %s
+                    WHERE history_id = %s
+                """, [float(new_section_id), float(new_section_id), history_id])
+                
+                if cursor.rowcount > 0:
+                    result['section_updated'] = True
+                    result['final_section_updated'] = True
+                    result['section_changed'] = (
+                        result['original_section'] and 
+                        result['original_section']['id'] != new_section_id
+                    )
+                    
+                    result['new_section'] = {
+                        'id': new_section_id,
+                        'name': section_info['section_name'],
+                        'display_name': section_info['display_name']
+                    }
+                    
+                    logger.info(f"SITI REVIEW: Updated section tujuan from ID {result['original_section']['id'] if result['original_section'] else 'Unknown'} to ID {new_section_id}")
+                    
+                    # Verify update
+                    cursor.execute("""
+                        SELECT tp.id_section, ms.seksi, tp.final_section_id
+                        FROM tabel_pengajuan tp
+                        LEFT JOIN tabel_msection ms ON tp.id_section = ms.id_section
+                        WHERE tp.history_id = %s
+                    """, [history_id])
+                    
+                    verify_row = cursor.fetchone()
+                    if verify_row:
+                        logger.info(f"SITI REVIEW: Verification - New section ID: {verify_row[0]}, Name: {verify_row[1]}, Final ID: {verify_row[2]}")
+                
+        except Exception as update_error:
+            logger.error(f"SITI REVIEW: Error updating sections: {update_error}")
+            result['error'] = f'Failed to update sections: {str(update_error)}'
+        
+        # STEP 3: SDBM Assignment ke supervisors
+        try:
+            supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
+            
+            if supervisors:
+                # Create assignment table if not exists
+                ensure_assignment_tables_exist()
+                
+                # Assign ke supervisors
+                with connections['DB_Maintenance'].cursor() as cursor:
+                    for supervisor in supervisors:
+                        try:
+                            cursor.execute("""
+                                INSERT INTO tabel_pengajuan_assignment
+                                (history_id, assigned_to_employee, assigned_by_employee, assignment_date, is_active, notes, assignment_type)
+                                VALUES (%s, %s, %s, GETDATE(), 1, %s, 'SITI_REVIEW_ENHANCED')
+                            """, [
+                                history_id,
+                                supervisor['employee_number'],
+                                reviewer_employee_number,
+                                f"SITI FATIMAH Enhanced Review: Section changed to {section_info['display_name']}. Assigned to {supervisor['title_name']}. Notes: {review_notes}"
+                            ])
+                            
+                            result['assigned_employees'].append({
+                                'employee_number': supervisor['employee_number'],
+                                'fullname': supervisor['fullname'],
+                                'title_name': supervisor['title_name'],
+                                'level_description': supervisor.get('level_description', 'Supervisor')
+                            })
+                            
+                            logger.info(f"SITI REVIEW: Assigned {history_id} to {supervisor['fullname']} ({supervisor['employee_number']})")
+                            
+                        except Exception as assign_error:
+                            logger.error(f"SITI REVIEW: Error assigning to {supervisor['employee_number']}: {assign_error}")
+                            continue
+                
+                logger.info(f"SITI REVIEW: Successfully assigned {history_id} to {len(result['assigned_employees'])} supervisors in {target_section}")
+                
+            else:
+                logger.warning(f"SITI REVIEW: No supervisors found for {target_section}")
+                result['error'] = f'No supervisors found for {target_section} but section was updated'
+                
+        except Exception as sdbm_error:
+            logger.error(f"SITI REVIEW: SDBM assignment error: {sdbm_error}")
+            result['error'] = f'Section updated successfully but SDBM assignment failed: {str(sdbm_error)}'
+        
+        # STEP 4: Enhanced logging
+        try:
+            log_enhanced_section_change(
+                history_id,
+                reviewer_employee_number,
+                target_section,
+                result['original_section'],
+                result['new_section'],
+                review_notes
+            )
+        except Exception as log_error:
+            logger.warning(f"SITI REVIEW: Logging error: {log_error}")
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"SITI REVIEW: Critical error in enhanced assignment: {e}")
+        return {
+            'success': False,
+            'error': str(e),
+            'assigned_employees': [],
+            'section_updated': False,
+            'section_changed': False,
+            'original_section': None,
+            'new_section': None
+        }
+    
+def log_enhanced_section_change(history_id, reviewer_employee, target_section, original_section, new_section, review_notes):
+    """
+    Log perubahan section untuk audit trail
+    
+    Args:
+        history_id (str): ID pengajuan
+        reviewer_employee (str): Employee number reviewer
+        target_section (str): Target section yang dipilih
+        original_section (dict): Section info sebelum perubahan
+        new_section (dict): Section info setelah perubahan
+        review_notes (str): Review notes
+    """
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Enhanced review log with section change info
+            cursor.execute("""
+                INSERT INTO tabel_review_log
+                (history_id, reviewer_employee, action, target_section, review_notes, review_date, 
+                 original_section_id, new_section_id, section_changed)
+                VALUES (%s, %s, %s, %s, %s, GETDATE(), %s, %s, %s)
+            """, [
+                history_id,
+                reviewer_employee,
+                'process_with_section_change',
+                target_section,
+                f"Section changed from '{original_section['name'] if original_section else 'Unknown'}' to '{new_section['display_name'] if new_section else 'Unknown'}'. {review_notes}",
+                original_section['id'] if original_section else None,
+                new_section['id'] if new_section else None,
+                1 if (original_section and new_section and original_section['id'] != new_section['id']) else 0
+            ])
+            
+            logger.info(f"Enhanced section change logged for {history_id}")
+            
+    except Exception as e:
+        logger.error(f"Error logging enhanced section change: {e}")
+
+
+def ensure_enhanced_review_tables_exist():
+    """
+    Enhanced version: Pastikan review tables memiliki kolom untuk section change tracking
+    
+    Returns:
+        bool: True jika berhasil, False jika gagal
+    """
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Base tables from original function
+            ensure_assignment_tables_exist()
+            
+            # Enhanced review log table with section change tracking
+            cursor.execute("""
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tabel_review_log' AND xtype='U')
+                BEGIN
+                    CREATE TABLE [dbo].[tabel_review_log](
+                        [id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                        [history_id] [varchar](15) NULL,
+                        [reviewer_employee] [varchar](50) NULL,
+                        [action] [varchar](50) NULL,
+                        [target_section] [varchar](50) NULL,
+                        [review_notes] [varchar](max) NULL,
+                        [priority_level] [varchar](20) NULL,
+                        [review_date] [datetime] NULL,
+                        [original_section_id] [float] NULL,
+                        [new_section_id] [float] NULL,
+                        [section_changed] [bit] NULL DEFAULT 0
+                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+                END
+            """)
+            
+            # Add missing columns to existing table
+            try:
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_review_log' AND COLUMN_NAME = 'original_section_id')
+                    BEGIN
+                        ALTER TABLE tabel_review_log ADD original_section_id float NULL
+                    END
+                """)
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_review_log' AND COLUMN_NAME = 'new_section_id')
+                    BEGIN
+                        ALTER TABLE tabel_review_log ADD new_section_id float NULL
+                    END
+                """)
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_review_log' AND COLUMN_NAME = 'section_changed')
+                    BEGIN
+                        ALTER TABLE tabel_review_log ADD section_changed bit NULL DEFAULT 0
+                    END
+                """)
+                
+            except Exception as col_error:
+                logger.warning(f"Column addition warning: {col_error}")
+            
+            # Create indexes for enhanced performance
+            cursor.execute("""
+                IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_tabel_review_log_section_changed')
+                BEGIN
+                    CREATE NONCLUSTERED INDEX [IX_tabel_review_log_section_changed] 
+                    ON [dbo].[tabel_review_log] ([section_changed] ASC, [review_date] DESC)
+                    WHERE [section_changed] = 1
+                END
+            """)
+            
+            logger.info("Enhanced review tables created/verified successfully")
+            return True
+            
+    except Exception as e:
+        logger.error(f"Error creating enhanced review tables: {e}")
+        return False
+
+
+def get_section_change_history(history_id):
+    """
+    Get history perubahan section untuk pengajuan tertentu
+    
+    Args:
+        history_id (str): ID pengajuan
+        
+    Returns:
+        list: List of section changes
+    """
+    try:
+        changes = []
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT 
+                    rl.review_date,
+                    rl.reviewer_employee,
+                    rl.target_section,
+                    rl.original_section_id,
+                    rl.new_section_id,
+                    rl.section_changed,
+                    rl.review_notes,
+                    orig_sec.seksi as original_section_name,
+                    new_sec.seksi as new_section_name
+                FROM tabel_review_log rl
+                LEFT JOIN tabel_msection orig_sec ON rl.original_section_id = orig_sec.id_section
+                LEFT JOIN tabel_msection new_sec ON rl.new_section_id = new_sec.id_section
+                WHERE rl.history_id = %s 
+                    AND rl.section_changed = 1
+                ORDER BY rl.review_date DESC
+            """, [history_id])
+            
+            for row in cursor.fetchall():
+                changes.append({
+                    'review_date': row[0],
+                    'reviewer_employee': row[1],
+                    'target_section': row[2],
+                    'original_section': {
+                        'id': row[3],
+                        'name': row[7]
+                    },
+                    'new_section': {
+                        'id': row[4],
+                        'name': row[8]
+                    },
+                    'review_notes': row[6]
+                })
+        
+        return changes
+        
+    except Exception as e:
+        logger.error(f"Error getting section change history: {e}")
+        return []
+
+
+# Export enhanced functions
+__all__ = [
+    'get_target_section_to_maintenance_mapping',
+    'auto_discover_maintenance_sections',
+    'assign_pengajuan_after_siti_review_enhanced',
+    'log_enhanced_section_change',
+    'ensure_enhanced_review_tables_exist',
+    'get_section_change_history'
+]

@@ -4964,3 +4964,428 @@ def debug_section_mapping(request, sdbm_section_id):
             'error': str(e),
             'traceback': traceback.format_exc()
         }, status=500)
+    
+@login_required
+@reviewer_required_fixed
+def review_pengajuan_detail_enhanced(request, nomor_pengajuan):
+    """
+    ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH dengan section update
+    """
+    try:
+        logger.info(f"ENHANCED REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
+        
+        # Ambil employee data dengan function yang fixed
+        employee_data = get_employee_data_for_request_fixed(request)
+        
+        if not employee_data:
+            logger.error(f"ENHANCED REVIEW: No employee data for {request.user.username}")
+            messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
+            return redirect('login')
+        
+        # Import enhanced functions
+        from .utils import (
+            auto_discover_maintenance_sections,
+            assign_pengajuan_after_siti_review_enhanced,
+            ensure_enhanced_review_tables_exist,
+            get_section_change_history
+        )
+        
+        # Ensure enhanced tables exist
+        ensure_enhanced_review_tables_exist()
+        
+        # Ambil data pengajuan dengan enhanced info
+        pengajuan = None
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT 
+                    tp.history_id,
+                    tp.number_wo,
+                    tp.tgl_insert,
+                    tp.oleh,
+                    tp.user_insert,
+                    tm.mesin,
+                    tms.seksi as section_tujuan,
+                    tpek.pekerjaan,
+                    tp.deskripsi_perbaikan,
+                    tp.status,
+                    tp.approve,
+                    tl.line as line_name,
+                    tp.tgl_his,
+                    tp.jam_his,
+                    tp.review_status,
+                    tp.reviewed_by,
+                    tp.review_date,
+                    tp.review_notes,
+                    tp.final_section_id,
+                    final_section.seksi as final_section_name,
+                    tp.status_pekerjaan,
+                    tp.id_section as current_section_id
+                FROM tabel_pengajuan tp
+                LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+                LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
+                LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+                LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
+                WHERE tp.history_id = %s
+            """, [nomor_pengajuan])
+            
+            row = cursor.fetchone()
+            
+            if not row:
+                logger.error(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not found")
+                messages.error(request, 'Pengajuan tidak ditemukan.')
+                return redirect('wo_maintenance_app:review_pengajuan_list')
+            
+            pengajuan = {
+                'history_id': row[0],
+                'number_wo': row[1],
+                'tgl_insert': row[2],
+                'oleh': row[3],
+                'user_insert': row[4],
+                'mesin': row[5],
+                'section_tujuan': row[6],
+                'pekerjaan': row[7],
+                'deskripsi_perbaikan': row[8],
+                'status': row[9],
+                'approve': row[10],
+                'line_name': row[11],
+                'tgl_his': row[12],
+                'jam_his': row[13],
+                'review_status': row[14],
+                'reviewed_by': row[15],
+                'review_date': row[16],
+                'review_notes': row[17],
+                'final_section_id': row[18],
+                'final_section_name': row[19],
+                'status_pekerjaan': row[20],
+                'current_section_id': row[21]
+            }
+        
+        logger.debug(f"ENHANCED REVIEW: Pengajuan loaded - Current section ID: {pengajuan['current_section_id']}")
+        
+        # Cek apakah pengajuan sudah di-approve dan belum direview
+        if pengajuan['status'] != STATUS_APPROVED or pengajuan['approve'] != APPROVE_YES:
+            logger.warning(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not approved")
+            messages.warning(request, 'Pengajuan ini belum di-approve oleh atasan.')
+            return redirect('wo_maintenance_app:review_pengajuan_list')
+        
+        # Cek apakah sudah direview
+        already_reviewed = pengajuan['review_status'] in ['1', '2']
+        
+        # Get section change history
+        section_change_history = get_section_change_history(nomor_pengajuan) if already_reviewed else []
+        
+        # ENHANCED: Handle review form submission dengan section update
+        if request.method == 'POST' and not already_reviewed:
+            logger.info(f"ENHANCED REVIEW: Processing POST request for {nomor_pengajuan}")
+            
+            # Ensure session is preserved
+            request.session.modified = True
+            
+            review_form = ReviewForm(request.POST)
+            
+            if review_form.is_valid():
+                action = review_form.cleaned_data['action']
+                target_section = review_form.cleaned_data['target_section']
+                review_notes = review_form.cleaned_data['review_notes']
+                priority_level = review_form.cleaned_data['priority_level']
+                
+                logger.info(f"ENHANCED REVIEW: Form valid - Action: {action}, Target: {target_section}")
+                
+                try:
+                    with connections['DB_Maintenance'].cursor() as cursor:
+                        if action == 'process':
+                            # Update pengajuan dengan review processing
+                            cursor.execute("""
+                                UPDATE tabel_pengajuan
+                                SET review_status = '1',
+                                    reviewed_by = %s,
+                                    review_date = GETDATE(),
+                                    review_notes = %s
+                                WHERE history_id = %s
+                            """, [
+                                REVIEWER_EMPLOYEE_NUMBER, 
+                                review_notes, 
+                                nomor_pengajuan
+                            ])
+                            
+                            logger.info(f"ENHANCED REVIEW: Updated pengajuan {nomor_pengajuan} with review processing")
+                            
+                            # ENHANCED: Section update dengan auto-discovery dan SDBM integration
+                            if target_section:
+                                logger.info(f"ENHANCED REVIEW: Processing section change to {target_section}")
+                                
+                                assignment_result = assign_pengajuan_after_siti_review_enhanced(
+                                    nomor_pengajuan,
+                                    target_section,
+                                    REVIEWER_EMPLOYEE_NUMBER,
+                                    review_notes
+                                )
+                                
+                                # Enhanced success message dengan section change info
+                                if assignment_result['success']:
+                                    success_parts = []
+                                    
+                                    # Base success message
+                                    success_parts.append(f'✅ Pengajuan {nomor_pengajuan} berhasil diproses!')
+                                    
+                                    # Section change info
+                                    if assignment_result['section_updated']:
+                                        if assignment_result['section_changed']:
+                                            original_name = assignment_result['original_section']['name'] if assignment_result['original_section'] else 'Unknown'
+                                            new_name = assignment_result['new_section']['display_name'] if assignment_result['new_section'] else 'Unknown'
+                                            success_parts.append(f'🎯 Section tujuan berubah dari "{original_name}" ke "{new_name}"')
+                                        else:
+                                            success_parts.append(f'🎯 Section tujuan dikonfirmasi ke "{assignment_result["new_section"]["display_name"]}"')
+                                    
+                                    # Assignment info
+                                    if assignment_result['assigned_employees']:
+                                        assigned_count = len(assignment_result['assigned_employees'])
+                                        supervisors_info = [
+                                            f"{emp['fullname']} ({emp['level_description']})" 
+                                            for emp in assignment_result['assigned_employees'][:3]
+                                        ]
+                                        
+                                        success_parts.append(f'📋 Auto-assigned ke {assigned_count} supervisor:')
+                                        success_parts.extend([f'• {info}' for info in supervisors_info])
+                                        
+                                        if assigned_count > 3:
+                                            success_parts.append(f'• dan {assigned_count - 3} supervisor lainnya')
+                                    
+                                    # Join semua pesan
+                                    messages.success(request, '\n'.join(success_parts))
+                                    
+                                    logger.info(f"ENHANCED REVIEW SUCCESS: {nomor_pengajuan} -> {target_section}, section_changed: {assignment_result['section_changed']}, assignments: {len(assignment_result['assigned_employees'])}")
+                                    
+                                else:
+                                    # Error dalam assignment tapi review tetap berhasil
+                                    error_msg = assignment_result.get('error', 'Unknown error')
+                                    messages.warning(request,
+                                        f'✅ Pengajuan {nomor_pengajuan} berhasil diproses, '
+                                        f'tetapi terjadi masalah: {error_msg}'
+                                    )
+                                    logger.warning(f"ENHANCED REVIEW PARTIAL: {nomor_pengajuan} processed but assignment failed: {error_msg}")
+                                
+                            else:
+                                # No specific target section - standard processing
+                                messages.success(request, 
+                                    f'✅ Pengajuan {nomor_pengajuan} berhasil diproses! '
+                                    f'Akan ditindaklanjuti sesuai prosedur standar.'
+                                )
+                                logger.info(f"ENHANCED REVIEW: {nomor_pengajuan} processed with standard procedure")
+                            
+                        elif action == 'reject':
+                            # Update pengajuan dengan review rejection
+                            cursor.execute("""
+                                UPDATE tabel_pengajuan
+                                SET review_status = '2',
+                                    reviewed_by = %s,
+                                    review_date = GETDATE(),
+                                    review_notes = %s,
+                                    status = '2'
+                                WHERE history_id = %s
+                            """, [REVIEWER_EMPLOYEE_NUMBER, review_notes, nomor_pengajuan])
+                            
+                            logger.info(f"ENHANCED REVIEW: Rejected pengajuan {nomor_pengajuan}")
+                            messages.success(request, f'❌ Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
+                    
+                    logger.info(f"ENHANCED REVIEW: Successfully processed review for {nomor_pengajuan}")
+                    
+                    # Ensure session is saved before redirect
+                    request.session.modified = True
+                    request.session.save()
+                    
+                    # Redirect ke enhanced detail view
+                    return redirect('wo_maintenance_app:review_pengajuan_detail_enhanced', nomor_pengajuan=nomor_pengajuan)
+                    
+                except Exception as update_error:
+                    logger.error(f"ENHANCED REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
+                    messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
+            else:
+                # Form validation error
+                logger.warning(f"ENHANCED REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
+                messages.error(request, 'Form review tidak valid. Periksa kembali input Anda.')
+        else:
+            review_form = ReviewForm()
+        
+        # Get enhanced available sections dengan auto-discovery
+        available_sections = []
+        try:
+            section_mapping = auto_discover_maintenance_sections()
+            
+            for key, info in section_mapping.items():
+                available_sections.append({
+                    'key': key,
+                    'name': info['display_name'],
+                    'section_id': info['id_section'],
+                    'section_name': info['section_name'],
+                    'is_current': info['id_section'] == pengajuan['current_section_id'],
+                    'matched_keyword': info['matched_keyword']
+                })
+                
+        except Exception as section_error:
+            logger.error(f"ENHANCED REVIEW: Error getting sections: {section_error}")
+            # Fallback ke basic sections
+            available_sections = [
+                {'key': 'it', 'name': '💻 IT', 'section_id': 1, 'is_current': False},
+                {'key': 'elektrik', 'name': '⚡ Elektrik', 'section_id': 2, 'is_current': False},
+                {'key': 'utility', 'name': '🏭 Utility', 'section_id': 4, 'is_current': False},
+                {'key': 'mekanik', 'name': '🔧 Mekanik', 'section_id': 3, 'is_current': False}
+            ]
+        
+        # Enhanced context
+        context = {
+            'pengajuan': pengajuan,
+            'review_form': review_form,
+            'already_reviewed': already_reviewed,
+            'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
+            'available_sections': available_sections,
+            'employee_data': employee_data,
+            'page_title': f'Enhanced Review Pengajuan {nomor_pengajuan}',
+            
+            # ENHANCED: Section change info
+            'section_change_history': section_change_history,
+            'has_section_changes': len(section_change_history) > 0,
+            'current_section_info': {
+                'id': pengajuan['current_section_id'],
+                'name': pengajuan['section_tujuan']
+            },
+            'final_section_info': {
+                'id': pengajuan['final_section_id'],
+                'name': pengajuan['final_section_name']
+            },
+            
+            # Enhanced features
+            'enhanced_mode': True,
+            'section_update_enabled': True,
+            'auto_discovery_enabled': True,
+            
+            # Debug info
+            'debug_mode': request.user.is_superuser,
+            'section_mapping_debug': auto_discover_maintenance_sections() if request.user.is_superuser else None
+        }
+        
+        logger.info(f"ENHANCED REVIEW: Rendering enhanced template for {nomor_pengajuan}")
+        return render(request, 'wo_maintenance_app/review_pengajuan_detail_enhanced.html', context)
+        
+    except Exception as e:
+        logger.error(f"ENHANCED REVIEW: Critical error for {nomor_pengajuan}: {e}")
+        import traceback
+        logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
+        messages.error(request, 'Terjadi kesalahan saat memuat enhanced detail pengajuan.')
+        return redirect('wo_maintenance_app:review_pengajuan_list')
+
+# ===== AJAX ENDPOINTS untuk Enhanced Features =====
+
+@login_required
+@reviewer_required_fixed
+def ajax_preview_section_change(request):
+    """
+    AJAX preview untuk section change sebelum submit
+    """
+    try:
+        history_id = request.GET.get('history_id', '').strip()
+        target_section = request.GET.get('target_section', '').strip()
+        
+        if not history_id or not target_section:
+            return JsonResponse({
+                'success': False,
+                'error': 'history_id and target_section required'
+            })
+        
+        from .utils import auto_discover_maintenance_sections
+        
+        # Get current section
+        current_section = None
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT tp.id_section, ms.seksi
+                FROM tabel_pengajuan tp
+                LEFT JOIN tabel_msection ms ON tp.id_section = ms.id_section
+                WHERE tp.history_id = %s
+            """, [history_id])
+            
+            row = cursor.fetchone()
+            if row:
+                current_section = {
+                    'id': int(float(row[0])) if row[0] else None,
+                    'name': row[1] or 'Unknown'
+                }
+        
+        # Get target section info
+        section_mapping = auto_discover_maintenance_sections()
+        target_info = section_mapping.get(target_section, {})
+        
+        preview = {
+            'history_id': history_id,
+            'target_section': target_section,
+            'current_section': current_section,
+            'target_section_info': {
+                'id': target_info.get('id_section'),
+                'name': target_info.get('section_name', 'Unknown'),
+                'display_name': target_info.get('display_name', target_section.title())
+            },
+            'will_change': (
+                current_section and 
+                target_info.get('id_section') and 
+                current_section['id'] != target_info.get('id_section')
+            )
+        }
+        
+        return JsonResponse({
+            'success': True,
+            'preview': preview
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in ajax_preview_section_change: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+@login_required
+def ajax_get_section_mapping_info(request):
+    """
+    AJAX endpoint untuk mendapatkan section mapping info
+    """
+    if not request.user.is_superuser and not is_reviewer_fixed(request):
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    try:
+        from .utils import auto_discover_maintenance_sections, get_target_section_to_maintenance_mapping
+        
+        # Get auto-discovered mapping
+        discovered = auto_discover_maintenance_sections()
+        
+        # Get default mapping
+        default = get_target_section_to_maintenance_mapping()
+        
+        mapping_info = {
+            'timestamp': timezone.now().isoformat(),
+            'discovered_mapping': discovered,
+            'default_mapping': default,
+            'differences': []
+        }
+        
+        # Check for differences
+        for target in default.keys():
+            default_id = default[target]['maintenance_section_id']
+            discovered_id = discovered.get(target, {}).get('id_section')
+            
+            if default_id != discovered_id:
+                mapping_info['differences'].append({
+                    'target_section': target,
+                    'default_id': default_id,
+                    'discovered_id': discovered_id,
+                    'status': 'mismatch'
+                })
+        
+        return JsonResponse(mapping_info, indent=2)
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }, status=500)

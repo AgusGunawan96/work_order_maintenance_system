@@ -93,6 +93,12 @@ urlpatterns = [
 path('debug/create-assignment-tables/', views.create_assignment_tables, name='create_assignment_tables'),
 # Debug URLs
 path('debug/section-mapping/<int:sdbm_section_id>/', views.debug_section_mapping, name='debug_section_mapping'),
+
+# ===== URL Patterns untuk Enhanced Views =====
+# Tambahkan ke urls.py:
+path('review/pengajuan/<str:nomor_pengajuan>/enhanced/', views.review_pengajuan_detail_enhanced, name='review_pengajuan_detail_enhanced'),
+path('ajax/review/preview-section-change/', views.ajax_preview_section_change, name='ajax_preview_section_change'),
+path('ajax/review/section-mapping-info/', views.ajax_get_section_mapping_info, name='ajax_get_section_mapping_info'),
 ]
 
 # ===== URL VALIDATION (untuk debugging) =====
