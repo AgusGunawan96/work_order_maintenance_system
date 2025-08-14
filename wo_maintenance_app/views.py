@@ -9,7 +9,7 @@ from django.db import connections, transaction
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from datetime import datetime, timedelta
-import json
+import json, traceback
 import logging
 from functools import wraps
 from django.http import JsonResponse
@@ -34,9 +34,18 @@ from wo_maintenance_app.utils import (
     APPROVE_REJECTED,
     REVIEWER_EMPLOYEE_NUMBER,
     REVIEWER_FULLNAME,
+    REVIEW_PENDING,
+    REVIEW_APPROVED,
+    REVIEW_REJECTED,
      is_pengajuan_approved_for_review,
      is_pengajuan_final_processed,  # NEW
-    initialize_review_data
+    initialize_review_data,
+    get_enhanced_pengajuan_access_for_user,
+    get_access_statistics,
+    get_maintenance_section_ids_by_keywords,
+    get_engineering_section_access,
+    is_engineering_supervisor_or_above,
+    build_enhanced_pengajuan_query_conditions
 )
 
 # Setup logging
@@ -5433,6 +5442,316 @@ def ajax_get_section_mapping_info(request):
                 })
         
         return JsonResponse(mapping_info, indent=2)
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }, status=500)
+
+@login_required
+def section_based_daftar_laporan(request):
+    """
+    Enhanced daftar laporan dengan section-based access untuk Engineering Supervisors
+    REQUIREMENTS:
+    1. User biasa: pengajuan mereka sendiri
+    2. Engineering Supervisors: semua pengajuan di section mereka
+    3. SITI FATIMAH: semua pengajuan
+    """
+    try:
+        # ===== AMBIL DATA HIERARCHY USER =====
+        user_hierarchy = get_employee_hierarchy_data(request.user)
+        
+        if not user_hierarchy:
+            logger.warning(f"User {request.user.username} tidak ditemukan di database SDBM")
+            messages.error(request, 'Data karyawan tidak ditemukan. Hubungi administrator.')
+            return redirect('wo_maintenance_app:dashboard')
+        
+        # ===== GET ENHANCED ACCESS INFO =====
+        access_info = get_enhanced_pengajuan_access_for_user(user_hierarchy)
+        access_info['user_employee_number'] = user_hierarchy.get('employee_number')
+        
+        logger.info(f"Section Access for {user_hierarchy.get('fullname')}: {access_info['access_type']}")
+        
+        # ===== FILTER FORM =====
+        filter_form = PengajuanFilterForm(request.GET or None)
+        search_query = request.GET.get('search', '').strip()
+        
+        # Build additional filters
+        additional_filters = {'search_query': search_query}
+        
+        if filter_form.is_valid():
+            if filter_form.cleaned_data.get('tanggal_dari'):
+                additional_filters['tanggal_dari'] = filter_form.cleaned_data['tanggal_dari']
+            if filter_form.cleaned_data.get('tanggal_sampai'):
+                additional_filters['tanggal_sampai'] = filter_form.cleaned_data['tanggal_sampai']
+            if filter_form.cleaned_data.get('status'):
+                additional_filters['status'] = filter_form.cleaned_data['status']
+        
+        # ===== QUERY DATABASE dengan Enhanced Access =====
+        pengajuan_list = []
+        total_records = 0
+        
+        try:
+            # Build query conditions
+            where_conditions, query_params = build_enhanced_pengajuan_query_conditions(
+                access_info, additional_filters
+            )
+            where_clause = "WHERE " + " AND ".join(where_conditions)
+            
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # ===== COUNT QUERY =====
+                count_query = f"""
+                    SELECT COUNT(DISTINCT tp.history_id)
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+                    LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
+                    LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                    LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+                    LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
+                    {where_clause}
+                """
+                
+                cursor.execute(count_query, query_params)
+                total_records = cursor.fetchone()[0] or 0
+                
+                # ===== PAGINATION =====
+                page_size = 20
+                page_number = int(request.GET.get('page', 1))
+                
+                total_pages = (total_records + page_size - 1) // page_size if total_records > 0 else 1
+                has_previous = page_number > 1
+                has_next = page_number < total_pages
+                previous_page_number = page_number - 1 if has_previous else None
+                next_page_number = page_number + 1 if has_next else None
+                
+                # ===== MAIN QUERY =====
+                offset = (page_number - 1) * page_size
+                
+                main_query = f"""
+                    SELECT DISTINCT
+                        tp.history_id,                    -- 0
+                        tp.oleh,                          -- 1
+                        ISNULL(tm.mesin, 'N/A'),          -- 2
+                        ISNULL(tms.seksi, 'N/A'),         -- 3 (current section)
+                        ISNULL(tpek.pekerjaan, 'N/A'),    -- 4
+                        tp.deskripsi_perbaikan,           -- 5
+                        tp.status,                        -- 6
+                        tp.tgl_insert,                    -- 7
+                        tp.user_insert,                   -- 8
+                        tp.number_wo,                     -- 9
+                        ISNULL(tl.line, 'N/A'),           -- 10
+                        tp.approve,                       -- 11
+                        tp.tgl_his,                       -- 12
+                        tp.jam_his,                       -- 13
+                        tp.status_pekerjaan,              -- 14
+                        ISNULL(tp.review_status, '0'),    -- 15
+                        tp.reviewed_by,                   -- 16
+                        tp.review_date,                   -- 17
+                        ISNULL(final_section.seksi, tms.seksi), -- 18 (final or current section)
+                        '%s' as access_type               -- 19
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN (
+                        SELECT DISTINCT id_mesin, mesin 
+                        FROM tabel_mesin 
+                        WHERE mesin IS NOT NULL
+                    ) tm ON tp.id_mesin = tm.id_mesin
+                    LEFT JOIN (
+                        SELECT DISTINCT id_line, line 
+                        FROM tabel_line 
+                        WHERE line IS NOT NULL
+                    ) tl ON tp.id_line = tl.id_line
+                    LEFT JOIN (
+                        SELECT DISTINCT id_section, seksi 
+                        FROM tabel_msection 
+                        WHERE seksi IS NOT NULL
+                    ) tms ON tp.id_section = tms.id_section
+                    LEFT JOIN (
+                        SELECT DISTINCT id_pekerjaan, pekerjaan 
+                        FROM tabel_pekerjaan 
+                        WHERE pekerjaan IS NOT NULL
+                    ) tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+                    LEFT JOIN (
+                        SELECT DISTINCT id_section, seksi 
+                        FROM tabel_msection 
+                        WHERE seksi IS NOT NULL
+                    ) final_section ON tp.final_section_id = final_section.id_section
+                    {where_clause}
+                    ORDER BY tp.tgl_insert DESC, tp.history_id DESC
+                    OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
+                """ % access_info['access_type']
+                
+                final_params = query_params + [offset, page_size]
+                cursor.execute(main_query, final_params)
+                
+                pengajuan_list = cursor.fetchall()
+                
+                logger.info(f"Section-based query executed - Found {total_records} records for {access_info['access_type']}")
+                
+        except Exception as db_error:
+            logger.error(f"Database error in section_based_daftar_laporan: {db_error}")
+            messages.error(request, f'Terjadi kesalahan database: {str(db_error)}')
+            pengajuan_list = []
+            total_records = 0
+            total_pages = 1
+            has_previous = False
+            has_next = False
+            previous_page_number = None
+            next_page_number = None
+            page_number = 1
+        
+        # ===== GET ACCESS STATISTICS =====
+        access_stats = get_access_statistics(access_info)
+        
+        # ===== ENHANCED CONTEXT =====
+        context = {
+            'pengajuan_list': pengajuan_list,
+            'filter_form': filter_form,
+            'search_query': search_query,
+            'total_records': total_records,
+            'total_pages': total_pages,
+            'page_number': page_number,
+            'has_previous': has_previous,
+            'has_next': has_next,
+            'previous_page_number': previous_page_number,
+            'next_page_number': next_page_number,
+            'can_approve': True,
+            'user_hierarchy': user_hierarchy,
+            'employee_data': user_hierarchy,
+            
+            # Enhanced section access info
+            'access_info': access_info,
+            'access_stats': access_stats,
+            'is_siti_fatimah': access_info['access_type'] == 'SITI_FATIMAH_FULL',
+            'is_engineering_supervisor': access_info['access_type'].startswith('ENGINEERING_'),
+            'section_access_display': access_info.get('access_description', ''),
+            
+            # Engineering supervisor specific info
+            'allowed_section_ids': access_info.get('allowed_section_ids', []),
+            'section_keywords': access_info.get('section_keywords', []),
+            
+            # Page info
+            'page_title': 'Section-based Daftar Laporan',
+            'enhanced_mode': True,
+            'section_based_access': True,
+            
+            # Status constants untuk template
+            'STATUS_PENDING': STATUS_PENDING,       # 0
+            'STATUS_APPROVED': STATUS_APPROVED,     # B
+            'STATUS_REVIEWED': STATUS_REVIEWED,     # A
+            'APPROVE_NO': APPROVE_NO,               # 0
+            'APPROVE_YES': APPROVE_YES,             # N
+            'APPROVE_REVIEWED': APPROVE_REVIEWED,   # Y
+            
+            # Debug info untuk superuser
+            'debug_info': {
+                'access_type': access_info['access_type'],
+                'allowed_employee_count': len(access_info.get('allowed_employee_numbers', [])),
+                'allowed_section_count': len(access_info.get('allowed_section_ids', [])),
+                'user_role': f"{user_hierarchy.get('title_name', 'Unknown')}",
+                'department_section': f"{user_hierarchy.get('department_name', '')}-{user_hierarchy.get('section_name', '')}",
+                'total_pengajuan_loaded': len(pengajuan_list),
+                'excluded_final_processed': True,
+                'section_based_mode': True
+            } if request.user.is_superuser else None
+        }
+        
+        return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+        
+    except Exception as e:
+        logger.error(f"Critical error in section_based_daftar_laporan: {e}")
+        import traceback
+        logger.error(f"Critical traceback: {traceback.format_exc()}")
+        messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi.')
+        return redirect('wo_maintenance_app:dashboard')
+
+@login_required
+def ajax_get_section_access_info(request):
+    """
+    AJAX view untuk mendapatkan info section access user
+    """
+    try:
+        user_hierarchy = get_employee_hierarchy_data(request.user)
+        
+        if not user_hierarchy:
+            return JsonResponse({
+                'success': False,
+                'error': 'User hierarchy data not found'
+            })
+        
+        access_info = get_enhanced_pengajuan_access_for_user(user_hierarchy)
+        access_stats = get_access_statistics(access_info)
+        
+        # Engineering section info
+        engineering_access = get_engineering_section_access(user_hierarchy)
+        
+        response_data = {
+            'success': True,
+            'user_info': {
+                'employee_number': user_hierarchy.get('employee_number'),
+                'fullname': user_hierarchy.get('fullname'),
+                'title_name': user_hierarchy.get('title_name'),
+                'department_name': user_hierarchy.get('department_name'),
+                'section_name': user_hierarchy.get('section_name')
+            },
+            'access_info': {
+                'access_type': access_info['access_type'],
+                'access_description': access_info['access_description'],
+                'allowed_section_count': len(access_info.get('allowed_section_ids', [])),
+                'allowed_employee_count': len(access_info.get('allowed_employee_numbers', []))
+            },
+            'access_stats': access_stats,
+            'engineering_access': engineering_access,
+            'is_siti_fatimah': access_info['access_type'] == 'SITI_FATIMAH_FULL',
+            'is_engineering_supervisor': access_info['access_type'].startswith('ENGINEERING_')
+        }
+        
+        return JsonResponse(response_data)
+        
+    except Exception as e:
+        logger.error(f"Error in ajax_get_section_access_info: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
+
+@login_required
+def debug_section_access(request):
+    """
+    Debug view untuk testing section access - SUPERUSER ONLY
+    """
+    if not request.user.is_superuser:
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    
+    try:
+        user_hierarchy = get_employee_hierarchy_data(request.user)
+        
+        debug_info = {
+            'timestamp': timezone.now().isoformat(),
+            'user_hierarchy': user_hierarchy,
+            'access_tests': {}
+        }
+        
+        if user_hierarchy:
+            # Test all access functions
+            debug_info['access_tests'] = {
+                'is_engineering_supervisor': is_engineering_supervisor_or_above(user_hierarchy),
+                'engineering_section_access': get_engineering_section_access(user_hierarchy),
+                'enhanced_access_info': get_enhanced_pengajuan_access_for_user(user_hierarchy),
+                'access_statistics': get_access_statistics(get_enhanced_pengajuan_access_for_user(user_hierarchy))
+            }
+            
+            # Test section ID mapping
+            engineering_access = get_engineering_section_access(user_hierarchy)
+            if engineering_access:
+                keywords = engineering_access['maintenance_section_keywords']
+                section_ids = get_maintenance_section_ids_by_keywords(keywords)
+                debug_info['access_tests']['section_id_mapping'] = {
+                    'keywords': keywords,
+                    'found_section_ids': section_ids
+                }
+        
+        return JsonResponse(debug_info, indent=2)
         
     except Exception as e:
         return JsonResponse({

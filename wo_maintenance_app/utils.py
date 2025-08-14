@@ -2327,6 +2327,328 @@ def get_section_change_history(history_id):
         logger.error(f"Error getting section change history: {e}")
         return []
 
+def is_engineering_supervisor_or_above(user_hierarchy):
+    """
+    Check apakah user adalah ASSISTANT SUPERVISOR keatas di department ENGINEERING
+    
+    Args:
+        user_hierarchy (dict): Data hierarchy user dari SDBM
+        
+    Returns:
+        bool: True jika ASSISTANT SUPERVISOR+ di ENGINEERING
+    """
+    if not user_hierarchy:
+        return False
+    
+    # Check department
+    department_name = str(user_hierarchy.get('department_name', '')).upper()
+    if 'ENGINEERING' not in department_name:
+        return False
+    
+    # Check title level
+    title_name = str(user_hierarchy.get('title_name', '')).upper()
+    is_supervisor = user_hierarchy.get('is_supervisor', False)
+    is_manager = user_hierarchy.get('is_manager', False) 
+    is_general_manager = user_hierarchy.get('is_general_manager', False)
+    is_bod = user_hierarchy.get('is_bod', False)
+    
+    # Check if has supervisor+ role
+    has_supervisor_role = (
+        is_supervisor or is_manager or is_general_manager or is_bod or
+        'SUPERVISOR' in title_name or 'MANAGER' in title_name or 
+        'SPV' in title_name or 'MGR' in title_name or
+        'ASSISTANT SUPERVISOR' in title_name
+    )
+    
+    if not has_supervisor_role:
+        return False
+    
+    # Calculate level
+    level = get_title_level(title_name)
+    
+    # ASSISTANT SUPERVISOR = level 8 keatas
+    return level >= 8
+
+def get_engineering_section_access(user_hierarchy):
+    """
+    Mendapatkan section access untuk engineering supervisor
+    
+    Args:
+        user_hierarchy (dict): Data hierarchy user dari SDBM
+        
+    Returns:
+        dict: Info section access atau None jika tidak ada
+    """
+    if not is_engineering_supervisor_or_above(user_hierarchy):
+        return None
+    
+    section_name = str(user_hierarchy.get('section_name', '')).upper()
+    
+    # Mapping section SDBM ke maintenance section
+    section_access_mapping = {
+        'ENGINEERING-MECHANIC': {
+            'maintenance_section_keywords': ['MEKANIK', 'MECHANIC', 'MECHANICAL'],
+            'display_name': '🔧 Mekanik (Mechanical Engineering)',
+            'access_type': 'ENGINEERING_MECHANIC_SUPERVISOR'
+        },
+        'ENGINEERING-ELECTRIC': {
+            'maintenance_section_keywords': ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL'],
+            'display_name': '⚡ Elektrik (Electrical Engineering)', 
+            'access_type': 'ENGINEERING_ELECTRIC_SUPERVISOR'
+        },
+        'ENGINEERING-IT': {
+            'maintenance_section_keywords': ['IT', 'INFORMATION', 'TECHNOLOGY'],
+            'display_name': '💻 IT (Information Technology)',
+            'access_type': 'ENGINEERING_IT_SUPERVISOR'
+        },
+        'ENGINEERING-UTILITY': {
+            'maintenance_section_keywords': ['UTILITY', 'UTILITIES'],
+            'display_name': '🏭 Utility (Utility Systems)',
+            'access_type': 'ENGINEERING_UTILITY_SUPERVISOR'
+        }
+    }
+    
+    return section_access_mapping.get(section_name)
+
+def get_maintenance_section_ids_by_keywords(keywords):
+    """
+    Mendapatkan ID section maintenance berdasarkan keywords
+    
+    Args:
+        keywords (list): List keywords untuk matching
+        
+    Returns:
+        list: List ID section yang match
+    """
+    try:
+        section_ids = []
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT id_section, seksi 
+                FROM tabel_msection 
+                WHERE (status = 'A' OR status IS NULL) 
+                    AND seksi IS NOT NULL 
+                    AND seksi != ''
+            """)
+            
+            for row in cursor.fetchall():
+                section_id = int(float(row[0]))
+                section_name = str(row[1]).upper()
+                
+                # Check if any keyword matches
+                if any(keyword in section_name for keyword in keywords):
+                    section_ids.append(section_id)
+                    logger.debug(f"Matched section: {section_name} (ID: {section_id}) with keywords: {keywords}")
+        
+        return section_ids
+        
+    except Exception as e:
+        logger.error(f"Error getting maintenance section IDs: {e}")
+        return []
+
+def get_enhanced_pengajuan_access_for_user(user_hierarchy):
+    """
+    ENHANCED: Mendapatkan akses pengajuan berdasarkan user hierarchy dengan section-based access
+    
+    Args:
+        user_hierarchy (dict): Data hierarchy user dari SDBM
+        
+    Returns:
+        dict: Access info dengan berbagai method
+    """
+    if not user_hierarchy:
+        return {
+            'access_type': 'NONE',
+            'allowed_employee_numbers': [],
+            'allowed_section_ids': [],
+            'access_description': 'No hierarchy data'
+        }
+    
+    # SITI FATIMAH - Full access ke semua pengajuan
+    if user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
+        return {
+            'access_type': 'SITI_FATIMAH_FULL',
+            'allowed_employee_numbers': ['*'],  # Special indicator
+            'allowed_section_ids': ['*'],  # All sections
+            'access_description': f'{REVIEWER_FULLNAME} - Full Access'
+        }
+    
+    # Engineering Supervisor - Section-based access  
+    engineering_access = get_engineering_section_access(user_hierarchy)
+    if engineering_access:
+        section_ids = get_maintenance_section_ids_by_keywords(
+            engineering_access['maintenance_section_keywords']
+        )
+        
+        return {
+            'access_type': engineering_access['access_type'],
+            'allowed_employee_numbers': [],  # No hierarchy limit untuk section access
+            'allowed_section_ids': section_ids,
+            'access_description': f"Engineering Supervisor - {engineering_access['display_name']}",
+            'section_keywords': engineering_access['maintenance_section_keywords']
+        }
+    
+    # Regular hierarchy access (existing logic)
+    allowed_employee_numbers = get_subordinate_employee_numbers(user_hierarchy)
+    
+    return {
+        'access_type': 'HIERARCHY_NORMAL',
+        'allowed_employee_numbers': allowed_employee_numbers,
+        'allowed_section_ids': [],
+        'access_description': f"Hierarchy Access - {user_hierarchy.get('title_name', 'Unknown')} ({len(allowed_employee_numbers)} subordinates)"
+    }
+
+def build_enhanced_pengajuan_query_conditions(access_info, additional_filters=None):
+    """
+    Build WHERE conditions untuk query pengajuan berdasarkan access info
+    
+    Args:
+        access_info (dict): Access info dari get_enhanced_pengajuan_access_for_user
+        additional_filters (dict): Additional filters (status, date range, etc.)
+        
+    Returns:
+        tuple: (where_conditions list, query_params list)
+    """
+    where_conditions = ["tp.history_id IS NOT NULL"]
+    query_params = []
+    
+    # UPDATED: Exclude final processed (status A, approve Y)
+    where_conditions.append("NOT (tp.status = %s AND tp.approve = %s)")
+    query_params.extend([STATUS_REVIEWED, APPROVE_REVIEWED])
+    
+    # Access-based conditions
+    access_type = access_info.get('access_type')
+    
+    if access_type == 'SITI_FATIMAH_FULL':
+        # SITI FATIMAH - Access ke semua approved pengajuan (status B, approve N)
+        where_conditions.extend([
+            "tp.status = %s",
+            "tp.approve = %s"
+        ])
+        query_params.extend([STATUS_APPROVED, APPROVE_YES])
+        
+    elif access_type.startswith('ENGINEERING_') and access_type.endswith('_SUPERVISOR'):
+        # Engineering Supervisor - Section-based access
+        section_ids = access_info.get('allowed_section_ids', [])
+        if section_ids:
+            placeholders = ','.join(['%s'] * len(section_ids))
+            where_conditions.append(f"(tp.id_section IN ({placeholders}) OR tp.final_section_id IN ({placeholders}))")
+            # Add section IDs twice (for id_section and final_section_id)
+            float_section_ids = [float(sid) for sid in section_ids]
+            query_params.extend(float_section_ids + float_section_ids)
+        
+    elif access_type == 'HIERARCHY_NORMAL':
+        # Regular hierarchy access
+        allowed_employee_numbers = access_info.get('allowed_employee_numbers', [])
+        if allowed_employee_numbers and '*' not in allowed_employee_numbers:
+            # Limit ke reasonable number
+            if len(allowed_employee_numbers) > 50:
+                allowed_employee_numbers = allowed_employee_numbers[:50]
+            
+            placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
+            where_conditions.append(f"tp.user_insert IN ({placeholders})")
+            query_params.extend(allowed_employee_numbers)
+        else:
+            # Fallback to own pengajuan only
+            where_conditions.append("tp.user_insert = %s")
+            query_params.append(access_info.get('user_employee_number', ''))
+    
+    # Additional filters
+    if additional_filters:
+        if additional_filters.get('tanggal_dari'):
+            where_conditions.append("CAST(tp.tgl_insert AS DATE) >= %s")
+            query_params.append(additional_filters['tanggal_dari'])
+        
+        if additional_filters.get('tanggal_sampai'):
+            where_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
+            query_params.append(additional_filters['tanggal_sampai'])
+        
+        if additional_filters.get('status'):
+            where_conditions.append("tp.status = %s")
+            query_params.append(additional_filters['status'])
+        
+        if additional_filters.get('search_query'):
+            search_conditions = [
+                "tp.history_id LIKE %s",
+                "tp.oleh LIKE %s",
+                "tp.deskripsi_perbaikan LIKE %s",
+                "tp.number_wo LIKE %s"
+            ]
+            where_conditions.append(f"({' OR '.join(search_conditions)})")
+            search_param = f"%{additional_filters['search_query']}%"
+            query_params.extend([search_param] * len(search_conditions))
+    
+    return where_conditions, query_params
+
+def get_access_statistics(access_info):
+    """
+    Mendapatkan statistik akses pengajuan untuk display
+    
+    Args:
+        access_info (dict): Access info dari get_enhanced_pengajuan_access_for_user
+        
+    Returns:
+        dict: Statistics data
+    """
+    try:
+        stats = {
+            'total_accessible': 0,
+            'by_status': {},
+            'access_method': access_info.get('access_type', 'UNKNOWN')
+        }
+        
+        # Build query conditions
+        where_conditions, query_params = build_enhanced_pengajuan_query_conditions(access_info)
+        where_clause = "WHERE " + " AND ".join(where_conditions)
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Total count
+            count_query = f"""
+                SELECT COUNT(DISTINCT tp.history_id)
+                FROM tabel_pengajuan tp
+                LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                {where_clause}
+            """
+            
+            cursor.execute(count_query, query_params)
+            stats['total_accessible'] = cursor.fetchone()[0] or 0
+            
+            # By status
+            status_query = f"""
+                SELECT tp.status, tp.approve, COUNT(DISTINCT tp.history_id)
+                FROM tabel_pengajuan tp
+                LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                {where_clause}
+                GROUP BY tp.status, tp.approve
+            """
+            
+            cursor.execute(status_query, query_params)
+            
+            for row in cursor.fetchall():
+                status_key = f"{row[0] or '0'}_{row[1] or '0'}"
+                stats['by_status'][status_key] = row[2]
+        
+        return stats
+        
+    except Exception as e:
+        logger.error(f"Error getting access statistics: {e}")
+        return {
+            'total_accessible': 0,
+            'by_status': {},
+            'access_method': 'ERROR',
+            'error': str(e)
+        }
+
+# Export new functions
+__all__.extend([
+    'is_engineering_supervisor_or_above',
+    'get_engineering_section_access', 
+    'get_maintenance_section_ids_by_keywords',
+    'get_enhanced_pengajuan_access_for_user',
+    'build_enhanced_pengajuan_query_conditions',
+    'get_access_statistics'
+])
 
 # Export enhanced functions
 __all__ = [

@@ -94,8 +94,20 @@
     <li><a href="{% url 'wo_maintenance_app:dashboard' %}"><i data-feather="home"></i><span>Dashboard</span></a></li>
     <li><a href="{% url 'wo_maintenance_app:input_laporan' %}"><i data-feather="edit-3"></i><span>Input Laporan</span></a></li>
     <li><a href="{% url 'wo_maintenance_app:daftar_laporan' %}"><i data-feather="list"></i><span>Daftar Pengajuan</span></a></li>
+    <li>
+      <a href="{% url 'wo_maintenance_app:section_based_daftar_laporan' %}">
+        <i data-feather="database"></i><span>Daftar Laporan</span>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}">
+        <i data-feather="star"></i><span>Enhanced View</span>
+      </a>
+    </li>
   </ul>
 </li>
+
+
 
 {% if perms.dailyactivity_app %}
 <li class="dropdown">
