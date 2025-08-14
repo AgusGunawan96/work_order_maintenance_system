@@ -24,10 +24,19 @@ from wo_maintenance_app.utils import (
     assign_pengajuan_to_section_supervisors,
     get_assigned_pengajuan_for_user,
     get_target_section_supervisors,
-    STATUS_APPROVED,
-    APPROVE_YES,
+    STATUS_PENDING,
+    STATUS_APPROVED,    # B
+    STATUS_REVIEWED,    # A  
+    STATUS_REJECTED,
+    APPROVE_NO,
+    APPROVE_YES,        # N
+    APPROVE_REVIEWED,   # Y
+    APPROVE_REJECTED,
     REVIEWER_EMPLOYEE_NUMBER,
-    REVIEWER_FULLNAME
+    REVIEWER_FULLNAME,
+     is_pengajuan_approved_for_review,
+     is_pengajuan_final_processed,  # NEW
+    initialize_review_data
 )
 
 # Setup logging
@@ -39,35 +48,32 @@ REVIEWER_FULLNAME = 'SITI FATIMAH'
 
 # ===== FIXED STATUS CONSTANTS - Konsisten dengan Database =====
 # IMPORTANT: Pastikan nilai ini sesuai dengan data actual di database
-STATUS_APPROVED = 'A'      # Status approved - pastikan di DB menggunakan 'A'
-STATUS_PENDING = '0'       # Status pending 
-STATUS_REJECTED = '2'      # Status rejected
+# STATUS_APPROVED = 'A'      # Status approved - pastikan di DB menggunakan 'A'
+# STATUS_PENDING = '0'       # Status pending 
+# STATUS_REJECTED = '2'      # Status rejected
 
-APPROVE_YES = 'Y'          # Approve approved - pastikan di DB menggunakan 'Y'  
-APPROVE_NO = '0'           # Approve not approved
-APPROVE_REJECTED = '2'     # Approve rejected
+# APPROVE_YES = 'Y'          # Approve approved - pastikan di DB menggunakan 'Y'  
+# APPROVE_NO = '0'           # Approve not approved
+# APPROVE_REJECTED = '2'     # Approve rejected
 
-# ===== REVIEW STATUS CONSTANTS =====
-REVIEW_PENDING = '0'       # Review pending
-REVIEW_APPROVED = '1'      # Review approved 
-REVIEW_REJECTED = '2'      # Review rejected
+# # ===== REVIEW STATUS CONSTANTS =====
+# REVIEW_PENDING = '0'       # Review pending
+# REVIEW_APPROVED = '1'      # Review approved 
+# REVIEW_REJECTED = '2'      # Review rejected
 
 # ===== FIXED REVIEWER FUNCTIONS =====
 
 def is_reviewer_fixed(request):
     """
-    FIXED: Check if user is the designated reviewer (SITI FATIMAH)
-    Using request object instead of user object for better session access
+    Check if user is the designated reviewer (SITI FATIMAH)
     """
     if not request.user.is_authenticated:
         return False
     
-    # Method 1: Check username (employee_number) - Primary check
     if request.user.username == REVIEWER_EMPLOYEE_NUMBER:
         logger.debug(f"REVIEWER CHECK: Username match for {request.user.username}")
         return True
     
-    # Method 2: Check dari session employee_data - FIXED
     try:
         employee_data = request.session.get('employee_data')
         if employee_data and employee_data.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
@@ -76,21 +82,18 @@ def is_reviewer_fixed(request):
     except Exception as e:
         logger.warning(f"REVIEWER CHECK: Session check failed: {e}")
     
-    # Method 3: Check dari SDBM langsung - FIXED with better error handling
     try:
         from authentication import SDBMAuthenticationBackend
         backend = SDBMAuthenticationBackend()
         employee_data = backend.get_employee_from_sdbm(request.user.username)
         
         if employee_data and employee_data.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
-            # Update session for future checks
             request.session['employee_data'] = employee_data
             logger.debug(f"REVIEWER CHECK: SDBM match for {employee_data.get('employee_number')}")
             return True
     except Exception as e:
         logger.warning(f"REVIEWER CHECK: SDBM check failed: {e}")
     
-    # Method 4: Explicit check for known reviewer usernames
     reviewer_usernames = ['007522', 'siti.fatimah', 'sitifatimah']
     if request.user.username.lower() in [u.lower() for u in reviewer_usernames]:
         logger.debug(f"REVIEWER CHECK: Alternative username match for {request.user.username}")
@@ -99,11 +102,9 @@ def is_reviewer_fixed(request):
     logger.debug(f"REVIEWER CHECK: No match found for {request.user.username}")
     return False
 
-
 def reviewer_required_fixed(view_func):
     """
-    FIXED: Decorator untuk memastikan hanya reviewer yang dapat akses
-    Better error handling dan no immediate redirect to dashboard
+    Decorator untuk memastikan hanya reviewer yang dapat akses
     """
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
@@ -111,9 +112,7 @@ def reviewer_required_fixed(view_func):
             messages.error(request, 'Silakan login terlebih dahulu.')
             return redirect('login')
         
-        # FIXED: Use new reviewer check function
         if not is_reviewer_fixed(request):
-            # Get employee data untuk pesan error yang lebih informatif
             employee_data = request.session.get('employee_data', {})
             user_name = employee_data.get('fullname', request.user.get_full_name() or request.user.username)
             
@@ -125,13 +124,8 @@ def reviewer_required_fixed(view_func):
                 f'Anda login sebagai: {user_name}'
             )
             
-            # FIXED: Don't immediately redirect to dashboard
-            # Check if this is a POST request (form submission)
             if request.method == 'POST':
-                # For POST requests, redirect to the same page as GET to show error
-                from django.urls import reverse
                 try:
-                    # Try to redirect to the same view but as GET
                     if 'nomor_pengajuan' in kwargs:
                         return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=kwargs['nomor_pengajuan'])
                     else:
@@ -147,30 +141,26 @@ def reviewer_required_fixed(view_func):
 
 def get_employee_data_for_request_fixed(request):
     """
-    FIXED: Get employee data untuk request dengan better session handling
+    Get employee data untuk request dengan better session handling
     """
-    # Method 1: Dari session - Check dulu apakah valid
     employee_data = request.session.get('employee_data')
     if employee_data and employee_data.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
         logger.debug("EMPLOYEE DATA: Using session data")
         return employee_data
     
-    # Method 2: Dari SDBM langsung dengan error handling
     try:
         from authentication import SDBMAuthenticationBackend
         backend = SDBMAuthenticationBackend()
         employee_data = backend.get_employee_from_sdbm(request.user.username)
         
         if employee_data and employee_data.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
-            # Update session dengan data fresh
             request.session['employee_data'] = employee_data
-            request.session.modified = True  # FIXED: Ensure session is saved
+            request.session.modified = True
             logger.debug("EMPLOYEE DATA: Using SDBM data and updated session")
             return employee_data
     except Exception as e:
         logger.error(f"EMPLOYEE DATA: SDBM error: {e}")
     
-    # Method 3: Fallback untuk SITI FATIMAH
     if request.user.username == REVIEWER_EMPLOYEE_NUMBER:
         fallback_data = {
             'employee_number': REVIEWER_EMPLOYEE_NUMBER,
@@ -183,7 +173,6 @@ def get_employee_data_for_request_fixed(request):
             'has_approval_role': True
         }
         
-        # Save fallback to session
         request.session['employee_data'] = fallback_data
         request.session.modified = True
         logger.debug("EMPLOYEE DATA: Using fallback data")
@@ -398,22 +387,21 @@ def reviewer_required(view_func):
 @reviewer_required_fixed
 def review_dashboard(request):
     """
-    Dashboard review untuk SITI FATIMAH - FIXED
+    Dashboard review untuk SITI FATIMAH
+    UPDATED: Stats dengan status B/N untuk pending, A/Y untuk processed
     """
     try:
-        # Ambil employee data dengan function yang fixed
         employee_data = get_employee_data_for_request_fixed(request)
         
         if not employee_data:
             messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
             return redirect('login')
         
-        # Initialize review data
         initialize_review_data()
         
-        # Statistik review
+        # UPDATED: Statistik review dengan status baru
         with connections['DB_Maintenance'].cursor() as cursor:
-            # Total pengajuan pending review - FIXED
+            # Total pengajuan pending review - status B/N
             cursor.execute("""
                 SELECT COUNT(*) 
                 FROM tabel_pengajuan 
@@ -422,14 +410,15 @@ def review_dashboard(request):
             """, [STATUS_APPROVED, APPROVE_YES])
             pending_review_count = cursor.fetchone()[0] or 0
             
-            # Total sudah direview hari ini
+            # Total sudah diproses (final A/Y) hari ini
             today = timezone.now().date()
             cursor.execute("""
                 SELECT COUNT(*) 
                 FROM tabel_pengajuan 
                 WHERE reviewed_by = %s 
                     AND CAST(review_date AS DATE) = %s
-            """, [REVIEWER_EMPLOYEE_NUMBER, today])
+                    AND status = %s AND approve = %s
+            """, [REVIEWER_EMPLOYEE_NUMBER, today, STATUS_REVIEWED, APPROVE_REVIEWED])
             reviewed_today_count = cursor.fetchone()[0] or 0
         
         context = {
@@ -452,35 +441,32 @@ def review_dashboard(request):
 @reviewer_required_fixed
 def review_pengajuan_list(request):
     """
-    Halaman daftar pengajuan yang perlu direview oleh SITI FATIMAH - FIXED
+    Halaman daftar pengajuan yang perlu direview oleh SITI FATIMAH
+    UPDATED: Query pengajuan dengan status B dan approve N
     """
     try:
-        # Ambil employee data
         employee_data = get_employee_data_for_request_fixed(request)
         
-        # Auto-initialize review data jika perlu
         initialize_review_data()
         
-        # Filter dan search
         filter_form = ReviewFilterForm(request.GET or None)
         search_query = request.GET.get('search', '').strip()
         
-        # Query pengajuan yang perlu direview - FIXED
+        # UPDATED: Query pengajuan yang perlu direview dengan status B/N
         pengajuan_list = []
         total_records = 0
         
         with connections['DB_Maintenance'].cursor() as cursor:
-            # FIXED: Base WHERE conditions dengan status A dan approve Y
+            # UPDATED: Base WHERE conditions dengan status B dan approve N
             where_conditions = [
-                "tp.status = %s",     # FIXED: Approved dengan 'A'
-                "tp.approve = %s",    # FIXED: Approved dengan 'Y' 
+                "tp.status = %s",     # B - approved oleh atasan
+                "tp.approve = %s",    # N - approved oleh atasan
                 "(tp.review_status IS NULL OR tp.review_status = '0')"  # Pending review
             ]
             query_params = [STATUS_APPROVED, APPROVE_YES]
             
             # Apply filters
             if filter_form.is_valid():
-                # Filter tanggal
                 tanggal_dari = filter_form.cleaned_data.get('tanggal_dari')
                 tanggal_sampai = filter_form.cleaned_data.get('tanggal_sampai')
                 
@@ -523,7 +509,7 @@ def review_pengajuan_list(request):
             page_number = int(request.GET.get('page', 1))
             offset = (page_number - 1) * page_size
             
-            # Main query dengan pagination
+            # Main query
             main_query = f"""
                 SELECT DISTINCT
                     tp.history_id,           -- 0
@@ -555,7 +541,7 @@ def review_pengajuan_list(request):
             cursor.execute(main_query, final_params)
             pengajuan_list = cursor.fetchall()
             
-            logger.info(f"Found {total_records} pengajuan for review by {employee_data.get('fullname', REVIEWER_FULLNAME)}")
+            logger.info(f"Found {total_records} pengajuan for review by {employee_data.get('fullname', REVIEWER_FULLNAME)} (status=B, approve=N)")
         
         context = {
             'pengajuan_list': pengajuan_list,
@@ -564,7 +550,11 @@ def review_pengajuan_list(request):
             'total_records': total_records,
             'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
             'employee_data': employee_data,
-            'page_title': 'Daftar Pengajuan untuk Review'
+            'page_title': 'Daftar Pengajuan untuk Review',
+            
+            # UPDATED: Status info untuk template
+            'STATUS_APPROVED': STATUS_APPROVED,     # B
+            'APPROVE_YES': APPROVE_YES              # N
         }
         
         return render(request, 'wo_maintenance_app/review_pengajuan_list.html', context)
@@ -698,38 +688,26 @@ __all__ = [
 
 # wo_maintenance_app/views.py - UPDATE review_pengajuan_detail view
 
+# wo_maintenance_app/views.py - FIXED review_pengajuan_detail dengan Section Change
+
 @login_required
 @reviewer_required_fixed
 def review_pengajuan_detail(request, nomor_pengajuan):
     """
-    ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH dengan section update otomatis
-    Solusi untuk perubahan section pengaju sesuai pilihan reviewer
+    Detail pengajuan untuk review oleh SITI FATIMAH
+    UPDATED: dengan automatic section update berdasarkan target_section
     """
     try:
-        logger.info(f"ENHANCED REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
+        logger.info(f"REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
         
-        # Ambil employee data dengan function yang fixed
         employee_data = get_employee_data_for_request_fixed(request)
         
         if not employee_data:
-            logger.error(f"ENHANCED REVIEW: No employee data for {request.user.username}")
+            logger.error(f"REVIEW: No employee data for {request.user.username}")
             messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
             return redirect('login')
         
-        logger.debug(f"ENHANCED REVIEW: Employee data found: {employee_data.get('fullname')}")
-        
-        # Import enhanced functions
-        from .utils import (
-            auto_discover_maintenance_sections,
-            assign_pengajuan_after_siti_review_enhanced,
-            ensure_enhanced_review_tables_exist,
-            get_section_change_history
-        )
-        
-        # Ensure enhanced tables exist
-        ensure_enhanced_review_tables_exist()
-        
-        # Ambil data pengajuan dengan enhanced info
+        # Ambil data pengajuan
         pengajuan = None
         
         with connections['DB_Maintenance'].cursor() as cursor:
@@ -769,7 +747,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             row = cursor.fetchone()
             
             if not row:
-                logger.error(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not found")
+                logger.error(f"REVIEW: Pengajuan {nomor_pengajuan} not found")
                 messages.error(request, 'Pengajuan tidak ditemukan.')
                 return redirect('wo_maintenance_app:review_pengajuan_list')
             
@@ -798,117 +776,163 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                 'current_section_id': row[21]
             }
         
-        logger.debug(f"ENHANCED REVIEW: Pengajuan loaded - Current section: {pengajuan['section_tujuan']}")
-        
         # Cek apakah pengajuan sudah di-approve dan belum direview
         if pengajuan['status'] != STATUS_APPROVED or pengajuan['approve'] != APPROVE_YES:
-            logger.warning(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not approved")
-            messages.warning(request, 'Pengajuan ini belum di-approve oleh atasan.')
+            logger.warning(f"REVIEW: Pengajuan {nomor_pengajuan} not ready for review")
+            messages.warning(request, 'Pengajuan ini belum siap untuk review.')
             return redirect('wo_maintenance_app:review_pengajuan_list')
         
         # Cek apakah sudah direview
         already_reviewed = pengajuan['review_status'] in ['1', '2']
         
-        # Get section change history jika sudah direview
-        section_change_history = get_section_change_history(nomor_pengajuan) if already_reviewed else []
-        
-        # ENHANCED: Handle review form submission dengan section update otomatis
+        # Handle review form submission
         if request.method == 'POST' and not already_reviewed:
-            logger.info(f"ENHANCED REVIEW: Processing POST request for {nomor_pengajuan}")
+            logger.info(f"REVIEW: Processing POST request for {nomor_pengajuan}")
             
-            # Ensure session is preserved
             request.session.modified = True
             
             review_form = ReviewForm(request.POST)
             
             if review_form.is_valid():
                 action = review_form.cleaned_data['action']
-                target_section = review_form.cleaned_data['target_section']
+                target_section = review_form.cleaned_data.get('target_section', '')
                 review_notes = review_form.cleaned_data['review_notes']
-                priority_level = review_form.cleaned_data['priority_level']
                 
-                logger.info(f"ENHANCED REVIEW: Form valid - Action: {action}, Target: {target_section}")
+                logger.info(f"REVIEW: Form valid - Action: {action}, Target: {target_section}")
                 
                 try:
                     with connections['DB_Maintenance'].cursor() as cursor:
                         if action == 'process':
-                            # Update pengajuan dengan review processing
+                            # STEP 1: Update review status dan final processing
                             cursor.execute("""
                                 UPDATE tabel_pengajuan
                                 SET review_status = '1',
                                     reviewed_by = %s,
                                     review_date = GETDATE(),
-                                    review_notes = %s
+                                    review_notes = %s,
+                                    status = %s,
+                                    approve = %s
                                 WHERE history_id = %s
                             """, [
                                 REVIEWER_EMPLOYEE_NUMBER, 
-                                review_notes, 
+                                review_notes,
+                                STATUS_REVIEWED,    # A - final processed
+                                APPROVE_REVIEWED,   # Y - final processed
                                 nomor_pengajuan
                             ])
                             
-                            logger.info(f"ENHANCED REVIEW: Updated pengajuan {nomor_pengajuan} with review processing")
+                            logger.info(f"REVIEW: Successfully processed {nomor_pengajuan} - final status A/Y")
                             
-                            # ENHANCED: Section update dengan otomatis mengubah section pengaju
+                            # STEP 2: Update section tujuan jika target_section dipilih
+                            section_updated = False
+                            section_changed = False
+                            original_section = None
+                            new_section = None
+                            
                             if target_section:
-                                logger.info(f"ENHANCED REVIEW: Processing section change to {target_section}")
+                                logger.info(f"REVIEW: Processing section change to {target_section}")
                                 
-                                assignment_result = assign_pengajuan_after_siti_review_enhanced(
-                                    nomor_pengajuan,
-                                    target_section,
-                                    REVIEWER_EMPLOYEE_NUMBER,
-                                    review_notes
-                                )
+                                # Get section mapping
+                                from .utils import auto_discover_maintenance_sections
+                                section_mapping = auto_discover_maintenance_sections()
+                                section_info = section_mapping.get(target_section)
                                 
-                                # Enhanced success message dengan info perubahan section
-                                if assignment_result['success']:
-                                    success_parts = []
+                                if section_info:
+                                    # Get original section info
+                                    cursor.execute("""
+                                        SELECT tp.id_section, ms.seksi as current_section_name
+                                        FROM tabel_pengajuan tp
+                                        LEFT JOIN tabel_msection ms ON tp.id_section = ms.id_section
+                                        WHERE tp.history_id = %s
+                                    """, [nomor_pengajuan])
                                     
-                                    # Base success message
-                                    success_parts.append(f'✅ Pengajuan {nomor_pengajuan} berhasil diproses!')
-                                    
-                                    # ENHANCED: Section change info yang lebih jelas
-                                    if assignment_result['section_updated']:
-                                        if assignment_result['section_changed']:
-                                            original_name = assignment_result['original_section']['name'] if assignment_result['original_section'] else 'Unknown'
-                                            new_name = assignment_result['new_section']['display_name'] if assignment_result['new_section'] else 'Unknown'
-                                            success_parts.append(f'🔄 Section pengaju berhasil diubah dari "{original_name}" ke "{new_name}"')
-                                            success_parts.append(f'📍 Pengajuan sekarang ditujukan ke section {new_name}')
-                                        else:
-                                            success_parts.append(f'✓ Section pengaju dikonfirmasi tetap di "{assignment_result["new_section"]["display_name"]}"')
-                                    
-                                    # Assignment info
-                                    if assignment_result['assigned_employees']:
-                                        assigned_count = len(assignment_result['assigned_employees'])
-                                        success_parts.append(f'👥 Otomatis di-assign ke {assigned_count} supervisor di section tujuan:')
+                                    original_row = cursor.fetchone()
+                                    if original_row:
+                                        original_section_id = int(float(original_row[0])) if original_row[0] else None
+                                        original_section_name = original_row[1] or 'Unknown'
                                         
-                                        for i, emp in enumerate(assignment_result['assigned_employees'][:3]):
-                                            success_parts.append(f'   • {emp["fullname"]} ({emp["level_description"]})')
+                                        original_section = {
+                                            'id': original_section_id,
+                                            'name': original_section_name
+                                        }
+                                    
+                                    # Update section tujuan
+                                    new_section_id = section_info['id_section']
+                                    
+                                    cursor.execute("""
+                                        UPDATE tabel_pengajuan
+                                        SET id_section = %s,
+                                            final_section_id = %s
+                                        WHERE history_id = %s
+                                    """, [float(new_section_id), float(new_section_id), nomor_pengajuan])
+                                    
+                                    if cursor.rowcount > 0:
+                                        section_updated = True
+                                        section_changed = (
+                                            original_section and 
+                                            original_section['id'] != new_section_id
+                                        )
                                         
-                                        if assigned_count > 3:
-                                            success_parts.append(f'   • dan {assigned_count - 3} supervisor lainnya')
+                                        new_section = {
+                                            'id': new_section_id,
+                                            'name': section_info['section_name'],
+                                            'display_name': section_info['display_name']
+                                        }
+                                        
+                                        logger.info(f"REVIEW: Updated section from ID {original_section['id'] if original_section else 'Unknown'} to ID {new_section_id}")
                                     
-                                    # Join semua pesan dengan line breaks
-                                    final_message = '\n'.join(success_parts)
-                                    messages.success(request, final_message)
-                                    
-                                    logger.info(f"ENHANCED REVIEW SUCCESS: {nomor_pengajuan} -> {target_section}, section_changed: {assignment_result['section_changed']}")
-                                    
+                                    # STEP 3: SDBM Assignment ke supervisors
+                                    try:
+                                        from .utils import get_sdbm_supervisors_by_section_mapping, ensure_assignment_tables_exist
+                                        
+                                        supervisors = get_sdbm_supervisors_by_section_mapping(target_section)
+                                        
+                                        if supervisors:
+                                            # Create assignment table if not exists
+                                            ensure_assignment_tables_exist()
+                                            
+                                            assigned_count = 0
+                                            # Assign ke supervisors
+                                            for supervisor in supervisors:
+                                                try:
+                                                    cursor.execute("""
+                                                        INSERT INTO tabel_pengajuan_assignment
+                                                        (history_id, assigned_to_employee, assigned_by_employee, assignment_date, is_active, notes, assignment_type)
+                                                        VALUES (%s, %s, %s, GETDATE(), 1, %s, 'SITI_REVIEW')
+                                                    """, [
+                                                        nomor_pengajuan,
+                                                        supervisor['employee_number'],
+                                                        REVIEWER_EMPLOYEE_NUMBER,
+                                                        f"SITI FATIMAH Review: Section changed to {section_info['display_name']}. Assigned to {supervisor['title_name']}. Notes: {review_notes}"
+                                                    ])
+                                                    
+                                                    assigned_count += 1
+                                                    logger.info(f"REVIEW: Assigned {nomor_pengajuan} to {supervisor['fullname']} ({supervisor['employee_number']})")
+                                                    
+                                                except Exception as assign_error:
+                                                    logger.error(f"REVIEW: Error assigning to {supervisor['employee_number']}: {assign_error}")
+                                                    continue
+                                            
+                                            logger.info(f"REVIEW: Successfully assigned {nomor_pengajuan} to {assigned_count} supervisors in {target_section}")
+                                        
+                                    except Exception as sdbm_error:
+                                        logger.error(f"REVIEW: SDBM assignment error: {sdbm_error}")
+                                
                                 else:
-                                    # Error dalam assignment tapi review tetap berhasil
-                                    error_msg = assignment_result.get('error', 'Unknown error')
-                                    messages.warning(request,
-                                        f'✅ Pengajuan {nomor_pengajuan} berhasil diproses, '
-                                        f'tetapi terjadi masalah dalam perubahan section: {error_msg}'
-                                    )
-                                    logger.warning(f"ENHANCED REVIEW PARTIAL: {nomor_pengajuan} processed but section change failed: {error_msg}")
-                                
-                            else:
-                                # No specific target section - standard processing tanpa perubahan section
-                                messages.success(request, 
-                                    f'✅ Pengajuan {nomor_pengajuan} berhasil diproses! '
-                                    f'Section pengaju tetap "{pengajuan["section_tujuan"]}" sesuai pengajuan awal.'
-                                )
-                                logger.info(f"ENHANCED REVIEW: {nomor_pengajuan} processed without section change")
+                                    logger.warning(f"REVIEW: Unknown target section: {target_section}")
+                            
+                            # Generate success message
+                            success_parts = []
+                            success_parts.append(f'✅ Pengajuan {nomor_pengajuan} berhasil diproses dan diselesaikan!')
+                            success_parts.append(f'Status: Final Processed (A/Y)')
+                            
+                            if section_updated:
+                                if section_changed and original_section and new_section:
+                                    success_parts.append(f'🎯 Section tujuan berubah dari "{original_section["name"]}" ke "{new_section["display_name"]}"')
+                                elif new_section:
+                                    success_parts.append(f'🎯 Section tujuan dikonfirmasi ke "{new_section["display_name"]}"')
+                            
+                            messages.success(request, '\n'.join(success_parts))
                             
                         elif action == 'reject':
                             # Update pengajuan dengan review rejection
@@ -918,67 +942,37 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                     reviewed_by = %s,
                                     review_date = GETDATE(),
                                     review_notes = %s,
-                                    status = '2'
+                                    status = %s
                                 WHERE history_id = %s
-                            """, [REVIEWER_EMPLOYEE_NUMBER, review_notes, nomor_pengajuan])
+                            """, [REVIEWER_EMPLOYEE_NUMBER, review_notes, STATUS_REJECTED, nomor_pengajuan])
                             
-                            logger.info(f"ENHANCED REVIEW: Rejected pengajuan {nomor_pengajuan}")
-                            messages.success(request, 
-                                f'❌ Pengajuan {nomor_pengajuan} berhasil ditolak.\n'
-                                f'Alasan: {review_notes}\n'
-                                f'Section pengaju tetap "{pengajuan["section_tujuan"]}" (tidak berubah karena ditolak).'
-                            )
+                            logger.info(f"REVIEW: Rejected pengajuan {nomor_pengajuan}")
+                            messages.success(request, f'❌ Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
                     
-                    logger.info(f"ENHANCED REVIEW: Successfully processed review for {nomor_pengajuan}")
+                    logger.info(f"REVIEW: Successfully processed review for {nomor_pengajuan}")
                     
-                    # Ensure session is saved before redirect
                     request.session.modified = True
                     request.session.save()
                     
-                    # Redirect to same page untuk menampilkan hasil
                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
                     
                 except Exception as update_error:
-                    logger.error(f"ENHANCED REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
+                    logger.error(f"REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
                     messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
             else:
-                # Form validation error
-                logger.warning(f"ENHANCED REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
+                logger.warning(f"REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
                 messages.error(request, 'Form review tidak valid. Periksa kembali input Anda.')
         else:
             review_form = ReviewForm()
         
-        # Get enhanced available sections dengan auto-discovery
-        available_sections = []
-        try:
-            section_mapping = auto_discover_maintenance_sections()
-            
-            for key, info in section_mapping.items():
-                is_current = False
-                if pengajuan['current_section_id']:
-                    is_current = info['id_section'] == int(float(pengajuan['current_section_id']))
-                
-                available_sections.append({
-                    'key': key,
-                    'name': info['display_name'],
-                    'section_id': info['id_section'],
-                    'section_name': info['section_name'],
-                    'is_current': is_current,
-                    'matched_keyword': info.get('matched_keyword', 'auto'),
-                    'will_change': not is_current  # Akan berubah jika bukan section saat ini
-                })
-                
-        except Exception as section_error:
-            logger.error(f"ENHANCED REVIEW: Error getting sections: {section_error}")
-            # Fallback ke basic sections
-            available_sections = [
-                {'key': 'it', 'name': '💻 IT', 'section_id': 1, 'is_current': False, 'will_change': True},
-                {'key': 'elektrik', 'name': '⚡ Elektrik', 'section_id': 2, 'is_current': False, 'will_change': True},
-                {'key': 'utility', 'name': '🏭 Utility', 'section_id': 4, 'is_current': False, 'will_change': True},
-                {'key': 'mekanik', 'name': '🔧 Mekanik', 'section_id': 3, 'is_current': False, 'will_change': True}
-            ]
+        # Basic available sections
+        available_sections = [
+            {'key': 'it', 'name': '💻 IT', 'section_id': 1},
+            {'key': 'elektrik', 'name': '⚡ Elektrik', 'section_id': 2},
+            {'key': 'utility', 'name': '🏭 Utility', 'section_id': 4},
+            {'key': 'mekanik', 'name': '🔧 Mekanik', 'section_id': 3}
+        ]
         
-        # Enhanced context dengan section change info
         context = {
             'pengajuan': pengajuan,
             'review_form': review_form,
@@ -986,46 +980,23 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
             'available_sections': available_sections,
             'employee_data': employee_data,
-            'page_title': f'Enhanced Review Pengajuan {nomor_pengajuan}',
+            'page_title': f'Review Pengajuan {nomor_pengajuan}',
             
-            # ENHANCED: Section change info
-            'section_change_history': section_change_history,
-            'has_section_changes': len(section_change_history) > 0,
-            'current_section_info': {
-                'id': pengajuan['current_section_id'],
-                'name': pengajuan['section_tujuan'],
-                'display_name': pengajuan['section_tujuan'] or 'Unknown'
-            },
-            'final_section_info': {
-                'id': pengajuan['final_section_id'],
-                'name': pengajuan['final_section_name'],
-                'display_name': pengajuan['final_section_name'] or pengajuan['section_tujuan']
-            },
-            'section_will_change_warning': True,  # Always show warning about section change
-            
-            # Enhanced features flags
-            'enhanced_mode': True,
-            'section_update_enabled': True,
-            'auto_discovery_enabled': True,
-            'section_change_preview_enabled': True,
-            
-            # Debug info untuk superuser
-            'debug_mode': request.user.is_superuser,
-            'section_mapping_debug': auto_discover_maintenance_sections() if request.user.is_superuser else None,
-            'original_section_debug': {
-                'id': pengajuan['current_section_id'],
-                'name': pengajuan['section_tujuan']
-            } if request.user.is_superuser else None
+            # Status constants untuk template
+            'STATUS_APPROVED': STATUS_APPROVED,     # B
+            'STATUS_REVIEWED': STATUS_REVIEWED,     # A
+            'APPROVE_YES': APPROVE_YES,             # N
+            'APPROVE_REVIEWED': APPROVE_REVIEWED    # Y
         }
         
-        logger.info(f"ENHANCED REVIEW: Rendering enhanced template for {nomor_pengajuan}")
+        logger.info(f"REVIEW: Rendering template for {nomor_pengajuan}")
         return render(request, 'wo_maintenance_app/review_pengajuan_detail.html', context)
         
     except Exception as e:
-        logger.error(f"ENHANCED REVIEW: Critical error for {nomor_pengajuan}: {e}")
+        logger.error(f"REVIEW: Critical error for {nomor_pengajuan}: {e}")
         import traceback
-        logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
-        messages.error(request, 'Terjadi kesalahan saat memuat enhanced detail pengajuan.')
+        logger.error(f"REVIEW: Traceback: {traceback.format_exc()}")
+        messages.error(request, 'Terjadi kesalahan saat memuat detail pengajuan.')
         return redirect('wo_maintenance_app:review_pengajuan_list')
 
 # ===== NEW: Enhanced Daftar Laporan dengan SDBM Assignment Filter =====
@@ -1036,7 +1007,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
 def enhanced_daftar_laporan(request):
     """
     Enhanced view untuk menampilkan daftar pengajuan dengan SDBM integration
-    FIXED: Tombol review untuk SITI FATIMAH muncul di semua mode
+    UPDATED: Exclude pengajuan yang sudah final processed (status=A & approve=Y)
     """
     try:
         # ===== AMBIL DATA HIERARCHY USER =====
@@ -1047,17 +1018,16 @@ def enhanced_daftar_laporan(request):
             messages.error(request, 'Data karyawan tidak ditemukan. Hubungi administrator.')
             return redirect('wo_maintenance_app:dashboard')
         
-        # ===== CEK APAKAH USER ADALAH 007522 (SITI FATIMAH) - ENHANCED =====
+        # ===== CEK APAKAH USER ADALAH 007522 (SITI FATIMAH) =====
         is_siti_fatimah = (
             user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER or 
             request.user.username == REVIEWER_EMPLOYEE_NUMBER or
-            request.user.username == '007522'  # Explicit check
+            request.user.username == '007522'
         )
         
         # ===== ENHANCED: SITI FATIMAH AUTO-INITIALIZE REVIEW SYSTEM =====
         if is_siti_fatimah:
             try:
-                # Auto-ensure review system is ready
                 initialize_review_data()
                 logger.info(f"SITI FATIMAH ({request.user.username}) accessing enhanced daftar laporan")
             except Exception as init_error:
@@ -1066,79 +1036,40 @@ def enhanced_daftar_laporan(request):
         # ===== FILTER MODE =====
         view_mode = request.GET.get('mode', 'normal')
         
-        # ===== GET SDBM ASSIGNMENTS =====
-        try:
-            from wo_maintenance_app.utils import get_assigned_pengajuan_for_sdbm_user
-            sdbm_assignments = get_assigned_pengajuan_for_sdbm_user(user_hierarchy.get('employee_number'))
-            assigned_history_ids = [assignment['history_id'] for assignment in sdbm_assignments if isinstance(assignment, dict) and assignment.get('history_id')]
-        except Exception as sdbm_error:
-            logger.warning(f"SDBM assignment error for {user_hierarchy.get('employee_number')}: {sdbm_error}")
-            sdbm_assignments = []
-            assigned_history_ids = []
-        
         # ===== FILTER FORM =====
         filter_form = PengajuanFilterForm(request.GET or None)
         search_query = request.GET.get('search', '').strip()
         
-        # ===== QUERY DATABASE - FIXED WITH PROPER REVIEW STATUS =====
+        # ===== QUERY DATABASE dengan NEW STATUS LOGIC =====
         pengajuan_list = []
         total_records = 0
         
         try:
             with connections['DB_Maintenance'].cursor() as cursor:
-                # ===== ENSURE REVIEW COLUMNS EXIST =====
-                if is_siti_fatimah:
-                    try:
-                        cursor.execute("""
-                            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-                                          WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_status')
-                            BEGIN
-                                ALTER TABLE tabel_pengajuan ADD review_status varchar(1) NULL DEFAULT '0'
-                            END
-                        """)
-                        
-                        cursor.execute("""
-                            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-                                          WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'reviewed_by')
-                            BEGIN
-                                ALTER TABLE tabel_pengajuan ADD reviewed_by varchar(50) NULL
-                            END
-                        """)
-                        
-                        cursor.execute("""
-                            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-                                          WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_date')
-                            BEGIN
-                                ALTER TABLE tabel_pengajuan ADD review_date datetime NULL
-                            END
-                        """)
-                    except Exception as col_error:
-                        logger.warning(f"Column check error: {col_error}")
-                
-                # ===== BUILD WHERE CONDITIONS =====
-                base_conditions = ["tp.history_id IS NOT NULL"]
-                query_params = []
+                # ===== BASE CONDITIONS: EXCLUDE FINAL PROCESSED =====
+                base_conditions = [
+                    "tp.history_id IS NOT NULL",
+                    "NOT (tp.status = %s AND tp.approve = %s)"  # UPDATED: Exclude final processed
+                ]
+                query_params = [STATUS_REVIEWED, APPROVE_REVIEWED]  # A, Y
                 
                 if is_siti_fatimah and view_mode == 'approved':
-                    # SITI FATIMAH - All approved pengajuan
+                    # SITI FATIMAH - Only pengajuan siap review (status B, approve N)
                     base_conditions.extend([
                         "tp.status = %s",
                         "tp.approve = %s"
                     ])
-                    query_params.extend([STATUS_APPROVED, APPROVE_YES])
-                    logger.info("SITI FATIMAH mode: querying ALL approved pengajuan")
-                    
-                elif view_mode == 'assigned' and assigned_history_ids:
-                    # Mode assigned: hanya yang di-assign via SDBM
-                    history_placeholders = ','.join(['%s'] * len(assigned_history_ids))
-                    base_conditions.append(f"tp.history_id IN ({history_placeholders})")
-                    query_params.extend(assigned_history_ids)
-                    logger.info(f"SDBM assigned mode: {len(assigned_history_ids)} assignments")
+                    query_params.extend([STATUS_APPROVED, APPROVE_YES])  # B, N
+                    logger.info("SITI FATIMAH mode: querying pengajuan ready for review (status=B, approve=N)")
                     
                 elif is_siti_fatimah:
-                    # ENHANCED: SITI FATIMAH normal mode - show all pengajuan with focus on approved
-                    logger.info("SITI FATIMAH mode: accessing ALL pengajuan with review focus")
-                    # Tidak ada additional filter - bisa lihat semua
+                    # ENHANCED: SITI FATIMAH normal mode - show pengajuan ready for review
+                    base_conditions.extend([
+                        "tp.status = %s",
+                        "tp.approve = %s"
+                    ])
+                    query_params.extend([STATUS_APPROVED, APPROVE_YES])  # B, N
+                    logger.info("SITI FATIMAH mode: accessing pengajuan ready for review")
                     
                 else:
                     # Mode normal: hierarchy filter untuk user lain
@@ -1148,22 +1079,10 @@ def enhanced_daftar_laporan(request):
                         allowed_employee_numbers = [user_hierarchy.get('employee_number')]
                     
                     # Simplified access control
-                    accessible_conditions = []
-                    
-                    # Hierarchy access
                     if allowed_employee_numbers:
                         placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
-                        accessible_conditions.append(f"tp.user_insert IN ({placeholders})")
+                        base_conditions.append(f"tp.user_insert IN ({placeholders})")
                         query_params.extend(allowed_employee_numbers)
-                    
-                    # SDBM assignments (if any)
-                    if assigned_history_ids:
-                        assignment_placeholders = ','.join(['%s'] * len(assigned_history_ids))
-                        accessible_conditions.append(f"tp.history_id IN ({assignment_placeholders})")
-                        query_params.extend(assigned_history_ids)
-                    
-                    if accessible_conditions:
-                        base_conditions.append(f"({' OR '.join(accessible_conditions)})")
                 
                 # ===== FORM FILTERS =====
                 if filter_form.is_valid():
@@ -1177,16 +1096,12 @@ def enhanced_daftar_laporan(request):
                         base_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
                         query_params.append(tanggal_sampai)
                     
-                    # Status filter - skip untuk mode approved
+                    # Status filter - skip untuk SITI FATIMAH approved mode
                     if not (is_siti_fatimah and view_mode == 'approved'):
                         status_filter = filter_form.cleaned_data.get('status')
                         if status_filter:
-                            if status_filter == '1':
-                                base_conditions.append("tp.status = %s")
-                                query_params.append(STATUS_APPROVED)  # Use 'A'
-                            else:
-                                base_conditions.append("tp.status = %s")
-                                query_params.append(status_filter)
+                            base_conditions.append("tp.status = %s")
+                            query_params.append(status_filter)
                     
                     pengaju_filter = filter_form.cleaned_data.get('pengaju')
                     if pengaju_filter:
@@ -1223,7 +1138,6 @@ def enhanced_daftar_laporan(request):
                     LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
                     LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
                     LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
-                    LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
                     {where_clause}
                 """
                 
@@ -1240,14 +1154,12 @@ def enhanced_daftar_laporan(request):
                 previous_page_number = page_number - 1 if has_previous else None
                 next_page_number = page_number + 1 if has_next else None
                 
-                # ===== MAIN QUERY - ENHANCED WITH PROPER REVIEW STATUS =====
+                # ===== MAIN QUERY =====
                 offset = (page_number - 1) * page_size
                 
-                # Determine access type based on mode and assignments
+                # Determine access type
                 access_type_sql = "'HIERARCHY'"
-                if view_mode == 'assigned':
-                    access_type_sql = "'SDBM_ASSIGNED'"
-                elif is_siti_fatimah:
+                if is_siti_fatimah:
                     access_type_sql = "'SITI_FATIMAH'"
                 
                 main_query = f"""
@@ -1267,16 +1179,16 @@ def enhanced_daftar_laporan(request):
                         tp.tgl_his,                       -- 12
                         tp.jam_his,                       -- 13
                         tp.status_pekerjaan,              -- 14
-                        ISNULL(tp.review_status, '0'),    -- 15 FIXED: Default to '0' if NULL
+                        ISNULL(tp.review_status, '0'),    -- 15
                         tp.reviewed_by,                   -- 16
                         tp.review_date,                   -- 17
-                        ISNULL(final_section.seksi, tms.seksi), -- 18
+                        ISNULL(tms.seksi, 'N/A'),         -- 18
                         {access_type_sql} as access_type, -- 19
-                        -- ENHANCED: Add status flags for SITI FATIMAH
+                        -- UPDATED: Enhanced status flags
                         CASE 
                             WHEN tp.status = %s AND tp.approve = %s THEN 1 
                             ELSE 0 
-                        END as is_approved_for_review,   -- 20
+                        END as is_approved_for_review,   -- 20 (status B, approve N)
                         CASE 
                             WHEN tp.status = %s AND tp.approve = %s AND (tp.review_status IS NULL OR tp.review_status = '0') THEN 1 
                             ELSE 0 
@@ -1302,17 +1214,12 @@ def enhanced_daftar_laporan(request):
                         FROM tabel_pekerjaan 
                         WHERE pekerjaan IS NOT NULL
                     ) tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
-                    LEFT JOIN (
-                        SELECT DISTINCT id_section, seksi 
-                        FROM tabel_msection 
-                        WHERE seksi IS NOT NULL
-                    ) final_section ON tp.final_section_id = final_section.id_section
                     {where_clause}
                     ORDER BY tp.tgl_insert DESC, tp.history_id DESC
                     OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
                 """
                 
-                # ENHANCED: Add STATUS constants to query parameters for the CASE statements
+                # UPDATED: Add STATUS constants untuk CASE statements
                 final_params = [STATUS_APPROVED, APPROVE_YES, STATUS_APPROVED, APPROVE_YES] + query_params + [offset, page_size]
                 cursor.execute(main_query, final_params)
                 
@@ -1339,7 +1246,7 @@ def enhanced_daftar_laporan(request):
         if is_siti_fatimah:
             try:
                 with connections['DB_Maintenance'].cursor() as cursor:
-                    # Total approved pengajuan
+                    # Total pengajuan siap review (status B, approve N)
                     cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = %s AND approve = %s", 
                                  [STATUS_APPROVED, APPROVE_YES])
                     siti_stats['total_approved'] = cursor.fetchone()[0] or 0
@@ -1358,12 +1265,11 @@ def enhanced_daftar_laporan(request):
                                  [STATUS_APPROVED, APPROVE_YES])
                     siti_stats['already_reviewed'] = cursor.fetchone()[0] or 0
                     
-                    # Approved today count
+                    # Final processed count (status A, approve Y)
                     cursor.execute("""SELECT COUNT(*) FROM tabel_pengajuan 
-                                    WHERE status = %s AND approve = %s 
-                                        AND CAST(tgl_insert AS DATE) = CAST(GETDATE() AS DATE)""", 
-                                 [STATUS_APPROVED, APPROVE_YES])
-                    siti_stats['approved_today'] = cursor.fetchone()[0] or 0
+                                    WHERE status = %s AND approve = %s""", 
+                                 [STATUS_REVIEWED, APPROVE_REVIEWED])
+                    siti_stats['final_processed'] = cursor.fetchone()[0] or 0
                     
                     logger.info(f"SITI FATIMAH stats: {siti_stats}")
                         
@@ -1373,7 +1279,7 @@ def enhanced_daftar_laporan(request):
                     'total_approved': 0,
                     'pending_review': 0,
                     'already_reviewed': 0,
-                    'approved_today': 0
+                    'final_processed': 0
                 }
         
         # ===== ENHANCED CONTEXT =====
@@ -1395,31 +1301,41 @@ def enhanced_daftar_laporan(request):
             'view_mode': view_mode,
             'siti_stats': siti_stats,
             
-            # Enhanced dengan SDBM info
-            'sdbm_assignments': sdbm_assignments,
-            'assigned_count': len(assigned_history_ids),
+            # Enhanced dengan info status
+            'assigned_count': 0,
             'access_methods': {
                 'hierarchy': len(get_subordinate_employee_numbers(user_hierarchy)) if view_mode == 'normal' and not is_siti_fatimah else 0,
-                'sdbm_assigned': len(assigned_history_ids)
+                'sdbm_assigned': 0
             },
             
             # ENHANCED: Review info untuk SITI FATIMAH
-            'show_review_buttons': is_siti_fatimah,  # Always show review buttons for SITI FATIMAH
+            'show_review_buttons': is_siti_fatimah,
             'reviewer_employee_number': REVIEWER_EMPLOYEE_NUMBER,
+            
+            # UPDATED: Status constants untuk template
+            'STATUS_PENDING': STATUS_PENDING,       # 0
+            'STATUS_APPROVED': STATUS_APPROVED,     # B - approved atasan
+            'STATUS_REVIEWED': STATUS_REVIEWED,     # A - reviewed SITI
+            'APPROVE_NO': APPROVE_NO,               # 0
+            'APPROVE_YES': APPROVE_YES,             # N - approved atasan  
+            'APPROVE_REVIEWED': APPROVE_REVIEWED,   # Y - reviewed SITI
             
             # Debug info
             'debug_info': {
                 'sdbm_integration': True,
-                'assigned_pengajuan_count': len(assigned_history_ids),
                 'view_mode': view_mode,
                 'is_siti_fatimah': is_siti_fatimah,
                 'user_role': f"{user_hierarchy.get('title_name', 'Unknown')}",
                 'status_values': {
+                    'pending': STATUS_PENDING,
                     'approved': STATUS_APPROVED,
-                    'approve_yes': APPROVE_YES
+                    'reviewed': STATUS_REVIEWED,
+                    'approve_yes': APPROVE_YES,
+                    'approve_reviewed': APPROVE_REVIEWED
                 },
                 'review_stats': siti_stats,
-                'total_pengajuan_loaded': len(pengajuan_list)
+                'total_pengajuan_loaded': len(pengajuan_list),
+                'excluded_final_processed': 'Yes'  # NEW: Indicator
             } if request.user.is_superuser else None
         }
         
@@ -1733,46 +1649,40 @@ def ensure_review_tables_exist():
 def dashboard_index(request):
     """Dashboard utama WO Maintenance dengan data dari DB_Maintenance"""
     
-    # Ambil data employee dari session (dari SDBM authentication)
     employee_data = request.session.get('employee_data', {})
     
     try:
-        # Statistik pengajuan dari database DB_Maintenance
         with connections['DB_Maintenance'].cursor() as cursor:
-            # Total pengajuan
-            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE history_id IS NOT NULL")
+            # Total pengajuan (exclude yang sudah final processed)
+            cursor.execute("""
+                SELECT COUNT(*) FROM tabel_pengajuan 
+                WHERE history_id IS NOT NULL 
+                    AND NOT (status = %s AND approve = %s)
+            """, [STATUS_REVIEWED, APPROVE_REVIEWED])
             total_pengajuan = cursor.fetchone()[0] or 0
             
-            # Pengajuan berdasarkan status
+            # Pengajuan berdasarkan status (exclude final processed)
             cursor.execute("""
                 SELECT status, COUNT(*) 
                 FROM tabel_pengajuan 
                 WHERE history_id IS NOT NULL
+                    AND NOT (status = %s AND approve = %s)
                 GROUP BY status
-            """)
+            """, [STATUS_REVIEWED, APPROVE_REVIEWED])
             status_data = cursor.fetchall()
             
-            # Pengajuan hari ini
+            # Pengajuan hari ini (exclude final processed)
             today = timezone.now().date()
             cursor.execute("""
                 SELECT COUNT(*) 
                 FROM tabel_pengajuan 
                 WHERE CAST(tgl_insert AS DATE) = %s
                     AND history_id IS NOT NULL
-            """, [today])
+                    AND NOT (status = %s AND approve = %s)
+            """, [today, STATUS_REVIEWED, APPROVE_REVIEWED])
             pengajuan_today = cursor.fetchone()[0] or 0
             
-            # Pengajuan minggu ini
-            week_start = today - timedelta(days=today.weekday())
-            cursor.execute("""
-                SELECT COUNT(*) 
-                FROM tabel_pengajuan 
-                WHERE CAST(tgl_insert AS DATE) BETWEEN %s AND %s
-                    AND history_id IS NOT NULL
-            """, [week_start, today])
-            pengajuan_this_week = cursor.fetchone()[0] or 0
-            
-            # Pengajuan terbaru (5 terakhir) dengan join tabel mesin dan line
+            # Recent pengajuan (exclude final processed)
             cursor.execute("""
                 SELECT TOP 5 
                     tp.history_id, tm.mesin, tp.oleh, 
@@ -1781,19 +1691,19 @@ def dashboard_index(request):
                 LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
                 LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
                 WHERE tp.history_id IS NOT NULL
+                    AND NOT (tp.status = %s AND tp.approve = %s)
                 ORDER BY tp.tgl_insert DESC
-            """)
+            """, [STATUS_REVIEWED, APPROVE_REVIEWED])
             recent_pengajuan = cursor.fetchall()
             
     except Exception as e:
-        print(f"Error loading dashboard data: {e}")
+        logger.error(f"Error loading dashboard data: {e}")
         total_pengajuan = 0
         status_data = []
         pengajuan_today = 0
-        pengajuan_this_week = 0
         recent_pengajuan = []
     
-    # Proses data status
+    # Process status data
     status_counts = {}
     for status, count in status_data:
         status_counts[str(status) if status else '0'] = count
@@ -1802,10 +1712,9 @@ def dashboard_index(request):
         'employee_data': employee_data,
         'total_pengajuan': total_pengajuan,
         'pengajuan_pending': status_counts.get('0', 0),
-        'pengajuan_approved': status_counts.get('1', 0),
-        'pengajuan_completed': status_counts.get('4', 0),
+        'pengajuan_approved': status_counts.get('B', 0),  # UPDATED: B for atasan approved
+        'pengajuan_reviewed': status_counts.get('A', 0),  # UPDATED: A for SITI reviewed  
         'pengajuan_today': pengajuan_today,
-        'pengajuan_this_week': pengajuan_this_week,
         'recent_pengajuan': recent_pengajuan,
         'page_title': 'Dashboard WO Maintenance'
     }
@@ -1819,9 +1728,8 @@ def dashboard_index(request):
 
 @login_required
 def input_laporan(request):
-    """View untuk input pengajuan maintenance baru - FIXED VERSION"""
+    """View untuk input pengajuan maintenance baru"""
     
-    # Ambil data employee dari session (dari SDBM authentication)
     employee_data = request.session.get('employee_data', {})
     
     if not employee_data:
@@ -1835,13 +1743,8 @@ def input_laporan(request):
             employee_data=employee_data
         )
         
-        logger.debug(f"Form POST data: {request.POST}")
-        
         if form.is_valid():
             try:
-                logger.debug(f"Form cleaned data: {form.cleaned_data}")
-                
-                # FIXED: Ambil data yang sudah divalidasi dari form
                 validated_data = form.cleaned_data
                 
                 with connections['DB_Maintenance'].cursor() as cursor:
@@ -1849,7 +1752,6 @@ def input_laporan(request):
                     today = datetime.now()
                     prefix = f"WO{today.strftime('%Y%m%d')}"
                     
-                    # Cari nomor terakhir
                     cursor.execute("""
                         SELECT TOP 1 history_id 
                         FROM tabel_pengajuan 
@@ -1864,7 +1766,7 @@ def input_laporan(request):
                     else:
                         history_id = f"{prefix}001"
                     
-                    # Generate number_wo (dibatasi 15 karakter)
+                    # Generate number_wo
                     number_wo = f"WO{today.strftime('%y%m%d%H%M%S')}"
                     if len(number_wo) > 15:
                         number_wo = number_wo[:15]
@@ -1873,13 +1775,13 @@ def input_laporan(request):
                     cursor.execute("SELECT ISNULL(MAX(id_pengajuan), 0) + 1 FROM tabel_pengajuan")
                     next_id_pengajuan = cursor.fetchone()[0]
                     
-                    # FIXED: Konversi data dengan konsisten
+                    # Convert data
                     line_id_int = int(validated_data['line_section'])
-                    mesin_id_int = int(validated_data['nama_mesin'])  # Sudah divalidasi di form
+                    mesin_id_int = int(validated_data['nama_mesin'])
                     section_id_int = int(validated_data['section_tujuan'])
                     pekerjaan_id_int = int(validated_data['jenis_pekerjaan'])
                     
-                    # Dapatkan id_line float yang asli dari tabel_line
+                    # Get actual line_id
                     cursor.execute("""
                         SELECT id_line FROM tabel_line 
                         WHERE CAST(id_line AS int) = %s AND status = 'A'
@@ -1889,33 +1791,14 @@ def input_laporan(request):
                     if not line_result:
                         raise ValueError(f"Line ID {line_id_int} tidak ditemukan")
                     
-                    actual_line_id = line_result[0]  # Float value asli
+                    actual_line_id = line_result[0]
                     
-                    # Double check validasi mesin (sudah divalidasi di form, tapi safety check)
-                    cursor.execute("""
-                        SELECT tm.id_mesin 
-                        FROM tabel_mesin tm
-                        INNER JOIN tabel_line tl ON CAST(tl.id_line AS varchar(10)) = tm.id_line
-                        WHERE tm.id_mesin = %s 
-                            AND CAST(tl.id_line AS int) = %s
-                            AND tm.mesin IS NOT NULL 
-                            AND (tm.status IS NULL OR tm.status != '0')
-                            AND tl.status = 'A'
-                    """, [mesin_id_int, line_id_int])
-                    
-                    mesin_validation = cursor.fetchone()
-                    if not mesin_validation:
-                        raise ValueError(f"Validasi final gagal: Mesin {mesin_id_int} tidak valid untuk line {line_id_int}")
-                    
-                    # Batasi panjang data sesuai struktur database
+                    # Prepare data
                     user_insert = str(request.user.username)[:50]
                     oleh = str(employee_data.get('fullname', request.user.username))[:500]
-                    deskripsi = str(validated_data['deskripsi_pekerjaan'])[:2000]  # Limit description
+                    deskripsi = str(validated_data['deskripsi_pekerjaan'])[:2000]
                     
-                    logger.info(f"SAVE: Inserting pengajuan {history_id}")
-                    logger.debug(f"SAVE: line_id={actual_line_id}, mesin_id={mesin_id_int}")
-                    
-                    # Insert data pengajuan dengan data yang sudah divalidasi
+                    # Insert dengan status pending
                     cursor.execute("""
                         INSERT INTO tabel_pengajuan 
                         (history_id, tgl_his, jam_his, id_line, id_mesin, number_wo, 
@@ -1924,21 +1807,21 @@ def input_laporan(request):
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """, [
                         history_id,
-                        today,  # tgl_his
-                        today.strftime('%H:%M:%S'),  # jam_his
-                        actual_line_id,  # id_line (float value asli)
-                        float(mesin_id_int),  # id_mesin
-                        number_wo,  # number_wo
-                        deskripsi,  # deskripsi_perbaikan
-                        '0',  # status (pending)
-                        user_insert,  # user_insert
-                        today,  # tgl_insert
-                        oleh,  # oleh
-                        '0',  # approve (not approved)
-                        float(section_id_int),  # id_section
-                        float(pekerjaan_id_int),  # id_pekerjaan
-                        next_id_pengajuan,  # id_pengajuan
-                        float(next_id_pengajuan)  # idpengajuan
+                        today,
+                        today.strftime('%H:%M:%S'),
+                        actual_line_id,
+                        float(mesin_id_int),
+                        number_wo,
+                        deskripsi,
+                        STATUS_PENDING,  # '0' - pending
+                        user_insert,
+                        today,
+                        oleh,
+                        APPROVE_NO,      # '0' - not approved
+                        float(section_id_int),
+                        float(pekerjaan_id_int),
+                        next_id_pengajuan,
+                        float(next_id_pengajuan)
                     ])
                 
                 logger.info(f"SUCCESS: Pengajuan {history_id} berhasil disimpan")
@@ -1950,34 +1833,9 @@ def input_laporan(request):
                 
             except Exception as e:
                 logger.error(f"ERROR saving pengajuan: {e}")
-                import traceback
-                logger.error(f"Traceback: {traceback.format_exc()}")
                 messages.error(request, f'Terjadi kesalahan saat menyimpan data: {str(e)}')
         else:
-            # Form tidak valid - log error dengan detail
-            logger.error(f"DEBUG INPUT: Form validation errors: {form.errors}")
-            logger.debug(f"DEBUG INPUT: Form data: {request.POST}")
-            
-            # Cek error spesifik untuk mesin
-            if 'nama_mesin' in form.errors:
-                mesin_id = request.POST.get('nama_mesin', '')
-                line_id = request.POST.get('line_section', '')
-                logger.error(f"MESIN ERROR: Mesin ID {mesin_id} tidak valid untuk Line ID {line_id}")
-                
-                # Coba cek di database untuk debugging
-                try:
-                    with connections['DB_Maintenance'].cursor() as cursor:
-                        cursor.execute("""
-                            SELECT COUNT(*) 
-                            FROM tabel_mesin tm
-                            INNER JOIN tabel_line tl ON CAST(tl.id_line AS varchar(10)) = tm.id_line
-                            WHERE tm.id_mesin = %s AND CAST(tl.id_line AS int) = %s
-                        """, [int(mesin_id), int(line_id)])
-                        count = cursor.fetchone()[0]
-                        logger.error(f"MESIN DEBUG: Found {count} matching records for mesin {mesin_id} in line {line_id}")
-                except Exception as debug_e:
-                    logger.error(f"MESIN DEBUG ERROR: {debug_e}")
-            
+            logger.error(f"Form validation errors: {form.errors}")
             messages.error(request, 'Mohon periksa kembali form yang Anda isi.')
     else:
         form = PengajuanMaintenanceForm(user=request.user, employee_data=employee_data)
@@ -2625,7 +2483,7 @@ def minimal_approved_view(request):
 def detail_laporan(request, nomor_pengajuan):
     """
     View untuk menampilkan detail pengajuan dengan sistem approval hierarchy
-    FIXED: menggunakan status A dan approve Y
+    UPDATED: approval set status=B dan approve=N (siap untuk review SITI)
     """
     try:
         # ===== AMBIL DATA HIERARCHY USER =====
@@ -2694,14 +2552,14 @@ def detail_laporan(request, nomor_pengajuan):
             messages.error(request, 'Terjadi kesalahan saat mengambil data pengajuan.')
             return redirect('wo_maintenance_app:daftar_laporan')
         
-        # ===== CEK APAKAH USER DAPAT MELIHAT PENGAJUAN INI =====
+        # ===== CEK ACCESS PERMISSION =====
         is_siti_fatimah = user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER
         
         if is_siti_fatimah:
             # SITI FATIMAH dapat melihat semua pengajuan
             can_view = True
         else:
-            # User lain: cek hierarchy dan assignment
+            # User lain: cek hierarchy
             allowed_employee_numbers = get_subordinate_employee_numbers(user_hierarchy)
             assigned_history_ids = get_assigned_pengajuan_for_user(user_hierarchy.get('employee_number'))
             
@@ -2716,11 +2574,10 @@ def detail_laporan(request, nomor_pengajuan):
             return redirect('wo_maintenance_app:daftar_laporan')
         
         # ===== CEK APPROVAL CAPABILITY =====
-        # Ambil data hierarchy pembuat pengajuan
         pengaju_hierarchy = get_employee_by_number(pengajuan['user_insert'])
         can_approve = False
         
-        # FIXED: Check status pending dengan nilai yang benar
+        # UPDATED: Check status pending dengan nilai yang benar
         if pengaju_hierarchy and pengajuan['status'] == STATUS_PENDING:  # Status pending = '0'
             can_approve = can_user_approve(user_hierarchy, pengaju_hierarchy)
         
@@ -2736,10 +2593,10 @@ def detail_laporan(request, nomor_pengajuan):
                 
                 try:
                     with connections['DB_Maintenance'].cursor() as cursor:
-                        # FIXED: Update status dan approval dengan nilai yang benar
+                        # UPDATED: Approval logic dengan status baru
                         if action == '1':  # Approve
-                            new_status = STATUS_APPROVED      # 'A'
-                            new_approve = APPROVE_YES          # 'Y'
+                            new_status = STATUS_APPROVED      # 'B' - approved oleh atasan
+                            new_approve = APPROVE_YES          # 'N' - approved oleh atasan
                         else:  # Reject
                             new_status = STATUS_REJECTED       # '2' 
                             new_approve = APPROVE_REJECTED     # '2'
@@ -2761,20 +2618,17 @@ def detail_laporan(request, nomor_pengajuan):
                             
                             logger.info(f"Pengajuan {nomor_pengajuan} approved by {user_hierarchy.get('fullname')} - sent to review queue (status={new_status}, approve={new_approve})")
                             
-                            # STEP 2: Ensure review tables exist
-                            ensure_review_tables_exist()
-                            
                             messages.success(request, 
                                 f'Pengajuan {nomor_pengajuan} berhasil di-approve! '
                                 f'Pengajuan akan direview oleh {REVIEWER_FULLNAME} untuk distribusi ke section yang tepat.'
                             )
                             
                         else:
-                            # Rejection - langsung final, tidak perlu review
+                            # Rejection - langsung final
                             logger.info(f"Pengajuan {nomor_pengajuan} rejected by {user_hierarchy.get('fullname')} (status={new_status}, approve={new_approve})")
                             messages.success(request, f'Pengajuan {nomor_pengajuan} berhasil ditolak.')
                         
-                        # Log approval action (existing code)
+                        # Log approval action
                         try:
                             cursor.execute("""
                                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tabel_approval_log' AND xtype='U')
@@ -2806,46 +2660,23 @@ def detail_laporan(request, nomor_pengajuan):
                     logger.error(f"Error updating approval for {nomor_pengajuan}: {update_error}")
                     messages.error(request, 'Terjadi kesalahan saat memproses approval.')
         
-        # ===== CEK ASSIGNMENT INFO =====
-        assigned_history_ids = get_assigned_pengajuan_for_user(user_hierarchy.get('employee_number'))
-        is_assigned_to_user = pengajuan['history_id'] in assigned_history_ids
-        assignment_info = None
-        
-        if is_assigned_to_user:
-            try:
-                with connections['DB_Maintenance'].cursor() as cursor:
-                    cursor.execute("""
-                        SELECT assigned_by_employee, assignment_date, notes
-                        FROM [DB_Maintenance].[dbo].[tabel_pengajuan_assignment]
-                        WHERE history_id = %s AND assigned_to_employee = %s AND is_active = 1
-                    """, [pengajuan['history_id'], user_hierarchy.get('employee_number')])
-                    
-                    assignment_row = cursor.fetchone()
-                    if assignment_row:
-                        assignment_info = {
-                            'assigned_by': assignment_row[0],
-                            'assignment_date': assignment_row[1],
-                            'notes': assignment_row[2]
-                        }
-            except Exception as e:
-                logger.error(f"Error getting assignment info: {e}")
-        
         # ===== CONTEXT =====
         context = {
             'pengajuan': pengajuan,
             'can_approve': can_approve,
             'approval_form': approval_form,
             'user_hierarchy': user_hierarchy,
-            'employee_data': user_hierarchy,  # Untuk compatibility dengan template
+            'employee_data': user_hierarchy,
             'pengaju_hierarchy': pengaju_hierarchy,
-            'is_assigned_to_user': is_assigned_to_user,
-            'assignment_info': assignment_info,
             'is_siti_fatimah': is_siti_fatimah,
-            # Status constants untuk template
-            'STATUS_APPROVED': STATUS_APPROVED,
-            'STATUS_PENDING': STATUS_PENDING,
-            'APPROVE_YES': APPROVE_YES,
-            'APPROVE_NO': APPROVE_NO
+            
+            # UPDATED: Status constants untuk template
+            'STATUS_PENDING': STATUS_PENDING,       # 0
+            'STATUS_APPROVED': STATUS_APPROVED,     # B
+            'STATUS_REVIEWED': STATUS_REVIEWED,     # A
+            'APPROVE_NO': APPROVE_NO,               # 0
+            'APPROVE_YES': APPROVE_YES,             # N
+            'APPROVE_REVIEWED': APPROVE_REVIEWED    # Y
         }
         
         return render(request, 'wo_maintenance_app/detail_laporan.html', context)
@@ -2854,6 +2685,7 @@ def detail_laporan(request, nomor_pengajuan):
         logger.error(f"Critical error in detail_laporan: {e}")
         messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi.')
         return redirect('wo_maintenance_app:daftar_laporan')
+
 
 @login_required 
 def create_assignment_tables(request):
@@ -3040,7 +2872,7 @@ def debug_section_supervisors(request, section_id):
 
 @login_required
 def get_mesin_by_line(request):
-    """AJAX view untuk mendapatkan mesin berdasarkan line - FIXED VERSION"""
+    """AJAX view untuk mendapatkan mesin berdasarkan line"""
     
     line_id = str(request.GET.get('line_id', '')).strip()
     
@@ -3054,7 +2886,6 @@ def get_mesin_by_line(request):
         })
     
     try:
-        # Validasi line_id adalah integer
         try:
             line_id_int = int(line_id)
         except ValueError:
@@ -3065,7 +2896,7 @@ def get_mesin_by_line(request):
             })
         
         with connections['DB_Maintenance'].cursor() as cursor:
-            # STEP 1: Validasi line exists
+            # Validasi line exists
             cursor.execute("""
                 SELECT id_line, line 
                 FROM tabel_line 
@@ -3083,7 +2914,7 @@ def get_mesin_by_line(request):
             line_name = line_data[1]
             logger.debug(f"AJAX: Valid line found - {line_name}")
             
-            # STEP 2: Get mesin dengan method yang konsisten
+            # Get mesin
             cursor.execute("""
                 SELECT tm.id_mesin, tm.mesin, tm.nomer
                 FROM tabel_mesin tm
@@ -3099,17 +2930,16 @@ def get_mesin_by_line(request):
             mesins = cursor.fetchall()
             logger.debug(f"AJAX: Found {len(mesins)} mesins for line {line_id}")
             
-            # STEP 3: Build response dengan validasi
+            # Build response
             mesin_list = []
-            seen_ids = set()  # Prevent duplicates
+            seen_ids = set()
             
             for mesin in mesins:
                 try:
-                    id_mesin = int(float(mesin[0]))  # Consistent ID conversion
+                    id_mesin = int(float(mesin[0]))
                     mesin_name = str(mesin[1] or '').strip()
                     mesin_nomer = str(mesin[2] or '').strip()
                     
-                    # Skip jika ID sudah ada atau nama kosong
                     if id_mesin in seen_ids or not mesin_name:
                         continue
                     
@@ -3118,7 +2948,7 @@ def get_mesin_by_line(request):
                         display_name += f" ({mesin_nomer})"
                     
                     mesin_list.append({
-                        'id': str(id_mesin),  # String untuk konsistensi dengan form
+                        'id': str(id_mesin),
                         'text': display_name
                     })
                     seen_ids.add(id_mesin)
@@ -3133,13 +2963,7 @@ def get_mesin_by_line(request):
                 'success': True,
                 'mesins': mesin_list,
                 'line_name': line_name,
-                'message': f'Ditemukan {len(mesin_list)} mesin untuk {line_name}',
-                'debug': {
-                    'line_id': line_id,
-                    'line_id_int': line_id_int,
-                    'raw_count': len(mesins),
-                    'filtered_count': len(mesin_list)
-                }
+                'message': f'Ditemukan {len(mesin_list)} mesin untuk {line_name}'
             }
             
             logger.debug(f"AJAX: Response prepared - {len(mesin_list)} mesins")
@@ -3520,17 +3344,16 @@ def update_pengajuan_status(request):
 def get_pending_review_count(request):
     """
     AJAX view untuk mendapatkan jumlah pengajuan yang pending review
-    FIXED: Check reviewer dengan SDBM dan status A/Y
+    UPDATED: Check dengan status B/N
     """
-    if not is_reviewer(request.user):
+    if not is_reviewer_fixed(request):
         return JsonResponse({'success': False, 'error': 'Unauthorized'})
     
     try:
-        # Auto-initialize jika perlu
         initialize_review_data()
         
         with connections['DB_Maintenance'].cursor() as cursor:
-            # FIXED: Query dengan status A dan approve Y
+            # UPDATED: Query dengan status B dan approve N
             cursor.execute("""
                 SELECT COUNT(*) 
                 FROM tabel_pengajuan 
@@ -3539,7 +3362,7 @@ def get_pending_review_count(request):
             """, [STATUS_APPROVED, APPROVE_YES])
             count = cursor.fetchone()[0] or 0
             
-            employee_data = get_employee_data_for_request(request)
+            employee_data = get_employee_data_for_request_fixed(request)
             reviewer_name = employee_data.get('fullname', REVIEWER_FULLNAME) if employee_data else REVIEWER_FULLNAME
             
             return JsonResponse({
@@ -3547,8 +3370,8 @@ def get_pending_review_count(request):
                 'count': count,
                 'reviewer': reviewer_name,
                 'status_info': {
-                    'status_approved': STATUS_APPROVED,
-                    'approve_yes': APPROVE_YES
+                    'status_approved': STATUS_APPROVED,   # B
+                    'approve_yes': APPROVE_YES            # N
                 }
             })
             

@@ -459,26 +459,20 @@ class ReviewFilterForm(forms.Form):
             logger.error(f"Error loading additional section choices: {e}")
 
 
+# wo_maintenance_app/forms.py - FIXED ReviewForm dengan Target Section
+
 class ReviewForm(forms.Form):
     """
-    ENHANCED: Form untuk review pengajuan oleh SITI FATIMAH dengan section change capability
+    Form untuk review pengajuan oleh SITI FATIMAH
+    UPDATED: dengan target_section support untuk section change
     """
-    
     ACTION_CHOICES = [
-        ('process', 'Process Pengajuan'),
-        ('reject', 'Reject Pengajuan'),
+        ('process', 'Process (Final: A/Y)'),
+        ('reject', 'Reject'),
     ]
     
-    PRIORITY_CHOICES = [
-        ('normal', 'Normal'),
-        ('urgent', 'Urgent'),
-        ('high', 'High Priority'),
-        ('critical', 'Critical'),
-    ]
-    
-    # Target section choices - akan diupdate otomatis
     TARGET_SECTION_CHOICES = [
-        ('', 'Pilih Section Tujuan (Opsional)'),
+        ('', '-- Tetap di Section Asal --'),
         ('it', '💻 IT (Information Technology)'),
         ('elektrik', '⚡ Elektrik (Electrical Engineering)'),
         ('mekanik', '🔧 Mekanik (Mechanical Engineering)'),
@@ -488,35 +482,22 @@ class ReviewForm(forms.Form):
     
     action = forms.ChoiceField(
         choices=ACTION_CHOICES,
-        widget=forms.RadioSelect(attrs={
-            'class': 'form-check-input',
+        widget=forms.Select(attrs={
+            'class': 'form-select',
             'required': True
         }),
-        label='Keputusan Review',
-        help_text='Pilih apakah pengajuan akan diproses atau ditolak',
-        required=True
+        label='Action Review',
+        help_text='Pilih action yang akan dilakukan untuk pengajuan ini'
     )
     
     target_section = forms.ChoiceField(
         choices=TARGET_SECTION_CHOICES,
         widget=forms.Select(attrs={
-            'class': 'form-control select2-section',
-            'data-placeholder': 'Pilih section untuk distribusi...'
+            'class': 'form-select'
         }),
-        label='Section Tujuan',
-        help_text='Pilih section tujuan - section pengaju akan berubah mengikuti pilihan ini',
-        required=False
-    )
-    
-    priority_level = forms.ChoiceField(
-        choices=PRIORITY_CHOICES,
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        }),
-        label='Priority Level',
-        help_text='Tentukan tingkat prioritas pengajuan',
-        initial='normal',
-        required=False
+        label='Target Section (Optional)',
+        required=False,
+        help_text='Pilih section lain jika ingin mengubah section tujuan pengajuan'
     )
     
     review_notes = forms.CharField(
@@ -526,109 +507,21 @@ class ReviewForm(forms.Form):
             'placeholder': 'Masukkan catatan review...'
         }),
         label='Catatan Review',
-        help_text='Catatan atau keterangan tambahan untuk review ini',
-        max_length=2000,
-        required=False
+        required=True,
+        help_text='Catatan wajib untuk dokumentasi keputusan review'
     )
     
-    def __init__(self, *args, **kwargs):
-        # Extract custom parameters
-        pengajuan_id = kwargs.pop('pengajuan_id', None)
-        current_section = kwargs.pop('current_section', None)
-        
-        super().__init__(*args, **kwargs)
-        
-        # ENHANCED: Dynamic section choices dengan auto-discovery
-        try:
-            self.fields['target_section'].choices = self.get_enhanced_section_choices(
-                pengajuan_id, current_section
-            )
-        except Exception as e:
-            logger.warning(f"Error getting enhanced section choices: {e}")
-            # Keep default choices if error
-        
-        # Add warning message for section change
-        self.fields['target_section'].help_text = (
-            'PERHATIAN: Pemilihan section akan mengubah section pengaju dari section saat ini '
-            'ke section yang dipilih. Pengajuan akan otomatis di-assign ke supervisor yang sesuai.'
-        )
-    
-    def get_enhanced_section_choices(self, pengajuan_id=None, current_section=None):
-        """
-        ENHANCED: Get section choices dengan info tambahan dan status current
-        """
-        try:
-            from .utils import auto_discover_maintenance_sections
-            
-            enhanced_choices = [('', 'Pilih Section Tujuan (Opsional)')]
-            
-            # Get auto-discovered sections
-            section_mapping = auto_discover_maintenance_sections()
-            
-            for key, info in section_mapping.items():
-                choice_label = info['display_name']
-                
-                # Add current section indicator
-                if current_section and info['section_name']:
-                    if current_section.upper() in info['section_name'].upper():
-                        choice_label += ' (SECTION SAAT INI)'
-                
-                enhanced_choices.append((key, choice_label))
-            
-            return enhanced_choices
-            
-        except Exception as e:
-            logger.error(f"Error in get_enhanced_section_choices: {e}")
-            return self.TARGET_SECTION_CHOICES
-    
-    def clean_target_section(self):
-        """
-        Enhanced validation untuk target section
-        """
-        target_section = self.cleaned_data.get('target_section')
-        action = self.cleaned_data.get('action')
-        
-        # Section selection hanya untuk action 'process'
-        if action == 'process' and target_section:
-            # Validate target section exists
-            try:
-                from .utils import auto_discover_maintenance_sections
-                section_mapping = auto_discover_maintenance_sections()
-                
-                if target_section not in section_mapping:
-                    raise forms.ValidationError(f'Section "{target_section}" tidak valid.')
-                
-                logger.info(f"Validated target section: {target_section}")
-                
-            except Exception as e:
-                logger.error(f"Error validating target section: {e}")
-                raise forms.ValidationError('Error validasi section. Silakan coba lagi.')
-        
-        return target_section
-    
     def clean(self):
-        """
-        Enhanced form validation dengan section change confirmation
-        """
+        """Custom validation"""
         cleaned_data = super().clean()
         action = cleaned_data.get('action')
-        target_section = cleaned_data.get('target_section')
         review_notes = cleaned_data.get('review_notes')
         
-        # Action required
-        if not action:
-            raise forms.ValidationError('Keputusan review harus dipilih.')
-        
-        # Review notes required for reject
-        if action == 'reject' and not review_notes:
+        # Review notes harus diisi
+        if not review_notes or not review_notes.strip():
             raise forms.ValidationError({
-                'review_notes': 'Catatan review wajib diisi untuk penolakan pengajuan.'
+                'review_notes': 'Catatan review wajib diisi untuk dokumentasi'
             })
-        
-        # Section change validation for process
-        if action == 'process' and target_section:
-            # Additional validation bisa ditambahkan di sini
-            logger.info(f"Form validation passed: {action} to section {target_section}")
         
         return cleaned_data
 

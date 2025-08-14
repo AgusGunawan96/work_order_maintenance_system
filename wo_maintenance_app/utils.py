@@ -5,16 +5,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# ===== FIXED STATUS CONSTANTS =====
-STATUS_PENDING = '0'      # Pending
-STATUS_APPROVED = 'A'     # FIXED: Approved menggunakan 'A' bukan '1'
-STATUS_REJECTED = '2'     # Rejected
-STATUS_IN_PROGRESS = '3'  # In Progress
-STATUS_COMPLETED = '4'    # Completed
+# ===== UPDATED STATUS CONSTANTS sesuai requirement baru =====
+STATUS_PENDING = '0'          # Pending (belum di-approve atasan)
+STATUS_APPROVED = 'B'         # UPDATED: Approved oleh atasan (siap untuk review SITI)
+STATUS_REVIEWED = 'A'         # UPDATED: Sudah diproses review oleh SITI FATIMAH (final)
+STATUS_REJECTED = '2'         # Rejected
+STATUS_IN_PROGRESS = '3'      # In Progress
+STATUS_COMPLETED = '4'        # Completed
 
-APPROVE_NO = '0'          # Not Approved
-APPROVE_YES = 'Y'         # FIXED: Approved menggunakan 'Y' bukan '1'
-APPROVE_REJECTED = '2'    # Rejected
+APPROVE_NO = '0'              # Not Approved
+APPROVE_YES = 'N'             # UPDATED: Approved oleh atasan (siap untuk review SITI)
+APPROVE_REVIEWED = 'Y'        # UPDATED: Sudah diproses review oleh SITI FATIMAH (final)
+APPROVE_REJECTED = '2'        # Rejected
 
 # ===== REVIEWER CONSTANTS =====
 REVIEWER_EMPLOYEE_NUMBER = '007522'  # SITI FATIMAH
@@ -24,6 +26,29 @@ REVIEWER_FULLNAME = 'SITI FATIMAH'
 REVIEW_PENDING = '0'       # Review pending
 REVIEW_APPROVED = '1'      # Review approved 
 REVIEW_REJECTED = '2'      # Review rejected
+
+def is_pengajuan_approved_for_review(status, approve):
+    """
+    UPDATED: Check apakah pengajuan approved oleh atasan dan ready for review SITI
+    Status='B' dan Approve='N' = sudah approved atasan, siap review SITI
+    """
+    # Primary check: B and N (approved oleh atasan, siap review)
+    if status == STATUS_APPROVED and approve == APPROVE_YES:
+        return True
+    
+    # Legacy support jika masih ada data lama
+    if status == '1' and approve == '1':
+        logger.warning(f"Using legacy status format: status=1, approve=1")
+        return True
+    
+    return False
+
+def is_pengajuan_final_processed(status, approve):
+    """
+    NEW: Check apakah pengajuan sudah final diproses oleh SITI FATIMAH
+    Status='A' dan Approve='Y' = sudah final diproses, tidak perlu ditampilkan di daftar
+    """
+    return status == STATUS_REVIEWED and approve == APPROVE_REVIEWED
 
 def assign_pengajuan_after_siti_review(history_id, target_section, reviewer_employee_number, review_notes):
     """
@@ -279,7 +304,7 @@ def get_sdbm_supervisors_by_section_mapping(target_section):
 def get_employee_hierarchy_data(user):
     """
     Mendapatkan data hierarchy employee dari database SDBM berdasarkan user yang login
-    FIXED: Better error handling and timeout protection
+    UPDATED: Better error handling and timeout protection
     
     Returns:
         dict: Data hierarchy employee atau None jika tidak ditemukan
@@ -361,7 +386,7 @@ def get_employee_hierarchy_data(user):
                     employee_data.update({
                         'is_reviewer': True,
                         'has_full_access': True,
-                        'can_access_all_pengajuan': True,
+                        'can_access_approved_pengajuan': True,  # UPDATED: access ke status B/N
                         'review_authority': 'ALL_SECTIONS',
                         'special_role': 'REVIEWER_SITI_FATIMAH'
                     })
@@ -407,7 +432,7 @@ def normalize_approve_value(approve_value):
 def can_user_approve(user_hierarchy, target_user_hierarchy):
     """
     Mengecek apakah user dapat melakukan approve terhadap target user berdasarkan hierarchy
-    ENHANCED: Special handling untuk SITI FATIMAH
+    UPDATED: Special handling untuk SITI FATIMAH dan new status logic
     
     Args:
         user_hierarchy (dict): Data hierarchy user yang akan melakukan approve
@@ -419,12 +444,12 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
     if not user_hierarchy or not target_user_hierarchy:
         return False
     
-    # ENHANCED: SITI FATIMAH dapat approve semua pengajuan
+    # UPDATED: SITI FATIMAH dapat approve semua pengajuan yang sudah approved atasan (status B/N)
     if user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
         logger.info(f"SITI FATIMAH approval privilege granted for user: {target_user_hierarchy.get('fullname')}")
         return True
     
-    # Supervisor/Manager/GM/BOD dapat approve
+    # Rest of the approval logic remains same for regular supervisors/managers
     user_title = str(user_hierarchy.get('title_name', '')).upper()
     is_supervisor = user_hierarchy.get('is_supervisor', False)
     is_manager = user_hierarchy.get('is_manager', False) 
@@ -441,12 +466,7 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
     if not has_approval_role:
         return False
     
-    # Target user title untuk validasi hierarchy
-    target_title = str(target_user_hierarchy.get('title_name', '')).upper()
-    target_is_supervisor = target_user_hierarchy.get('is_supervisor', False)
-    target_is_manager = target_user_hierarchy.get('is_manager', False)
-    
-    # Level hierarchy (semakin tinggi angka, semakin tinggi level) - UPDATED
+    # Level hierarchy validation (same as before)
     approval_levels = {
         'OPERATOR': 1,
         'ASSISTANT LEADER': 2,
@@ -457,25 +477,24 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
         'SENIOR STAFF': 7,
         'ASSISTANT SUPERVISOR': 8,
         'SUPERVISOR': 9,
-        'SPV': 9,  # Alias untuk SUPERVISOR
+        'SPV': 9,
         'SENIOR SUPERVISOR': 10,
         'ASSISTANT MANAGER': 11,
         'MANAGER': 12,
-        'MGR': 12,  # Alias untuk MANAGER
+        'MGR': 12,
         'GENERAL MANAGER': 13,
-        'GM': 13,  # Alias untuk GENERAL MANAGER
+        'GM': 13,
         'DIRECTOR': 14,
         'PRESIDENT DIRECTOR': 15,
-        'BOD': 15  # Alias untuk PRESIDENT DIRECTOR
+        'BOD': 15
     }
     
-    # Tentukan level user yang akan approve
+    # Calculate user level
     user_level = 0
     for title, level in approval_levels.items():
         if title in user_title:
             user_level = max(user_level, level)
     
-    # Jika user adalah manager/supervisor berdasarkan flag database
     if is_manager:
         user_level = max(user_level, 12)
     elif is_supervisor:
@@ -485,7 +504,11 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
     elif is_bod:
         user_level = max(user_level, 15)
     
-    # Tentukan level target user
+    # Calculate target level
+    target_title = str(target_user_hierarchy.get('title_name', '')).upper()
+    target_is_supervisor = target_user_hierarchy.get('is_supervisor', False)
+    target_is_manager = target_user_hierarchy.get('is_manager', False)
+    
     target_level = 0
     for title, level in approval_levels.items():
         if title in target_title:
@@ -499,12 +522,10 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
     # User dapat approve jika levelnya lebih tinggi dari target
     level_check = user_level > target_level
     
-    # Cek hierarchy department/section juga
+    # Hierarchy department/section check
     same_department = user_hierarchy.get('department_id') == target_user_hierarchy.get('department_id')
     same_section = user_hierarchy.get('section_id') == target_user_hierarchy.get('section_id')
     
-    # Manager dapat approve semua dalam department yang sama
-    # Supervisor dapat approve dalam section yang sama
     if is_manager or is_general_manager or is_bod or 'MANAGER' in user_title:
         hierarchy_check = same_department
     else:
@@ -521,7 +542,7 @@ def can_user_approve(user_hierarchy, target_user_hierarchy):
 def get_subordinate_employee_numbers(user_hierarchy):
     """
     Mendapatkan daftar employee_number dari bawahan berdasarkan hierarchy
-    FIXED: Simplified and more robust error handling
+    UPDATED: SITI FATIMAH dapat akses semua pengajuan yang belum final processed
     
     Args:
         user_hierarchy (dict): Data hierarchy user
@@ -532,22 +553,21 @@ def get_subordinate_employee_numbers(user_hierarchy):
     if not user_hierarchy:
         return []
     
-    # ENHANCED: SITI FATIMAH dapat mengakses SEMUA pengajuan
+    # UPDATED: SITI FATIMAH dapat mengakses SEMUA pengajuan yang belum final processed
     if user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
         try:
-            # Return indicator for all access - will be handled in view
-            logger.info(f"SITI FATIMAH granted unlimited access to all employees")
-            return ['*']  # Special indicator untuk all access
+            logger.info(f"SITI FATIMAH granted access to review approved pengajuan")
+            return ['*']  # Special indicator untuk review access
                 
         except Exception as e:
-            logger.error(f"Error getting all employees for SITI FATIMAH: {e}")
+            logger.error(f"Error getting access for SITI FATIMAH: {e}")
             return ['*']  # Fallback untuk ensure access
     
+    # Rest of the hierarchy logic remains same for other users
     try:
         employee_numbers = []
         
         with connections['SDBM'].cursor() as cursor:
-            # Simplified hierarchy logic
             user_title = str(user_hierarchy.get('title_name', '')).upper()
             is_manager = user_hierarchy.get('is_manager', False)
             is_supervisor = user_hierarchy.get('is_supervisor', False) 
@@ -555,7 +575,6 @@ def get_subordinate_employee_numbers(user_hierarchy):
             is_bod = user_hierarchy.get('is_bod', False)
             
             if is_bod or 'BOD' in user_title:
-                # BOD dapat melihat semua pengajuan
                 cursor.execute("""
                     SELECT DISTINCT e.employee_number
                     FROM [hrbp].[employees] e
@@ -563,7 +582,6 @@ def get_subordinate_employee_numbers(user_hierarchy):
                 """)
                 
             elif is_general_manager or 'GENERAL' in user_title or 'GM' in user_title:
-                # GM dapat melihat semua dalam company
                 cursor.execute("""
                     SELECT DISTINCT e.employee_number
                     FROM [hrbp].[employees] e
@@ -571,7 +589,6 @@ def get_subordinate_employee_numbers(user_hierarchy):
                 """)
                 
             elif is_manager or 'MANAGER' in user_title or 'MGR' in user_title:
-                # Manager dapat melihat dalam department yang sama
                 cursor.execute("""
                     SELECT DISTINCT e.employee_number
                     FROM [hrbp].[employees] e
@@ -582,7 +599,6 @@ def get_subordinate_employee_numbers(user_hierarchy):
                 """, [user_hierarchy.get('department_id')])
                 
             elif is_supervisor or 'SUPERVISOR' in user_title or 'SPV' in user_title:
-                # Supervisor dapat melihat dalam section yang sama
                 cursor.execute("""
                     SELECT DISTINCT e.employee_number
                     FROM [hrbp].[employees] e
@@ -593,13 +609,11 @@ def get_subordinate_employee_numbers(user_hierarchy):
                 """, [user_hierarchy.get('section_id')])
                 
             else:
-                # User biasa hanya melihat pengajuan sendiri
                 return [user_hierarchy.get('employee_number')]
             
             rows = cursor.fetchall()
             employee_numbers = [row[0] for row in rows if row[0]]
             
-            # Selalu tambahkan employee number user sendiri
             if user_hierarchy.get('employee_number') not in employee_numbers:
                 employee_numbers.append(user_hierarchy.get('employee_number'))
             
@@ -609,8 +623,8 @@ def get_subordinate_employee_numbers(user_hierarchy):
             
     except Exception as e:
         logger.error(f"Error getting subordinate employees for {user_hierarchy.get('fullname')}: {e}")
-        # Fallback: return only own employee number
         return [user_hierarchy.get('employee_number')] if user_hierarchy.get('employee_number') else []
+
 
 def get_employee_by_number(employee_number):
     """
@@ -1285,7 +1299,7 @@ def log_enhanced_review_action(history_id, reviewer_employee, action, target_sec
 def get_assigned_pengajuan_for_user(employee_number):
     """
     Mendapatkan daftar pengajuan yang di-assign ke user
-    GRACEFUL FALLBACK: Return empty list jika table tidak ada
+    UPDATED: SITI FATIMAH mendapat akses ke pengajuan yang siap review (status B/N)
     
     Args:
         employee_number (str): Employee number user
@@ -1296,11 +1310,11 @@ def get_assigned_pengajuan_for_user(employee_number):
     if not employee_number:
         return []
     
-    # ENHANCED: SITI FATIMAH mendapat akses ke semua pengajuan yang sudah approved
+    # UPDATED: SITI FATIMAH mendapat akses ke semua pengajuan yang sudah approved atasan
     if employee_number == REVIEWER_EMPLOYEE_NUMBER:
         try:
             with connections['DB_Maintenance'].cursor() as cursor:
-                # FIXED: Query dengan status A dan approve Y
+                # UPDATED: Query dengan status B dan approve N (siap review)
                 cursor.execute("""
                     SELECT DISTINCT history_id
                     FROM [DB_Maintenance].[dbo].[tabel_pengajuan]
@@ -1309,15 +1323,15 @@ def get_assigned_pengajuan_for_user(employee_number):
                 """, [STATUS_APPROVED, APPROVE_YES])
                 
                 approved_pengajuan = [row[0] for row in cursor.fetchall() if row[0]]
-                logger.info(f"SITI FATIMAH granted access to {len(approved_pengajuan)} approved pengajuan (status=A, approve=Y)")
+                logger.info(f"SITI FATIMAH granted access to {len(approved_pengajuan)} approved pengajuan (status=B, approve=N)")
                 return approved_pengajuan
                 
         except Exception as e:
             logger.error(f"Error getting approved pengajuan for SITI FATIMAH: {e}")
             return []
     
+    # For other users - same logic as before
     try:
-        # Cek apakah table assignment ada
         with connections['DB_Maintenance'].cursor() as cursor:
             cursor.execute("""
                 SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES 
@@ -1330,7 +1344,6 @@ def get_assigned_pengajuan_for_user(employee_number):
                 logger.debug(f"Assignment table does not exist - returning empty list for {employee_number}")
                 return []
             
-            # Table ada, ambil assignments
             cursor.execute("""
                 SELECT DISTINCT history_id
                 FROM [DB_Maintenance].[dbo].[tabel_pengajuan_assignment]
@@ -1530,7 +1543,7 @@ def convert_legacy_approve_to_actual(legacy_approve):
 def initialize_review_data():
     """
     Auto-initialize pengajuan approved untuk review dengan status yang benar
-    FIXED: menggunakan status A dan approve Y
+    UPDATED: menggunakan status B dan approve N (approved oleh atasan, siap review)
     """
     try:
         with connections['DB_Maintenance'].cursor() as cursor:
@@ -1588,7 +1601,7 @@ def initialize_review_data():
                 logger.warning("Review columns not found. Please run: python manage.py setup_review_system")
                 return False
             
-            # FIXED: Initialize approved pengajuan untuk review dengan status A dan approve Y
+            # UPDATED: Initialize approved pengajuan untuk review dengan status B dan approve N
             cursor.execute("""
                 UPDATE tabel_pengajuan 
                 SET review_status = '0'
@@ -1599,7 +1612,7 @@ def initialize_review_data():
             updated_count = cursor.rowcount
             
             if updated_count > 0:
-                logger.info(f"Auto-initialized {updated_count} approved pengajuan for review (status=A, approve=Y)")
+                logger.info(f"Auto-initialized {updated_count} approved pengajuan for review (status=B, approve=N)")
             
             # Log current status for debugging
             cursor.execute("""
@@ -1821,17 +1834,22 @@ __all__ = [
     'assign_pengajuan_to_section_supervisors',
     'ensure_assignment_tables_exist',
     'get_assigned_pengajuan_for_user',
+    'is_pengajuan_final_processed',  # NEW
+    'initialize_review_data',
+    'is_pengajuan_approved_for_review',
     'get_sdbm_section_mapping',
     'get_assigned_pengajuan_for_sdbm_user',
     'convert_legacy_status_to_actual',
     'convert_legacy_approve_to_actual',
     'STATUS_PENDING',
     'STATUS_APPROVED',
+    'STATUS_REVIEWED', 
     'STATUS_REJECTED',
     'STATUS_IN_PROGRESS', 
     'STATUS_COMPLETED',
     'APPROVE_NO',
     'APPROVE_YES',
+    'APPROVE_REVIEWED', 
     'APPROVE_REJECTED',
     'REVIEWER_EMPLOYEE_NUMBER',
     'REVIEWER_FULLNAME'
@@ -1951,6 +1969,7 @@ def auto_discover_maintenance_sections():
             }
             for target, info in default_mapping.items()
         }
+
 
 def assign_pengajuan_after_siti_review_enhanced(history_id, target_section, reviewer_employee_number, review_notes):
     """

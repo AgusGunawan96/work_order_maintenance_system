@@ -1,5 +1,5 @@
 <!-- wo_maintenance_app/templates/wo_maintenance_app/enhanced_daftar_laporan.html -->
-<!-- FIXED Template dengan Better Error Handling -->
+<!-- UPDATED Template dengan New Status Logic -->
 
 {% extends 'starter_kit/base.html' %}
 {% load static %}
@@ -287,7 +287,7 @@
         transition: all 0.2s ease;
     }
     
-    /* Enhanced Status Badges */
+    /* UPDATED: Enhanced Status Badges untuk New Status Logic */
     .enhanced-status-badge {
         padding: 6px 12px;
         border-radius: 20px;
@@ -304,7 +304,12 @@
         color: #856404;
     }
     
-    .status-approved {
+    .status-approved-atasan {
+        background: linear-gradient(135deg, #cce7ff 0%, #b3d7ff 100%);
+        color: #004085;
+    }
+    
+    .status-final-processed {
         background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
         color: #155724;
     }
@@ -312,11 +317,6 @@
     .status-rejected {
         background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
         color: #721c24;
-    }
-    
-    .status-sdbm-assigned {
-        background: linear-gradient(135deg, #cce7ff 0%, #b3d7ff 100%);
-        color: #004085;
     }
     
     /* Enhanced Action Buttons */
@@ -396,28 +396,6 @@
         font-size: 14px;
     }
     
-    /* Loading State */
-    .loading-container {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-    }
-    
-    .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #28a745;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 20px;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
     /* Responsive Design */
     @media (max-width: 768px) {
         .sdbm-integration-header {
@@ -483,18 +461,18 @@
         {% endfor %}
     {% endif %}
 
-    <!-- SDBM Integration Header -->
+    <!-- UPDATED: SDBM Integration Header dengan New Status Info -->
     <div class="sdbm-integration-header">
-        <h4>🎯 Enhanced WO Maintenance dengan SDBM Integration</h4>
+        <h4>🎯 Enhanced WO Maintenance dengan New Status Flow</h4>
         <div class="integration-info">
-            <span>Auto-assignment berdasarkan department & section mapping</span>
+            <span>Status Flow: Pending (0/0) → Approved Atasan (B/N) → Final Processed (A/Y)</span>
             <div class="integration-badge">
                 <div style="width: 8px; height: 8px; background: rgba(255,255,255,0.8); border-radius: 50%; animation: pulse 2s infinite;"></div>
-                SDBM Active
+                New Status Active
             </div>
-            {% if assigned_count|default:0 > 0 %}
+            {% if is_siti_fatimah %}
             <div class="integration-badge">
-                📋 {{ assigned_count }} SDBM Assignment{{ assigned_count|pluralize }}
+                📋 SITI FATIMAH Mode
             </div>
             {% endif %}
         </div>
@@ -541,87 +519,58 @@
                 <span class="badge-count">{{ access_methods.hierarchy|default:0 }}</span>
             </a>
             
-            {% if assigned_count|default:0 > 0 %}
-            <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}?mode=assigned" 
-               class="mode-btn {% if view_mode == 'assigned' %}active{% endif %}">
-                <i data-feather="user-check"></i>
-                SDBM Assigned
-                <span class="badge-count">{{ assigned_count }}</span>
-            </a>
-            {% endif %}
-            
             {% if is_siti_fatimah %}
             <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}?mode=approved" 
                class="mode-btn {% if view_mode == 'approved' %}active{% endif %}">
                 <i data-feather="check-circle"></i>
-                All Approved
-                <span class="badge-count">{{ siti_stats.total_approved|default:0 }}</span>
+                Ready for Review
+                <span class="badge-count">{{ siti_stats.pending_review|default:0 }}</span>
             </a>
             
             <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" 
                class="mode-btn">
                 <i data-feather="clipboard"></i>
-                Review Mode
+                Review Dashboard
                 <span class="badge-count">{{ siti_stats.pending_review|default:0 }}</span>
             </a>
             {% endif %}
         </div>
     </div>
 
-    <!-- Enhanced Stats Cards -->
-    {% if view_mode == 'assigned' or is_siti_fatimah %}
+    <!-- UPDATED: Enhanced Stats Cards dengan New Status -->
+    {% if is_siti_fatimah %}
     <div class="sdbm-stats-container">
         <div class="row">
-            {% if view_mode == 'assigned' %}
             <div class="col-md-3 mb-3">
                 <div class="sdbm-stat-card">
-                    <div class="stat-icon">📋</div>
-                    <div class="stat-number">{{ assigned_count|default:0 }}</div>
-                    <div class="stat-label">SDBM Assignments</div>
-                    <div class="stat-description">Pengajuan yang di-assign melalui SDBM integration</div>
+                    <div class="stat-icon">🔄</div>
+                    <div class="stat-number">{{ siti_stats.pending_review|default:0 }}</div>
+                    <div class="stat-label">Ready for Review</div>
+                    <div class="stat-description">Pengajuan siap review (Status B/N)</div>
                 </div>
             </div>
-            {% endif %}
-            
-            {% if is_siti_fatimah %}
             <div class="col-md-3 mb-3">
                 <div class="sdbm-stat-card">
                     <div class="stat-icon">✅</div>
-                    <div class="stat-number">{{ siti_stats.total_approved|default:0 }}</div>
-                    <div class="stat-label">Total Approved</div>
-                    <div class="stat-description">Pengajuan yang sudah di-approve atasan</div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="sdbm-stat-card">
-                    <div class="stat-icon">⏳</div>
-                    <div class="stat-number">{{ siti_stats.pending_review|default:0 }}</div>
-                    <div class="stat-label">Pending Review</div>
-                    <div class="stat-description">Menunggu review untuk assignment</div>
+                    <div class="stat-number">{{ siti_stats.already_reviewed|default:0 }}</div>
+                    <div class="stat-label">Reviewed</div>
+                    <div class="stat-description">Sudah direview oleh SITI</div>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="sdbm-stat-card">
                     <div class="stat-icon">🎯</div>
-                    <div class="stat-number">{{ siti_stats.already_reviewed|default:0 }}</div>
-                    <div class="stat-label">Reviewed</div>
-                    <div class="stat-description">Sudah direview dan di-assign</div>
+                    <div class="stat-number">{{ siti_stats.final_processed|default:0 }}</div>
+                    <div class="stat-label">Final Processed</div>
+                    <div class="stat-description">Selesai diproses (Status A/Y)</div>
                 </div>
             </div>
-            {% endif %}
-            
             <div class="col-md-3 mb-3">
                 <div class="sdbm-stat-card">
                     <div class="stat-icon">📊</div>
                     <div class="stat-number">{{ total_records|default:0 }}</div>
-                    <div class="stat-label">Total Records</div>
-                    <div class="stat-description">
-                        {% if view_mode == 'assigned' %}
-                            Current view total
-                        {% else %}
-                            Accessible pengajuan
-                        {% endif %}
-                    </div>
+                    <div class="stat-label">Total Current</div>
+                    <div class="stat-description">Total yang ditampilkan</div>
                 </div>
             </div>
         </div>
@@ -631,13 +580,16 @@
     <!-- Debug Panel (Superuser Only) -->
     {% if debug_info and user.is_superuser %}
     <div class="debug-panel">
-        <h6>🔧 SDBM Integration Debug Info (Superuser Only)</h6>
+        <h6>🔧 New Status System Debug Info (Superuser Only)</h6>
         <div class="debug-info">
-            <div><strong>SDBM Integration:</strong> {{ debug_info.sdbm_integration|yesno:"Active,Inactive" }}</div>
+            <div><strong>Status Constants:</strong></div>
+            <div>- PENDING: {{ debug_info.status_values.pending }} ({{ debug_info.status_values.pending }}/0)</div>
+            <div>- APPROVED ATASAN: {{ debug_info.status_values.approved }} ({{ debug_info.status_values.approved }}/{{ debug_info.status_values.approve_yes }})</div>
+            <div>- FINAL PROCESSED: {{ debug_info.status_values.reviewed }} ({{ debug_info.status_values.reviewed }}/{{ debug_info.status_values.approve_reviewed }})</div>
             <div><strong>View Mode:</strong> {{ debug_info.view_mode }}</div>
-            <div><strong>Assigned Pengajuan Count:</strong> {{ debug_info.assigned_pengajuan_count }}</div>
             <div><strong>User Role:</strong> {{ debug_info.user_role }}</div>
-            <div><strong>Query Mode:</strong> {{ debug_info.query_mode|default:"normal" }}</div>
+            <div><strong>Excluded Final Processed:</strong> {{ debug_info.excluded_final_processed }}</div>
+            <div><strong>Total Loaded:</strong> {{ debug_info.total_pengajuan_loaded }}</div>
         </div>
     </div>
     {% endif %}
@@ -646,17 +598,14 @@
     <div class="enhanced-table-container">
         <div class="table-header{% if is_siti_fatimah and view_mode == 'approved' %} siti-mode{% endif %}">
             <div class="table-title">
-                <i data-feather="{% if view_mode == 'assigned' %}user-check{% elif view_mode == 'approved' %}check-circle{% else %}list{% endif %}"></i>
-                {% if view_mode == 'assigned' %}
-                    SDBM Assigned Pengajuan
-                {% elif view_mode == 'approved' %}
-                    All Approved Pengajuan - SITI FATIMAH
+                <i data-feather="{% if view_mode == 'approved' %}check-circle{% else %}list{% endif %}"></i>
+                {% if view_mode == 'approved' %}
+                    Pengajuan Ready for Review - SITI FATIMAH
                 {% else %}
                     Enhanced Daftar Pengajuan Maintenance
                 {% endif %}
                 <small style="opacity: 0.8; display: block; font-size: 0.8rem; margin-top: 5px;">
-                    Total: {{ total_records|default:0 }} pengajuan
-                    {% if assigned_count|default:0 > 0 %} | {{ assigned_count }} SDBM assignments{% endif %}
+                    Total: {{ total_records|default:0 }} pengajuan (excluding final processed A/Y)
                 </small>
             </div>
             <div class="table-actions">
@@ -683,7 +632,7 @@
                         <th style="width: 120px;">Section</th>
                         <th style="width: 130px;">Pekerjaan</th>
                         <th>Deskripsi</th>
-                        <th style="width: 120px;">Status</th>
+                        <th style="width: 140px;">Status</th>
                         <th style="width: 130px;">Tanggal</th>
                         <th style="width: 120px;">Actions</th>
                     </tr>
@@ -703,13 +652,6 @@
                                 {% if pengajuan.8 %}
                                     <br><small class="text-muted">{{ pengajuan.8 }}</small>
                                 {% endif %}
-                                
-                                <!-- Assignment Info -->
-                                {% if pengajuan.19 == 'SDBM_ASSIGNED' %}
-                                    <div style="background: #d4edda; color: #155724; padding: 2px 6px; border-radius: 8px; font-size: 0.7rem; margin-top: 3px; display: inline-block;">
-                                        📋 SDBM
-                                    </div>
-                                {% endif %}
                             </div>
                         </td>
                         <td>
@@ -720,14 +662,7 @@
                             {% endif %}
                         </td>
                         <td>{{ pengajuan.2|default:"-" }}</td>
-                        <td>
-                            <div>
-                                {{ pengajuan.3|default:"-" }}
-                                {% if pengajuan.18 and pengajuan.18 != pengajuan.3 and pengajuan.18 != 'N/A' %}
-                                    <br><small class="text-success">→ {{ pengajuan.18 }}</small>
-                                {% endif %}
-                            </div>
-                        </td>
+                        <td>{{ pengajuan.3|default:"-" }}</td>
                         <td>{{ pengajuan.4|default:"-" }}</td>
                         <td>
                             <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
@@ -736,37 +671,39 @@
                         </td>
                         <td>
                             <div>
-                                {% if view_mode == 'approved' %}
-                                    <!-- Review Status untuk mode approved -->
-                                    {% if pengajuan.15 == '0' or pengajuan.15 is None %}
-                                        <span class="enhanced-status-badge status-pending">
-                                            ⏳ Pending Review
-                                        </span>
-                                    {% elif pengajuan.15 == '1' %}
-                                        <span class="enhanced-status-badge status-approved">
-                                            ✅ Reviewed
-                                        </span>
-                                    {% elif pengajuan.15 == '2' %}
-                                        <span class="enhanced-status-badge status-rejected">
-                                            ❌ Rejected
-                                        </span>
-                                    {% endif %}
+                                <!-- UPDATED: Status badges dengan new logic -->
+                                {% if pengajuan.6 == '0' %}
+                                    <span class="enhanced-status-badge status-pending">
+                                        ⏳ Pending
+                                    </span>
+                                {% elif pengajuan.6 == 'B' and pengajuan.11 == 'N' %}
+                                    <span class="enhanced-status-badge status-approved-atasan">
+                                        ✅ Approved Atasan
+                                    </span>
+                                {% elif pengajuan.6 == 'A' and pengajuan.11 == 'Y' %}
+                                    <span class="enhanced-status-badge status-final-processed">
+                                        🎯 Final Processed
+                                    </span>
+                                {% elif pengajuan.6 == '2' %}
+                                    <span class="enhanced-status-badge status-rejected">
+                                        ❌ Rejected
+                                    </span>
                                 {% else %}
-                                    <!-- Normal Status -->
-                                    {% if pengajuan.6 == '0' %}
-                                        <span class="enhanced-status-badge status-pending">Pending</span>
-                                    {% elif pengajuan.6 == 'A' or pengajuan.6 == '1' %}
-                                        <span class="enhanced-status-badge status-approved">Approved</span>
-                                    {% elif pengajuan.6 == '2' %}
-                                        <span class="enhanced-status-badge status-rejected">Rejected</span>
-                                    {% endif %}
+                                    <span class="enhanced-status-badge">
+                                        Status: {{ pengajuan.6|default:"-" }}/{{ pengajuan.11|default:"-" }}
+                                    </span>
                                 {% endif %}
                                 
-                                <!-- SDBM Assignment Status -->
-                                {% if pengajuan.19 == 'SDBM_ASSIGNED' %}
-                                    <br><span class="enhanced-status-badge status-sdbm-assigned">
-                                        🎯 SDBM
-                                    </span>
+                                <!-- Review status untuk SITI FATIMAH -->
+                                {% if is_siti_fatimah and pengajuan.15 %}
+                                    <br>
+                                    {% if pengajuan.15 == '0' %}
+                                        <small class="text-warning">⏳ Waiting Review</small>
+                                    {% elif pengajuan.15 == '1' %}
+                                        <small class="text-success">✅ Reviewed</small>
+                                    {% elif pengajuan.15 == '2' %}
+                                        <small class="text-danger">❌ Review Rejected</small>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </td>
@@ -787,16 +724,16 @@
                 <i data-feather="eye"></i> Detail
             </a>
             
-            <!-- ENHANCED: Review Button Logic untuk SITI FATIMAH -->
+            <!-- UPDATED: Review Button Logic untuk SITI FATIMAH -->
             {% if is_siti_fatimah %}
                 {% comment %}
                 SITI FATIMAH can review if:
-                1. Pengajuan is approved (status='A' AND approve='Y') 
+                1. Pengajuan is approved by atasan (status='B' AND approve='N') 
                 2. NOT yet reviewed (review_status is NULL or '0')
                 {% endcomment %}
                 
-                <!-- Check if this is approved pengajuan -->
-                {% if pengajuan.6 == 'A' and pengajuan.11 == 'Y' %}
+                <!-- Check if this is approved by atasan -->
+                {% if pengajuan.6 == 'B' and pengajuan.11 == 'N' %}
                     <!-- Check review status -->
                     {% if pengajuan.15 == '0' or pengajuan.15 is None %}
                         <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
@@ -815,29 +752,24 @@
                         </span>
                     {% endif %}
                 {% else %}
-                    <!-- Not approved yet or rejected -->
+                    <!-- Not ready for review yet -->
                     {% if pengajuan.6 == '0' %}
-                        <span class="enhanced-action-btn" style="background: #fff3cd; color: #856404; cursor: default;" title="Menunggu Approval">
-                            <i data-feather="clock"></i> Pending
+                        <span class="enhanced-action-btn" style="background: #fff3cd; color: #856404; cursor: default;" title="Menunggu Approval Atasan">
+                            <i data-feather="clock"></i> Pending Approval
                         </span>
                     {% elif pengajuan.6 == '2' %}
                         <span class="enhanced-action-btn" style="background: #f8d7da; color: #721c24; cursor: default;" title="Ditolak">
                             <i data-feather="x-circle"></i> Rejected
                         </span>
+                    {% elif pengajuan.6 == 'A' and pengajuan.11 == 'Y' %}
+                        <span class="enhanced-action-btn" style="background: #d4edda; color: #155724; cursor: default;" title="Sudah Final Processed">
+                            <i data-feather="check-circle-2"></i> Final
+                        </span>
                     {% endif %}
-                {% endif %}
-                
-                <!-- Additional: Quick review link for approved mode -->
-                {% if view_mode == 'approved' and pengajuan.21 == '1' %}
-                    <!-- pengajuan.21 is needs_review flag -->
-                    <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
-                       class="enhanced-action-btn" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white;" title="Quick Review">
-                        <i data-feather="zap"></i> Quick Review
-                    </a>
                 {% endif %}
             {% endif %}
             
-            <!-- Regular Approval Button for Other Users -->
+            <!-- Regular Approval Button untuk atasan (non-SITI FATIMAH) -->
             {% if can_approve and not is_siti_fatimah and pengajuan.6 == '0' and pengajuan.11 == '0' %}
                 <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}#approval" 
                    class="enhanced-action-btn btn-approve" title="Approve">
@@ -867,19 +799,15 @@
         <!-- Enhanced Empty State -->
         <div class="enhanced-empty-state">
             <div class="empty-state-icon">
-                {% if view_mode == 'assigned' %}
-                    <i data-feather="user-check"></i>
-                {% elif view_mode == 'approved' %}
+                {% if view_mode == 'approved' %}
                     <i data-feather="check-circle"></i>
                 {% else %}
                     <i data-feather="inbox"></i>
                 {% endif %}
             </div>
             <h5 class="text-muted">
-                {% if view_mode == 'assigned' %}
-                    Tidak ada SDBM assignments
-                {% elif view_mode == 'approved' %}
-                    Tidak ada pengajuan approved
+                {% if view_mode == 'approved' %}
+                    Tidak ada pengajuan ready for review
                 {% else %}
                     Tidak ada data pengajuan
                 {% endif %}
@@ -887,12 +815,10 @@
             <p class="text-muted">
                 {% if search_query %}
                     Tidak ditemukan hasil untuk pencarian "{{ search_query }}"
-                {% elif view_mode == 'assigned' %}
-                    Anda belum memiliki pengajuan yang di-assign melalui SDBM integration
                 {% elif view_mode == 'approved' %}
-                    Belum ada pengajuan work order yang telah di-approve
+                    Belum ada pengajuan work order yang approved atasan (status B/N)
                 {% else %}
-                    Belum ada pengajuan maintenance yang dapat diakses
+                    Belum ada pengajuan maintenance yang dapat diakses (excluding final processed A/Y)
                 {% endif %}
             </p>
             <a href="{% url 'wo_maintenance_app:input_laporan' %}" class="btn btn-primary">
@@ -915,6 +841,41 @@
 $(document).ready(function() {
     // Initialize Feather Icons
     feather.replace();
+    
+    // UPDATED: Debug function untuk new status system
+    window.showDebugInfo = function(historyId, status, approve, reviewStatus, isSiti) {
+        console.log('=== NEW STATUS SYSTEM DEBUG ===');
+        console.log('History ID:', historyId);
+        console.log('Status:', status, '(0=Pending, B=Approved Atasan, A=Final Processed, 2=Rejected)');
+        console.log('Approve:', approve, '(0=No, N=Approved Atasan, Y=Final Processed, 2=Rejected)');
+        console.log('Review Status:', reviewStatus, '(0=Pending Review, 1=Reviewed, 2=Review Rejected)');
+        console.log('Is SITI FATIMAH:', isSiti);
+        
+        // Status flow explanation
+        console.log('--- STATUS FLOW ---');
+        if (status === '0' && approve === '0') {
+            console.log('➡️ PENDING: Waiting for atasan approval');
+        } else if (status === 'B' && approve === 'N') {
+            console.log('➡️ APPROVED BY ATASAN: Ready for SITI review');
+        } else if (status === 'A' && approve === 'Y') {
+            console.log('➡️ FINAL PROCESSED: Completed by SITI (should be hidden from list)');
+        } else if (status === '2') {
+            console.log('➡️ REJECTED: Rejected by atasan or review');
+        } else {
+            console.log('➡️ UNKNOWN STATUS COMBINATION');
+        }
+        
+        // Review availability
+        if (isSiti) {
+            if (status === 'B' && approve === 'N' && (reviewStatus === '0' || reviewStatus === null)) {
+                console.log('✅ SITI CAN REVIEW: Status B/N and not yet reviewed');
+            } else {
+                console.log('❌ SITI CANNOT REVIEW: Either not B/N or already reviewed');
+            }
+        }
+        
+        alert('Debug info printed to console. Check browser console (F12) for details.');
+    };
     
     // Stats animation (with error handling)
     $('.stat-number').each(function() {
@@ -941,31 +902,6 @@ $(document).ready(function() {
     // Enhanced tooltip untuk action buttons
     $('.enhanced-action-btn').tooltip();
     
-    // Auto-refresh assignment count (with error handling)
-    {% if view_mode == 'assigned' %}
-    let refreshInterval = setInterval(function() {
-        fetch('/wo-maintenance/ajax/sdbm/assignment-status/')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.assignment_count !== {{ assigned_count|default:0 }}) {
-                    showNotification('New SDBM assignments available', 'info');
-                }
-            })
-            .catch(error => {
-                console.log('Assignment check failed:', error);
-                // Clear interval after multiple failures
-                if (typeof refreshFailCount === 'undefined') {
-                    window.refreshFailCount = 0;
-                }
-                window.refreshFailCount++;
-                if (window.refreshFailCount > 3) {
-                    clearInterval(refreshInterval);
-                    console.log('Auto-refresh disabled due to repeated failures');
-                }
-            });
-    }, 30000);
-    {% endif %}
-    
     // Show notification function
     function showNotification(message, type = 'info') {
         const alertClass = type === 'info' ? 'alert-info' : 'alert-success';
@@ -990,17 +926,21 @@ $(document).ready(function() {
         return false;
     };
     
-    // Log enhanced integration status (with safe checks)
-    console.log('🎯 Enhanced WO Maintenance - SDBM Integration');
+    // UPDATED: Log new status integration info
+    console.log('🎯 Enhanced WO Maintenance - New Status System');
     console.log('View Mode:', '{{ view_mode|default:"normal" }}');
-    console.log('SDBM Assignments:', {{ assigned_count|default:0 }});
     console.log('Is SITI FATIMAH:', {{ is_siti_fatimah|yesno:"true,false" }});
     console.log('Total Records:', {{ total_records|default:0 }});
+    console.log('Status Constants:');
+    console.log('- PENDING: 0/0');
+    console.log('- APPROVED ATASAN: B/N');
+    console.log('- FINAL PROCESSED: A/Y (hidden from list)');
+    console.log('- REJECTED: 2/2');
     
     // Success message if no errors
     setTimeout(function() {
         if (!$('.error-container').length) {
-            console.log('✅ Enhanced SDBM Integration loaded successfully');
+            console.log('✅ New Status System loaded successfully');
         }
     }, 1000);
 });
