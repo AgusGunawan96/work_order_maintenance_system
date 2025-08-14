@@ -1,4 +1,4 @@
-# wo_maintenance_app/forms.py - FIXED VERSION
+# wo_maintenance_app/forms.py - FIXED VERSION dengan Status A & Approve Y
 from django import forms
 from django.db import connections
 import logging
@@ -259,9 +259,9 @@ class PengajuanMaintenanceForm(forms.Form):
 
 
 class PengajuanFilterForm(forms.Form):
-    """Form untuk filter daftar pengajuan"""
+    """Form untuk filter daftar pengajuan - FIXED dengan Status A"""
     
-     # FIXED: Status choices dengan mapping yang benar
+    # FIXED: Status choices dengan mapping yang benar
     STATUS_CHOICES = [
         ('', 'Semua Status'),
         ('0', 'Pending'),           # Pending tetap '0'
@@ -330,11 +330,12 @@ class PengajuanFilterForm(forms.Form):
 
 
 class ApprovalForm(forms.Form):
-    """Form untuk approval pengajuan"""
+    """Form untuk approval pengajuan - FIXED dengan Action Values"""
     
+    # FIXED: Action choices dengan mapping yang benar
     ACTION_CHOICES = [
-        ('1', 'Approve'),
-        ('2', 'Reject'),
+        ('1', 'Approve'),   # Action '1' akan mapping ke status 'A' dan approve 'Y'
+        ('2', 'Reject'),    # Action '2' akan mapping ke status '2' dan approve '2'
     ]
     
     action = forms.ChoiceField(
@@ -356,9 +357,11 @@ class ApprovalForm(forms.Form):
         help_text='Keterangan opsional untuk keputusan approval'
     )
 
+
 class ReviewFilterForm(forms.Form):
-    """Form untuk filter review pengajuan - ENHANCED"""
+    """Form untuk filter review pengajuan - ENHANCED dengan Status A"""
     
+    # FIXED: Review status choices 
     REVIEW_STATUS_CHOICES = [
         ('', 'Semua Status Review'),
         ('0', 'Pending Review'),
@@ -455,7 +458,6 @@ class ReviewFilterForm(forms.Form):
         except Exception as e:
             logger.error(f"Error loading additional section choices: {e}")
 
-# wo_maintenance_app/forms.py - FIXED ReviewForm
 
 class ReviewForm(forms.Form):
     """Form untuk review pengajuan oleh SITI FATIMAH - FIXED ACTION_CHOICES"""
@@ -599,189 +601,14 @@ class ReviewForm(forms.Form):
             cleaned_data['target_section'] = ''
         
         return cleaned_data
-    
-
-class EnhancedReviewForm(forms.Form):
-    """
-    Enhanced Form untuk review pengajuan oleh SITI FATIMAH dengan SDBM Integration
-    """
-    
-    ACTION_CHOICES = [
-        ('process', 'Process Pengajuan'),
-        ('reject', 'Reject Pengajuan'),
-    ]
-    
-    action = forms.ChoiceField(
-        label='Keputusan Review',
-        choices=ACTION_CHOICES,
-        widget=forms.RadioSelect(attrs={
-            'class': 'form-check-input review-action'
-        }),
-        help_text='Pilih "Process Pengajuan" untuk melanjutkan atau "Reject" untuk menolak'
-    )
-    
-    target_section = forms.ChoiceField(
-        label='Tujuan Section SDBM (Opsional)',
-        choices=[],  # Will be populated in __init__
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-control select2-section',
-            'data-placeholder': 'Pilih section tujuan untuk auto-assignment...'
-        }),
-        help_text='🎯 Pilih section spesifik untuk auto-assignment ke supervisor SDBM'
-    )
-    
-    priority_level = forms.ChoiceField(
-        label='Tingkat Prioritas',
-        choices=[
-            ('normal', 'Normal'),
-            ('urgent', 'Urgent'),
-            ('critical', 'Critical')
-        ],
-        initial='normal',
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        }),
-        help_text='Tentukan tingkat prioritas pengajuan ini'
-    )
-    
-    review_notes = forms.CharField(
-        label='Catatan Review',
-        required=False,
-        widget=forms.Textarea(attrs={
-            'class': 'form-control',
-            'rows': 4,
-            'placeholder': 'Tambahkan catatan review dan instruksi untuk supervisor...'
-        }),
-        help_text='Catatan untuk dokumentasi dan instruksi kepada supervisor yang akan menerima assignment'
-    )
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        # Load SDBM section mapping
-        self.load_sdbm_section_choices()
-    
-    def load_sdbm_section_choices(self):
-        """
-        Load section choices berdasarkan SDBM mapping dan validasi supervisor
-        """
-        try:
-            from wo_maintenance_app.utils import get_sdbm_section_mapping, validate_sdbm_section_mapping
-            
-            # Get mapping dan validation
-            section_mapping = get_sdbm_section_mapping()
-            validation = validate_sdbm_section_mapping()
-            
-            choices = [('', '-- Pilih Section untuk Auto-Assignment --')]
-            
-            for key, info in section_mapping.items():
-                # Get supervisor count dari validation
-                supervisor_count = validation['found_supervisors'].get(key, {}).get('count', 0)
-                
-                # Format choice dengan info supervisor count
-                if supervisor_count > 0:
-                    display_text = f"{info['display_name']} ({supervisor_count} supervisor)"
-                    choices.append((key, display_text))
-                else:
-                    # Masih tampilkan tapi dengan warning
-                    display_text = f"{info['display_name']} (⚠️ No supervisors found)"
-                    choices.append((key, display_text))
-            
-            self.fields['target_section'].choices = choices
-            
-            # Store mapping untuk referensi
-            self.sdbm_section_mapping = section_mapping
-            self.sdbm_validation = validation
-            
-            logger.info(f"Loaded {len(choices)-1} SDBM section choices for review form")
-            
-        except Exception as e:
-            logger.error(f"Error loading SDBM section choices: {e}")
-            
-            # Fallback choices
-            self.fields['target_section'].choices = [
-                ('', '-- Pilih Section (Fallback Mode) --'),
-                ('it', '💻 IT (ENGINEERING-IT)'),
-                ('elektrik', '⚡ Elektrik (ENGINEERING-ELECTRIC)'),
-                ('utility', '🏭 Utility (ENGINEERING-UTILITY)'),
-                ('mekanik', '🔧 Mekanik (ENGINEERING-MECHANIC)')
-            ]
-    
-    def get_sdbm_section_info(self, target_section):
-        """
-        Get SDBM section info untuk target section yang dipilih
-        
-        Args:
-            target_section (str): Target section key
-            
-        Returns:
-            dict: Section info dengan supervisor count
-        """
-        if not hasattr(self, 'sdbm_section_mapping') or not hasattr(self, 'sdbm_validation'):
-            return None
-        
-        section_info = self.sdbm_section_mapping.get(target_section, {})
-        validation_info = self.sdbm_validation['found_supervisors'].get(target_section, {})
-        
-        return {
-            'display_name': section_info.get('display_name', target_section),
-            'department_name': section_info.get('department_name'),
-            'section_name': section_info.get('section_name'),
-            'supervisor_count': validation_info.get('count', 0),
-            'is_valid': target_section not in [s.lower() for s in self.sdbm_validation.get('missing_sections', [])]
-        }
-    
-    def clean(self):
-        """
-        Enhanced validation untuk SDBM integration
-        """
-        cleaned_data = super().clean()
-        action = cleaned_data.get('action')
-        target_section = cleaned_data.get('target_section')
-        review_notes = cleaned_data.get('review_notes')
-        
-        # Validasi berdasarkan action
-        if action == 'process':
-            # Untuk process, section adalah opsional tapi berikan default notes
-            if not review_notes:
-                if target_section:
-                    section_info = self.get_sdbm_section_info(target_section)
-                    if section_info:
-                        cleaned_data['review_notes'] = (
-                            f"Pengajuan diproses dan akan di-assign ke supervisor "
-                            f"di {section_info['display_name']}"
-                        )
-                    else:
-                        cleaned_data['review_notes'] = f"Pengajuan diproses ke section {target_section}"
-                else:
-                    cleaned_data['review_notes'] = 'Pengajuan diproses dengan prosedur standar'
-            
-            # Validasi target section jika dipilih
-            if target_section:
-                section_info = self.get_sdbm_section_info(target_section)
-                if section_info and section_info['supervisor_count'] == 0:
-                    self.add_error('target_section', 
-                        f"⚠️ Tidak ada supervisor ditemukan di {section_info['display_name']}. "
-                        f"Auto-assignment mungkin tidak berhasil."
-                    )
-        
-        elif action == 'reject':
-            # Untuk reject, notes direkomendasikan
-            if not review_notes:
-                cleaned_data['review_notes'] = 'Pengajuan ditolak oleh reviewer'
-            
-            # Clear target section jika reject
-            cleaned_data['target_section'] = ''
-        
-        return cleaned_data
 
 
 class EnhancedPengajuanFilterForm(forms.Form):
     """
-    Enhanced Filter Form dengan SDBM assignment filter
+    Enhanced Filter Form dengan SDBM assignment filter - FIXED Status
     """
     
+    # FIXED: Status choices dengan mapping yang benar
     STATUS_CHOICES = [
         ('', 'Semua Status'),
         ('0', 'Pending'),           # Pending tetap '0'
@@ -917,115 +744,6 @@ class EnhancedPengajuanFilterForm(forms.Form):
             logger.error(f"Error loading assigned section choices: {e}")
             self.fields['assigned_section'].choices = [('', 'Semua Section')]
 
-
-class SDBMValidationForm(forms.Form):
-    """
-    Form untuk validasi dan testing SDBM integration - ADMIN ONLY
-    """
-    
-    test_target_section = forms.ChoiceField(
-        label='Test Target Section',
-        choices=[
-            ('it', '💻 IT'),
-            ('elektrik', '⚡ Elektrik'),
-            ('utility', '🏭 Utility'),
-            ('mekanik', '🔧 Mekanik')
-        ],
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        }),
-        help_text='Pilih section untuk test SDBM supervisor lookup'
-    )
-    
-    test_employee_number = forms.CharField(
-        label='Test Employee Number',
-        max_length=50,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Contoh: 007522'
-        }),
-        help_text='Employee number untuk test assignment lookup'
-    )
-    
-    validate_all_sections = forms.BooleanField(
-        label='Validate All Sections',
-        required=False,
-        initial=True,
-        widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input'
-        }),
-        help_text='Validate semua section mapping dengan SDBM'
-    )
-    
-    include_supervisor_details = forms.BooleanField(
-        label='Include Supervisor Details',
-        required=False,
-        initial=False,
-        widget=forms.CheckboxInput(attrs={
-            'class': 'form-check-input'
-        }),
-        help_text='Include detail supervisor dalam hasil validasi'
-    )
-
-
-# Enhanced Review Filter Form
-class EnhancedReviewFilterForm(ReviewFilterForm):
-    """
-    Enhanced Review Filter Form dengan SDBM integration
-    """
-    
-    ASSIGNMENT_STATUS_CHOICES = [
-        ('', 'Semua Assignment Status'),
-        ('assigned', 'Sudah Di-assign ke SDBM'),
-        ('not_assigned', 'Belum Di-assign'),
-        ('failed_assignment', 'Assignment Gagal')
-    ]
-    
-    assignment_status = forms.ChoiceField(
-        label='Status Assignment',
-        choices=ASSIGNMENT_STATUS_CHOICES,
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        }),
-        help_text='Filter berdasarkan status assignment ke supervisor SDBM'
-    )
-    
-    target_section_filter = forms.ChoiceField(
-        label='Target Section',
-        choices=[],  # Will be populated in __init__
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        }),
-        help_text='Filter berdasarkan target section yang dipilih saat review'
-    )
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        # Load target section choices
-        self.load_target_section_choices()
-    
-    def load_target_section_choices(self):
-        """
-        Load target section choices dari SDBM mapping
-        """
-        try:
-            from wo_maintenance_app.utils import get_sdbm_section_mapping
-            
-            choices = [('', 'Semua Target Section')]
-            section_mapping = get_sdbm_section_mapping()
-            
-            for key, info in section_mapping.items():
-                choices.append((key, info['display_name']))
-            
-            self.fields['target_section_filter'].choices = choices
-            
-        except Exception as e:
-            logger.error(f"Error loading target section choices: {e}")
-            self.fields['target_section_filter'].choices = [('', 'Semua Target Section')]
 
 class SupervisorAccessFilterForm(forms.Form):
     """

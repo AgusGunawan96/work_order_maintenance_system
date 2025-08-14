@@ -6182,3 +6182,1061 @@ INFO 2025-08-13 15:50:55,378 views 3188 17456   Status: A, Approve: N, Review: 0
 INFO 2025-08-13 15:50:55,378 views 3188 17456   Status: A, Approve: T, Review: None
 INFO 2025-08-13 15:50:55,378 views 3188 17456   Status: A, Approve: Y, Review: 0
 INFO 2025-08-13 15:50:55,378 views 3188 17456 === END VALIDATION ===
+INFO 2025-08-13 15:51:08,678 basehttp 3188 17508 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:51:08,816 basehttp 3188 17508 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 11224
+INFO 2025-08-13 15:51:20,328 views 3188 380 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 15:51:20,368 authentication 3188 380 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 15:51:20,368 authentication 3188 380 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 15:51:20,379 views 3188 380 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 15:51:20,380 views 3188 380 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-13 15:51:20,386 basehttp 3188 380 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:51:20,461 utils 3188 380 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:51:20,476 views 3188 380 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:51:20,577 utils 3188 380 SITI FATIMAH granted access to 11614 approved pengajuan via special privilege
+INFO 2025-08-13 15:51:20,583 views 3188 380 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 15:51:20,720 views 3188 380 Enhanced query executed successfully - Found 11341 records for view_mode: normal
+INFO 2025-08-13 15:51:20,743 views 3188 380 SITI FATIMAH stats: {'total_approved': 11627, 'pending_review': 11627, 'already_reviewed': 0, 'approved_today': 28}
+INFO 2025-08-13 15:51:20,877 basehttp 3188 380 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 117271
+INFO 2025-08-13 15:51:26,647 forms 3188 18088 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 15:51:26,662 utils 3188 18088 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:51:26,668 utils 3188 18088 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:51:26,676 utils 3188 18088 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:51:26,682 utils 3188 18088 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 15:51:26,755 basehttp 3188 18088 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 33713
+INFO 2025-08-13 15:51:46,388 forms 3188 836 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-13 15:51:46,398 utils 3188 836 FIXED: Starting SITI review assignment for WO20250813001 to elektrik
+INFO 2025-08-13 15:51:46,408 utils 3188 836 FIXED: Updated section for WO20250813001 to section ID 5
+INFO 2025-08-13 15:51:46,410 utils 3188 836 ENHANCED: Searching supervisors for elektrik -> ENGINEERING/ENGINEERING-ELECTRIC
+WARNING 2025-08-13 15:51:46,420 utils 3188 836 ENHANCED: Query 1 failed for elektrik: unsupported format character 'S' (0x53) at index 1502
+WARNING 2025-08-13 15:51:46,422 utils 3188 836 ENHANCED: Query 2 failed for elektrik: must be real number, not str
+ERROR 2025-08-13 15:51:46,422 utils 3188 836 ENHANCED: Error getting supervisors for target section elektrik: cannot access local variable 'rows' where it is not associated with a value
+WARNING 2025-08-13 15:51:46,423 utils 3188 836 FIXED: No SDBM supervisors found for elektrik
+WARNING 2025-08-13 15:51:46,423 views 3188 836 SITI REVIEW: WO20250813001 processed but no SDBM supervisors found for elektrik
+ERROR 2025-08-13 15:51:46,424 views 3188 836 SITI REVIEW ERROR for WO20250813001: No supervisors found for section elektrik
+INFO 2025-08-13 15:51:46,425 utils 3188 836 Enhanced review tables verified/created successfully
+ERROR 2025-08-13 15:51:46,427 utils 3188 836 Error logging enhanced review action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'priority_level'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 15:51:46,429 basehttp 3188 836 "POST /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:51:46,501 forms 3188 836 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 15:51:46,510 utils 3188 836 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:51:46,516 utils 3188 836 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:51:46,521 utils 3188 836 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:51:46,527 utils 3188 836 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 15:51:46,586 basehttp 3188 836 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 31444
+INFO 2025-08-13 15:51:55,309 basehttp 3188 17516 "GET /logout/?next=/wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:51:55,361 basehttp 3188 17516 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:51:55,460 basehttp 3188 17516 "GET /login/?next=/wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 15:52:01,542 views 3188 15580 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 15:52:01,556 authentication 3188 15580 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 15:52:01,563 views 3188 15580 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 15:52:01,563 views 3188 15580 LOGIN REDIRECT: 001605 -> /wo-maintenance/review/pengajuan/WO20250813001/
+INFO 2025-08-13 15:52:01,567 basehttp 3188 15580 "POST /login/?next=/wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:52:01,636 basehttp 3188 15580 "GET /wo-maintenance/review/pengajuan/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:52:01,800 basehttp 3188 15580 "GET /wo-maintenance/ HTTP/1.1" 200 28338
+INFO 2025-08-13 15:52:04,716 views 3188 3104 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 15:52:04,787 basehttp 3188 3104 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34602
+INFO 2025-08-13 15:52:09,653 basehttp 3188 11184 "GET /wo-maintenance/input/ HTTP/1.1" 200 47213
+INFO 2025-08-13 15:52:12,233 views 3188 11184 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 15:52:12,297 basehttp 3188 11184 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33971
+INFO 2025-08-13 15:52:28,785 basehttp 3188 18396 "GET /wo-maintenance/input/ HTTP/1.1" 200 47213
+INFO 2025-08-13 15:52:31,239 basehttp 3188 18396 "GET /wo-maintenance/ HTTP/1.1" 200 28338
+INFO 2025-08-13 15:52:37,337 views 3188 988 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 15:52:37,410 basehttp 3188 988 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33971
+INFO 2025-08-13 15:52:40,990 basehttp 3188 16032 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:52:41,044 basehttp 3188 16032 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:52:41,139 basehttp 3188 16032 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 15:53:12,683 views 3188 14876 LOGIN ATTEMPT: 007522
+INFO 2025-08-13 15:53:12,709 authentication 3188 14876 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-13 15:53:12,709 authentication 3188 14876 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-13 15:53:12,717 views 3188 14876 LOGIN: Using existing session data for 007522
+INFO 2025-08-13 15:53:12,717 views 3188 14876 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-13 15:53:12,721 basehttp 3188 14876 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 15:53:12,796 utils 3188 14876 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:53:12,809 views 3188 14876 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:53:12,905 utils 3188 14876 SITI FATIMAH granted access to 11614 approved pengajuan via special privilege
+INFO 2025-08-13 15:53:12,911 views 3188 14876 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 15:53:13,059 views 3188 14876 Enhanced query executed successfully - Found 11341 records for view_mode: normal
+INFO 2025-08-13 15:53:13,089 views 3188 14876 SITI FATIMAH stats: {'total_approved': 11627, 'pending_review': 11626, 'already_reviewed': 1, 'approved_today': 28}
+INFO 2025-08-13 15:53:13,211 basehttp 3188 14876 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 117313
+INFO 2025-08-13 15:53:20,472 utils 3188 13896 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-13 15:53:20,497 utils 3188 13896 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 15:53:20,573 basehttp 3188 13896 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 28984
+INFO 2025-08-13 15:53:41,311 utils 3188 16048 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 15:53:41,316 views 3188 16048 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-13 15:53:41,410 utils 3188 16048 SITI FATIMAH granted access to 11614 approved pengajuan via special privilege
+INFO 2025-08-13 15:53:41,416 views 3188 16048 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-13 15:53:41,543 views 3188 16048 Enhanced query executed successfully - Found 11341 records for view_mode: normal
+INFO 2025-08-13 15:53:41,557 views 3188 16048 SITI FATIMAH stats: {'total_approved': 11627, 'pending_review': 11626, 'already_reviewed': 1, 'approved_today': 28}
+INFO 2025-08-13 15:53:41,638 basehttp 3188 16048 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 117030
+INFO 2025-08-13 15:53:52,823 forms 3188 14516 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+ERROR 2025-08-13 15:53:52,832 utils 3188 14516 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:53:52,838 utils 3188 14516 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:53:52,843 utils 3188 14516 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-13 15:53:52,849 utils 3188 14516 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-13 15:53:52,918 basehttp 3188 14516 "GET /wo-maintenance/review/pengajuan/25-08-0219/ HTTP/1.1" 200 33732
+INFO 2025-08-13 16:10:41,619 autoreload 3188 17456 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-13 16:10:43,558 autoreload 15900 17776 Watching for file changes with StatReloader
+INFO 2025-08-13 16:13:11,840 autoreload 13440 11212 Watching for file changes with StatReloader
+INFO 2025-08-13 16:13:13,838 views 13440 11212 === STATUS VALIDATION ===
+INFO 2025-08-13 16:13:13,839 views 13440 11212 Expected STATUS_APPROVED: A
+INFO 2025-08-13 16:13:13,839 views 13440 11212 Expected APPROVE_YES: Y
+INFO 2025-08-13 16:13:13,839 views 13440 11212 Actual values in database:
+INFO 2025-08-13 16:13:13,840 views 13440 11212   Status: , Approve: N, Review: None
+INFO 2025-08-13 16:13:13,840 views 13440 11212   Status: A, Approve: T, Review: None
+INFO 2025-08-13 16:13:13,840 views 13440 11212   Status: A, Approve: Y, Review: 0
+INFO 2025-08-13 16:13:13,841 views 13440 11212   Status: A, Approve: Y, Review: 1
+INFO 2025-08-13 16:13:13,841 views 13440 11212 === END VALIDATION ===
+INFO 2025-08-13 16:13:20,189 utils 13440 17728 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-13 16:13:20,203 views 13440 17728 SITI FATIMAH (007522) accessing enhanced daftar laporan
+ERROR 2025-08-13 16:13:20,207 utils 13440 17728 Error getting assigned pengajuan for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 16:13:20,208 views 13440 17728 Found 0 assigned pengajuan for 007522
+INFO 2025-08-13 16:13:20,212 views 13440 17728 SITI FATIMAH mode: accessing ALL pengajuan
+INFO 2025-08-13 16:13:20,414 views 13440 17728 Enhanced query executed successfully - Found 11342 records for view_mode: normal
+INFO 2025-08-13 16:13:20,629 basehttp 13440 17728 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 117836
+INFO 2025-08-13 16:13:25,611 basehttp 13440 11384 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 16:13:25,664 basehttp 13440 11384 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-13 16:13:25,774 basehttp 13440 11384 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-13 16:13:31,207 views 13440 16288 LOGIN ATTEMPT: 002104
+INFO 2025-08-13 16:13:31,220 authentication 13440 16288 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-13 16:13:31,228 views 13440 16288 LOGIN: Using existing session data for 002104
+INFO 2025-08-13 16:13:31,228 views 13440 16288 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-13 16:13:31,234 basehttp 13440 16288 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-13 16:13:31,317 utils 13440 16288 Error getting assigned pengajuan for 002104: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 16:13:31,318 views 13440 16288 Found 0 assigned pengajuan for 002104
+ERROR 2025-08-13 16:13:31,325 views 13440 16288 Error mapping SDBM section 25: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_id'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 16:13:31,325 views 13440 16288 User 002104 has 1 access methods
+INFO 2025-08-13 16:13:31,394 views 13440 16288 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-13 16:13:31,464 basehttp 13440 16288 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 40949
+ERROR 2025-08-13 16:13:49,952 utils 13440 18060 Error getting assigned pengajuan for 002104: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+ERROR 2025-08-13 16:13:49,962 utils 13440 18060 Error getting assigned pengajuan for 002104: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 16:13:50,025 basehttp 13440 18060 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 30983
+INFO 2025-08-13 16:13:54,322 basehttp 13440 18060 "GET /logout/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 16:13:54,379 basehttp 13440 18060 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+INFO 2025-08-13 16:13:54,484 basehttp 13440 18060 "GET /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 10284
+INFO 2025-08-13 16:14:03,265 views 13440 16888 LOGIN ATTEMPT: 001605
+INFO 2025-08-13 16:14:03,279 authentication 13440 16888 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-13 16:14:03,288 views 13440 16888 LOGIN: Using existing session data for 001605
+INFO 2025-08-13 16:14:03,289 views 13440 16888 LOGIN REDIRECT: 001605 -> /wo-maintenance/detail/WO20250813001/
+INFO 2025-08-13 16:14:03,295 basehttp 13440 16888 "POST /login/?next=/wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 16:14:03,385 utils 13440 16888 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+WARNING 2025-08-13 16:14:03,385 views 13440 16888 User TUMPAL BERLIN HARIANJA tried to access unauthorized pengajuan WO20250813001
+INFO 2025-08-13 16:14:03,387 basehttp 13440 16888 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 302 0
+ERROR 2025-08-13 16:14:03,471 utils 13440 16888 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 16:14:03,472 views 13440 16888 Found 0 assigned pengajuan for 001605
+ERROR 2025-08-13 16:14:03,484 views 13440 16888 Error mapping SDBM section 36: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_id'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 16:14:03,484 views 13440 16888 User 001605 has 1 access methods
+INFO 2025-08-13 16:14:03,578 views 13440 16888 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 16:14:03,642 basehttp 13440 16888 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34547
+ERROR 2025-08-13 16:14:08,354 utils 13440 16888 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 16:14:08,355 views 13440 16888 Found 0 assigned pengajuan for 001605
+ERROR 2025-08-13 16:14:08,363 views 13440 16888 Error mapping SDBM section 36: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_id'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-13 16:14:08,364 views 13440 16888 User 001605 has 1 access methods
+INFO 2025-08-13 16:14:08,430 views 13440 16888 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-13 16:14:08,495 basehttp 13440 16888 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33971
+INFO 2025-08-14 06:48:47,574 autoreload 13440 11212 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-14 06:48:53,705 autoreload 1568 15092 Watching for file changes with StatReloader
+INFO 2025-08-14 06:49:01,703 views 1568 15092 === STATUS VALIDATION ===
+INFO 2025-08-14 06:49:01,704 views 1568 15092 Expected STATUS_APPROVED: A
+INFO 2025-08-14 06:49:01,707 views 1568 15092 Expected APPROVE_YES: Y
+INFO 2025-08-14 06:49:01,708 views 1568 15092 Actual values in database:
+INFO 2025-08-14 06:49:01,709 views 1568 15092   Status: , Approve: N, Review: None
+INFO 2025-08-14 06:49:01,711 views 1568 15092   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 06:49:01,712 views 1568 15092   Status: A, Approve: T, Review: None
+INFO 2025-08-14 06:49:01,713 views 1568 15092   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 06:49:01,715 views 1568 15092   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 06:49:01,718 views 1568 15092 === END VALIDATION ===
+INFO 2025-08-14 06:49:17,080 basehttp 1568 11116 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 06:49:17,202 basehttp 1568 11116 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 06:49:17,386 basehttp 1568 11116 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 06:49:24,487 views 1568 15940 LOGIN ATTEMPT: 001605
+INFO 2025-08-14 06:49:24,538 authentication 1568 15940 Updated Django user data for 001605
+INFO 2025-08-14 06:49:24,539 authentication 1568 15940 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-14 06:49:24,547 views 1568 15940 LOGIN: Using existing session data for 001605
+INFO 2025-08-14 06:49:24,548 views 1568 15940 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-14 06:49:24,553 basehttp 1568 15940 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-14 06:49:24,632 utils 1568 15940 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 06:49:24,633 views 1568 15940 Found 0 assigned pengajuan for 001605
+ERROR 2025-08-14 06:49:24,638 views 1568 15940 Error mapping SDBM section 36: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_id'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 06:49:24,638 views 1568 15940 User 001605 has 1 access methods
+INFO 2025-08-14 06:49:24,704 views 1568 15940 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 06:49:24,824 basehttp 1568 15940 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34256
+ERROR 2025-08-14 06:49:27,896 utils 1568 16524 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 06:49:27,897 views 1568 16524 Found 0 assigned pengajuan for 001605
+ERROR 2025-08-14 06:49:27,905 views 1568 16524 Error mapping SDBM section 36: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_id'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 06:49:27,906 views 1568 16524 User 001605 has 1 access methods
+INFO 2025-08-14 06:49:27,975 views 1568 16524 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 06:49:28,035 basehttp 1568 16524 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33971
+INFO 2025-08-14 06:50:41,201 basehttp 1568 17988 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 06:50:41,259 basehttp 1568 17988 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 06:50:41,371 basehttp 1568 17988 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 06:50:47,777 views 1568 11776 LOGIN ATTEMPT: 007522
+INFO 2025-08-14 06:50:47,803 authentication 1568 11776 Updated Django user data for 007522
+INFO 2025-08-14 06:50:47,803 authentication 1568 11776 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-14 06:50:47,805 authentication 1568 11776 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-14 06:50:47,812 views 1568 11776 LOGIN: Using existing session data for 007522
+INFO 2025-08-14 06:50:47,812 views 1568 11776 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-14 06:50:47,816 basehttp 1568 11776 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 06:50:47,880 utils 1568 11776 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 06:50:47,894 views 1568 11776 SITI FATIMAH (007522) accessing enhanced daftar laporan
+ERROR 2025-08-14 06:50:47,897 utils 1568 11776 Error getting assigned pengajuan for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 06:50:47,897 views 1568 11776 Found 0 assigned pengajuan for 007522
+INFO 2025-08-14 06:50:47,899 views 1568 11776 SITI FATIMAH mode: accessing ALL pengajuan
+INFO 2025-08-14 06:50:48,051 views 1568 11776 Enhanced query executed successfully - Found 11342 records for view_mode: normal
+INFO 2025-08-14 06:50:48,156 basehttp 1568 11776 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 112045
+INFO 2025-08-14 07:20:45,559 basehttp 1568 2360 "GET /wo-maintenance/input/ HTTP/1.1" 200 47181
+INFO 2025-08-14 07:23:08,551 basehttp 1568 17612 "GET /logout/?next=/wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-14 07:23:08,620 basehttp 1568 17612 "GET /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-14 07:23:08,719 basehttp 1568 17612 "GET /login/?next=/wo-maintenance/input/ HTTP/1.1" 200 10284
+INFO 2025-08-14 07:23:16,481 views 1568 17584 LOGIN ATTEMPT: 001605
+INFO 2025-08-14 07:23:16,506 authentication 1568 17584 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-14 07:23:16,516 views 1568 17584 LOGIN: Using existing session data for 001605
+INFO 2025-08-14 07:23:16,516 views 1568 17584 LOGIN REDIRECT: 001605 -> /wo-maintenance/input/
+INFO 2025-08-14 07:23:16,523 basehttp 1568 17584 "POST /login/?next=/wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-14 07:23:16,659 basehttp 1568 17584 "GET /wo-maintenance/input/ HTTP/1.1" 200 47354
+ERROR 2025-08-14 07:23:19,161 utils 1568 17584 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 07:23:19,161 views 1568 17584 Found 0 assigned pengajuan for 001605
+ERROR 2025-08-14 07:23:19,168 views 1568 17584 Error mapping SDBM section 36: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_id'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 07:23:19,168 views 1568 17584 User 001605 has 1 access methods
+INFO 2025-08-14 07:23:19,238 views 1568 17584 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 07:23:19,310 basehttp 1568 17584 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33971
+ERROR 2025-08-14 07:37:40,312 utils 1568 15444 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 07:37:40,313 views 1568 15444 Found 0 assigned pengajuan for 001605
+ERROR 2025-08-14 07:37:40,319 views 1568 15444 Error mapping SDBM section 36: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'department_id'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 07:37:40,319 views 1568 15444 User 001605 has 1 access methods
+INFO 2025-08-14 07:37:40,389 views 1568 15444 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 07:37:40,459 basehttp 1568 15444 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 33971
+INFO 2025-08-14 07:37:43,580 basehttp 1568 15444 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 07:37:43,649 basehttp 1568 15444 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 07:37:43,762 basehttp 1568 15444 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 07:37:49,935 views 1568 17512 LOGIN ATTEMPT: 007522
+INFO 2025-08-14 07:37:49,956 authentication 1568 17512 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-14 07:37:49,957 authentication 1568 17512 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-14 07:37:49,965 views 1568 17512 LOGIN: Using existing session data for 007522
+INFO 2025-08-14 07:37:49,965 views 1568 17512 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-14 07:37:49,983 basehttp 1568 17512 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 07:37:50,058 utils 1568 17512 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 07:37:50,071 views 1568 17512 SITI FATIMAH (007522) accessing enhanced daftar laporan
+ERROR 2025-08-14 07:37:50,074 utils 1568 17512 Error getting assigned pengajuan for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 07:37:50,074 views 1568 17512 Found 0 assigned pengajuan for 007522
+INFO 2025-08-14 07:37:50,075 views 1568 17512 SITI FATIMAH mode: accessing ALL pengajuan
+INFO 2025-08-14 07:37:50,263 views 1568 17512 Enhanced query executed successfully - Found 11347 records for view_mode: normal
+INFO 2025-08-14 07:37:50,365 basehttp 1568 17512 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 118140
+INFO 2025-08-14 07:38:00,184 forms 1568 17512 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-14 07:38:00,272 basehttp 1568 17512 "GET /wo-maintenance/review/pengajuan/25-08-0231/ HTTP/1.1" 200 33667
+INFO 2025-08-14 08:03:43,888 autoreload 1568 15092 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-14 08:03:45,805 autoreload 12628 14456 Watching for file changes with StatReloader
+INFO 2025-08-14 08:05:31,658 autoreload 16872 18332 Watching for file changes with StatReloader
+INFO 2025-08-14 08:05:33,630 views 16872 18332 === STATUS VALIDATION ===
+INFO 2025-08-14 08:05:33,630 views 16872 18332 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:05:33,631 views 16872 18332 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:05:33,631 views 16872 18332 Actual values in database:
+INFO 2025-08-14 08:05:33,632 views 16872 18332   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:05:33,632 views 16872 18332   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:05:33,632 views 16872 18332   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:05:33,633 views 16872 18332   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:05:33,633 views 16872 18332 === END VALIDATION ===
+INFO 2025-08-14 08:05:39,925 utils 16872 9948 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 08:05:39,936 views 16872 9948 SITI FATIMAH (007522) accessing enhanced daftar laporan
+ERROR 2025-08-14 08:05:39,939 utils 16872 9948 Error getting assigned pengajuan for 007522: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 08:05:39,940 views 16872 9948 Found 0 assigned pengajuan for 007522
+WARNING 2025-08-14 08:05:39,940 views 16872 9948 Section access error for 007522: name 'get_pengajuan_by_section_access' is not defined
+INFO 2025-08-14 08:05:39,941 views 16872 9948 SITI FATIMAH mode: accessing ALL pengajuan
+INFO 2025-08-14 08:05:40,087 views 16872 9948 Enhanced query executed successfully - Found 11347 records for view_mode: normal
+INFO 2025-08-14 08:05:40,310 basehttp 16872 9948 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 118022
+INFO 2025-08-14 08:05:48,095 basehttp 16872 5324 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 08:05:48,147 basehttp 16872 5324 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 08:05:48,251 basehttp 16872 5324 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 08:05:57,292 views 16872 13432 LOGIN ATTEMPT: 001605
+INFO 2025-08-14 08:05:57,306 authentication 16872 13432 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-14 08:05:57,313 views 16872 13432 LOGIN: Using existing session data for 001605
+INFO 2025-08-14 08:05:57,314 views 16872 13432 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-14 08:05:57,319 basehttp 16872 13432 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+ERROR 2025-08-14 08:05:57,406 utils 16872 13432 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 08:05:57,406 views 16872 13432 Found 0 assigned pengajuan for 001605
+WARNING 2025-08-14 08:05:57,409 views 16872 13432 Section access error for 001605: name 'get_pengajuan_by_section_access' is not defined
+INFO 2025-08-14 08:05:57,413 views 16872 13432 User 001605 has 1 access methods
+INFO 2025-08-14 08:05:57,480 views 16872 13432 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 08:05:57,537 basehttp 16872 13432 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34292
+ERROR 2025-08-14 08:06:01,654 utils 16872 15952 Error getting assigned pengajuan for 001605: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'assignment_type'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-14 08:06:01,654 views 16872 15952 Found 0 assigned pengajuan for 001605
+WARNING 2025-08-14 08:06:01,655 views 16872 15952 Section access error for 001605: name 'get_pengajuan_by_section_access' is not defined
+INFO 2025-08-14 08:06:01,659 views 16872 15952 User 001605 has 1 access methods
+INFO 2025-08-14 08:06:01,725 views 16872 15952 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 08:06:01,785 basehttp 16872 15952 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34007
+INFO 2025-08-14 08:08:46,610 autoreload 16872 18332 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-14 08:08:48,532 autoreload 13452 11908 Watching for file changes with StatReloader
+INFO 2025-08-14 08:08:50,474 views 13452 11908 === STATUS VALIDATION ===
+INFO 2025-08-14 08:08:50,475 views 13452 11908 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:08:50,476 views 13452 11908 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:08:50,477 views 13452 11908 Actual values in database:
+INFO 2025-08-14 08:08:50,478 views 13452 11908   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:08:50,479 views 13452 11908   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:08:50,480 views 13452 11908   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:08:50,480 views 13452 11908   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:08:50,481 views 13452 11908 === END VALIDATION ===
+INFO 2025-08-14 08:09:23,041 autoreload 13452 11908 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-14 08:09:24,872 autoreload 16424 18428 Watching for file changes with StatReloader
+INFO 2025-08-14 08:09:26,828 views 16424 18428 === STATUS VALIDATION ===
+INFO 2025-08-14 08:09:26,829 views 16424 18428 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:09:26,830 views 16424 18428 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:09:26,831 views 16424 18428 Actual values in database:
+INFO 2025-08-14 08:09:26,832 views 16424 18428   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:09:26,833 views 16424 18428   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:09:26,833 views 16424 18428   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:09:26,834 views 16424 18428   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:09:26,835 views 16424 18428 === END VALIDATION ===
+INFO 2025-08-14 08:10:09,761 autoreload 16424 18428 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-14 08:10:11,620 autoreload 14496 16932 Watching for file changes with StatReloader
+INFO 2025-08-14 08:11:58,221 autoreload 17028 18004 Watching for file changes with StatReloader
+INFO 2025-08-14 08:12:00,169 views 17028 18004 === STATUS VALIDATION ===
+INFO 2025-08-14 08:12:00,170 views 17028 18004 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:12:00,170 views 17028 18004 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:12:00,171 views 17028 18004 Actual values in database:
+INFO 2025-08-14 08:12:00,171 views 17028 18004   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:12:00,171 views 17028 18004   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:12:00,172 views 17028 18004   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:12:00,172 views 17028 18004   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:12:00,172 views 17028 18004 === END VALIDATION ===
+INFO 2025-08-14 08:12:11,678 basehttp 17028 16780 "GET /wo-maintenance/debug/create-assignment-tables/ HTTP/1.1" 302 0
+WARNING 2025-08-14 08:12:11,773 views 17028 16780 Assignment error for 001605: name 'ensure_assignment_tables_exist' is not defined
+ERROR 2025-08-14 08:12:11,775 utils 17028 16780 Error mapping SDBM section 36: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:12:11,786 utils 17028 16780 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py", line 3186, in get_maintenance_section_mapping_for_sdbm_section
+    cursor.execute("""
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+INFO 2025-08-14 08:12:11,788 views 17028 16780 Found 0 section-accessible pengajuan for 001605
+INFO 2025-08-14 08:12:11,801 views 17028 16780 User 001605 has 1 access methods
+INFO 2025-08-14 08:12:11,889 views 17028 16780 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 08:12:11,999 basehttp 17028 16780 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34289
+WARNING 2025-08-14 08:12:16,467 views 17028 10932 Assignment error for 001605: name 'ensure_assignment_tables_exist' is not defined
+ERROR 2025-08-14 08:12:16,469 utils 17028 10932 Error mapping SDBM section 36: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:12:16,472 utils 17028 10932 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py", line 3186, in get_maintenance_section_mapping_for_sdbm_section
+    cursor.execute("""
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+INFO 2025-08-14 08:12:16,474 views 17028 10932 Found 0 section-accessible pengajuan for 001605
+INFO 2025-08-14 08:12:16,487 views 17028 10932 User 001605 has 1 access methods
+INFO 2025-08-14 08:12:16,544 views 17028 10932 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 08:12:16,619 basehttp 17028 10932 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34007
+INFO 2025-08-14 08:17:51,955 autoreload 17028 18004 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-14 08:17:53,916 autoreload 16760 14916 Watching for file changes with StatReloader
+INFO 2025-08-14 08:20:17,606 autoreload 3188 18320 Watching for file changes with StatReloader
+INFO 2025-08-14 08:20:19,648 views 3188 18320 === STATUS VALIDATION ===
+INFO 2025-08-14 08:20:19,648 views 3188 18320 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:20:19,649 views 3188 18320 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:20:19,649 views 3188 18320 Actual values in database:
+INFO 2025-08-14 08:20:19,650 views 3188 18320   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:20:19,650 views 3188 18320   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 08:20:19,650 views 3188 18320   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:20:19,651 views 3188 18320   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:20:19,651 views 3188 18320   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:20:19,651 views 3188 18320 === END VALIDATION ===
+WARNING 2025-08-14 08:20:21,905 log 3188 2460 Forbidden: /wo-maintenance/debug/section-mapping/36/
+WARNING 2025-08-14 08:20:21,905 basehttp 3188 2460 "GET /wo-maintenance/debug/section-mapping/36/ HTTP/1.1" 403 25
+WARNING 2025-08-14 08:21:37,564 views 3188 2892 Assignment error for 001605: name 'ensure_assignment_tables_exist' is not defined
+INFO 2025-08-14 08:21:37,564 utils 3188 2892 Mapping SDBM section 36 for user 001605 (ENGINEERING-ELECTRIC in ENGINEERING)
+INFO 2025-08-14 08:21:37,566 utils 3188 2892 Starting section mapping for SDBM section 36
+ERROR 2025-08-14 08:21:37,569 utils 3188 2892 Error mapping SDBM section 36: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:21:37,578 utils 3188 2892 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py", line 3188, in get_maintenance_section_mapping_for_sdbm_section
+    cursor.execute("""
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+WARNING 2025-08-14 08:21:37,580 utils 3188 2892 Emergency fallback: returning [2] for section 36
+INFO 2025-08-14 08:21:37,606 utils 3188 2892 Found 0 section-accessible pengajuan for 001605 (section 36 -> maintenance sections [2])
+INFO 2025-08-14 08:21:37,607 views 3188 2892 Found 0 section-accessible pengajuan for 001605
+INFO 2025-08-14 08:21:37,613 views 3188 2892 User 001605 has 1 access methods
+INFO 2025-08-14 08:21:37,698 views 3188 2892 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 08:21:37,878 basehttp 3188 2892 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34007
+WARNING 2025-08-14 08:21:38,896 views 3188 2892 Assignment error for 001605: name 'ensure_assignment_tables_exist' is not defined
+INFO 2025-08-14 08:21:38,897 utils 3188 2892 Mapping SDBM section 36 for user 001605 (ENGINEERING-ELECTRIC in ENGINEERING)
+INFO 2025-08-14 08:21:38,898 utils 3188 2892 Starting section mapping for SDBM section 36
+ERROR 2025-08-14 08:21:38,901 utils 3188 2892 Error mapping SDBM section 36: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:21:38,903 utils 3188 2892 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py", line 3188, in get_maintenance_section_mapping_for_sdbm_section
+    cursor.execute("""
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+WARNING 2025-08-14 08:21:38,904 utils 3188 2892 Emergency fallback: returning [2] for section 36
+INFO 2025-08-14 08:21:38,926 utils 3188 2892 Found 0 section-accessible pengajuan for 001605 (section 36 -> maintenance sections [2])
+INFO 2025-08-14 08:21:38,926 views 3188 2892 Found 0 section-accessible pengajuan for 001605
+INFO 2025-08-14 08:21:38,932 views 3188 2892 User 001605 has 1 access methods
+INFO 2025-08-14 08:21:38,992 views 3188 2892 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 08:21:39,065 basehttp 3188 2892 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34007
+WARNING 2025-08-14 08:21:40,616 views 3188 2892 Assignment error for 001605: name 'ensure_assignment_tables_exist' is not defined
+INFO 2025-08-14 08:21:40,617 utils 3188 2892 Mapping SDBM section 36 for user 001605 (ENGINEERING-ELECTRIC in ENGINEERING)
+INFO 2025-08-14 08:21:40,619 utils 3188 2892 Starting section mapping for SDBM section 36
+ERROR 2025-08-14 08:21:40,622 utils 3188 2892 Error mapping SDBM section 36: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:21:40,624 utils 3188 2892 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py", line 3188, in get_maintenance_section_mapping_for_sdbm_section
+    cursor.execute("""
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+
+WARNING 2025-08-14 08:21:40,626 utils 3188 2892 Emergency fallback: returning [2] for section 36
+INFO 2025-08-14 08:21:40,643 utils 3188 2892 Found 0 section-accessible pengajuan for 001605 (section 36 -> maintenance sections [2])
+INFO 2025-08-14 08:21:40,643 views 3188 2892 Found 0 section-accessible pengajuan for 001605
+INFO 2025-08-14 08:21:40,649 views 3188 2892 User 001605 has 1 access methods
+INFO 2025-08-14 08:21:40,716 views 3188 2892 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 08:21:40,777 basehttp 3188 2892 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34007
+INFO 2025-08-14 08:34:09,217 autoreload 3188 18320 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 08:34:11,149 autoreload 16752 14936 Watching for file changes with StatReloader
+INFO 2025-08-14 08:34:13,192 views 16752 14936 === STATUS VALIDATION ===
+INFO 2025-08-14 08:34:13,193 views 16752 14936 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:34:13,196 views 16752 14936 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:34:13,197 views 16752 14936 Actual values in database:
+INFO 2025-08-14 08:34:13,197 views 16752 14936   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:34:13,198 views 16752 14936   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:34:13,199 views 16752 14936   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:34:13,200 views 16752 14936   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:34:13,200 views 16752 14936 === END VALIDATION ===
+INFO 2025-08-14 08:34:42,211 autoreload 16752 14936 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 08:34:44,077 autoreload 15904 16876 Watching for file changes with StatReloader
+INFO 2025-08-14 08:39:22,272 views 15320 14668 === STATUS VALIDATION ===
+INFO 2025-08-14 08:39:22,273 views 15320 14668 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:39:22,274 views 15320 14668 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:39:22,274 views 15320 14668 Actual values in database:
+INFO 2025-08-14 08:39:22,275 views 15320 14668   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:39:22,275 views 15320 14668   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 08:39:22,275 views 15320 14668   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:39:22,276 views 15320 14668   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:39:22,276 views 15320 14668   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:39:22,276 views 15320 14668 === END VALIDATION ===
+INFO 2025-08-14 08:39:47,072 views 18076 16592 === STATUS VALIDATION ===
+INFO 2025-08-14 08:39:47,073 views 18076 16592 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:39:47,074 views 18076 16592 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:39:47,074 views 18076 16592 Actual values in database:
+INFO 2025-08-14 08:39:47,075 views 18076 16592   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:39:47,075 views 18076 16592   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 08:39:47,076 views 18076 16592   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:39:47,076 views 18076 16592   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:39:47,077 views 18076 16592   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:39:47,077 views 18076 16592 === END VALIDATION ===
+INFO 2025-08-14 08:40:03,726 views 13092 14752 === STATUS VALIDATION ===
+INFO 2025-08-14 08:40:03,727 views 13092 14752 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:40:03,728 views 13092 14752 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:40:03,728 views 13092 14752 Actual values in database:
+INFO 2025-08-14 08:40:03,729 views 13092 14752   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:40:03,729 views 13092 14752   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 08:40:03,729 views 13092 14752   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:40:03,730 views 13092 14752   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:40:03,730 views 13092 14752   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:40:03,730 views 13092 14752 === END VALIDATION ===
+INFO 2025-08-14 08:45:19,031 views 13584 17464 === STATUS VALIDATION ===
+INFO 2025-08-14 08:45:19,032 views 13584 17464 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:45:19,033 views 13584 17464 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:45:19,033 views 13584 17464 Actual values in database:
+INFO 2025-08-14 08:45:19,034 views 13584 17464   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:45:19,034 views 13584 17464   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 08:45:19,034 views 13584 17464   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:45:19,035 views 13584 17464   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:45:19,035 views 13584 17464   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:45:19,035 views 13584 17464 === END VALIDATION ===
+INFO 2025-08-14 08:45:28,652 views 1116 17444 === STATUS VALIDATION ===
+INFO 2025-08-14 08:45:28,652 views 1116 17444 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:45:28,653 views 1116 17444 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:45:28,654 views 1116 17444 Actual values in database:
+INFO 2025-08-14 08:45:28,654 views 1116 17444   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:45:28,655 views 1116 17444   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 08:45:28,655 views 1116 17444   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:45:28,655 views 1116 17444   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:45:28,656 views 1116 17444   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:45:28,656 views 1116 17444 === END VALIDATION ===
+INFO 2025-08-14 08:45:48,285 views 6620 16160 === STATUS VALIDATION ===
+INFO 2025-08-14 08:45:48,286 views 6620 16160 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:45:48,287 views 6620 16160 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:45:48,287 views 6620 16160 Actual values in database:
+INFO 2025-08-14 08:45:48,287 views 6620 16160   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:45:48,288 views 6620 16160   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 08:45:48,288 views 6620 16160   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:45:48,288 views 6620 16160   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:45:48,289 views 6620 16160   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:45:48,289 views 6620 16160 === END VALIDATION ===
+INFO 2025-08-14 08:45:56,524 views 15608 11696 === STATUS VALIDATION ===
+INFO 2025-08-14 08:45:56,525 views 15608 11696 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:45:56,525 views 15608 11696 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:45:56,526 views 15608 11696 Actual values in database:
+INFO 2025-08-14 08:45:56,526 views 15608 11696   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:45:56,526 views 15608 11696   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:45:56,526 views 15608 11696   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:45:56,527 views 15608 11696   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:45:56,527 views 15608 11696 === END VALIDATION ===
+INFO 2025-08-14 08:46:06,859 views 16536 2884 === STATUS VALIDATION ===
+INFO 2025-08-14 08:46:06,860 views 16536 2884 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:46:06,860 views 16536 2884 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:46:06,860 views 16536 2884 Actual values in database:
+INFO 2025-08-14 08:46:06,861 views 16536 2884   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:46:06,861 views 16536 2884   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:46:06,861 views 16536 2884   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:46:06,862 views 16536 2884   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:46:06,862 views 16536 2884 === END VALIDATION ===
+INFO 2025-08-14 08:46:16,133 views 10876 16760 === STATUS VALIDATION ===
+INFO 2025-08-14 08:46:16,133 views 10876 16760 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:46:16,134 views 10876 16760 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:46:16,134 views 10876 16760 Actual values in database:
+INFO 2025-08-14 08:46:16,134 views 10876 16760   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:46:16,134 views 10876 16760   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:46:16,134 views 10876 16760   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:46:16,135 views 10876 16760   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:46:16,135 views 10876 16760 === END VALIDATION ===
+INFO 2025-08-14 08:58:19,642 views 16492 17128 === STATUS VALIDATION ===
+INFO 2025-08-14 08:58:19,643 views 16492 17128 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:58:19,643 views 16492 17128 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:58:19,643 views 16492 17128 Actual values in database:
+INFO 2025-08-14 08:58:19,644 views 16492 17128   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:58:19,644 views 16492 17128   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:58:19,645 views 16492 17128   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:58:19,645 views 16492 17128   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:58:19,646 views 16492 17128 === END VALIDATION ===
+ERROR 2025-08-14 08:58:19,771 utils 16492 17128 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,775 utils 16492 17128 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,779 utils 16492 17128 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,783 utils 16492 17128 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,791 utils 16492 17128 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,793 utils 16492 17128 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,796 utils 16492 17128 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,801 utils 16492 17128 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,805 utils 16492 17128 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,809 utils 16492 17128 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,812 utils 16492 17128 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:19,815 utils 16492 17128 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 08:58:35,794 views 18040 12976 === STATUS VALIDATION ===
+INFO 2025-08-14 08:58:35,795 views 18040 12976 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:58:35,796 views 18040 12976 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:58:35,796 views 18040 12976 Actual values in database:
+INFO 2025-08-14 08:58:35,797 views 18040 12976   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:58:35,797 views 18040 12976   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:58:35,797 views 18040 12976   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:58:35,798 views 18040 12976   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:58:35,798 views 18040 12976 === END VALIDATION ===
+ERROR 2025-08-14 08:58:35,908 utils 18040 12976 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,912 utils 18040 12976 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,916 utils 18040 12976 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,920 utils 18040 12976 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,928 utils 18040 12976 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,931 utils 18040 12976 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,934 utils 18040 12976 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,937 utils 18040 12976 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,942 utils 18040 12976 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,946 utils 18040 12976 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,949 utils 18040 12976 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:35,953 utils 18040 12976 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 08:58:43,658 views 3000 13544 === STATUS VALIDATION ===
+INFO 2025-08-14 08:58:43,659 views 3000 13544 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:58:43,660 views 3000 13544 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:58:43,660 views 3000 13544 Actual values in database:
+INFO 2025-08-14 08:58:43,660 views 3000 13544   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:58:43,661 views 3000 13544   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:58:43,661 views 3000 13544   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:58:43,661 views 3000 13544   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:58:43,662 views 3000 13544 === END VALIDATION ===
+ERROR 2025-08-14 08:58:43,775 utils 3000 13544 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,778 utils 3000 13544 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,781 utils 3000 13544 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,786 utils 3000 13544 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,945 utils 3000 13544 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,950 utils 3000 13544 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,953 utils 3000 13544 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,957 utils 3000 13544 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,961 utils 3000 13544 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,964 utils 3000 13544 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,967 utils 3000 13544 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:58:43,969 utils 3000 13544 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 08:59:00,661 views 18036 13016 === STATUS VALIDATION ===
+INFO 2025-08-14 08:59:00,662 views 18036 13016 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:59:00,663 views 18036 13016 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:59:00,663 views 18036 13016 Actual values in database:
+INFO 2025-08-14 08:59:00,664 views 18036 13016   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:59:00,664 views 18036 13016   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:59:00,664 views 18036 13016   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:59:00,665 views 18036 13016   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:59:00,665 views 18036 13016 === END VALIDATION ===
+ERROR 2025-08-14 08:59:00,780 utils 18036 13016 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:00,784 utils 18036 13016 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:00,788 utils 18036 13016 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:00,794 utils 18036 13016 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 08:59:12,285 views 13440 12140 === STATUS VALIDATION ===
+INFO 2025-08-14 08:59:12,286 views 13440 12140 Expected STATUS_APPROVED: A
+INFO 2025-08-14 08:59:12,286 views 13440 12140 Expected APPROVE_YES: Y
+INFO 2025-08-14 08:59:12,287 views 13440 12140 Actual values in database:
+INFO 2025-08-14 08:59:12,287 views 13440 12140   Status: , Approve: N, Review: None
+INFO 2025-08-14 08:59:12,287 views 13440 12140   Status: A, Approve: T, Review: None
+INFO 2025-08-14 08:59:12,288 views 13440 12140   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 08:59:12,288 views 13440 12140   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 08:59:12,288 views 13440 12140 === END VALIDATION ===
+ERROR 2025-08-14 08:59:12,408 utils 13440 12140 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,412 utils 13440 12140 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,417 utils 13440 12140 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,421 utils 13440 12140 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,453 utils 13440 12140 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,457 utils 13440 12140 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,461 utils 13440 12140 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,464 utils 13440 12140 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,492 utils 13440 12140 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,497 utils 13440 12140 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,502 utils 13440 12140 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 08:59:12,507 utils 13440 12140 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:00:10,707 views 10916 14448 === STATUS VALIDATION ===
+INFO 2025-08-14 09:00:10,708 views 10916 14448 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:00:10,708 views 10916 14448 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:00:10,709 views 10916 14448 Actual values in database:
+INFO 2025-08-14 09:00:10,709 views 10916 14448   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:00:10,709 views 10916 14448   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:00:10,710 views 10916 14448   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:00:10,710 views 10916 14448   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 09:00:10,710 views 10916 14448 === END VALIDATION ===
+ERROR 2025-08-14 09:00:10,875 utils 10916 14448 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:10,887 utils 10916 14448 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:10,902 utils 10916 14448 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:10,907 utils 10916 14448 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:00:23,864 views 13880 4836 === STATUS VALIDATION ===
+INFO 2025-08-14 09:00:23,865 views 13880 4836 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:00:23,865 views 13880 4836 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:00:23,866 views 13880 4836 Actual values in database:
+INFO 2025-08-14 09:00:23,866 views 13880 4836   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:00:23,866 views 13880 4836   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:00:23,867 views 13880 4836   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:00:23,867 views 13880 4836   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 09:00:23,867 views 13880 4836 === END VALIDATION ===
+ERROR 2025-08-14 09:00:24,040 utils 13880 4836 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:24,051 utils 13880 4836 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:24,057 utils 13880 4836 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:24,063 utils 13880 4836 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:00:36,411 views 17840 6620 === STATUS VALIDATION ===
+INFO 2025-08-14 09:00:36,412 views 17840 6620 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:00:36,412 views 17840 6620 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:00:36,412 views 17840 6620 Actual values in database:
+INFO 2025-08-14 09:00:36,414 views 17840 6620   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:00:36,414 views 17840 6620   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:00:36,414 views 17840 6620   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:00:36,415 views 17840 6620   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 09:00:36,415 views 17840 6620 === END VALIDATION ===
+ERROR 2025-08-14 09:00:36,544 utils 17840 6620 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:36,555 utils 17840 6620 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:36,562 utils 17840 6620 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:36,567 utils 17840 6620 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:00:47,429 views 16736 888 === STATUS VALIDATION ===
+INFO 2025-08-14 09:00:47,430 views 16736 888 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:00:47,430 views 16736 888 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:00:47,431 views 16736 888 Actual values in database:
+INFO 2025-08-14 09:00:47,431 views 16736 888   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:00:47,431 views 16736 888   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:00:47,431 views 16736 888   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:00:47,432 views 16736 888   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 09:00:47,432 views 16736 888 === END VALIDATION ===
+ERROR 2025-08-14 09:00:47,583 utils 16736 888 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:47,589 utils 16736 888 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:47,596 utils 16736 888 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:47,601 utils 16736 888 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:00:57,626 views 18008 18164 === STATUS VALIDATION ===
+INFO 2025-08-14 09:00:57,627 views 18008 18164 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:00:57,627 views 18008 18164 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:00:57,628 views 18008 18164 Actual values in database:
+INFO 2025-08-14 09:00:57,628 views 18008 18164   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:00:57,629 views 18008 18164   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:00:57,629 views 18008 18164   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:00:57,629 views 18008 18164   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 09:00:57,630 views 18008 18164 === END VALIDATION ===
+ERROR 2025-08-14 09:00:57,805 utils 18008 18164 Error getting SDBM supervisors for target section it: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:57,814 utils 18008 18164 Error getting SDBM supervisors for target section elektrik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:57,824 utils 18008 18164 Error getting SDBM supervisors for target section mekanik: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:00:57,829 utils 18008 18164 Error getting SDBM supervisors for target section utility: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:04:32,490 autoreload 13008 2888 Watching for file changes with StatReloader
+INFO 2025-08-14 09:04:41,210 autoreload 17912 3640 Watching for file changes with StatReloader
+INFO 2025-08-14 09:04:53,116 autoreload 15868 18424 Watching for file changes with StatReloader
+INFO 2025-08-14 09:04:55,096 views 15868 18424 === STATUS VALIDATION ===
+INFO 2025-08-14 09:04:55,097 views 15868 18424 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:04:55,098 views 15868 18424 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:04:55,098 views 15868 18424 Actual values in database:
+INFO 2025-08-14 09:04:55,098 views 15868 18424   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:04:55,099 views 15868 18424   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:04:55,099 views 15868 18424   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:04:55,099 views 15868 18424   Status: A, Approve: Y, Review: 1
+INFO 2025-08-14 09:04:55,100 views 15868 18424 === END VALIDATION ===
+INFO 2025-08-14 09:04:59,744 basehttp 15868 17028 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:04:59,857 basehttp 15868 17028 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:04:59,993 basehttp 15868 17028 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 09:05:10,949 views 15868 14936 LOGIN ATTEMPT: 007522
+INFO 2025-08-14 09:05:10,980 authentication 15868 14936 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-14 09:05:10,980 authentication 15868 14936 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-14 09:05:10,987 views 15868 14936 LOGIN: Using existing session data for 007522
+INFO 2025-08-14 09:05:10,987 views 15868 14936 LOGIN REDIRECT: 007522 -> /wo-maintenance/daftar/
+INFO 2025-08-14 09:05:10,991 basehttp 15868 14936 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:05:11,057 utils 15868 14936 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:05:11,092 utils 15868 14936 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:05:11,938 views 15868 14936 Enhanced SDBM query executed successfully - Found 7 records
+INFO 2025-08-14 09:05:11,953 utils 15868 14936 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:05:12,056 basehttp 15868 14936 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 56835
+INFO 2025-08-14 09:05:28,729 utils 15868 368 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-14 09:05:28,765 utils 15868 368 Error getting assigned pengajuan for 007522: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:05:28,834 basehttp 15868 368 "GET /wo-maintenance/detail/WO20250813001/ HTTP/1.1" 200 28984
+INFO 2025-08-14 09:05:32,647 basehttp 15868 368 "GET /wo-maintenance/input/ HTTP/1.1" 200 47181
+INFO 2025-08-14 09:05:34,007 utils 15868 368 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:05:34,025 utils 15868 368 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:05:34,658 views 15868 368 Enhanced SDBM query executed successfully - Found 7 records
+INFO 2025-08-14 09:05:34,670 utils 15868 368 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:05:34,742 basehttp 15868 368 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 56552
+INFO 2025-08-14 09:06:11,148 basehttp 15868 8840 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:06:11,209 basehttp 15868 8840 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:06:11,304 basehttp 15868 8840 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 09:06:20,397 views 15868 17344 LOGIN ATTEMPT: 001605
+INFO 2025-08-14 09:06:20,422 authentication 15868 17344 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-14 09:06:20,430 views 15868 17344 LOGIN: Using existing session data for 001605
+INFO 2025-08-14 09:06:20,431 views 15868 17344 LOGIN REDIRECT: 001605 -> /wo-maintenance/daftar/
+INFO 2025-08-14 09:06:20,436 basehttp 15868 17344 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:06:20,546 utils 15868 17344 Found 0 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-14 09:06:20,626 views 15868 17344 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-14 09:06:20,691 basehttp 15868 17344 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30839
+INFO 2025-08-14 09:06:23,999 utils 15868 17344 Found 0 section-based assignments for 001605 in ENGINEERING-ELECTRIC
+INFO 2025-08-14 09:06:24,067 views 15868 17344 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-14 09:06:24,141 basehttp 15868 17344 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30554
+INFO 2025-08-14 09:07:03,181 basehttp 15868 13500 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:03,234 basehttp 15868 13500 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:03,341 basehttp 15868 13500 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 09:07:09,260 views 15868 13500 LOGIN ATTEMPT: 002186
+INFO 2025-08-14 09:07:09,280 authentication 15868 13500 Updated Django user data for 002186
+INFO 2025-08-14 09:07:09,281 authentication 15868 13500 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-14 09:07:09,288 views 15868 13500 LOGIN: Using existing session data for 002186
+INFO 2025-08-14 09:07:09,289 views 15868 13500 LOGIN REDIRECT: 002186 -> /wo-maintenance/daftar/
+INFO 2025-08-14 09:07:09,294 basehttp 15868 13500 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:09,419 views 15868 13500 Enhanced SDBM query executed successfully - Found 0 records
+INFO 2025-08-14 09:07:09,499 basehttp 15868 13500 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 30785
+INFO 2025-08-14 09:07:12,370 basehttp 15868 13500 "GET /wo-maintenance/input/ HTTP/1.1" 200 47177
+INFO 2025-08-14 09:07:16,447 basehttp 15868 12396 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755137232574 HTTP/1.1" 200 292
+INFO 2025-08-14 09:07:29,404 forms 15868 17592 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-14 09:07:29,429 views 15868 17592 SAVE: Inserting pengajuan WO20250814001
+INFO 2025-08-14 09:07:29,434 views 15868 17592 SUCCESS: Pengajuan WO20250814001 berhasil disimpan
+INFO 2025-08-14 09:07:29,436 basehttp 15868 17592 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:29,549 views 15868 17592 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-14 09:07:29,615 basehttp 15868 17592 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34884
+INFO 2025-08-14 09:07:33,612 basehttp 15868 17592 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:33,665 basehttp 15868 17592 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:33,767 basehttp 15868 17592 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 09:07:39,712 views 15868 13920 LOGIN ATTEMPT: 002104
+INFO 2025-08-14 09:07:39,728 authentication 15868 13920 Updated Django user data for 002104
+INFO 2025-08-14 09:07:39,728 authentication 15868 13920 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-14 09:07:39,737 views 15868 13920 LOGIN: Using existing session data for 002104
+INFO 2025-08-14 09:07:39,737 views 15868 13920 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-14 09:07:39,741 basehttp 15868 13920 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:39,835 utils 15868 13920 Found 0 section-based assignments for 002104 in ENGINEERING-IT
+INFO 2025-08-14 09:07:39,923 views 15868 13920 Enhanced SDBM query executed successfully - Found 1 records
+INFO 2025-08-14 09:07:39,994 basehttp 15868 13920 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 37280
+ERROR 2025-08-14 09:07:43,916 utils 15868 13920 Error getting assigned pengajuan for 002104: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:07:43,924 utils 15868 13920 Error getting assigned pengajuan for 002104: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:07:43,992 basehttp 15868 13920 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 34822
+ERROR 2025-08-14 09:07:49,883 utils 15868 17972 Error getting assigned pengajuan for 002104: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:07:49,942 views 15868 17972 Pengajuan WO20250814001 approved by BADRI KIMAN - sent to review queue (status=A, approve=Y)
+INFO 2025-08-14 09:07:49,967 views 15868 17972 Review tables and columns verified/created successfully
+INFO 2025-08-14 09:07:49,983 views 15868 17972 Pengajuan WO20250814001 disetujui by BADRI KIMAN
+INFO 2025-08-14 09:07:49,986 basehttp 15868 17972 "POST /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+ERROR 2025-08-14 09:07:50,097 utils 15868 17972 Error getting assigned pengajuan for 002104: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+ERROR 2025-08-14 09:07:50,109 utils 15868 17972 Error getting assigned pengajuan for 002104: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:07:50,170 basehttp 15868 17972 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 31358
+INFO 2025-08-14 09:07:53,676 basehttp 15868 17972 "GET /logout/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:53,723 basehttp 15868 17972 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:53,839 basehttp 15868 17972 "GET /login/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 10284
+INFO 2025-08-14 09:07:59,176 views 15868 18400 LOGIN ATTEMPT: 007522
+INFO 2025-08-14 09:07:59,189 authentication 15868 18400 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-14 09:07:59,189 authentication 15868 18400 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-14 09:07:59,195 views 15868 18400 LOGIN: Using existing session data for 007522
+INFO 2025-08-14 09:07:59,196 views 15868 18400 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250814001/
+INFO 2025-08-14 09:07:59,199 basehttp 15868 18400 "POST /login/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:07:59,261 utils 15868 18400 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-14 09:07:59,284 utils 15868 18400 Error getting assigned pengajuan for 007522: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:07:59,344 basehttp 15868 18400 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 29254
+INFO 2025-08-14 09:08:01,869 utils 15868 18400 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:08:01,888 utils 15868 18400 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:08:02,521 views 15868 18400 Enhanced SDBM query executed successfully - Found 7 records
+INFO 2025-08-14 09:08:02,534 utils 15868 18400 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:08:02,609 basehttp 15868 18400 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 56663
+INFO 2025-08-14 09:09:02,041 utils 15868 17048 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:09:02,070 utils 15868 17048 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:09:02,776 views 15868 17048 Enhanced SDBM query executed successfully - Found 7 records
+INFO 2025-08-14 09:09:02,786 utils 15868 17048 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:09:02,877 basehttp 15868 17048 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 56666
+INFO 2025-08-14 09:10:07,582 utils 15868 14360 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:10:07,604 utils 15868 14360 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:10:08,260 views 15868 14360 Enhanced SDBM query executed successfully - Found 7 records
+INFO 2025-08-14 09:10:08,271 utils 15868 14360 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:10:08,334 basehttp 15868 14360 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 57177
+INFO 2025-08-14 09:10:12,739 utils 15868 14360 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:10:12,764 utils 15868 14360 SITI FATIMAH approval privilege granted for user: AGUS GUNAWAN
+ERROR 2025-08-14 09:10:12,767 utils 15868 14360 Error getting assigned pengajuan for 007522: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:10:12,843 basehttp 15868 14360 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 32823
+INFO 2025-08-14 09:10:45,402 utils 15868 13664 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:10:45,419 utils 15868 13664 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:10:46,125 views 15868 13664 Enhanced SDBM query executed successfully - Found 7 records
+INFO 2025-08-14 09:10:46,137 utils 15868 13664 SITI FATIMAH granted access to ALL 665 employees
+INFO 2025-08-14 09:10:46,199 basehttp 15868 13664 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 56811
+INFO 2025-08-14 09:10:49,243 utils 15868 13664 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-14 09:10:49,264 utils 15868 13664 Error getting assigned pengajuan for 007522: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 09:10:49,333 basehttp 15868 13664 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 29037
+INFO 2025-08-14 09:23:46,008 autoreload 15868 18424 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 09:23:47,985 autoreload 4768 16120 Watching for file changes with StatReloader
+INFO 2025-08-14 09:23:49,971 views 4768 16120 === STATUS VALIDATION ===
+INFO 2025-08-14 09:23:49,972 views 4768 16120 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:23:49,972 views 4768 16120 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:23:49,973 views 4768 16120 Actual values in database:
+INFO 2025-08-14 09:23:49,973 views 4768 16120   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:23:49,973 views 4768 16120   Status: 1, Approve: 1, Review: 0
+INFO 2025-08-14 09:23:49,974 views 4768 16120   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:23:49,974 views 4768 16120   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:23:49,974 views 4768 16120 === END VALIDATION ===
+INFO 2025-08-14 09:24:38,168 autoreload 4768 16120 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 09:24:40,070 autoreload 1224 17984 Watching for file changes with StatReloader
+INFO 2025-08-14 09:30:44,806 views 9412 10376 === STATUS VALIDATION ===
+INFO 2025-08-14 09:30:44,806 views 9412 10376 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:30:44,807 views 9412 10376 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:30:44,807 views 9412 10376 Actual values in database:
+INFO 2025-08-14 09:30:44,808 views 9412 10376   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:30:44,808 views 9412 10376   Status: 1, Approve: 1, Review: 0
+INFO 2025-08-14 09:30:44,808 views 9412 10376   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:30:44,809 views 9412 10376   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:30:44,809 views 9412 10376 === END VALIDATION ===
+INFO 2025-08-14 09:30:59,301 views 16616 4536 === STATUS VALIDATION ===
+INFO 2025-08-14 09:30:59,302 views 16616 4536 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:30:59,303 views 16616 4536 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:30:59,303 views 16616 4536 Actual values in database:
+INFO 2025-08-14 09:30:59,304 views 16616 4536   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:30:59,304 views 16616 4536   Status: 1, Approve: 1, Review: 0
+INFO 2025-08-14 09:30:59,304 views 16616 4536   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:30:59,305 views 16616 4536   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:30:59,305 views 16616 4536 === END VALIDATION ===
+INFO 2025-08-14 09:36:49,691 autoreload 14720 17908 Watching for file changes with StatReloader
+INFO 2025-08-14 09:36:57,832 autoreload 14192 10204 Watching for file changes with StatReloader
+INFO 2025-08-14 09:38:10,088 autoreload 14192 10204 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 09:38:11,874 autoreload 17512 9976 Watching for file changes with StatReloader
+INFO 2025-08-14 09:38:13,860 views 17512 9976 === STATUS VALIDATION ===
+INFO 2025-08-14 09:38:13,861 views 17512 9976 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:38:13,863 views 17512 9976 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:38:13,864 views 17512 9976 Actual values in database:
+INFO 2025-08-14 09:38:13,865 views 17512 9976   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:38:13,866 views 17512 9976   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:38:13,866 views 17512 9976   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:38:13,867 views 17512 9976 === END VALIDATION ===
+INFO 2025-08-14 09:38:17,963 utils 17512 15772 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:38:17,985 views 17512 15772 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 09:38:18,037 utils 17512 15772 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 09:38:18,042 views 17512 15772 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 09:38:18,240 views 17512 15772 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 09:38:18,262 views 17512 15772 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11635, 'already_reviewed': 0, 'approved_today': 6}
+INFO 2025-08-14 09:38:18,442 basehttp 17512 15772 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 89633
+INFO 2025-08-14 09:38:29,616 utils 17512 2060 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:38:29,627 views 17512 2060 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 09:38:29,684 utils 17512 2060 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 09:38:29,689 views 17512 2060 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 09:38:29,818 views 17512 2060 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 09:38:29,834 views 17512 2060 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11635, 'already_reviewed': 0, 'approved_today': 6}
+INFO 2025-08-14 09:38:29,906 basehttp 17512 2060 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 89633
+INFO 2025-08-14 09:39:53,658 autoreload 17512 9976 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 09:39:55,545 autoreload 17388 6548 Watching for file changes with StatReloader
+INFO 2025-08-14 09:39:57,515 views 17388 6548 === STATUS VALIDATION ===
+INFO 2025-08-14 09:39:57,515 views 17388 6548 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:39:57,517 views 17388 6548 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:39:57,518 views 17388 6548 Actual values in database:
+INFO 2025-08-14 09:39:57,519 views 17388 6548   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:39:57,520 views 17388 6548   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:39:57,520 views 17388 6548   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:39:57,521 views 17388 6548 === END VALIDATION ===
+INFO 2025-08-14 09:40:27,881 utils 17388 18060 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:40:27,894 views 17388 18060 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 09:40:27,956 utils 17388 18060 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 09:40:27,961 views 17388 18060 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 09:40:28,119 views 17388 18060 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 09:40:28,143 views 17388 18060 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11635, 'already_reviewed': 0, 'approved_today': 6}
+INFO 2025-08-14 09:40:28,321 basehttp 17388 18060 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100756
+INFO 2025-08-14 09:40:32,436 basehttp 17388 18060 "GET /wo-maintenance/review/pengajuan/WO20250814001/ HTTP/1.1" 302 0
+ERROR 2025-08-14 09:40:32,514 views 17388 18060 Error in review pengajuan list: name 'ReviewFilterForm' is not defined
+INFO 2025-08-14 09:40:32,515 basehttp 17388 18060 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 302 0
+ERROR 2025-08-14 09:40:32,577 views 17388 18060 Error in review dashboard: name 'ReviewFilterForm' is not defined
+INFO 2025-08-14 09:40:32,580 basehttp 17388 18060 "GET /wo-maintenance/review/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:40:32,784 basehttp 17388 18060 "GET /wo-maintenance/ HTTP/1.1" 200 28219
+INFO 2025-08-14 09:45:28,620 utils 17388 17060 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 09:45:28,635 views 17388 17060 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 09:45:28,693 utils 17388 17060 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 09:45:28,703 views 17388 17060 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 09:45:28,853 views 17388 17060 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 09:45:28,878 views 17388 17060 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11635, 'already_reviewed': 0, 'approved_today': 6}
+INFO 2025-08-14 09:45:28,956 basehttp 17388 17060 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 101729
+INFO 2025-08-14 09:45:40,045 basehttp 17388 16000 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:45:40,110 basehttp 17388 16000 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:45:40,228 basehttp 17388 16000 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 09:45:51,524 views 17388 15160 LOGIN ATTEMPT: 002104
+INFO 2025-08-14 09:45:51,537 authentication 17388 15160 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-14 09:45:51,544 views 17388 15160 LOGIN: Using existing session data for 002104
+INFO 2025-08-14 09:45:51,545 views 17388 15160 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-14 09:45:51,550 basehttp 17388 15160 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 09:45:51,710 views 17388 15160 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-14 09:45:51,778 basehttp 17388 15160 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31928
+INFO 2025-08-14 09:45:58,982 basehttp 17388 14344 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 30977
+INFO 2025-08-14 09:51:35,078 views 16148 12972 === STATUS VALIDATION ===
+INFO 2025-08-14 09:51:35,079 views 16148 12972 Expected STATUS_APPROVED: A
+INFO 2025-08-14 09:51:35,079 views 16148 12972 Expected APPROVE_YES: Y
+INFO 2025-08-14 09:51:35,080 views 16148 12972 Actual values in database:
+INFO 2025-08-14 09:51:35,080 views 16148 12972   Status: , Approve: N, Review: None
+INFO 2025-08-14 09:51:35,080 views 16148 12972   Status: A, Approve: T, Review: None
+INFO 2025-08-14 09:51:35,081 views 16148 12972   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 09:51:35,081 views 16148 12972 === END VALIDATION ===
+INFO 2025-08-14 09:55:42,934 autoreload 17388 6548 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 09:55:44,861 autoreload 18196 11620 Watching for file changes with StatReloader
+INFO 2025-08-14 10:01:52,732 autoreload 16000 11820 Watching for file changes with StatReloader
+INFO 2025-08-14 10:02:00,619 autoreload 15948 17280 Watching for file changes with StatReloader
+INFO 2025-08-14 10:02:08,317 autoreload 5056 15420 Watching for file changes with StatReloader
+INFO 2025-08-14 10:02:10,274 views 5056 15420 === STATUS VALIDATION ===
+INFO 2025-08-14 10:02:10,275 views 5056 15420 Expected STATUS_APPROVED: A
+INFO 2025-08-14 10:02:10,275 views 5056 15420 Expected APPROVE_YES: Y
+INFO 2025-08-14 10:02:10,276 views 5056 15420 Actual values in database:
+INFO 2025-08-14 10:02:10,276 views 5056 15420   Status: , Approve: N, Review: None
+INFO 2025-08-14 10:02:10,276 views 5056 15420   Status: A, Approve: T, Review: None
+INFO 2025-08-14 10:02:10,277 views 5056 15420   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 10:02:10,277 views 5056 15420 === END VALIDATION ===

@@ -88,6 +88,11 @@ urlpatterns = [
     # ===== FALLBACK ROUTES untuk Backward Compatibility =====
     path('enhanced/', views.enhanced_daftar_laporan, name='enhanced_daftar_laporan'),
     path('review-list/', views.review_pengajuan_list, name='review_list'),
+
+    # Debug & Management URLs (Superuser Only)
+path('debug/create-assignment-tables/', views.create_assignment_tables, name='create_assignment_tables'),
+# Debug URLs
+path('debug/section-mapping/<int:sdbm_section_id>/', views.debug_section_mapping, name='debug_section_mapping'),
 ]
 
 # ===== URL VALIDATION (untuk debugging) =====

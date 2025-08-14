@@ -1,577 +1,350 @@
 # wo_maintenance_app/management/commands/setup_review_system.py
-# Create this directory structure: wo_maintenance_app/management/commands/
 
 from django.core.management.base import BaseCommand
 from django.db import connections
 from django.contrib.auth.models import User
+from django.utils import timezone
 import logging
 
 logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
-    help = 'Setup Review System Database Tables and Initialize Data for SITI FATIMAH'
+    help = 'Setup Review System untuk SITI FATIMAH (007522) dengan section selection'
     
     def add_arguments(self, parser):
         parser.add_argument(
-            '--dry-run',
+            '--create-tables',
             action='store_true',
-            help='Show what would be done without making changes',
+            help='Create review tables jika belum ada',
         )
         parser.add_argument(
-            '--force',
+            '--init-data',
             action='store_true',
-            help='Force execution even if tables already exist',
+            help='Initialize approved pengajuan untuk review',
+        )
+        parser.add_argument(
+            '--test-sections',
+            action='store_true',
+            help='Test section data untuk distribusi',
+        )
+        parser.add_argument(
+            '--create-user',
+            action='store_true',
+            help='Create user 007522 jika belum ada',
         )
     
     def handle(self, *args, **options):
-        dry_run = options['dry_run']
-        force = options['force']
+        self.stdout.write(self.style.SUCCESS('=== SETUP REVIEW SYSTEM SITI FATIMAH ==='))
         
-        self.stdout.write(self.style.SUCCESS('=== Setting up Review System for SITI FATIMAH ==='))
+        # 1. CHECK/CREATE USER 007522
+        if options['create_user']:
+            self.stdout.write('\n1. Setting up user 007522 (SITI FATIMAH)...')
+            self.setup_user_007522()
         
-        if dry_run:
-            self.stdout.write(self.style.WARNING('DRY RUN MODE - No actual changes will be made'))
+        # 2. CREATE REVIEW TABLES
+        if options['create_tables']:
+            self.stdout.write('\n2. Creating review tables...')
+            self.create_review_tables()
         
+        # 3. TEST SECTION DATA
+        if options['test_sections']:
+            self.stdout.write('\n3. Testing section data...')
+            self.test_section_data()
+        
+        # 4. INITIALIZE DATA
+        if options['init_data']:
+            self.stdout.write('\n4. Initializing approved pengajuan for review...')
+            self.init_review_data()
+        
+        # 5. SHOW SUMMARY
+        self.stdout.write('\n5. System Summary...')
+        self.show_system_summary()
+        
+        self.stdout.write('\n' + '='*50)
+        self.stdout.write(self.style.SUCCESS('✅ Review System Setup Completed!'))
+        self.stdout.write('')
+        self.stdout.write('🎯 SITI FATIMAH (007522) can now:')
+        self.stdout.write('  • Review approved pengajuan')
+        self.stdout.write('  • Select final section for distribution')
+        self.stdout.write('  • Auto-assign to section supervisors')
+        self.stdout.write('')
+        self.stdout.write('🔗 Access URLs:')
+        self.stdout.write('  Review Dashboard: /wo-maintenance/review/dashboard/')
+        self.stdout.write('  Review List: /wo-maintenance/review/pengajuan/')
+        self.stdout.write('  Daftar Mode Approved: /wo-maintenance/daftar/?mode=approved')
+    
+    def setup_user_007522(self):
+        """Setup user 007522 SITI FATIMAH"""
+        try:
+            user, created = User.objects.get_or_create(
+                username='007522',
+                defaults={
+                    'first_name': 'SITI',
+                    'last_name': 'FATIMAH',
+                    'is_active': True,
+                    'is_staff': True
+                }
+            )
+            
+            if created:
+                user.set_password('007522')
+                user.save()
+                self.stdout.write(self.style.SUCCESS('  ✅ User 007522 created successfully'))
+                self.stdout.write('  🔑 Default password: 007522')
+            else:
+                self.stdout.write(self.style.SUCCESS('  ✅ User 007522 already exists'))
+            
+            # Ensure user is active and staff
+            if not user.is_active or not user.is_staff:
+                user.is_active = True
+                user.is_staff = True
+                user.save()
+                self.stdout.write('  🔄 Updated user permissions')
+                
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'  ❌ Error setting up user: {e}'))
+    
+    def create_review_tables(self):
+        """Create review tables"""
         try:
             with connections['DB_Maintenance'].cursor() as cursor:
                 # 1. Add review columns to tabel_pengajuan
-                self.stdout.write('1. Checking tabel_pengajuan columns...')
-                
-                review_columns = [
-                    {
-                        'name': 'review_status',
-                        'type': 'varchar(1)',
-                        'default': "'0'",
-                        'description': '0=Pending Review, 1=Reviewed Approved, 2=Reviewed Rejected'
-                    },
-                    {
-                        'name': 'reviewed_by',
-                        'type': 'varchar(50)',
-                        'default': 'NULL',
-                        'description': 'Employee number of reviewer (007522)'
-                    },
-                    {
-                        'name': 'review_date',
-                        'type': 'datetime',
-                        'default': 'NULL',
-                        'description': 'Date when review was completed'
-                    },
-                    {
-                        'name': 'review_notes',
-                        'type': 'varchar(max)',
-                        'default': 'NULL',
-                        'description': 'Review notes from reviewer'
-                    },
-                    {
-                        'name': 'final_section_id',
-                        'type': 'float',
-                        'default': 'NULL',
-                        'description': 'Final section assigned by reviewer'
-                    }
-                ]
-                
-                for column in review_columns:
-                    # Check if column exists
-                    cursor.execute("""
-                        SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS 
-                        WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = %s
-                    """, [column['name']])
-                    
-                    exists = cursor.fetchone()[0] > 0
-                    
-                    if not exists or force:
-                        sql = f"""
-                            ALTER TABLE tabel_pengajuan 
-                            ADD {column['name']} {column['type']} DEFAULT {column['default']}
-                        """
-                        
-                        if dry_run:
-                            self.stdout.write(f"  Would add column: {column['name']} ({column['description']})")
-                        else:
-                            try:
-                                if not exists:
-                                    cursor.execute(sql)
-                                    self.stdout.write(
-                                        self.style.SUCCESS(f"  ✅ Added column: {column['name']}")
-                                    )
-                                else:
-                                    self.stdout.write(f"  ⚠️  Column {column['name']} already exists (forced)")
-                            except Exception as e:
-                                self.stdout.write(
-                                    self.style.ERROR(f"  ❌ Failed to add {column['name']}: {e}")
-                                )
-                    else:
-                        self.stdout.write(f"  ✓ Column {column['name']} already exists")
-                
-                # 2. Create tabel_review_log
-                self.stdout.write('\n2. Checking tabel_review_log...')
+                self.stdout.write('  Creating review columns...')
                 
                 cursor.execute("""
-                    SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES 
-                    WHERE TABLE_NAME = 'tabel_review_log'
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_status')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD review_status varchar(1) NULL DEFAULT '0'
+                    END
                 """)
                 
-                table_exists = cursor.fetchone()[0] > 0
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'reviewed_by')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD reviewed_by varchar(50) NULL
+                    END
+                """)
                 
-                if not table_exists or force:
-                    create_table_sql = """
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_date')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD review_date datetime NULL
+                    END
+                """)
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_notes')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD review_notes varchar(max) NULL
+                    END
+                """)
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+                                  WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'final_section_id')
+                    BEGIN
+                        ALTER TABLE tabel_pengajuan ADD final_section_id float NULL
+                    END
+                """)
+                
+                # 2. Create review log table
+                self.stdout.write('  Creating review log table...')
+                
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tabel_review_log' AND xtype='U')
+                    BEGIN
                         CREATE TABLE [dbo].[tabel_review_log](
-                            [id] [int] IDENTITY(1,1) NOT NULL,
+                            [id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
                             [history_id] [varchar](15) NULL,
                             [reviewer_employee] [varchar](50) NULL,
                             [action] [varchar](10) NULL,
                             [final_section_id] [float] NULL,
                             [review_notes] [varchar](max) NULL,
                             [review_date] [datetime] NULL,
-                            CONSTRAINT [PK_tabel_review_log] PRIMARY KEY CLUSTERED ([id] ASC)
-                        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-                    """
-                    
-                    if dry_run:
-                        self.stdout.write("  Would create table: tabel_review_log")
-                    else:
-                        try:
-                            if not table_exists:
-                                cursor.execute(create_table_sql)
-                                self.stdout.write(
-                                    self.style.SUCCESS("  ✅ Created table: tabel_review_log")
-                                )
-                            else:
-                                self.stdout.write("  ⚠️  Table tabel_review_log already exists (forced)")
-                        except Exception as e:
-                            self.stdout.write(
-                                self.style.ERROR(f"  ❌ Failed to create tabel_review_log: {e}")
-                            )
-                else:
-                    self.stdout.write("  ✓ Table tabel_review_log already exists")
-                
-                # 3. Initialize existing approved pengajuan for review
-                self.stdout.write('\n3. Initializing existing approved pengajuan...')
-                
-                if not dry_run:
-                    try:
-                        # Set review_status = '0' untuk pengajuan yang sudah approved tapi belum review
-                        cursor.execute("""
-                            UPDATE tabel_pengajuan 
-                            SET review_status = '0'
-                            WHERE status = '1' AND approve = '1' 
-                                AND (review_status IS NULL OR review_status = '')
-                        """)
-                        
-                        updated_count = cursor.rowcount
-                        self.stdout.write(
-                            self.style.SUCCESS(f"  ✅ Initialized {updated_count} existing approved pengajuan for review")
+                            [priority_level] [varchar](20) NULL DEFAULT 'normal'
                         )
-                    except Exception as e:
-                        self.stdout.write(
-                            self.style.ERROR(f"  ❌ Failed to initialize existing pengajuan: {e}")
-                        )
-                else:
-                    cursor.execute("""
-                        SELECT COUNT(*) FROM tabel_pengajuan 
-                        WHERE status = '1' AND approve = '1' 
-                            AND (review_status IS NULL OR review_status = '')
-                    """)
-                    count = cursor.fetchone()[0]
-                    self.stdout.write(f"  Would initialize {count} existing approved pengajuan")
+                    END
+                """)
                 
-                # 4. Create reviewer user if not exists
-                self.stdout.write('\n4. Checking reviewer user (SITI FATIMAH)...')
-                
-                try:
-                    reviewer_user, created = User.objects.get_or_create(
-                        username='007522',
-                        defaults={
-                            'first_name': 'SITI',
-                            'last_name': 'FATIMAH',
-                            'is_active': True,
-                            'is_staff': True
-                        }
-                    )
-                    
-                    if created and not dry_run:
-                        reviewer_user.set_password('007522')  # Default password
-                        reviewer_user.save()
-                        self.stdout.write(
-                            self.style.SUCCESS("  ✅ Created reviewer user: 007522 (SITI FATIMAH)")
-                        )
-                        self.stdout.write(
-                            self.style.WARNING("  ⚠️  Default password set to: 007522 (please change)")
-                        )
-                    elif created and dry_run:
-                        self.stdout.write("  Would create reviewer user: 007522 (SITI FATIMAH)")
-                    else:
-                        self.stdout.write("  ✓ Reviewer user already exists: 007522 (SITI FATIMAH)")
-                        
-                except Exception as e:
-                    self.stdout.write(
-                        self.style.ERROR(f"  ❌ Failed to create reviewer user: {e}")
-                    )
-                
-                # 5. Check pengajuan yang siap review
-                self.stdout.write('\n5. Checking pengajuan ready for review...')
+                # 3. Create assignment table  
+                self.stdout.write('  Creating assignment table...')
                 
                 cursor.execute("""
-                    SELECT COUNT(*) FROM tabel_pengajuan 
-                    WHERE status = '1' AND approve = '1' 
-                        AND (review_status = '0' OR review_status IS NULL)
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tabel_pengajuan_assignment' AND xtype='U')
+                    BEGIN
+                        CREATE TABLE [dbo].[tabel_pengajuan_assignment](
+                            [id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                            [history_id] [varchar](15) NULL,
+                            [assigned_to_employee] [varchar](50) NULL,
+                            [assigned_by_employee] [varchar](50) NULL,
+                            [assignment_date] [datetime] NULL,
+                            [notes] [varchar](max) NULL,
+                            [assignment_type] [varchar](20) NULL DEFAULT 'MANUAL',
+                            [is_active] [bit] NULL DEFAULT 1
+                        )
+                    END
                 """)
-                ready_count = cursor.fetchone()[0]
                 
-                self.stdout.write(f"  📋 Found {ready_count} pengajuan ready for review by SITI FATIMAH")
-                
-                if ready_count > 0:
-                    cursor.execute("""
-                        SELECT TOP 5 history_id, oleh, tgl_insert 
-                        FROM tabel_pengajuan 
-                        WHERE status = '1' AND approve = '1' 
-                            AND (review_status = '0' OR review_status IS NULL)
-                        ORDER BY tgl_insert ASC
-                    """)
-                    sample_pengajuan = cursor.fetchall()
-                    
-                    self.stdout.write("  Recent pengajuan ready for review:")
-                    for pengajuan in sample_pengajuan:
-                        self.stdout.write(f"    - {pengajuan[0]} by {pengajuan[1]} on {pengajuan[2]}")
-                
-                self.stdout.write('\n' + '='*60)
-                
-                if dry_run:
-                    self.stdout.write(
-                        self.style.SUCCESS('DRY RUN COMPLETED - No actual changes were made')
-                    )
-                    self.stdout.write('Run without --dry-run to apply changes')
-                else:
-                    self.stdout.write(
-                        self.style.SUCCESS('✅ Review System setup completed successfully!')
-                    )
-                    self.stdout.write('\nNext steps:')
-                    self.stdout.write('1. Login as user 007522 (SITI FATIMAH) to access review system')
-                    self.stdout.write('2. Navigate to /wo-maintenance/review/ for review dashboard')
-                    self.stdout.write('3. Review and distribute pending pengajuan')
-                    self.stdout.write(f'4. {ready_count} pengajuan are ready for review')
+                self.stdout.write(self.style.SUCCESS('  ✅ Review tables created successfully'))
                 
         except Exception as e:
-            self.stdout.write(
-                self.style.ERROR(f'❌ Error setting up review system: {e}')
-            )
-            import traceback
-            self.stdout.write(traceback.format_exc())
-
-    def get_available_sections_for_review():
-        """
-        Get daftar section yang tersedia untuk distribusi pengajuan
-        Dengan prioritas untuk IT, Elektrik, Mekanik, Utility
-        """
+            self.stdout.write(self.style.ERROR(f'  ❌ Error creating tables: {e}'))
+    
+    def test_section_data(self):
+        """Test available sections for distribution"""
         try:
-            sections = []
-            
             with connections['DB_Maintenance'].cursor() as cursor:
                 cursor.execute("""
                     SELECT DISTINCT id_section, seksi 
                     FROM tabel_msection 
-                    WHERE (status = 'A' OR status IS NULL) 
-                        AND seksi IS NOT NULL
-                        AND seksi != ''
-                        AND LEN(LTRIM(RTRIM(seksi))) > 0
-                    ORDER BY 
-                        CASE 
-                            WHEN seksi LIKE '%IT%' OR seksi LIKE '%INFORMATION%' THEN 1
-                            WHEN seksi LIKE '%ELEKTRIK%' OR seksi LIKE '%ELECTRIC%' THEN 2
-                            WHEN seksi LIKE '%MEKANIK%' OR seksi LIKE '%MECHANIC%' THEN 3
-                            WHEN seksi LIKE '%UTILITY%' OR seksi LIKE '%UTILITIES%' THEN 4
-                            ELSE 5
-                        END,
-                        seksi
+                    WHERE (status = 'A' OR status IS NULL) AND seksi IS NOT NULL
+                    ORDER BY seksi
                 """)
                 
-                for row in cursor.fetchall():
-                    section_id = int(float(row[0]))
-                    section_name = str(row[1]).strip()
+                sections = cursor.fetchall()
+                self.stdout.write(f'  Found {len(sections)} available sections:')
+                
+                # Categorize sections
+                categories = {
+                    'IT': [],
+                    'Elektrik': [],
+                    'Mekanik': [],
+                    'Utility': [],
+                    'Other': []
+                }
+                
+                for section in sections:
+                    section_id = int(float(section[0]))
+                    section_name = str(section[1]).strip()
                     
-                    # Determine category and icon
-                    category = "Other"
-                    icon = "🔧"
-                    
-                    if any(keyword in section_name.upper() for keyword in ['IT', 'INFORMATION', 'SYSTEM', 'TEKNOLOGI']):
-                        category = "IT"
-                        icon = "💻"
+                    # Categorize
+                    if any(keyword in section_name.upper() for keyword in ['IT', 'INFORMATION', 'SYSTEM']):
+                        categories['IT'].append((section_id, section_name))
                     elif any(keyword in section_name.upper() for keyword in ['ELEKTRIK', 'ELECTRIC', 'LISTRIK']):
-                        category = "Elektrik"
-                        icon = "⚡"
+                        categories['Elektrik'].append((section_id, section_name))
                     elif any(keyword in section_name.upper() for keyword in ['MEKANIK', 'MECHANIC', 'MECHANICAL']):
-                        category = "Mekanik"
-                        icon = "🔧"
+                        categories['Mekanik'].append((section_id, section_name))
                     elif any(keyword in section_name.upper() for keyword in ['UTILITY', 'UTILITIES', 'UMUM']):
-                        category = "Utility"
-                        icon = "🏭"
-                    
-                    sections.append({
-                        'id': section_id,
-                        'name': section_name,
-                        'category': category,
-                        'icon': icon,
-                        'display_name': f"{icon} {section_name}"
-                    })
-            
-            logger.info(f"Retrieved {len(sections)} sections for review distribution")
-            return sections
-            
+                        categories['Utility'].append((section_id, section_name))
+                    else:
+                        categories['Other'].append((section_id, section_name))
+                
+                # Display by category
+                for category, sections in categories.items():
+                    if sections:
+                        icon = {'IT': '💻', 'Elektrik': '⚡', 'Mekanik': '🔧', 'Utility': '🏭', 'Other': '📋'}[category]
+                        self.stdout.write(f'    {icon} {category} ({len(sections)}):')
+                        for section_id, section_name in sections[:3]:  # Show first 3
+                            self.stdout.write(f'      {section_id}: {section_name}')
+                        if len(sections) > 3:
+                            self.stdout.write(f'      ... and {len(sections)-3} more')
+                
+                self.stdout.write(self.style.SUCCESS('  ✅ Section data test completed'))
+                
         except Exception as e:
-            logger.error(f"Error getting available sections for review: {e}")
-            return [
-                {'id': 1, 'name': 'IT', 'category': 'IT', 'icon': '💻', 'display_name': '💻 IT'},
-                {'id': 2, 'name': 'Elektrik', 'category': 'Elektrik', 'icon': '⚡', 'display_name': '⚡ Elektrik'},
-                {'id': 3, 'name': 'Mekanik', 'category': 'Mekanik', 'icon': '🔧', 'display_name': '🔧 Mekanik'},
-                {'id': 4, 'name': 'Utility', 'category': 'Utility', 'icon': '🏭', 'display_name': '🏭 Utility'}
-            ]
-        
-    def get_section_supervisors_for_assignment(section_id):
-        """
-        Get supervisors di section tertentu untuk auto-assignment setelah review
-        """
+            self.stdout.write(self.style.ERROR(f'  ❌ Error testing sections: {e}'))
+    
+    def init_review_data(self):
+        """Initialize approved pengajuan for review"""
         try:
-            supervisors = []
-            
-            with connections['SDBM'].cursor() as cursor:
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # Initialize approved pengajuan for review
                 cursor.execute("""
-                    SELECT DISTINCT
-                        e.employee_number,
-                        e.fullname,
-                        e.nickname,
-                        d.name as department_name,
-                        s.name as section_name,
-                        t.Name as title_name,
-                        t.is_supervisor,
-                        t.is_manager,
-                        t.is_generalManager
-                    FROM hrbp.employees e
-                    INNER JOIN hrbp.position p ON e.id = p.employeeId
-                    LEFT JOIN hr.department d ON p.departmentId = d.id
-                    LEFT JOIN hr.section s ON p.sectionId = s.id
-                    LEFT JOIN hr.title t ON p.titleId = t.id
-                    WHERE e.is_active = 1
-                        AND p.is_active = 1
-                        AND (t.is_supervisor = 1 OR t.is_manager = 1 OR 
-                            t.Name LIKE '%SUPERVISOR%' OR t.Name LIKE '%MANAGER%' OR 
-                            t.Name LIKE '%SPV%' OR t.Name LIKE '%MGR%')
-                        AND s.name IS NOT NULL
-                    ORDER BY 
-                        CASE 
-                            WHEN t.is_manager = 1 THEN 1
-                            WHEN t.is_supervisor = 1 THEN 2
-                            ELSE 3
-                        END,
-                        e.fullname
+                    UPDATE tabel_pengajuan 
+                    SET review_status = '0'
+                    WHERE status = '1' AND approve = '1' 
+                        AND (review_status IS NULL OR review_status = '')
                 """)
                 
-                for row in cursor.fetchall():
-                    supervisor = {
-                        'employee_number': row[0],
-                        'fullname': row[1],
-                        'nickname': row[2],
-                        'department_name': row[3],
-                        'section_name': row[4],
-                        'title_name': row[5],
-                        'is_supervisor': row[6],
-                        'is_manager': row[7],
-                        'is_general_manager': row[8],
-                        'level': 'Manager' if row[7] else 'Supervisor'
-                    }
-                    supervisors.append(supervisor)
-            
-            logger.info(f"Found {len(supervisors)} supervisors for section assignment")
-            return supervisors
-            
+                updated_count = cursor.rowcount
+                self.stdout.write(f'  ✅ Initialized {updated_count} approved pengajuan for review')
+                
+                # Get some stats
+                cursor.execute("""
+                    SELECT COUNT(*) FROM tabel_pengajuan 
+                    WHERE status = '1' AND approve = '1' AND review_status = '0'
+                """)
+                pending_review = cursor.fetchone()[0]
+                
+                cursor.execute("""
+                    SELECT COUNT(*) FROM tabel_pengajuan 
+                    WHERE status = '1' AND approve = '1'
+                """)
+                total_approved = cursor.fetchone()[0]
+                
+                self.stdout.write(f'  📊 Pending Review: {pending_review}/{total_approved} approved pengajuan')
+                
         except Exception as e:
-            logger.error(f"Error getting section supervisors: {e}")
-            return []
-
-
-def assign_pengajuan_after_review(history_id, final_section_id, reviewer_employee):
-    """
-    Auto-assign pengajuan ke supervisors di final section setelah review SITI FATIMAH
-    """
-    try:
-        assigned_count = 0
-        
-        # Get supervisors di final section
-        supervisors = get_section_supervisors_for_assignment(final_section_id)
-        
-        if not supervisors:
-            logger.warning(f"No supervisors found for auto-assignment to section {final_section_id}")
-            return []
-        
-        # Ensure assignment table exists
-        ensure_assignment_tables_exist()
-        
-        assigned_employees = []
-        
-        with connections['DB_Maintenance'].cursor() as cursor:
-            for supervisor in supervisors:
-                try:
-                    # Check if already assigned
+            self.stdout.write(self.style.ERROR(f'  ❌ Error initializing data: {e}'))
+    
+    def show_system_summary(self):
+        """Show system summary"""
+        try:
+            # Check user
+            try:
+                user = User.objects.get(username='007522')
+                user_status = f"✅ Active (Staff: {user.is_staff})"
+            except User.DoesNotExist:
+                user_status = "❌ Not Found"
+            
+            # Check tables
+            tables_status = {}
+            try:
+                with connections['DB_Maintenance'].cursor() as cursor:
+                    # Check review columns
                     cursor.execute("""
-                        SELECT COUNT(*) FROM tabel_pengajuan_assignment
-                        WHERE history_id = %s AND assigned_to_employee = %s AND is_active = 1
-                    """, [history_id, supervisor['employee_number']])
+                        SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS 
+                        WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_status'
+                    """)
+                    tables_status['review_columns'] = "✅ Exists" if cursor.fetchone()[0] > 0 else "❌ Missing"
                     
-                    if cursor.fetchone()[0] > 0:
-                        logger.debug(f"Pengajuan {history_id} already assigned to {supervisor['employee_number']}")
-                        continue
-                    
-                    # Insert assignment
+                    # Check review log table
                     cursor.execute("""
-                        INSERT INTO tabel_pengajuan_assignment 
-                        (history_id, assigned_to_employee, assigned_by_employee, assignment_date, 
-                         notes, assignment_type, is_active)
-                        VALUES (%s, %s, %s, GETDATE(), %s, %s, 1)
-                    """, [
-                        history_id,
-                        supervisor['employee_number'],
-                        reviewer_employee,
-                        f'Auto-assigned after review to {supervisor["level"]} in {supervisor["section_name"]}',
-                        'AUTO_REVIEW'
-                    ])
+                        SELECT COUNT(*) FROM sysobjects WHERE name='tabel_review_log' AND xtype='U'
+                    """)
+                    tables_status['review_log'] = "✅ Exists" if cursor.fetchone()[0] > 0 else "❌ Missing"
                     
-                    assigned_employees.append(supervisor['employee_number'])
-                    assigned_count += 1
+                    # Check assignment table
+                    cursor.execute("""
+                        SELECT COUNT(*) FROM sysobjects WHERE name='tabel_pengajuan_assignment' AND xtype='U'
+                    """)
+                    tables_status['assignment_table'] = "✅ Exists" if cursor.fetchone()[0] > 0 else "❌ Missing"
                     
-                    logger.info(f"Auto-assigned pengajuan {history_id} to {supervisor['fullname']} ({supervisor['employee_number']})")
+                    # Check data
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '1' AND approve = '1'")
+                    total_approved = cursor.fetchone()[0]
                     
-                except Exception as assign_error:
-                    logger.error(f"Error assigning to {supervisor['employee_number']}: {assign_error}")
-                    continue
-        
-        logger.info(f"Successfully auto-assigned pengajuan {history_id} to {assigned_count} supervisors in section {final_section_id}")
-        return assigned_employees
-        
-    except Exception as e:
-        logger.error(f"Error in assign_pengajuan_after_review: {e}")
-        return []
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE review_status = '0'")
+                    pending_review = cursor.fetchone()[0]
+                    
+                    cursor.execute("SELECT COUNT(DISTINCT id_section) FROM tabel_msection WHERE (status = 'A' OR status IS NULL)")
+                    available_sections = cursor.fetchone()[0]
+                    
+            except Exception as e:
+                tables_status['error'] = f"❌ Database Error: {e}"
+            
+            # Display summary
+            self.stdout.write('  📋 System Status:')
+            self.stdout.write(f'    User 007522: {user_status}')
+            for table, status in tables_status.items():
+                self.stdout.write(f'    {table}: {status}')
+            
+            if 'error' not in tables_status:
+                self.stdout.write('')
+                self.stdout.write('  📊 Data Summary:')
+                self.stdout.write(f'    Total Approved: {total_approved}')
+                self.stdout.write(f'    Pending Review: {pending_review}')
+                self.stdout.write(f'    Available Sections: {available_sections}')
+                
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'  ❌ Error getting summary: {e}'))
 
 
-def log_review_action(history_id, reviewer_employee, action, final_section_id=None, review_notes=None, priority_level='normal'):
-    """
-    Log review action untuk audit trail
-    """
-    try:
-        with connections['DB_Maintenance'].cursor() as cursor:
-            # Ensure review log table exists
-            cursor.execute("""
-                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tabel_review_log' AND xtype='U')
-                BEGIN
-                    CREATE TABLE [dbo].[tabel_review_log](
-                        [id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
-                        [history_id] [varchar](15) NULL,
-                        [reviewer_employee] [varchar](50) NULL,
-                        [action] [varchar](10) NULL,
-                        [final_section_id] [float] NULL,
-                        [review_notes] [varchar](max) NULL,
-                        [review_date] [datetime] NULL,
-                        [priority_level] [varchar](20) NULL
-                    )
-                END
-            """)
-            
-            # Insert log
-            cursor.execute("""
-                INSERT INTO tabel_review_log 
-                (history_id, reviewer_employee, action, final_section_id, review_notes, review_date, priority_level)
-                VALUES (%s, %s, %s, %s, %s, GETDATE(), %s)
-            """, [history_id, reviewer_employee, action, final_section_id, review_notes, priority_level])
-            
-            logger.info(f"Review action logged: {history_id} - {action} by {reviewer_employee}")
-            return True
-            
-    except Exception as e:
-        logger.error(f"Error logging review action: {e}")
-        return False
-
-
-def get_review_statistics_for_siti():
-    """
-    Get statistik review khusus untuk SITI FATIMAH dashboard
-    """
-    try:
-        stats = {}
-        
-        with connections['DB_Maintenance'].cursor() as cursor:
-            # Total approved pengajuan
-            cursor.execute("""
-                SELECT COUNT(*) FROM tabel_pengajuan 
-                WHERE status = '1' AND approve = '1'
-            """)
-            stats['total_approved'] = cursor.fetchone()[0] or 0
-            
-            # Pending review
-            cursor.execute("""
-                SELECT COUNT(*) FROM tabel_pengajuan 
-                WHERE status = '1' AND approve = '1' 
-                    AND (review_status IS NULL OR review_status = '0')
-            """)
-            stats['pending_review'] = cursor.fetchone()[0] or 0
-            
-            # Already reviewed
-            cursor.execute("""
-                SELECT COUNT(*) FROM tabel_pengajuan 
-                WHERE reviewed_by = %s
-            """, [REVIEWER_EMPLOYEE_NUMBER])
-            stats['total_reviewed'] = cursor.fetchone()[0] or 0
-            
-            # Reviewed today
-            today = timezone.now().date()
-            cursor.execute("""
-                SELECT COUNT(*) FROM tabel_pengajuan 
-                WHERE reviewed_by = %s 
-                    AND CAST(review_date AS DATE) = %s
-            """, [REVIEWER_EMPLOYEE_NUMBER, today])
-            stats['reviewed_today'] = cursor.fetchone()[0] or 0
-            
-            # Review breakdown by action
-            cursor.execute("""
-                SELECT review_status, COUNT(*) 
-                FROM tabel_pengajuan 
-                WHERE reviewed_by = %s
-                GROUP BY review_status
-            """, [REVIEWER_EMPLOYEE_NUMBER])
-            
-            review_breakdown = {row[0]: row[1] for row in cursor.fetchall()}
-            stats['approved_count'] = review_breakdown.get('1', 0)
-            stats['rejected_count'] = review_breakdown.get('2', 0)
-            
-            # Distribution by section
-            cursor.execute("""
-                SELECT ms.seksi, COUNT(*) 
-                FROM tabel_pengajuan tp
-                INNER JOIN tabel_msection ms ON tp.final_section_id = ms.id_section
-                WHERE tp.reviewed_by = %s AND tp.review_status = '1'
-                GROUP BY ms.seksi
-                ORDER BY COUNT(*) DESC
-            """, [REVIEWER_EMPLOYEE_NUMBER])
-            
-            stats['section_distribution'] = [
-                {'section': row[0], 'count': row[1]} 
-                for row in cursor.fetchall()
-            ]
-        
-        return stats
-        
-    except Exception as e:
-        logger.error(f"Error getting review statistics: {e}")
-        return {
-            'total_approved': 0,
-            'pending_review': 0,
-            'total_reviewed': 0,
-            'reviewed_today': 0,
-            'approved_count': 0,
-            'rejected_count': 0,
-            'section_distribution': []
-        }
-
-
-
-# USAGE:
-# python manage.py setup_review_system --dry-run  # Preview changes
-# python manage.py setup_review_system             # Apply changes
-# python manage.py setup_review_system --force     # Force recreation of existing objects
+# USAGE EXAMPLES:
+# python manage.py setup_review_system --create-tables --create-user
+# python manage.py setup_review_system --init-data --test-sections  
+# python manage.py setup_review_system --create-tables --create-user --init-data --test-sections
