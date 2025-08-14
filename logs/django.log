@@ -7316,3 +7316,314 @@ INFO 2025-08-14 10:18:18,196 views 16560 11412   Status: A, Approve: T, Review: 
 INFO 2025-08-14 10:18:18,196 views 16560 11412   Status: A, Approve: Y, Review: 0
 INFO 2025-08-14 10:18:18,196 views 16560 11412   Status: A, Approve: Y, Review: 1
 INFO 2025-08-14 10:18:18,197 views 16560 11412 === END VALIDATION ===
+INFO 2025-08-14 10:18:27,561 basehttp 16560 152 "GET /wo-maintenance/input/ HTTP/1.1" 200 47181
+INFO 2025-08-14 10:18:30,388 utils 16560 15336 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:18:30,403 views 16560 15336 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:18:30,467 utils 16560 15336 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 10:18:30,472 views 16560 15336 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 10:18:30,643 views 16560 15336 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 10:18:30,669 views 16560 15336 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11634, 'already_reviewed': 1, 'approved_today': 6}
+INFO 2025-08-14 10:18:30,771 basehttp 16560 15336 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100919
+INFO 2025-08-14 10:18:51,433 basehttp 16560 14536 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:18:51,492 basehttp 16560 14536 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:18:51,610 basehttp 16560 14536 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 10:18:59,160 views 16560 13216 LOGIN ATTEMPT: 002186
+INFO 2025-08-14 10:18:59,183 authentication 16560 13216 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-14 10:18:59,193 views 16560 13216 LOGIN: Using existing session data for 002186
+INFO 2025-08-14 10:18:59,193 views 16560 13216 LOGIN REDIRECT: 002186 -> /wo-maintenance/daftar/
+INFO 2025-08-14 10:18:59,199 basehttp 16560 13216 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:18:59,335 views 16560 13216 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 10:18:59,406 basehttp 16560 13216 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 25824
+INFO 2025-08-14 10:19:02,447 basehttp 16560 276 "GET /wo-maintenance/input/ HTTP/1.1" 200 47177
+INFO 2025-08-14 10:19:05,847 basehttp 16560 16580 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755141542637 HTTP/1.1" 200 292
+INFO 2025-08-14 10:19:18,096 forms 16560 2560 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-14 10:19:18,118 views 16560 2560 SAVE: Inserting pengajuan WO20250814001
+INFO 2025-08-14 10:19:18,122 views 16560 2560 SUCCESS: Pengajuan WO20250814001 berhasil disimpan
+INFO 2025-08-14 10:19:18,123 basehttp 16560 2560 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:19:18,244 views 16560 2560 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-14 10:19:18,320 basehttp 16560 2560 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 29316
+INFO 2025-08-14 10:19:21,178 basehttp 16560 13548 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 29017
+INFO 2025-08-14 10:19:25,628 basehttp 16560 1060 "GET /logout/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:19:25,688 basehttp 16560 1060 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:19:25,789 basehttp 16560 1060 "GET /login/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 10284
+INFO 2025-08-14 10:19:31,323 views 16560 2564 LOGIN ATTEMPT: 002104
+INFO 2025-08-14 10:19:31,342 authentication 16560 2564 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-14 10:19:31,349 views 16560 2564 LOGIN: Using existing session data for 002104
+INFO 2025-08-14 10:19:31,349 views 16560 2564 LOGIN REDIRECT: 002104 -> /wo-maintenance/detail/WO20250814001/
+INFO 2025-08-14 10:19:31,355 basehttp 16560 2564 "POST /login/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:19:31,519 basehttp 16560 2564 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 35099
+INFO 2025-08-14 10:19:33,936 views 16560 2564 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-14 10:19:33,999 basehttp 16560 2564 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31864
+INFO 2025-08-14 10:19:35,870 basehttp 16560 9704 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 34822
+INFO 2025-08-14 10:19:39,522 views 16560 9704 Pengajuan WO20250814001 approved by BADRI KIMAN - sent to review queue (status=A, approve=Y)
+INFO 2025-08-14 10:19:39,526 views 16560 9704 Review tables and columns verified/created successfully
+INFO 2025-08-14 10:19:39,529 views 16560 9704 Pengajuan WO20250814001 disetujui by BADRI KIMAN
+INFO 2025-08-14 10:19:39,531 basehttp 16560 9704 "POST /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:19:39,695 basehttp 16560 9704 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 31358
+INFO 2025-08-14 10:19:44,295 basehttp 16560 10208 "GET /logout/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:19:44,356 basehttp 16560 10208 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:19:44,452 basehttp 16560 10208 "GET /login/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 10284
+INFO 2025-08-14 10:19:50,039 views 16560 14716 LOGIN ATTEMPT: 007522
+INFO 2025-08-14 10:19:50,052 authentication 16560 14716 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-14 10:19:50,053 authentication 16560 14716 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-14 10:19:50,059 views 16560 14716 LOGIN: Using existing session data for 007522
+INFO 2025-08-14 10:19:50,059 views 16560 14716 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250814001/
+INFO 2025-08-14 10:19:50,064 basehttp 16560 14716 "POST /login/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:19:50,131 utils 16560 14716 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-14 10:19:50,156 utils 16560 14716 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 10:19:50,218 basehttp 16560 14716 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 29254
+INFO 2025-08-14 10:19:52,567 utils 16560 14716 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:19:52,575 views 16560 14716 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:19:52,638 utils 16560 14716 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 10:19:52,644 views 16560 14716 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 10:19:52,803 views 16560 14716 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 10:19:52,819 views 16560 14716 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11635, 'already_reviewed': 0, 'approved_today': 6}
+INFO 2025-08-14 10:19:52,897 basehttp 16560 14716 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100756
+INFO 2025-08-14 10:19:58,055 views 16560 14716 REVIEW DETAIL: Starting review for WO20250814001 by 007522
+INFO 2025-08-14 10:19:58,076 forms 16560 14716 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-14 10:19:58,077 views 16560 14716 REVIEW DETAIL: Rendering template for WO20250814001
+INFO 2025-08-14 10:19:58,163 basehttp 16560 14716 "GET /wo-maintenance/review/pengajuan/WO20250814001/ HTTP/1.1" 200 33661
+INFO 2025-08-14 10:20:06,728 views 16560 11144 REVIEW DETAIL: Starting review for WO20250814001 by 007522
+INFO 2025-08-14 10:20:06,741 views 16560 11144 REVIEW DETAIL: Processing POST request for WO20250814001
+INFO 2025-08-14 10:20:06,743 forms 16560 11144 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-14 10:20:06,744 views 16560 11144 REVIEW DETAIL: Form valid - Action: process, Target: elektrik
+INFO 2025-08-14 10:20:06,754 views 16560 11144 REVIEW DETAIL: Updated pengajuan WO20250814001 with review processing
+INFO 2025-08-14 10:20:06,754 utils 16560 11144 SITI REVIEW ASSIGNMENT: Starting assignment for WO20250814001 to elektrik
+INFO 2025-08-14 10:20:06,773 utils 16560 11144 SITI REVIEW: Updated final_section_id to 2 for WO20250814001
+ERROR 2025-08-14 10:20:06,777 utils 16560 11144 Error getting SDBM supervisors for elektrik: unsupported format character 'S' (0x53) at index 1420
+WARNING 2025-08-14 10:20:06,778 utils 16560 11144 SITI REVIEW: No supervisors found for elektrik
+INFO 2025-08-14 10:20:06,779 views 16560 11144 REVIEW DETAIL: Successfully processed review for WO20250814001
+INFO 2025-08-14 10:20:06,790 basehttp 16560 11144 "POST /wo-maintenance/review/pengajuan/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:20:06,846 views 16560 11144 REVIEW DETAIL: Starting review for WO20250814001 by 007522
+INFO 2025-08-14 10:20:06,863 forms 16560 11144 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-14 10:20:06,864 views 16560 11144 REVIEW DETAIL: Rendering template for WO20250814001
+INFO 2025-08-14 10:20:06,931 basehttp 16560 11144 "GET /wo-maintenance/review/pengajuan/WO20250814001/ HTTP/1.1" 200 31264
+INFO 2025-08-14 10:20:18,107 utils 16560 17820 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:20:18,115 views 16560 17820 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:20:18,173 utils 16560 17820 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 10:20:18,177 views 16560 17820 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 10:20:18,335 views 16560 17820 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 10:20:18,361 views 16560 17820 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11634, 'already_reviewed': 1, 'approved_today': 6}
+INFO 2025-08-14 10:20:18,440 basehttp 16560 17820 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100919
+INFO 2025-08-14 10:20:24,817 utils 16560 12764 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-14 10:20:24,836 utils 16560 12764 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 10:20:24,889 basehttp 16560 12764 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 28978
+INFO 2025-08-14 10:26:59,419 utils 16560 18124 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:26:59,431 views 16560 18124 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:26:59,491 utils 16560 18124 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 10:26:59,496 views 16560 18124 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 10:26:59,654 views 16560 18124 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 10:26:59,681 views 16560 18124 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11634, 'already_reviewed': 1, 'approved_today': 6}
+INFO 2025-08-14 10:26:59,762 basehttp 16560 18124 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100919
+INFO 2025-08-14 10:27:03,131 views 16560 18168 REVIEW DETAIL: Starting review for 25-08-0231 by 007522
+INFO 2025-08-14 10:27:03,161 forms 16560 18168 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-14 10:27:03,162 views 16560 18168 REVIEW DETAIL: Rendering template for 25-08-0231
+INFO 2025-08-14 10:27:03,230 basehttp 16560 18168 "GET /wo-maintenance/review/pengajuan/25-08-0231/ HTTP/1.1" 200 33715
+INFO 2025-08-14 10:28:29,075 utils 16560 16432 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-14 10:28:29,124 utils 16560 16432 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 10:28:29,227 basehttp 16560 16432 "GET /wo-maintenance/detail/25-08-0235/ HTTP/1.1" 200 28442
+INFO 2025-08-14 10:30:36,650 autoreload 16560 11412 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 10:30:38,616 autoreload 16616 11960 Watching for file changes with StatReloader
+INFO 2025-08-14 10:30:40,573 views 16616 11960 === STATUS VALIDATION ===
+INFO 2025-08-14 10:30:40,574 views 16616 11960 Expected STATUS_APPROVED: A
+INFO 2025-08-14 10:30:40,576 views 16616 11960 Expected APPROVE_YES: Y
+INFO 2025-08-14 10:30:40,576 views 16616 11960 Actual values in database:
+INFO 2025-08-14 10:30:40,576 views 16616 11960   Status: , Approve: N, Review: None
+INFO 2025-08-14 10:30:40,576 views 16616 11960   Status: A, Approve: T, Review: None
+INFO 2025-08-14 10:30:40,577 views 16616 11960   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 10:30:40,577 views 16616 11960 === END VALIDATION ===
+INFO 2025-08-14 10:30:54,032 autoreload 16616 11960 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 10:30:55,860 autoreload 16732 17460 Watching for file changes with StatReloader
+INFO 2025-08-14 10:32:46,503 views 14696 14248 === STATUS VALIDATION ===
+INFO 2025-08-14 10:32:46,504 views 14696 14248 Expected STATUS_APPROVED: A
+INFO 2025-08-14 10:32:46,504 views 14696 14248 Expected APPROVE_YES: Y
+INFO 2025-08-14 10:32:46,505 views 14696 14248 Actual values in database:
+INFO 2025-08-14 10:32:46,505 views 14696 14248   Status: , Approve: N, Review: None
+INFO 2025-08-14 10:32:46,505 views 14696 14248   Status: A, Approve: T, Review: None
+INFO 2025-08-14 10:32:46,505 views 14696 14248   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 10:32:46,506 views 14696 14248 === END VALIDATION ===
+INFO 2025-08-14 10:33:11,824 views 1656 15680 === STATUS VALIDATION ===
+INFO 2025-08-14 10:33:11,824 views 1656 15680 Expected STATUS_APPROVED: A
+INFO 2025-08-14 10:33:11,825 views 1656 15680 Expected APPROVE_YES: Y
+INFO 2025-08-14 10:33:11,825 views 1656 15680 Actual values in database:
+INFO 2025-08-14 10:33:11,826 views 1656 15680   Status: , Approve: N, Review: None
+INFO 2025-08-14 10:33:11,826 views 1656 15680   Status: A, Approve: T, Review: None
+INFO 2025-08-14 10:33:11,826 views 1656 15680   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 10:33:11,827 views 1656 15680 === END VALIDATION ===
+INFO 2025-08-14 10:34:31,688 autoreload 15476 10200 Watching for file changes with StatReloader
+INFO 2025-08-14 10:34:41,671 autoreload 18240 2792 Watching for file changes with StatReloader
+INFO 2025-08-14 10:45:59,968 autoreload 10500 16040 Watching for file changes with StatReloader
+INFO 2025-08-14 10:46:02,212 views 10500 16040 === STATUS VALIDATION ===
+INFO 2025-08-14 10:46:02,213 views 10500 16040 Expected STATUS_APPROVED: A
+INFO 2025-08-14 10:46:02,214 views 10500 16040 Expected APPROVE_YES: Y
+INFO 2025-08-14 10:46:02,214 views 10500 16040 Actual values in database:
+INFO 2025-08-14 10:46:02,214 views 10500 16040   Status: , Approve: N, Review: None
+INFO 2025-08-14 10:46:02,214 views 10500 16040   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 10:46:02,215 views 10500 16040   Status: A, Approve: T, Review: None
+INFO 2025-08-14 10:46:02,215 views 10500 16040   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 10:46:02,215 views 10500 16040 === END VALIDATION ===
+INFO 2025-08-14 10:46:08,949 utils 10500 17400 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:46:08,963 views 10500 17400 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:46:09,024 utils 10500 17400 SITI FATIMAH granted access to 11621 approved pengajuan via special privilege
+INFO 2025-08-14 10:46:09,030 views 10500 17400 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 10:46:09,175 views 10500 17400 Enhanced query executed successfully - Found 11348 records for view_mode: normal
+INFO 2025-08-14 10:46:09,195 views 10500 17400 SITI FATIMAH stats: {'total_approved': 11634, 'pending_review': 11634, 'already_reviewed': 0, 'approved_today': 5}
+INFO 2025-08-14 10:46:09,398 basehttp 10500 17400 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 97304
+INFO 2025-08-14 10:46:33,024 basehttp 10500 2216 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:46:33,079 basehttp 10500 2216 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:46:33,217 basehttp 10500 2216 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 10:46:39,650 views 10500 11188 LOGIN ATTEMPT: 002186
+INFO 2025-08-14 10:46:39,664 authentication 10500 11188 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-14 10:46:39,671 views 10500 11188 LOGIN: Using existing session data for 002186
+INFO 2025-08-14 10:46:39,672 views 10500 11188 LOGIN REDIRECT: 002186 -> /wo-maintenance/daftar/
+INFO 2025-08-14 10:46:39,676 basehttp 10500 11188 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:46:39,793 views 10500 11188 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-14 10:46:39,859 basehttp 10500 11188 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 25824
+INFO 2025-08-14 10:46:42,986 basehttp 10500 11188 "GET /wo-maintenance/input/ HTTP/1.1" 200 47177
+INFO 2025-08-14 10:46:47,810 basehttp 10500 15928 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755143203185 HTTP/1.1" 200 292
+INFO 2025-08-14 10:47:02,771 forms 10500 12284 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-14 10:47:02,791 views 10500 12284 SAVE: Inserting pengajuan WO20250814001
+INFO 2025-08-14 10:47:02,796 views 10500 12284 SUCCESS: Pengajuan WO20250814001 berhasil disimpan
+INFO 2025-08-14 10:47:02,798 basehttp 10500 12284 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:02,898 views 10500 12284 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-14 10:47:02,960 basehttp 10500 12284 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 29316
+INFO 2025-08-14 10:47:06,245 basehttp 10500 12284 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:06,295 basehttp 10500 12284 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:06,397 basehttp 10500 12284 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-14 10:47:11,747 views 10500 15368 LOGIN ATTEMPT: 002104
+INFO 2025-08-14 10:47:11,759 authentication 10500 15368 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-14 10:47:11,766 views 10500 15368 LOGIN: Using existing session data for 002104
+INFO 2025-08-14 10:47:11,767 views 10500 15368 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-14 10:47:11,773 basehttp 10500 15368 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:11,898 views 10500 15368 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-14 10:47:11,961 basehttp 10500 15368 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 32174
+INFO 2025-08-14 10:47:14,614 basehttp 10500 18248 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 34822
+INFO 2025-08-14 10:47:18,605 views 10500 1824 Pengajuan WO20250814001 approved by BADRI KIMAN - sent to review queue (status=A, approve=Y)
+INFO 2025-08-14 10:47:18,608 views 10500 1824 Review tables and columns verified/created successfully
+INFO 2025-08-14 10:47:18,609 views 10500 1824 Pengajuan WO20250814001 disetujui by BADRI KIMAN
+INFO 2025-08-14 10:47:18,610 basehttp 10500 1824 "POST /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:18,739 basehttp 10500 1824 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 31358
+INFO 2025-08-14 10:47:22,993 basehttp 10500 6836 "GET /logout/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:23,048 basehttp 10500 6836 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:23,143 basehttp 10500 6836 "GET /login/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 10284
+INFO 2025-08-14 10:47:32,697 views 10500 6856 LOGIN ATTEMPT: 007522
+INFO 2025-08-14 10:47:32,713 authentication 10500 6856 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-14 10:47:32,714 authentication 10500 6856 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-14 10:47:32,721 views 10500 6856 LOGIN: Using existing session data for 007522
+INFO 2025-08-14 10:47:32,722 views 10500 6856 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250814001/
+INFO 2025-08-14 10:47:32,728 basehttp 10500 6856 "POST /login/?next=/wo-maintenance/detail/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:32,795 utils 10500 6856 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-14 10:47:32,824 utils 10500 6856 Error getting approved pengajuan for SITI FATIMAH: ('42000', '[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]ORDER BY items must appear in the select list if SELECT DISTINCT is specified. (145) (SQLExecDirectW); [42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)')
+INFO 2025-08-14 10:47:32,900 basehttp 10500 6856 "GET /wo-maintenance/detail/WO20250814001/ HTTP/1.1" 200 29254
+INFO 2025-08-14 10:47:35,190 utils 10500 6856 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:47:35,203 views 10500 6856 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:47:35,265 utils 10500 6856 SITI FATIMAH granted access to 11622 approved pengajuan via special privilege
+INFO 2025-08-14 10:47:35,270 views 10500 6856 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 10:47:35,419 views 10500 6856 Enhanced query executed successfully - Found 11349 records for view_mode: normal
+INFO 2025-08-14 10:47:35,446 views 10500 6856 SITI FATIMAH stats: {'total_approved': 11635, 'pending_review': 11635, 'already_reviewed': 0, 'approved_today': 6}
+INFO 2025-08-14 10:47:35,520 basehttp 10500 6856 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 97310
+INFO 2025-08-14 10:47:38,977 basehttp 10500 6852 "GET /wo-maintenance/review/pengajuan/WO20250814001/ HTTP/1.1" 302 0
+INFO 2025-08-14 10:47:39,212 views 10500 6852 Found 11324 pengajuan for review by SITI FATIMAH
+INFO 2025-08-14 10:47:39,340 basehttp 10500 6852 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 200 88506
+INFO 2025-08-14 10:48:00,715 basehttp 10500 17660 "GET /wo-maintenance/review/history/ HTTP/1.1" 200 19859
+INFO 2025-08-14 10:48:04,260 utils 10500 15780 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:48:04,277 views 10500 15780 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:48:04,336 utils 10500 15780 SITI FATIMAH granted access to 11625 approved pengajuan via special privilege
+INFO 2025-08-14 10:48:04,345 views 10500 15780 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 10:48:04,472 views 10500 15780 Enhanced query executed successfully - Found 11352 records for view_mode: normal
+INFO 2025-08-14 10:48:04,487 views 10500 15780 SITI FATIMAH stats: {'total_approved': 11638, 'pending_review': 11638, 'already_reviewed': 0, 'approved_today': 9}
+INFO 2025-08-14 10:48:04,561 basehttp 10500 15780 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100709
+INFO 2025-08-14 10:48:06,552 utils 10500 15780 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:48:06,560 views 10500 15780 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:48:06,624 utils 10500 15780 SITI FATIMAH granted access to 11625 approved pengajuan via special privilege
+INFO 2025-08-14 10:48:06,629 views 10500 15780 SDBM assigned mode: 11625 assignments
+ERROR 2025-08-14 10:48:06,767 views 10500 15780 Database error in enhanced daftar_laporan: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+ERROR 2025-08-14 10:48:06,773 views 10500 15780 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.Error: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 1108, in enhanced_daftar_laporan
+    cursor.execute(count_query, query_params)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.Error: ('07002', '[07002] [Microsoft][ODBC Driver 17 for SQL Server]COUNT field incorrect or syntax error (0) (SQLExecDirectW)')
+
+INFO 2025-08-14 10:48:06,798 views 10500 15780 SITI FATIMAH stats: {'total_approved': 11638, 'pending_review': 11638, 'already_reviewed': 0, 'approved_today': 9}
+INFO 2025-08-14 10:48:06,859 basehttp 10500 15780 "GET /wo-maintenance/enhanced/?mode=assigned HTTP/1.1" 200 30549
+INFO 2025-08-14 10:49:00,944 autoreload 10500 16040 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 10:49:03,047 autoreload 12312 16196 Watching for file changes with StatReloader
+INFO 2025-08-14 10:50:01,323 autoreload 17128 16088 Watching for file changes with StatReloader
+INFO 2025-08-14 10:50:09,352 autoreload 14004 14828 Watching for file changes with StatReloader
+INFO 2025-08-14 10:50:11,628 views 14004 14828 === STATUS VALIDATION ===
+INFO 2025-08-14 10:50:11,629 views 14004 14828 Expected STATUS_APPROVED: A
+INFO 2025-08-14 10:50:11,629 views 14004 14828 Expected APPROVE_YES: Y
+INFO 2025-08-14 10:50:11,630 views 14004 14828 Actual values in database:
+INFO 2025-08-14 10:50:11,630 views 14004 14828   Status: , Approve: N, Review: None
+INFO 2025-08-14 10:50:11,631 views 14004 14828   Status: A, Approve: T, Review: None
+INFO 2025-08-14 10:50:11,631 views 14004 14828   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 10:50:11,631 views 14004 14828 === END VALIDATION ===
+INFO 2025-08-14 10:50:16,037 utils 14004 10556 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-14 10:50:16,053 views 14004 10556 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-14 10:50:16,115 utils 14004 10556 SITI FATIMAH granted access to 11625 approved pengajuan via special privilege
+INFO 2025-08-14 10:50:16,120 views 14004 10556 SITI FATIMAH mode: accessing ALL pengajuan with review focus
+INFO 2025-08-14 10:50:16,245 views 14004 10556 Enhanced query executed successfully - Found 11352 records for view_mode: normal
+INFO 2025-08-14 10:50:16,260 views 14004 10556 SITI FATIMAH stats: {'total_approved': 11638, 'pending_review': 11638, 'already_reviewed': 0, 'approved_today': 9}
+INFO 2025-08-14 10:50:16,451 basehttp 14004 10556 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 100709
+INFO 2025-08-14 10:50:20,578 views 14004 10556 REVIEW DETAIL: Starting review for WO20250814001 by 007522
+INFO 2025-08-14 10:50:20,604 forms 14004 10556 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-14 10:50:20,605 views 14004 10556 REVIEW DETAIL: Rendering template for WO20250814001
+INFO 2025-08-14 10:50:20,684 basehttp 14004 10556 "GET /wo-maintenance/review/pengajuan/WO20250814001/ HTTP/1.1" 200 33661
+INFO 2025-08-14 10:51:33,409 views 14004 16768 REVIEW DETAIL: Starting review for WO20250814001 by 007522
+INFO 2025-08-14 10:51:33,436 forms 14004 16768 Section mapping loaded: {'elektrik': 5, 'it': 8, 'mekanik': 4}
+INFO 2025-08-14 10:51:33,436 views 14004 16768 REVIEW DETAIL: Rendering template for WO20250814001
+INFO 2025-08-14 10:51:33,515 basehttp 14004 16768 "GET /wo-maintenance/review/pengajuan/WO20250814001/ HTTP/1.1" 200 33661
+INFO 2025-08-14 11:14:51,211 autoreload 14004 14828 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-14 11:14:53,158 autoreload 17516 2892 Watching for file changes with StatReloader
+INFO 2025-08-14 11:18:43,929 autoreload 13820 15104 Watching for file changes with StatReloader
+INFO 2025-08-14 11:18:54,738 autoreload 15532 5668 Watching for file changes with StatReloader
+INFO 2025-08-14 11:19:01,966 autoreload 5384 1568 Watching for file changes with StatReloader
+INFO 2025-08-14 11:19:04,040 views 5384 1568 === STATUS VALIDATION ===
+INFO 2025-08-14 11:19:04,041 views 5384 1568 Expected STATUS_APPROVED: A
+INFO 2025-08-14 11:19:04,041 views 5384 1568 Expected APPROVE_YES: Y
+INFO 2025-08-14 11:19:04,042 views 5384 1568 Actual values in database:
+INFO 2025-08-14 11:19:04,042 views 5384 1568   Status: , Approve: N, Review: None
+INFO 2025-08-14 11:19:04,042 views 5384 1568   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 11:19:04,043 views 5384 1568   Status: A, Approve: T, Review: None
+INFO 2025-08-14 11:19:04,043 views 5384 1568   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 11:19:04,043 views 5384 1568 === END VALIDATION ===
+INFO 2025-08-14 11:23:11,737 autoreload 5384 1568 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-14 11:23:13,585 autoreload 10064 11684 Watching for file changes with StatReloader
+INFO 2025-08-14 11:23:15,516 views 10064 11684 === STATUS VALIDATION ===
+INFO 2025-08-14 11:23:15,516 views 10064 11684 Expected STATUS_APPROVED: A
+INFO 2025-08-14 11:23:15,518 views 10064 11684 Expected APPROVE_YES: Y
+INFO 2025-08-14 11:23:15,519 views 10064 11684 Actual values in database:
+INFO 2025-08-14 11:23:15,520 views 10064 11684   Status: , Approve: N, Review: None
+INFO 2025-08-14 11:23:15,521 views 10064 11684   Status: A, Approve: N, Review: 0
+INFO 2025-08-14 11:23:15,523 views 10064 11684   Status: A, Approve: T, Review: None
+INFO 2025-08-14 11:23:15,524 views 10064 11684   Status: A, Approve: Y, Review: 0
+INFO 2025-08-14 11:23:15,525 views 10064 11684 === END VALIDATION ===

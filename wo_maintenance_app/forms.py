@@ -460,148 +460,291 @@ class ReviewFilterForm(forms.Form):
 
 
 class ReviewForm(forms.Form):
-    """Form untuk review pengajuan oleh SITI FATIMAH - FIXED ACTION_CHOICES"""
+    """
+    ENHANCED: Form untuk review pengajuan oleh SITI FATIMAH dengan section change capability
+    """
     
-    # FIXED: Action choices yang benar
     ACTION_CHOICES = [
         ('process', 'Process Pengajuan'),
         ('reject', 'Reject Pengajuan'),
     ]
     
+    PRIORITY_CHOICES = [
+        ('normal', 'Normal'),
+        ('urgent', 'Urgent'),
+        ('high', 'High Priority'),
+        ('critical', 'Critical'),
+    ]
+    
+    # Target section choices - akan diupdate otomatis
+    TARGET_SECTION_CHOICES = [
+        ('', 'Pilih Section Tujuan (Opsional)'),
+        ('it', '💻 IT (Information Technology)'),
+        ('elektrik', '⚡ Elektrik (Electrical Engineering)'),
+        ('mekanik', '🔧 Mekanik (Mechanical Engineering)'),
+        ('utility', '🏭 Utility (Utility Systems)'),
+        ('civil', '🏗️ Civil (Civil Engineering)'),
+    ]
+    
     action = forms.ChoiceField(
-        label='Keputusan Review',
         choices=ACTION_CHOICES,
         widget=forms.RadioSelect(attrs={
-            'class': 'form-check-input review-action'
+            'class': 'form-check-input',
+            'required': True
         }),
-        help_text='Pilih "Process Pengajuan" untuk melanjutkan atau "Reject" untuk menolak'
+        label='Keputusan Review',
+        help_text='Pilih apakah pengajuan akan diproses atau ditolak',
+        required=True
     )
     
     target_section = forms.ChoiceField(
-        label='Tujuan Section (Opsional)',
-        choices=[
-            ('', '-- Pilih Section (Opsional) --'),
-            ('it', '💻 IT'),
-            ('elektrik', '⚡ Elektrik'),
-            ('utility', '🏭 Utility'),
-            ('mekanik', '🔧 Mekanik'),
-        ],
-        required=False,
+        choices=TARGET_SECTION_CHOICES,
         widget=forms.Select(attrs={
             'class': 'form-control select2-section',
-            'data-placeholder': 'Pilih section tujuan (opsional)...'
+            'data-placeholder': 'Pilih section untuk distribusi...'
         }),
-        help_text='🎯 Opsional: Tentukan section spesifik yang akan menangani pengajuan ini'
+        label='Section Tujuan',
+        help_text='Pilih section tujuan - section pengaju akan berubah mengikuti pilihan ini',
+        required=False
     )
     
     priority_level = forms.ChoiceField(
-        label='Tingkat Prioritas',
-        choices=[
-            ('normal', 'Normal'),
-            ('urgent', 'Urgent'),
-            ('critical', 'Critical')
-        ],
-        initial='normal',
+        choices=PRIORITY_CHOICES,
         widget=forms.Select(attrs={
             'class': 'form-control'
         }),
-        help_text='Tentukan tingkat prioritas pengajuan ini'
+        label='Priority Level',
+        help_text='Tentukan tingkat prioritas pengajuan',
+        initial='normal',
+        required=False
     )
     
     review_notes = forms.CharField(
-        label='Catatan Review',
-        required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 4,
-            'placeholder': 'Opsional: Tambahkan catatan untuk keputusan review dan instruksi khusus...'
+            'placeholder': 'Masukkan catatan review...'
         }),
-        help_text='Catatan opsional untuk dokumentasi dan instruksi'
+        label='Catatan Review',
+        help_text='Catatan atau keterangan tambahan untuk review ini',
+        max_length=2000,
+        required=False
     )
     
     def __init__(self, *args, **kwargs):
+        # Extract custom parameters
+        pengajuan_id = kwargs.pop('pengajuan_id', None)
+        current_section = kwargs.pop('current_section', None)
+        
         super().__init__(*args, **kwargs)
         
-        # Load section choices dari database untuk mapping
-        self.load_section_mapping()
-    
-    def load_section_mapping(self):
-        """Load mapping section dari database untuk referensi"""
+        # ENHANCED: Dynamic section choices dengan auto-discovery
         try:
-            self.section_mapping = {}
+            self.fields['target_section'].choices = self.get_enhanced_section_choices(
+                pengajuan_id, current_section
+            )
+        except Exception as e:
+            logger.warning(f"Error getting enhanced section choices: {e}")
+            # Keep default choices if error
+        
+        # Add warning message for section change
+        self.fields['target_section'].help_text = (
+            'PERHATIAN: Pemilihan section akan mengubah section pengaju dari section saat ini '
+            'ke section yang dipilih. Pengajuan akan otomatis di-assign ke supervisor yang sesuai.'
+        )
+    
+    def get_enhanced_section_choices(self, pengajuan_id=None, current_section=None):
+        """
+        ENHANCED: Get section choices dengan info tambahan dan status current
+        """
+        try:
+            from .utils import auto_discover_maintenance_sections
             
-            with connections['DB_Maintenance'].cursor() as cursor:
-                cursor.execute("""
-                    SELECT DISTINCT id_section, seksi 
-                    FROM tabel_msection 
-                    WHERE (status = 'A' OR status IS NULL) 
-                        AND seksi IS NOT NULL
-                        AND seksi != ''
-                    ORDER BY seksi
-                """)
+            enhanced_choices = [('', 'Pilih Section Tujuan (Opsional)')]
+            
+            # Get auto-discovered sections
+            section_mapping = auto_discover_maintenance_sections()
+            
+            for key, info in section_mapping.items():
+                choice_label = info['display_name']
                 
-                for row in cursor.fetchall():
-                    section_id = int(float(row[0]))
-                    section_name = str(row[1]).strip().upper()
-                    
-                    # Map section berdasarkan kata kunci
-                    if any(keyword in section_name for keyword in ['IT', 'INFORMATION', 'SYSTEM', 'TEKNOLOGI']):
-                        if 'it' not in self.section_mapping:
-                            self.section_mapping['it'] = section_id
-                    elif any(keyword in section_name for keyword in ['ELEKTRIK', 'ELECTRIC', 'LISTRIK']):
-                        if 'elektrik' not in self.section_mapping:
-                            self.section_mapping['elektrik'] = section_id
-                    elif any(keyword in section_name for keyword in ['UTILITY', 'UTILITIES', 'UMUM']):
-                        if 'utility' not in self.section_mapping:
-                            self.section_mapping['utility'] = section_id
-                    elif any(keyword in section_name for keyword in ['MEKANIK', 'MECHANIC', 'MECHANICAL']):
-                        if 'mekanik' not in self.section_mapping:
-                            self.section_mapping['mekanik'] = section_id
+                # Add current section indicator
+                if current_section and info['section_name']:
+                    if current_section.upper() in info['section_name'].upper():
+                        choice_label += ' (SECTION SAAT INI)'
+                
+                enhanced_choices.append((key, choice_label))
             
-            logger.info(f"Section mapping loaded: {self.section_mapping}")
+            return enhanced_choices
             
         except Exception as e:
-            logger.error(f"Error loading section mapping: {e}")
-            # Default mapping sebagai fallback
-            self.section_mapping = {
-                'it': 1,
-                'elektrik': 2,
-                'mekanik': 3,
-                'utility': 4
-            }
+            logger.error(f"Error in get_enhanced_section_choices: {e}")
+            return self.TARGET_SECTION_CHOICES
     
-    def get_final_section_id(self):
-        """Get final section ID berdasarkan pilihan target_section"""
+    def clean_target_section(self):
+        """
+        Enhanced validation untuk target section
+        """
         target_section = self.cleaned_data.get('target_section')
+        action = self.cleaned_data.get('action')
         
-        if target_section and hasattr(self, 'section_mapping'):
-            return self.section_mapping.get(target_section)
+        # Section selection hanya untuk action 'process'
+        if action == 'process' and target_section:
+            # Validate target section exists
+            try:
+                from .utils import auto_discover_maintenance_sections
+                section_mapping = auto_discover_maintenance_sections()
+                
+                if target_section not in section_mapping:
+                    raise forms.ValidationError(f'Section "{target_section}" tidak valid.')
+                
+                logger.info(f"Validated target section: {target_section}")
+                
+            except Exception as e:
+                logger.error(f"Error validating target section: {e}")
+                raise forms.ValidationError('Error validasi section. Silakan coba lagi.')
         
-        return None
+        return target_section
     
     def clean(self):
-        """Custom validation untuk review form"""
+        """
+        Enhanced form validation dengan section change confirmation
+        """
         cleaned_data = super().clean()
         action = cleaned_data.get('action')
         target_section = cleaned_data.get('target_section')
         review_notes = cleaned_data.get('review_notes')
         
-        # Validasi berdasarkan action
-        if action == 'process':
-            # Untuk process, section adalah opsional
-            if not review_notes:
-                cleaned_data['review_notes'] = 'Pengajuan diproses untuk ditindaklanjuti'
+        # Action required
+        if not action:
+            raise forms.ValidationError('Keputusan review harus dipilih.')
         
-        elif action == 'reject':
-            # Untuk reject, notes direkomendasikan
-            if not review_notes:
-                cleaned_data['review_notes'] = 'Pengajuan ditolak oleh reviewer'
-            
-            # Clear target section jika reject
-            cleaned_data['target_section'] = ''
+        # Review notes required for reject
+        if action == 'reject' and not review_notes:
+            raise forms.ValidationError({
+                'review_notes': 'Catatan review wajib diisi untuk penolakan pengajuan.'
+            })
+        
+        # Section change validation for process
+        if action == 'process' and target_section:
+            # Additional validation bisa ditambahkan di sini
+            logger.info(f"Form validation passed: {action} to section {target_section}")
         
         return cleaned_data
 
+class EnhancedReviewFilterForm(forms.Form):
+    """
+    ENHANCED: Filter form untuk review list dengan section filter
+    """
+    
+    REVIEW_STATUS_CHOICES = [
+        ('', 'Semua Status Review'),
+        ('0', 'Pending Review'),
+        ('1', 'Reviewed (Approved)'),
+        ('2', 'Reviewed (Rejected)'),
+    ]
+    
+    SECTION_FILTER_CHOICES = [
+        ('', 'Semua Section'),
+        ('it', 'IT'),
+        ('elektrik', 'Elektrik'),
+        ('mekanik', 'Mekanik'),
+        ('utility', 'Utility'),
+        ('civil', 'Civil'),
+    ]
+    
+    tanggal_dari = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'type': 'date'
+        }),
+        label='Tanggal Dari',
+        required=False
+    )
+    
+    tanggal_sampai = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'type': 'date'
+        }),
+        label='Tanggal Sampai',
+        required=False
+    )
+    
+    review_status = forms.ChoiceField(
+        choices=REVIEW_STATUS_CHOICES,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        }),
+        label='Status Review',
+        required=False
+    )
+    
+    target_section_filter = forms.ChoiceField(
+        choices=SECTION_FILTER_CHOICES,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        }),
+        label='Filter Section',
+        required=False
+    )
+    
+    search = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Cari berdasarkan History ID, Pengaju, atau Deskripsi...'
+        }),
+        label='Pencarian',
+        max_length=100,
+        required=False
+    )
+
+
+# BACKWARD COMPATIBILITY: Pastikan ReviewForm tetap bisa digunakan tanpa parameter
+def get_review_form_class():
+    """
+    Factory function untuk mendapatkan ReviewForm class yang sesuai
+    """
+    return ReviewForm
+
+
+# ENHANCED: Helper function untuk form initialization
+def create_review_form(request_data=None, pengajuan=None, **kwargs):
+    """
+    Enhanced helper function untuk create ReviewForm dengan proper initialization
+    
+    Args:
+        request_data: POST/GET data dari request
+        pengajuan: Instance pengajuan yang sedang direview
+        **kwargs: Additional arguments
+    
+    Returns:
+        ReviewForm instance yang sudah diinisialisasi
+    """
+    form_kwargs = {}
+    
+    # Extract pengajuan info untuk form customization
+    if pengajuan:
+        form_kwargs['pengajuan_id'] = pengajuan.get('history_id')
+        form_kwargs['current_section'] = pengajuan.get('section_tujuan')
+    
+    # Merge dengan kwargs lain
+    form_kwargs.update(kwargs)
+    
+    # Create form instance
+    if request_data:
+        return ReviewForm(request_data, **form_kwargs)
+    else:
+        return ReviewForm(**form_kwargs)
+
+
+# Export forms
+__all__ = [
+    'ReviewForm',
+    'EnhancedReviewFilterForm', 
+    'get_review_form_class',
+    'create_review_form'
+]
 
 class EnhancedPengajuanFilterForm(forms.Form):
     """

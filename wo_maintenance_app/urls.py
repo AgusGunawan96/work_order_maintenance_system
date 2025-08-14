@@ -1,4 +1,4 @@
-# wo_maintenance_app/urls.py - FIXED VERSION dengan Complete Routes
+# wo_maintenance_app/urls.py - ENHANCED dengan Section Change URLs
 
 from django.urls import path
 from wo_maintenance_app import views
@@ -26,15 +26,23 @@ urlpatterns = [
     path('detail/<str:nomor_pengajuan>/', views.detail_laporan, name='detail_laporan'),
     path('detail-pengajuan/<str:nomor_pengajuan>/', views.detail_laporan, name='detail_pengajuan'),
     
-    # ===== FIXED: Enhanced Detail Route yang sebelumnya missing =====
+    # ===== ENHANCED DETAIL ROUTE =====
     path('enhanced-detail/<str:nomor_pengajuan>/', views.enhanced_pengajuan_detail, name='enhanced_pengajuan_detail'),
     
-    # ===== ENHANCED REVIEW SYSTEM - SITI FATIMAH dengan SDBM =====
+    # ===== ENHANCED REVIEW SYSTEM - SITI FATIMAH dengan Section Change =====
     path('review/', views.review_dashboard, name='review_dashboard'),
     path('review/dashboard/', views.review_dashboard, name='review_dashboard_alt'),
     path('review/pengajuan/', views.review_pengajuan_list, name='review_pengajuan_list'),
     path('review/pengajuan/<str:nomor_pengajuan>/', views.review_pengajuan_detail, name='review_pengajuan_detail'),
     path('review/history/', views.review_history, name='review_history'),
+    
+    # ===== ENHANCED REVIEW dengan Section Change Support =====
+    path('review/pengajuan/<str:nomor_pengajuan>/enhanced/', views.review_pengajuan_detail_enhanced, name='review_pengajuan_detail_enhanced'),
+    
+    # ===== AJAX ENDPOINTS untuk Section Change =====
+    path('ajax/review/preview-section-change/', views.ajax_preview_section_change, name='ajax_preview_section_change'),
+    path('ajax/review/confirm-section-change/', views.ajax_confirm_section_change, name='ajax_confirm_section_change'),
+    path('ajax/review/section-mapping-info/', views.ajax_get_section_mapping_info, name='ajax_get_section_mapping_info'),
     
     # ===== SDBM INTEGRATION ENDPOINTS =====
     path('sdbm/validate/', views.validate_sdbm_integration, name='validate_sdbm_integration'),
@@ -85,70 +93,131 @@ urlpatterns = [
     path('debug/quick-fix-review/', views.quick_fix_review_system, name='quick_fix_review_system'),
     path('debug/status-validation/', views.debug_status_validation, name='debug_status_validation'),
     
+    # ===== ENHANCED DEBUG untuk Section Mapping =====
+    path('debug/section-mapping/<int:sdbm_section_id>/', views.debug_section_mapping, name='debug_section_mapping'),
+    # path('debug/section-change-preview/<str:history_id>/<str:target_section>/', views.debug_section_change_preview, name='debug_section_change_preview'),
+    
     # ===== FALLBACK ROUTES untuk Backward Compatibility =====
     path('enhanced/', views.enhanced_daftar_laporan, name='enhanced_daftar_laporan'),
     path('review-list/', views.review_pengajuan_list, name='review_list'),
-
-    # Debug & Management URLs (Superuser Only)
-path('debug/create-assignment-tables/', views.create_assignment_tables, name='create_assignment_tables'),
-# Debug URLs
-path('debug/section-mapping/<int:sdbm_section_id>/', views.debug_section_mapping, name='debug_section_mapping'),
-
-# ===== URL Patterns untuk Enhanced Views =====
-# Tambahkan ke urls.py:
-path('review/pengajuan/<str:nomor_pengajuan>/enhanced/', views.review_pengajuan_detail_enhanced, name='review_pengajuan_detail_enhanced'),
-path('ajax/review/preview-section-change/', views.ajax_preview_section_change, name='ajax_preview_section_change'),
-path('ajax/review/section-mapping-info/', views.ajax_get_section_mapping_info, name='ajax_get_section_mapping_info'),
 ]
 
-# ===== URL VALIDATION (untuk debugging) =====
-def validate_url_patterns():
+# ===== ENHANCED URL VALIDATION untuk Section Change =====
+def validate_enhanced_url_patterns():
     """
-    Function untuk validate semua URL patterns
+    Enhanced function untuk validate semua URL patterns termasuk section change endpoints
     """
     import logging
     logger = logging.getLogger(__name__)
     
     url_map = {}
+    ajax_endpoints = []
+    section_change_endpoints = []
+    
     for pattern in urlpatterns:
-        url_map[pattern.name] = pattern.pattern._route if hasattr(pattern.pattern, '_route') else str(pattern.pattern)
+        url_name = pattern.name
+        url_route = pattern.pattern._route if hasattr(pattern.pattern, '_route') else str(pattern.pattern)
+        
+        url_map[url_name] = url_route
+        
+        # Kategorisasi endpoints
+        if 'ajax' in url_route:
+            ajax_endpoints.append(url_name)
+            
+        if 'section' in url_route or 'review' in url_route:
+            section_change_endpoints.append(url_name)
     
     # Log semua URLs
-    logger.info("=== WO MAINTENANCE URL PATTERNS ===")
-    for name, route in url_map.items():
-        logger.info(f"  {name}: {route}")
-    logger.info("=== END URL PATTERNS ===")
+    logger.info("=== ENHANCED WO MAINTENANCE URL PATTERNS ===")
+    logger.info(f"Total URLs: {len(url_map)}")
+    logger.info(f"AJAX Endpoints: {len(ajax_endpoints)}")
+    logger.info(f"Section Change Related: {len(section_change_endpoints)}")
     
-    return url_map
+    for name, route in url_map.items():
+        category = ""
+        if name in ajax_endpoints:
+            category += "[AJAX] "
+        if name in section_change_endpoints:
+            category += "[SECTION] "
+        
+        logger.info(f"  {category}{name}: {route}")
+    
+    logger.info("=== END ENHANCED URL PATTERNS ===")
+    
+    return {
+        'all_urls': url_map,
+        'ajax_endpoints': ajax_endpoints,
+        'section_change_endpoints': section_change_endpoints
+    }
 
-# Critical URLs yang harus ada
-CRITICAL_URLS = [
+# Enhanced Critical URLs yang harus ada untuk section change
+ENHANCED_CRITICAL_URLS = [
     'dashboard',
     'daftar_laporan',
     'detail_laporan', 
     'review_dashboard',
     'review_pengajuan_list',
     'review_pengajuan_detail',
-    'enhanced_pengajuan_detail'  # FIXED: Now exists
+    'enhanced_pengajuan_detail',
+    'ajax_preview_section_change',    # NEW: Required untuk section change preview
+    'ajax_confirm_section_change',    # NEW: Required untuk section change confirmation
+    'ajax_get_section_mapping_info'   # NEW: Required untuk section mapping info
 ]
 
-def check_critical_urls():
+def check_enhanced_critical_urls():
     """
-    Check apakah semua critical URLs exist
+    Enhanced check untuk memastikan semua critical URLs exist termasuk section change endpoints
     """
     import logging
     logger = logging.getLogger(__name__)
     
     existing_urls = [pattern.name for pattern in urlpatterns]
     missing_urls = []
+    section_change_urls = []
     
-    for critical_url in CRITICAL_URLS:
+    for critical_url in ENHANCED_CRITICAL_URLS:
         if critical_url not in existing_urls:
             missing_urls.append(critical_url)
+        
+        # Track section change related URLs
+        if 'section' in critical_url or 'preview' in critical_url or 'confirm' in critical_url:
+            section_change_urls.append(critical_url)
     
     if missing_urls:
-        logger.error(f"MISSING CRITICAL URLS: {missing_urls}")
+        logger.error(f"MISSING ENHANCED CRITICAL URLS: {missing_urls}")
         return False
     else:
-        logger.info("All critical URLs exist ✅")
+        logger.info("✅ All enhanced critical URLs exist")
+        logger.info(f"✅ Section change URLs available: {len(section_change_urls)}")
         return True
+
+# ===== ENHANCED URL Helper Functions =====
+def get_section_change_urls():
+    """
+    Get all URLs related to section change functionality
+    """
+    section_urls = {}
+    
+    for pattern in urlpatterns:
+        url_name = pattern.name
+        url_route = str(pattern.pattern)
+        
+        if any(keyword in url_name for keyword in ['section', 'preview', 'confirm']):
+            section_urls[url_name] = url_route
+    
+    return section_urls
+
+def get_ajax_urls():
+    """
+    Get all AJAX endpoints
+    """
+    ajax_urls = {}
+    
+    for pattern in urlpatterns:
+        url_name = pattern.name
+        url_route = str(pattern.pattern)
+        
+        if 'ajax' in url_route:
+            ajax_urls[url_name] = url_route
+    
+    return ajax_urls
