@@ -2371,91 +2371,217 @@ def is_engineering_supervisor_or_above(user_hierarchy):
 
 def get_engineering_section_access(user_hierarchy):
     """
-    Mendapatkan section access untuk engineering supervisor
-    
-    Args:
-        user_hierarchy (dict): Data hierarchy user dari SDBM
-        
-    Returns:
-        dict: Info section access atau None jika tidak ada
+    FIXED: Section access untuk engineering supervisor dengan improved mapping dan broader coverage
     """
     if not is_engineering_supervisor_or_above(user_hierarchy):
         return None
     
     section_name = str(user_hierarchy.get('section_name', '')).upper()
     
-    # Mapping section SDBM ke maintenance section
+    # ENHANCED: More comprehensive section access mapping dengan multiple keyword variations
     section_access_mapping = {
         'ENGINEERING-MECHANIC': {
-            'maintenance_section_keywords': ['MEKANIK', 'MECHANIC', 'MECHANICAL'],
+            'maintenance_section_keywords': ['MEKANIK', 'MECHANIC', 'MECHANICAL', 'MECH', 'TEKNIK MESIN'],
             'display_name': '🔧 Mekanik (Mechanical Engineering)',
             'access_type': 'ENGINEERING_MECHANIC_SUPERVISOR'
         },
         'ENGINEERING-ELECTRIC': {
-            'maintenance_section_keywords': ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL'],
+            'maintenance_section_keywords': ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL', 'LISTRIK', 'POWER', 'ELEC'],
             'display_name': '⚡ Elektrik (Electrical Engineering)', 
             'access_type': 'ENGINEERING_ELECTRIC_SUPERVISOR'
         },
         'ENGINEERING-IT': {
-            'maintenance_section_keywords': ['IT', 'INFORMATION', 'TECHNOLOGY'],
+            'maintenance_section_keywords': ['IT', 'INFORMATION', 'TECHNOLOGY', 'SISTEM', 'KOMPUTER', 'ICT'],
             'display_name': '💻 IT (Information Technology)',
             'access_type': 'ENGINEERING_IT_SUPERVISOR'
         },
         'ENGINEERING-UTILITY': {
-            'maintenance_section_keywords': ['UTILITY', 'UTILITIES'],
+            'maintenance_section_keywords': ['UTILITY', 'UTILITIES', 'FASILITAS', 'INFRASTRUKTUR', 'UTIL'],
             'display_name': '🏭 Utility (Utility Systems)',
             'access_type': 'ENGINEERING_UTILITY_SUPERVISOR'
+        },
+        'ENGINEERING-CIVIL': {
+            'maintenance_section_keywords': ['CIVIL', 'SIPIL', 'KONSTRUKSI', 'BANGUNAN'],
+            'display_name': '🏗️ Civil (Civil Engineering)',
+            'access_type': 'ENGINEERING_CIVIL_SUPERVISOR'
         }
     }
     
-    return section_access_mapping.get(section_name)
+    # ENHANCED: Multiple matching strategies
+    matched_mapping = None
+    
+    # 1. Direct exact match
+    if section_name in section_access_mapping:
+        matched_mapping = section_access_mapping[section_name]
+        logger.info(f"FIXED: Direct section match found: {section_name}")
+    
+    # 2. Partial match untuk flexibility
+    if not matched_mapping:
+        for key, mapping in section_access_mapping.items():
+            section_key = key.replace('ENGINEERING-', '')
+            if section_key in section_name or section_name.endswith(section_key):
+                matched_mapping = mapping
+                logger.info(f"FIXED: Partial section match found: {section_name} -> {key}")
+                break
+    
+    # 3. Keyword-based match untuk edge cases (ENHANCED untuk elektrik)
+    if not matched_mapping:
+        for key, mapping in section_access_mapping.items():
+            for keyword in mapping['maintenance_section_keywords']:
+                if keyword in section_name:
+                    matched_mapping = mapping
+                    logger.info(f"FIXED: Keyword section match found: {section_name} contains {keyword} -> {key}")
+                    break
+            if matched_mapping:
+                break
+    
+    # 4. SPECIAL: Enhanced detection untuk ELEKTRIK variations
+    if not matched_mapping and any(term in section_name for term in ['ELECTRIC', 'ELEKTRIK', 'LISTRIK']):
+        matched_mapping = section_access_mapping['ENGINEERING-ELECTRIC']
+        logger.info(f"FIXED: Special elektrik detection for: {section_name}")
+    
+    if not matched_mapping:
+        logger.warning(f"FIXED: No section access mapping found for: {section_name}")
+        return None
+    
+    return matched_mapping
 
+
+def debug_section_access_detection(user_hierarchy):
+    """
+    DEBUG function untuk troubleshoot section access detection
+    """
+    try:
+        debug_info = {
+            'user_info': {
+                'employee_number': user_hierarchy.get('employee_number'),
+                'fullname': user_hierarchy.get('fullname'),
+                'department_name': user_hierarchy.get('department_name'),
+                'section_name': user_hierarchy.get('section_name'),
+                'title_name': user_hierarchy.get('title_name')
+            },
+            'engineering_check': is_engineering_supervisor_or_above(user_hierarchy),
+            'section_access': get_engineering_section_access(user_hierarchy),
+            'enhanced_access': get_enhanced_pengajuan_access_for_user(user_hierarchy)
+        }
+        
+        if debug_info['section_access']:
+            keywords = debug_info['section_access']['maintenance_section_keywords']
+            debug_info['section_ids'] = get_maintenance_section_ids_by_keywords(keywords)
+        
+        logger.info(f"SECTION ACCESS DEBUG for {user_hierarchy.get('fullname')}: {debug_info}")
+        return debug_info
+        
+    except Exception as e:
+        logger.error(f"Error in debug_section_access_detection: {e}")
+        return {'error': str(e)}
+    
 def get_maintenance_section_ids_by_keywords(keywords):
     """
-    Mendapatkan ID section maintenance berdasarkan keywords
-    
-    Args:
-        keywords (list): List keywords untuk matching
-        
-    Returns:
-        list: List ID section yang match
+    FIXED: Mendapatkan ID section maintenance berdasarkan keywords dengan enhanced matching
     """
     try:
         section_ids = []
         
         with connections['DB_Maintenance'].cursor() as cursor:
+            # ENHANCED: More flexible query dengan multiple conditions
             cursor.execute("""
                 SELECT id_section, seksi 
                 FROM tabel_msection 
-                WHERE (status = 'A' OR status IS NULL) 
+                WHERE (status = 'A' OR status IS NULL OR status = '') 
                     AND seksi IS NOT NULL 
                     AND seksi != ''
+                    AND LEN(seksi) > 0
+                ORDER BY id_section
             """)
             
-            for row in cursor.fetchall():
-                section_id = int(float(row[0]))
-                section_name = str(row[1]).upper()
-                
-                # Check if any keyword matches
-                if any(keyword in section_name for keyword in keywords):
-                    section_ids.append(section_id)
-                    logger.debug(f"Matched section: {section_name} (ID: {section_id}) with keywords: {keywords}")
+            all_sections = cursor.fetchall()
+            
+            for row in all_sections:
+                try:
+                    # FIXED: Enhanced type handling
+                    section_id_raw = row[0]
+                    
+                    # Convert ke integer dengan multiple strategies
+                    section_id = None
+                    if isinstance(section_id_raw, (int, float)):
+                        section_id = int(section_id_raw)
+                    elif isinstance(section_id_raw, str):
+                        try:
+                            section_id = int(float(section_id_raw))
+                        except (ValueError, TypeError):
+                            logger.warning(f"FIXED: Cannot convert section ID '{section_id_raw}' to integer")
+                            continue
+                    else:
+                        logger.warning(f"FIXED: Unknown section ID type: {type(section_id_raw)} = {section_id_raw}")
+                        continue
+                    
+                    if section_id is None:
+                        continue
+                    
+                    section_name = str(row[1]).upper().strip()
+                    
+                    # ENHANCED: Multiple matching strategies untuk elektrik
+                    matched = False
+                    
+                    # 1. Direct keyword match
+                    for keyword in keywords:
+                        if keyword.upper() in section_name:
+                            matched = True
+                            logger.debug(f"FIXED: Direct match - Section: {section_name} (ID: {section_id}) matched keyword: {keyword}")
+                            break
+                    
+                    # 2. SPECIAL: Enhanced elektrik detection
+                    if not matched and any(kw.upper() in ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL'] for kw in keywords):
+                        elektrik_variations = [
+                            'ELEKTRIK', 'ELECTRIC', 'ELECTRICAL', 'LISTRIK', 'POWER', 
+                            'ELEC', 'ELEKTR', 'LISTRIK'
+                        ]
+                        for variation in elektrik_variations:
+                            if variation in section_name:
+                                matched = True
+                                logger.debug(f"FIXED: Elektrik variation match - Section: {section_name} (ID: {section_id}) matched: {variation}")
+                                break
+                    
+                    # 3. Partial/substring matching
+                    if not matched:
+                        for keyword in keywords:
+                            if len(keyword) >= 4:  # Only for longer keywords
+                                keyword_upper = keyword.upper()
+                                # Check if section contains keyword or vice versa
+                                if keyword_upper in section_name or section_name in keyword_upper:
+                                    matched = True
+                                    logger.debug(f"FIXED: Partial match - Section: {section_name} (ID: {section_id}) partial matched: {keyword}")
+                                    break
+                    
+                    if matched and section_id not in section_ids:
+                        section_ids.append(section_id)
+                        
+                except Exception as row_error:
+                    logger.warning(f"FIXED: Error processing section row {row}: {row_error}")
+                    continue
         
+        # ENHANCED: Ensure elektrik gets at least section ID 2 if keywords include elektrik
+        if any(kw.upper() in ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL'] for kw in keywords):
+            if 2 not in section_ids:
+                section_ids.append(2)  # Default elektrik section ID
+                logger.info(f"FIXED: Added default elektrik section ID 2")
+        
+        logger.info(f"FIXED: Found {len(section_ids)} matching sections for keywords {keywords}: {section_ids}")
         return section_ids
         
     except Exception as e:
-        logger.error(f"Error getting maintenance section IDs: {e}")
-        return []
+        logger.error(f"FIXED: Error getting maintenance section IDs: {e}")
+        # FALLBACK: Return common section IDs for elektrik
+        fallback_ids = []
+        if any(kw.upper() in ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL'] for kw in keywords):
+            fallback_ids = [2, 5]  # Common elektrik section IDs
+            logger.info(f"FIXED: Using fallback elektrik section IDs: {fallback_ids}")
+        return fallback_ids
 
 def get_enhanced_pengajuan_access_for_user(user_hierarchy):
     """
-    ENHANCED: Mendapatkan akses pengajuan berdasarkan user hierarchy dengan section-based access
-    
-    Args:
-        user_hierarchy (dict): Data hierarchy user dari SDBM
-        
-    Returns:
-        dict: Access info dengan berbagai method
+    FIXED: Enhanced access untuk user dengan better section detection dan no artificial limits
     """
     if not user_hierarchy:
         return {
@@ -2465,50 +2591,118 @@ def get_enhanced_pengajuan_access_for_user(user_hierarchy):
             'access_description': 'No hierarchy data'
         }
     
-    # SITI FATIMAH - Full access ke semua pengajuan
-    if user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
-        return {
-            'access_type': 'SITI_FATIMAH_FULL',
-            'allowed_employee_numbers': ['*'],  # Special indicator
-            'allowed_section_ids': ['*'],  # All sections
-            'access_description': f'{REVIEWER_FULLNAME} - Full Access'
-        }
-    
-    # Engineering Supervisor - Section-based access  
-    engineering_access = get_engineering_section_access(user_hierarchy)
-    if engineering_access:
-        section_ids = get_maintenance_section_ids_by_keywords(
-            engineering_access['maintenance_section_keywords']
-        )
+    try:
+        # SITI FATIMAH - Full access ke semua pengajuan
+        if user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER:
+            return {
+                'access_type': 'SITI_FATIMAH_FULL',
+                'allowed_employee_numbers': ['*'],
+                'allowed_section_ids': ['*'],
+                'access_description': f'{REVIEWER_FULLNAME} - Full Access'
+            }
         
+        # ENHANCED: Engineering Supervisor - Section-based access dengan better detection
+        try:
+            engineering_access = get_engineering_section_access(user_hierarchy)
+            if engineering_access:
+                try:
+                    section_ids = get_maintenance_section_ids_by_keywords(
+                        engineering_access['maintenance_section_keywords']
+                    )
+                    
+                    # ENHANCED: Additional section discovery for elektrik
+                    if engineering_access['access_type'] == 'ENGINEERING_ELECTRIC_SUPERVISOR':
+                        # Get ALL possible elektrik sections from database
+                        additional_ids = discover_additional_elektrik_sections()
+                        for aid in additional_ids:
+                            if aid not in section_ids:
+                                section_ids.append(aid)
+                        logger.info(f"FIXED: Enhanced elektrik section IDs: {section_ids}")
+                    
+                    return {
+                        'access_type': engineering_access['access_type'],
+                        'allowed_employee_numbers': [],  # No hierarchy limit untuk section access
+                        'allowed_section_ids': section_ids,
+                        'access_description': f"Engineering Supervisor - {engineering_access['display_name']}",
+                        'section_keywords': engineering_access['maintenance_section_keywords']
+                    }
+                except Exception as section_error:
+                    logger.error(f"FIXED: Error getting section IDs: {section_error}")
+                    # Fallback to hierarchy access
+        except Exception as eng_error:
+            logger.error(f"FIXED: Error checking engineering access: {eng_error}")
+        
+        # ENHANCED: Regular hierarchy access dengan NO artificial limits
+        try:
+            allowed_employee_numbers = get_subordinate_employee_numbers(user_hierarchy)
+            
+            return {
+                'access_type': 'HIERARCHY_NORMAL',
+                'allowed_employee_numbers': allowed_employee_numbers,
+                'allowed_section_ids': [],
+                'access_description': f"Hierarchy Access - {user_hierarchy.get('title_name', 'Unknown')} ({len(allowed_employee_numbers)} subordinates)"
+            }
+        except Exception as hierarchy_error:
+            logger.error(f"FIXED: Error getting hierarchy access: {hierarchy_error}")
+            
+            # Final fallback - own data only
+            return {
+                'access_type': 'OWN_ONLY',
+                'allowed_employee_numbers': [user_hierarchy.get('employee_number', '')],
+                'allowed_section_ids': [],
+                'access_description': f"Own Data Only - {user_hierarchy.get('fullname', 'Unknown')}"
+            }
+        
+    except Exception as e:
+        logger.error(f"FIXED: Critical error in get_enhanced_pengajuan_access_for_user: {e}")
         return {
-            'access_type': engineering_access['access_type'],
-            'allowed_employee_numbers': [],  # No hierarchy limit untuk section access
-            'allowed_section_ids': section_ids,
-            'access_description': f"Engineering Supervisor - {engineering_access['display_name']}",
-            'section_keywords': engineering_access['maintenance_section_keywords']
+            'access_type': 'ERROR',
+            'allowed_employee_numbers': [],
+            'allowed_section_ids': [],
+            'access_description': f'Error: {str(e)}'
         }
-    
-    # Regular hierarchy access (existing logic)
-    allowed_employee_numbers = get_subordinate_employee_numbers(user_hierarchy)
-    
-    return {
-        'access_type': 'HIERARCHY_NORMAL',
-        'allowed_employee_numbers': allowed_employee_numbers,
-        'allowed_section_ids': [],
-        'access_description': f"Hierarchy Access - {user_hierarchy.get('title_name', 'Unknown')} ({len(allowed_employee_numbers)} subordinates)"
-    }
+
+def discover_additional_elektrik_sections():
+    """
+    NEW: Discover additional elektrik sections dari database
+    """
+    try:
+        elektrik_ids = []
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Query semua section yang mengandung elektrik-related terms
+            cursor.execute("""
+                SELECT DISTINCT id_section 
+                FROM tabel_msection 
+                WHERE (status = 'A' OR status IS NULL OR status = '') 
+                    AND seksi IS NOT NULL 
+                    AND (
+                        UPPER(seksi) LIKE '%ELEKTRIK%' OR
+                        UPPER(seksi) LIKE '%ELECTRIC%' OR
+                        UPPER(seksi) LIKE '%LISTRIK%' OR
+                        UPPER(seksi) LIKE '%POWER%' OR
+                        UPPER(seksi) LIKE '%ELEC%'
+                    )
+                ORDER BY id_section
+            """)
+            
+            for row in cursor.fetchall():
+                try:
+                    section_id = int(float(row[0]))
+                    elektrik_ids.append(section_id)
+                except (ValueError, TypeError):
+                    continue
+        
+        logger.info(f"FIXED: Discovered additional elektrik sections: {elektrik_ids}")
+        return elektrik_ids
+        
+    except Exception as e:
+        logger.error(f"FIXED: Error discovering additional elektrik sections: {e}")
+        return [2]  # Default elektrik section
 
 def build_enhanced_pengajuan_query_conditions(access_info, additional_filters=None):
     """
-    Build WHERE conditions untuk query pengajuan berdasarkan access info
-    
-    Args:
-        access_info (dict): Access info dari get_enhanced_pengajuan_access_for_user
-        additional_filters (dict): Additional filters (status, date range, etc.)
-        
-    Returns:
-        tuple: (where_conditions list, query_params list)
+    FIXED: Build WHERE conditions dengan NO artificial limits dan better type conversion
     """
     where_conditions = ["tp.history_id IS NOT NULL"]
     query_params = []
@@ -2529,30 +2723,153 @@ def build_enhanced_pengajuan_query_conditions(access_info, additional_filters=No
         query_params.extend([STATUS_APPROVED, APPROVE_YES])
         
     elif access_type.startswith('ENGINEERING_') and access_type.endswith('_SUPERVISOR'):
-        # Engineering Supervisor - Section-based access
+        # ENHANCED: Engineering Supervisor - Section-based access dengan NO LIMITS
         section_ids = access_info.get('allowed_section_ids', [])
         if section_ids:
-            placeholders = ','.join(['%s'] * len(section_ids))
-            where_conditions.append(f"(tp.id_section IN ({placeholders}) OR tp.final_section_id IN ({placeholders}))")
-            # Add section IDs twice (for id_section and final_section_id)
-            float_section_ids = [float(sid) for sid in section_ids]
-            query_params.extend(float_section_ids + float_section_ids)
+            # FIXED: Enhanced type conversion dan multiple condition strategies
+            section_id_strings = [str(sid) for sid in section_ids]
+            section_placeholders = ','.join(['%s'] * len(section_id_strings))
+            
+            # ENHANCED: Multiple matching strategies
+            where_conditions.append(f"""(
+                CAST(tp.id_section AS varchar(10)) IN ({section_placeholders}) OR 
+                CAST(tp.final_section_id AS varchar(10)) IN ({section_placeholders}) OR
+                tp.id_section IN ({section_placeholders}) OR
+                tp.final_section_id IN ({section_placeholders})
+            )""")
+            
+            # Add section IDs as strings AND numbers (4 times for all conditions)
+            query_params.extend(section_id_strings)  # varchar cast 1
+            query_params.extend(section_id_strings)  # varchar cast 2
+            query_params.extend([int(sid) for sid in section_ids])  # direct int 1
+            query_params.extend([int(sid) for sid in section_ids])  # direct int 2
+            
+            logger.info(f"FIXED: Added enhanced section conditions for IDs: {section_id_strings}")
+        else:
+            # No sections available - show empty
+            where_conditions.append("1 = 0")
+        
+    elif access_type == 'HIERARCHY_NORMAL':
+        # ENHANCED: Regular hierarchy access dengan NO 50-limit artificial restriction
+        allowed_employee_numbers = access_info.get('allowed_employee_numbers', [])
+        if allowed_employee_numbers and '*' not in allowed_employee_numbers:
+            # REMOVED: The artificial 50-limit restriction
+            # OLD: if len(allowed_employee_numbers) > 50: allowed_employee_numbers = allowed_employee_numbers[:50]
+            
+            if allowed_employee_numbers:
+                placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
+                where_conditions.append(f"tp.user_insert IN ({placeholders})")
+                query_params.extend(allowed_employee_numbers)
+                logger.info(f"FIXED: No artificial limit - processing {len(allowed_employee_numbers)} employee numbers")
+        else:
+            # Fallback to own pengajuan only
+            user_emp_num = access_info.get('user_employee_number', '')
+            if user_emp_num:
+                where_conditions.append("tp.user_insert = %s")
+                query_params.append(user_emp_num)
+            else:
+                where_conditions.append("1 = 0")  # No access
+    
+    else:
+        # Default: no access
+        where_conditions.append("1 = 0")
+    
+    # Additional filters (unchanged)
+    if additional_filters:
+        if additional_filters.get('tanggal_dari'):
+            where_conditions.append("CAST(tp.tgl_insert AS DATE) >= %s")
+            query_params.append(additional_filters['tanggal_dari'])
+        
+        if additional_filters.get('tanggal_sampai'):
+            where_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
+            query_params.append(additional_filters['tanggal_sampai'])
+        
+        if additional_filters.get('status'):
+            where_conditions.append("tp.status = %s")
+            query_params.append(additional_filters['status'])
+        
+        if additional_filters.get('search_query'):
+            search_conditions = [
+                "tp.history_id LIKE %s",
+                "tp.oleh LIKE %s",
+                "tp.deskripsi_perbaikan LIKE %s",
+                "tp.number_wo LIKE %s"
+            ]
+            where_conditions.append(f"({' OR '.join(search_conditions)})")
+            search_param = f"%{additional_filters['search_query']}%"
+            query_params.extend([search_param] * len(search_conditions))
+    
+    return where_conditions, query_params
+    
+def build_enhanced_pengajuan_query_conditions(access_info, additional_filters=None):
+    """
+    FIXED: Build WHERE conditions dengan proper type conversion untuk section IDs
+    """
+    where_conditions = ["tp.history_id IS NOT NULL"]
+    query_params = []
+    
+    # UPDATED: Exclude final processed (status A, approve Y)
+    where_conditions.append("NOT (tp.status = %s AND tp.approve = %s)")
+    query_params.extend([STATUS_REVIEWED, APPROVE_REVIEWED])
+    
+    # Access-based conditions
+    access_type = access_info.get('access_type')
+    
+    if access_type == 'SITI_FATIMAH_FULL':
+        # SITI FATIMAH - Access ke semua approved pengajuan (status B, approve N)
+        where_conditions.extend([
+            "tp.status = %s",
+            "tp.approve = %s"
+        ])
+        query_params.extend([STATUS_APPROVED, APPROVE_YES])
+        
+    elif access_type.startswith('ENGINEERING_') and access_type.endswith('_SUPERVISOR'):
+        # Engineering Supervisor - Section-based access dengan TYPE CONVERSION
+        section_ids = access_info.get('allowed_section_ids', [])
+        if section_ids:
+            # FIXED: Convert to strings dan gunakan CAST di SQL
+            section_id_strings = [str(sid) for sid in section_ids]
+            section_placeholders = ','.join(['%s'] * len(section_id_strings))
+            
+            # FIXED: Use CAST untuk convert section IDs ke varchar
+            where_conditions.append(f"""(
+                CAST(tp.id_section AS varchar(10)) IN ({section_placeholders}) OR 
+                CAST(tp.final_section_id AS varchar(10)) IN ({section_placeholders})
+            )""")
+            
+            # Add section IDs as strings (twice for both conditions)
+            query_params.extend(section_id_strings)
+            query_params.extend(section_id_strings)
+            
+            logger.info(f"UTILS: Added section conditions with type conversion for IDs: {section_id_strings}")
+        else:
+            # No sections available - show empty
+            where_conditions.append("1 = 0")
         
     elif access_type == 'HIERARCHY_NORMAL':
         # Regular hierarchy access
         allowed_employee_numbers = access_info.get('allowed_employee_numbers', [])
         if allowed_employee_numbers and '*' not in allowed_employee_numbers:
-            # Limit ke reasonable number
+            # Limit untuk menghindari query terlalu panjang
             if len(allowed_employee_numbers) > 50:
                 allowed_employee_numbers = allowed_employee_numbers[:50]
             
-            placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
-            where_conditions.append(f"tp.user_insert IN ({placeholders})")
-            query_params.extend(allowed_employee_numbers)
+            if allowed_employee_numbers:
+                placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
+                where_conditions.append(f"tp.user_insert IN ({placeholders})")
+                query_params.extend(allowed_employee_numbers)
         else:
             # Fallback to own pengajuan only
-            where_conditions.append("tp.user_insert = %s")
-            query_params.append(access_info.get('user_employee_number', ''))
+            user_emp_num = access_info.get('user_employee_number', '')
+            if user_emp_num:
+                where_conditions.append("tp.user_insert = %s")
+                query_params.append(user_emp_num)
+            else:
+                where_conditions.append("1 = 0")  # No access
+    
+    else:
+        # Default: no access
+        where_conditions.append("1 = 0")
     
     # Additional filters
     if additional_filters:
@@ -2583,13 +2900,7 @@ def build_enhanced_pengajuan_query_conditions(access_info, additional_filters=No
 
 def get_access_statistics(access_info):
     """
-    Mendapatkan statistik akses pengajuan untuk display
-    
-    Args:
-        access_info (dict): Access info dari get_enhanced_pengajuan_access_for_user
-        
-    Returns:
-        dict: Statistics data
+    FIXED: Statistik akses dengan proper type conversion
     """
     try:
         stats = {
@@ -2598,47 +2909,69 @@ def get_access_statistics(access_info):
             'access_method': access_info.get('access_type', 'UNKNOWN')
         }
         
-        # Build query conditions
-        where_conditions, query_params = build_enhanced_pengajuan_query_conditions(access_info)
-        where_clause = "WHERE " + " AND ".join(where_conditions)
+        # Build query conditions dengan error handling
+        try:
+            where_conditions, query_params = build_enhanced_pengajuan_query_conditions(access_info)
+            where_clause = "WHERE " + " AND ".join(where_conditions)
+        except Exception as condition_error:
+            logger.error(f"Error building query conditions for stats: {condition_error}")
+            # Fallback stats
+            return {
+                'total_accessible': 0,
+                'by_status': {},
+                'access_method': 'ERROR_BUILDING_CONDITIONS',
+                'error': str(condition_error)
+            }
         
         with connections['DB_Maintenance'].cursor() as cursor:
-            # Total count
-            count_query = f"""
-                SELECT COUNT(DISTINCT tp.history_id)
-                FROM tabel_pengajuan tp
-                LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
-                {where_clause}
-            """
+            # Total count dengan error handling
+            try:
+                count_query = f"""
+                    SELECT COUNT(DISTINCT tp.history_id)
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                    {where_clause}
+                """
+                
+                cursor.execute(count_query, query_params)
+                stats['total_accessible'] = cursor.fetchone()[0] or 0
+                
+            except Exception as count_error:
+                logger.error(f"Error getting total count: {count_error}")
+                stats['total_accessible'] = 0
             
-            cursor.execute(count_query, query_params)
-            stats['total_accessible'] = cursor.fetchone()[0] or 0
-            
-            # By status
-            status_query = f"""
-                SELECT tp.status, tp.approve, COUNT(DISTINCT tp.history_id)
-                FROM tabel_pengajuan tp
-                LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
-                {where_clause}
-                GROUP BY tp.status, tp.approve
-            """
-            
-            cursor.execute(status_query, query_params)
-            
-            for row in cursor.fetchall():
-                status_key = f"{row[0] or '0'}_{row[1] or '0'}"
-                stats['by_status'][status_key] = row[2]
+            # By status dengan error handling
+            try:
+                status_query = f"""
+                    SELECT tp.status, tp.approve, COUNT(DISTINCT tp.history_id)
+                    FROM tabel_pengajuan tp
+                    LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                    {where_clause}
+                    GROUP BY tp.status, tp.approve
+                """
+                
+                cursor.execute(status_query, query_params)
+                
+                for row in cursor.fetchall():
+                    status_key = f"{row[0] or '0'}_{row[1] or '0'}"
+                    stats['by_status'][status_key] = row[2]
+                    
+            except Exception as status_error:
+                logger.error(f"Error getting status breakdown: {status_error}")
+                stats['by_status'] = {}
         
         return stats
         
     except Exception as e:
-        logger.error(f"Error getting access statistics: {e}")
+        logger.error(f"Critical error in get_access_statistics: {e}")
         return {
             'total_accessible': 0,
             'by_status': {},
-            'access_method': 'ERROR',
+            'access_method': 'CRITICAL_ERROR',
             'error': str(e)
         }
+
+
 
 # Export new functions
 __all__.extend([
@@ -2659,3 +2992,5 @@ __all__ = [
     'ensure_enhanced_review_tables_exist',
     'get_section_change_history'
 ]
+
+

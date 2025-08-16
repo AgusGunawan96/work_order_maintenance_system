@@ -83,9 +83,13 @@ class MechanicalData(models.Model):
     masalah = models.TextField()
     penyebab = models.TextField()
     tindakan = models.TextField()
+    # TAMBAHKAN FIELD BARU INI:
+    tindakan_perbaikan = models.TextField(null=True, blank=True)  # Field tambahan untuk tindakan perbaikan yang terpisah
+    tindakan_pencegahan = models.TextField(null=True, blank=True)  # Field tambahan untuk tindakan pencegahan
     image = models.ImageField(upload_to='mechanical_images/', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    pic = models.ManyToManyField('PICMechanical', blank=True, through='MechanicalDataPIC')  # Menambahkan through
+    # UPDATE PIC RELATIONSHIP:
+    pic = models.ManyToManyField('PICMechanical2', blank=True, through='MechanicalDataPIC')  # Ganti ke PICMechanical2
     nomor_wo = models.CharField(max_length=100, blank=True, null=True)  # Menyimpan nomor WO
     waktu_pengerjaan = models.CharField(max_length=100, blank=True, null=True)  # Menyimpan waktu pengerjaan
 
@@ -94,6 +98,8 @@ class MechanicalData(models.Model):
 
     def __str__(self):
         return f"{self.tanggal} - {self.machine.name} - {self.user.username}"
+
+
 
 class MechanicalData2(models.Model):
     tanggal = models.DateField()
@@ -151,9 +157,10 @@ class PICMechanical(models.Model):
     def __str__(self):
         return self.name
 
+# UPDATE THROUGH TABLE:
 class MechanicalDataPIC(models.Model):
     mechanical_data = models.ForeignKey(MechanicalData, on_delete=models.CASCADE)
-    pic_mechanical = models.ForeignKey('PICMechanical', on_delete=models.CASCADE)
+    pic_mechanical = models.ForeignKey('PICMechanical2', on_delete=models.CASCADE)  # Ganti ke PICMechanical2
 
     class Meta:
         db_table = 'dailyactivity_app_mechanical_data_pic'
@@ -244,29 +251,30 @@ class UtilityDataPIC(models.Model):
 
 class UtilityData2(models.Model):
     tanggal = models.DateField()
-    jam = models.DateTimeField(null=True, blank=True)
+    jam = models.DateTimeField(null=True, blank=True)  # Menyimpan waktu jika ada, jika tidak ada bisa kosong
     shift = models.ForeignKey(Shift, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE, default=1)
     masalah = models.TextField()
     penyebab = models.TextField(null=True, blank=True)
-    line = models.CharField(max_length=255, null=True, blank=True)
-    mesin = models.CharField(max_length=255, null=True, blank=True)
-    nomer = models.CharField(max_length=50, null=True, blank=True)
-    pekerjaan = models.TextField(null=True, blank=True)
-    status_pekerjaan = models.CharField(max_length=100, null=True, blank=True)
-    tindakan_perbaikan = models.TextField(null=True, blank=True)
-    tindakan_pencegahan = models.TextField(null=True, blank=True)
+    line = models.CharField(max_length=255, null=True, blank=True)   # Field line seperti di migration
+    mesin = models.CharField(max_length=255, null=True, blank=True)  # Field mesin seperti di migration
+    nomer = models.CharField(max_length=50, null=True, blank=True)   # Field nomer seperti di migration
+    pekerjaan = models.TextField(null=True, blank=True)   # Field pekerjaan seperti di migration
+    status_pekerjaan = models.CharField(max_length=100, null=True, blank=True)   # Field status_pekerjaan seperti di migration
+    tindakan_perbaikan = models.TextField(null=True, blank=True)  # Field tambahan untuk tindakan perbaikan yang terpisah
+    tindakan_pencegahan = models.TextField(null=True, blank=True)  # Field tambahan untuk tindakan pencegahan
     image = models.ImageField(upload_to='utility_images/', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    pic = models.ManyToManyField('PICUtility2', blank=True, through='UtilityDataPIC2')  # Menggunakan PICMechanical2
-    nomor_wo = models.CharField(max_length=100, blank=True, null=True)
-    waktu_pengerjaan = models.CharField(max_length=100, blank=True, null=True)
+    pic = models.ManyToManyField('PICUtility2', blank=True, through='UtilityDataPIC2')  # Ganti ke PICUtility2
+    nomor_wo = models.CharField(max_length=100, blank=True, null=True)  # Menyimpan nomor WO
+    waktu_pengerjaan = models.CharField(max_length=100, blank=True, null=True)  # Menyimpan waktu pengerjaan
 
     class Meta:
         db_table = 'dailyactivity_app_utility_data2'
 
     def __str__(self):
         return f"{self.tanggal} - {self.user.username}"
+
 
     
 class PICUtility2(models.Model):
@@ -380,12 +388,40 @@ class ItDataPIC(models.Model):
 #     def __str__(self):
 #         return f"{self.tanggal} - {self.user.username}"
 
+# class LaporanData(models.Model):
+#     tanggal = models.DateField()
+#     shift = models.ForeignKey(Shift, on_delete=models.CASCADE)
+#     masalah = models.TextField()  # Ini tetap jadi deskripsi pekerjaan
+    
+#     # KOLOM BARU YANG DITAMBAHKAN:
+#     jenis_pekerjaan = models.CharField(max_length=200, null=True, blank=True)
+#     lama_pekerjaan = models.CharField(max_length=100, null=True, blank=True) 
+#     pic_pekerjaan = models.CharField(max_length=100, null=True, blank=True)
+    
+#     catatan = models.TextField(blank=True, null=True)
+#     voice_note_masalah = models.FileField(upload_to='voice_notes/', blank=True, null=True)
+#     voice_note_catatan = models.FileField(upload_to='voice_notes/', blank=True, null=True)
+#     image = models.ImageField(upload_to='laporan_images/', null=True, blank=True)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     pic = models.ManyToManyField('PICLaporan', blank=True, through='LaporanDataPIC')
+#     piclembur = models.ManyToManyField('PICLembur', blank=True, through='LemburDataPIC')
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+
+#     class Meta:
+#         db_table = 'dailyactivity_app_laporan_data'
+#         verbose_name = 'Laporan Data'
+#         verbose_name_plural = 'Laporan Data'
+
+#     def __str__(self):
+#         return f"{self.tanggal} - {self.user.username} - {self.jenis_pekerjaan or 'No Type'}"
 class LaporanData(models.Model):
+    # Field yang udah ada (JANGAN DIHAPUS)
     tanggal = models.DateField()
     shift = models.ForeignKey(Shift, on_delete=models.CASCADE)
     masalah = models.TextField()  # Ini tetap jadi deskripsi pekerjaan
     
-    # KOLOM BARU YANG DITAMBAHKAN:
+    # KOLOM LAMA YANG UDAH ADA (JANGAN DIHAPUS):
     jenis_pekerjaan = models.CharField(max_length=200, null=True, blank=True)
     lama_pekerjaan = models.CharField(max_length=100, null=True, blank=True) 
     pic_pekerjaan = models.CharField(max_length=100, null=True, blank=True)
@@ -399,6 +435,25 @@ class LaporanData(models.Model):
     piclembur = models.ManyToManyField('PICLembur', blank=True, through='LemburDataPIC')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    # FIELD BARU YANG LO MINTA TAMBAHIN (GAUL STYLE):
+    nomor_wo = models.CharField(max_length=50, null=True, blank=True, verbose_name="Nomor WO")
+    status_utility = models.CharField(
+        max_length=20, 
+        choices=[
+            ('proses', 'Proses'),
+            ('selesai', 'Selesai'),
+            ('hold', 'Hold')
+        ],
+        default='proses',
+        verbose_name="Status Utility"
+    )
+    lokasi = models.CharField(max_length=100, null=True, blank=True, verbose_name="Lokasi")
+    mesin = models.CharField(max_length=100, null=True, blank=True, verbose_name="Mesin")
+    nomor_mesin = models.CharField(max_length=50, null=True, blank=True, verbose_name="Nomor Mesin")
+    jenis_pekerjaan_maintenance = models.CharField(max_length=100, null=True, blank=True, verbose_name="Jenis Pekerjaan Maintenance")
+    penyebab = models.TextField(null=True, blank=True, verbose_name="Penyebab")
+    tindakan_perbaikan = models.TextField(null=True, blank=True, verbose_name="Tindakan Perbaikan")
 
     class Meta:
         db_table = 'dailyactivity_app_laporan_data'
@@ -407,7 +462,6 @@ class LaporanData(models.Model):
 
     def __str__(self):
         return f"{self.tanggal} - {self.user.username} - {self.jenis_pekerjaan or 'No Type'}"
-
 
 class DetailPekerjaan(models.Model):
     laporan = models.ForeignKey(LaporanData, on_delete=models.CASCADE, related_name='detail_pekerjaan')

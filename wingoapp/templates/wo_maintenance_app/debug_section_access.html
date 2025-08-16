@@ -1,0 +1,262 @@
+<!-- wo_maintenance_app/templates/wo_maintenance_app/debug_section_access.html -->
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+
+{% block css %}
+{{ block.super }}
+<style>
+    .debug-panel {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .debug-success {
+        background: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+    
+    .debug-error {
+        background: #f8d7da;
+        border-color: #f1b0b7;
+        color: #721c24;
+    }
+    
+    .debug-warning {
+        background: #fff3cd;
+        border-color: #ffeaa7;
+        color: #856404;
+    }
+    
+    pre {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        max-height: 300px;
+    }
+    
+    .test-item {
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        border-left: 4px solid #007bff;
+    }
+    
+    .test-pass {
+        background: #d4edda;
+        border-left-color: #28a745;
+    }
+    
+    .test-fail {
+        background: #f8d7da;
+        border-left-color: #dc3545;
+    }
+    
+    .test-warn {
+        background: #fff3cd;
+        border-left-color: #ffc107;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">🔧 Debug Section Access System</h4>
+                        <small class="text-muted">{{ debug_info.timestamp }}</small>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- User Info Test -->
+                        <div class="debug-panel {% if debug_info.user_info.found %}debug-success{% else %}debug-error{% endif %}">
+                            <h5>1. User Hierarchy Test</h5>
+                            {% if debug_info.user_info.found %}
+                                <div class="test-item test-pass">
+                                    ✅ User hierarchy found
+                                    <ul>
+                                        <li><strong>Name:</strong> {{ debug_info.user_info.data.fullname }}</li>
+                                        <li><strong>Employee Number:</strong> {{ debug_info.user_info.data.employee_number }}</li>
+                                        <li><strong>Department:</strong> {{ debug_info.user_info.data.department_name }}</li>
+                                        <li><strong>Section:</strong> {{ debug_info.user_info.data.section_name }}</li>
+                                        <li><strong>Title:</strong> {{ debug_info.user_info.data.title_name }}</li>
+                                    </ul>
+                                </div>
+                            {% else %}
+                                <div class="test-item test-fail">
+                                    ❌ User hierarchy not found in SDBM database
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Access Info Test -->
+                        <div class="debug-panel {% if debug_info.access_info.success %}debug-success{% else %}debug-error{% endif %}">
+                            <h5>2. Access Info Test</h5>
+                            {% if debug_info.access_info.success %}
+                                <div class="test-item test-pass">
+                                    ✅ Access info generated successfully
+                                    <ul>
+                                        <li><strong>Access Type:</strong> {{ debug_info.access_info.data.access_type }}</li>
+                                        <li><strong>Description:</strong> {{ debug_info.access_info.data.access_description }}</li>
+                                        <li><strong>Allowed Section IDs:</strong> {{ debug_info.access_info.data.allowed_section_ids|length }}</li>
+                                        <li><strong>Allowed Employee Numbers:</strong> {{ debug_info.access_info.data.allowed_employee_numbers|length }}</li>
+                                    </ul>
+                                </div>
+                            {% else %}
+                                <div class="test-item test-fail">
+                                    ❌ Access info generation failed: {{ debug_info.access_info.error }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Query Test -->
+                        <div class="debug-panel {% if debug_info.query_test.success %}debug-success{% else %}debug-error{% endif %}">
+                            <h5>3. Query Building Test</h5>
+                            {% if debug_info.query_test.success %}
+                                <div class="test-item {% if debug_info.query_test.params_match %}test-pass{% else %}test-fail{% endif %}">
+                                    {% if debug_info.query_test.params_match %}✅{% else %}❌{% endif %} Query parameters check
+                                    <ul>
+                                        <li><strong>Where Conditions:</strong> {{ debug_info.query_test.where_conditions_count }}</li>
+                                        <li><strong>Query Parameters:</strong> {{ debug_info.query_test.query_params_count }}</li>
+                                        <li><strong>Parameters Match:</strong> {{ debug_info.query_test.params_match|yesno:"Yes,No" }}</li>
+                                    </ul>
+                                </div>
+                                
+                                <details>
+                                    <summary>Show Query Details</summary>
+                                    <div class="mt-3">
+                                        <h6>Where Conditions:</h6>
+                                        <pre>{{ debug_info.query_test.where_conditions|join:"\nAND " }}</pre>
+                                        
+                                        <h6>Query Parameters (first 10):</h6>
+                                        <pre>{{ debug_info.query_test.query_params|join:", " }}</pre>
+                                    </div>
+                                </details>
+                            {% else %}
+                                <div class="test-item test-fail">
+                                    ❌ Query building failed: {{ debug_info.query_test.error }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Database Test -->
+                        <div class="debug-panel {% if debug_info.database_test.success %}debug-success{% else %}debug-error{% endif %}">
+                            <h5>4. Database Execution Test</h5>
+                            {% if debug_info.database_test.success %}
+                                <div class="test-item test-pass">
+                                    ✅ Query executed successfully
+                                    <ul>
+                                        <li><strong>Count Result:</strong> {{ debug_info.database_test.count_result }} pengajuan</li>
+                                        <li><strong>Query Status:</strong> Success</li>
+                                    </ul>
+                                </div>
+                            {% else %}
+                                <div class="test-item test-fail">
+                                    ❌ Query execution failed: {{ debug_info.database_test.error }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Section Mapping Test -->
+                        <div class="debug-panel">
+                            <h5>5. Section Mapping Test</h5>
+                            {% if debug_info.section_mapping.error %}
+                                <div class="test-item test-fail">
+                                    ❌ Section mapping error: {{ debug_info.section_mapping.error }}
+                                </div>
+                            {% else %}
+                                <div class="test-item test-pass">
+                                    ✅ Section mapping working
+                                    <ul>
+                                        <li><strong>Engineering Access:</strong> 
+                                            {% if debug_info.section_mapping.engineering_sections %}
+                                                {{ debug_info.section_mapping.engineering_sections.display_name }}
+                                            {% else %}
+                                                Not an engineering supervisor
+                                            {% endif %}
+                                        </li>
+                                        <li><strong>Maintenance Section IDs:</strong> {{ debug_info.section_mapping.maintenance_sections|join:", " }}</li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Sample Users Test -->
+                        {% if debug_info.sample_users %}
+                        <div class="debug-panel">
+                            <h5>6. Sample Engineering Supervisors</h5>
+                            {% for emp_num, user_data in debug_info.sample_users.items %}
+                                <div class="test-item {% if user_data.error %}test-fail{% else %}test-pass{% endif %}">
+                                    {% if user_data.error %}
+                                        ❌ {{ emp_num }}: {{ user_data.error }}
+                                    {% else %}
+                                        ✅ {{ user_data.name }} ({{ emp_num }})
+                                        <ul>
+                                            <li><strong>Section:</strong> {{ user_data.section }}</li>
+                                            <li><strong>Access Type:</strong> {{ user_data.access_type }}</li>
+                                            <li><strong>Allowed Sections:</strong> {{ user_data.allowed_sections }}</li>
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Action Buttons -->
+                        <div class="mt-4">
+                            <a href="{% url 'wo_maintenance_app:section_based_daftar_laporan' %}" class="btn btn-primary">
+                                <i data-feather="database"></i> Test Section-based View
+                            </a>
+                            <a href="{% url 'wo_maintenance_app:simple_section_test' %}" class="btn btn-info">
+                                <i data-feather="zap"></i> Simple Test (JSON)
+                            </a>
+                            <a href="{% url 'wo_maintenance_app:dashboard' %}" class="btn btn-secondary">
+                                <i data-feather="home"></i> Back to Dashboard
+                            </a>
+                        </div>
+
+                        <!-- Critical Error -->
+                        {% if debug_info.critical_error %}
+                        <div class="debug-panel debug-error mt-4">
+                            <h5>Critical Error</h5>
+                            <div class="test-item test-fail">
+                                ❌ {{ debug_info.critical_error }}
+                            </div>
+                            {% if debug_info.traceback %}
+                            <details>
+                                <summary>Show Traceback</summary>
+                                <pre>{{ debug_info.traceback }}</pre>
+                            </details>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons
+    feather.replace();
+    
+    // Auto-refresh setiap 30 detik
+    setTimeout(function() {
+        console.log('Debug info auto-refresh available');
+    }, 30000);
+});
+</script>
+{% endblock scriptcontent %}

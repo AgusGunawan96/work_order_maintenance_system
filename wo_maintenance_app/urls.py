@@ -86,6 +86,8 @@ urlpatterns = [
     
     # ===== NEW: DEBUG untuk Section Access =====
     path('debug/section-access/', views.debug_section_access, name='debug_section_access'),
+    path('debug/section-access-view/', views.debug_section_access_view, name='debug_section_access_view'),
+    path('debug/simple-section-test/', views.simple_section_test, name='simple_section_test'),
     
     # ===== ADDITIONAL DEBUG VIEWS =====
     path('debug/form-validation/', views.debug_form_validation, name='debug_form_validation'),

@@ -4,122 +4,831 @@
 {% load widget_tweaks %}
 
 {% block css %}
-<!-- Plugins css start-->
-<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
-<!-- Plugins css Ends-->
+<style>
+    /* Simple & Clean Design */
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --info-color: #17a2b8;
+        --light-gray: #f8f9fa;
+        --border-color: #dee2e6;
+        --text-color: #2c3e50;
+        --text-muted: #6c757d;
+    }
+
+    .page-body {
+        background: #f8f9fa;
+        padding: 15px;
+    }
+
+    /* Card Styling */
+    .data-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    .card-header {
+        background: var(--primary-color);
+        color: white;
+        padding: 15px 20px;
+        border-bottom: none;
+    }
+
+    .card-header h4 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .card-body {
+        padding: 0;
+        background: white;
+    }
+
+    /* Stats Summary */
+    .stats-summary {
+        background: var(--light-gray);
+        padding: 10px 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        font-size: 0.85rem;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .stat-number {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    /* Table Container */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+
+    /* Table Styling */
+    .data-table {
+        width: max-content;
+        min-width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        background: white;
+    }
+
+    .data-table th {
+        background: var(--light-gray);
+        color: var(--text-color);
+        font-weight: 600;
+        padding: 12px 8px;
+        border-bottom: 2px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        text-align: left;
+        white-space: nowrap;
+        font-size: 0.8rem;
+        position: relative;
+        top: auto;
+    }
+
+    .data-table th:last-child {
+        border-right: none;
+    }
+
+    .data-table td {
+        padding: 10px 8px;
+        border-bottom: 1px solid #f1f3f4;
+        border-right: 1px solid var(--border-color);
+        vertical-align: middle;
+        color: var(--text-color);
+        line-height: 1.4;
+        white-space: nowrap;
+    }
+
+    .data-table td:last-child {
+        border-right: none;
+    }
+
+    .data-table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .data-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Row Type Indicators */
+    .row-utility {
+        border-left: 4px solid var(--accent-color);
+    }
+
+    .row-laporan {
+        border-left: 4px solid var(--success-color);
+    }
+
+    /* Type Badges */
+    .type-badge-utility {
+        background: #e3f2fd;
+        color: #1565c0;
+        border-color: #bbdefb;
+    }
+
+    .type-badge-laporan {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-color: #c8e6c9;
+    }
+
+    /* Text Handling */
+    .text-truncate {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .text-wrap {
+        max-width: 200px;
+        word-wrap: break-word;
+        white-space: normal;
+        line-height: 1.3;
+    }
+
+    /* Simple Badges */
+    .simple-badge {
+        background: var(--light-gray);
+        color: var(--text-color);
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border: 1px solid var(--border-color);
+    }
+
+    .badge-primary { 
+        background: #e3f2fd; 
+        color: #1565c0; 
+        border-color: #bbdefb;
+    }
+
+    .badge-success { 
+        background: #e8f5e9; 
+        color: #2e7d32; 
+        border-color: #c8e6c9;
+    }
+
+    .badge-info { 
+        background: #e1f5fe; 
+        color: #0277bd; 
+        border-color: #b3e5fc;
+    }
+
+    .badge-secondary { 
+        background: #f5f5f5; 
+        color: #424242; 
+        border-color: #e0e0e0;
+    }
+
+    /* Button Styling */
+    .btn-simple {
+        padding: 5px 12px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-block;
+        margin: 1px;
+        border: 1px solid;
+        transition: all 0.2s ease;
+    }
+
+    .btn-edit {
+        background: white;
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-edit:hover {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .btn-delete {
+        background: white;
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+    }
+
+    .btn-delete:hover {
+        background: var(--danger-color);
+        color: white;
+    }
+
+    .btn-view {
+        background: white;
+        color: var(--text-muted);
+        border-color: var(--border-color);
+    }
+
+    .btn-view:hover {
+        background: var(--light-gray);
+        color: var(--text-color);
+    }
+
+    /* PIC Display */
+    .pic-container {
+        max-width: 120px;
+    }
+
+    .pic-item {
+        background: var(--light-gray);
+        color: var(--text-color);
+        padding: 2px 6px;
+        margin: 1px;
+        border-radius: 3px;
+        font-size: 0.7rem;
+        display: inline-block;
+        border: 1px solid var(--border-color);
+    }
+
+    .pic-lembur-item {
+        background: #fff3cd;
+        color: #856404;
+        border-color: #ffeaa7;
+    }
+
+    /* Status Indicators */
+    .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .status-active { background-color: var(--success-color); }
+    .status-pending { background-color: var(--warning-color); }
+    .status-inactive { background-color: var(--text-muted); }
+
+    /* Null Values */
+    .null-value {
+        color: var(--text-muted);
+        font-style: italic;
+        font-size: 0.8rem;
+    }
+
+    /* Detail Pekerjaan Styling */
+    .detail-pekerjaan {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+        padding-left: 10px;
+        border-left: 2px solid var(--border-color);
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+        .page-body {
+            padding: 10px;
+        }
+
+        .card-header {
+            padding: 12px 15px;
+        }
+
+        .card-header h4 {
+            font-size: 1.1rem;
+        }
+
+        .stats-summary {
+            padding: 8px 15px;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 8px 6px;
+            font-size: 0.8rem;
+        }
+
+        .text-truncate {
+            max-width: 100px;
+        }
+
+        .text-wrap {
+            max-width: 120px;
+        }
+
+        .btn-simple {
+            padding: 4px 8px;
+            font-size: 0.7rem;
+        }
+
+        .mobile-hide {
+            display: none;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .data-table th,
+        .data-table td {
+            padding: 6px 4px;
+            font-size: 0.75rem;
+        }
+
+        .card-header h4 {
+            font-size: 1rem;
+        }
+
+        .text-truncate,
+        .text-wrap {
+            max-width: 80px;
+        }
+    }
+
+    /* DataTables Override */
+    .dataTables_wrapper {
+        padding: 15px;
+    }
+
+    .dataTables_scrollHead {
+        overflow: hidden !important;
+    }
+
+    .dataTables_scrollBody {
+        overflow: auto !important;
+    }
+
+    .dataTables_scrollHeadInner {
+        box-sizing: content-box !important;
+    }
+
+    .dataTables_scrollHeadInner table {
+        margin: 0 !important;
+    }
+
+    .dataTables_wrapper .dataTables_scroll .dataTables_scrollHead table {
+        position: static !important;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        margin-bottom: 15px;
+    }
+
+    .dataTables_length select,
+    .dataTables_filter input {
+        padding: 5px 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+
+    .dataTables_info,
+    .dataTables_paginate {
+        margin-top: 15px;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+    }
+
+    .paginate_button {
+        padding: 5px 10px !important;
+        margin: 0 2px !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 4px !important;
+        background: white !important;
+        color: var(--text-color) !important;
+    }
+
+    .paginate_button.current {
+        background: var(--primary-color) !important;
+        color: white !important;
+        border-color: var(--primary-color) !important;
+    }
+
+    /* Table scroll indicator */
+    .table-container::after {
+        content: "👈 Geser buat liat kolom lain nih!";
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+    }
+
+    .table-container:hover::after {
+        opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+        .table-container::after {
+            opacity: 1;
+            background: rgba(52, 152, 219, 0.8);
+            animation: pulse 2s infinite;
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 0.4; }
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-muted);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    /* Summary */
+    .summary-info {
+        background: var(--light-gray);
+        padding: 10px 15px;
+        border-top: 1px solid var(--border-color);
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+</style>
 {% endblock css %}
 
 {% block content %}
 <div class="page-body">
     {% include 'starter_kit/layout/breadcrumb.html' %}
-    <div class="card full-width-card mt-4">
+    
+    <div class="data-card">
         <div class="card-header">
-            <h5>Data Utility Activity</h5>
+            <h4>📋 Data Utility Activity - {{ selected_date|date:"d F Y" }}</h4>
         </div>
+        
         <div class="card-body">
-            <div class="table-responsive">
-                <table id="utilityDataTable" class="table table-striped table-bordered">
+            <div class="table-container">
+                <table id="utilityTable" class="data-table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Tanggal</th>
-                            <th>Waktu WO</th>
-                            <th>Nomor WO</th>
-                            <th>Waktu Pengerjaan</th>
-                            <th>Shift</th>
-                            <th>Lokasi</th>
-                            <th>Mesin</th>
-                            <th>Nomor</th>
-                            <th>Jenis Pekerjaan</th>
-                            <th>Masalah</th>
-                            <th>Penyebab</th>
-                            <th>Tindakan Perbaikan</th>
-                            <th>Tindakan Pencegahan</th>
-                            <th>Status</th>
-                            <th>PIC</th>
-                            <th>Image</th>
-                            <th>Action</th>
+                            <th style="width: 40px;">#</th>
+                            <th style="width: 90px;">Tanggal</th>
+                            <th style="width: 120px;" class="mobile-hide">Waktu</th>
+                            <th style="width: 100px;" class="mobile-hide">No. WO</th>
+                            <th style="width: 100px;" class="mobile-hide">Waktu Kerja</th>
+                            <th style="width: 70px;">Shift</th>
+                            <th style="width: 100px;" class="mobile-hide">Line/Lokasi</th>
+                            <th style="width: 120px;" class="mobile-hide">Mesin</th>
+                            <th style="width: 80px;" class="mobile-hide">No. Mesin</th>
+                            <th style="width: 250px;">Masalah/Deskripsi</th>
+                            <th style="width: 150px;" class="mobile-hide">Penyebab</th>
+                            <th style="width: 150px;" class="mobile-hide">Tindakan</th>
+                            <th style="width: 80px;" class="mobile-hide">Status</th>
+                            <th style="width: 120px;">PIC</th>
+                            <th style="width: 60px;" class="mobile-hide">Gambar</th>
+                            <th style="width: 120px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for data in utility_data %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ data.tanggal|date:"d-m-Y" }}</td>
-                            <td>{{ data.jam }}</td>
-                            <td>{{ data.nomor_wo }}</td>
-                            <td>{{ data.waktu_pengerjaan }}</td>
-                            <td>{{ data.shift.name }}</td>
-                            <td>{{ data.line }}</td>
-                            <td>{{ data.mesin }}</td>
-                            <td>{{ data.nomer }}</td>
-                            <td>{{ data.pekerjaan }}</td>
-                            <td>{{ data.masalah }}</td>
-                            <td>{{ data.penyebab }}</td>
-                            <td>{{ data.tindakan_perbaikan }}</td>
-                            <td>{{ data.tindakan_pencegahan }}</td>
-                            <td>{{ data.status.name }}</td>
-
-                            <td>
-                                {% for pic in data.pic.all %}
-                                    <span>{{ pic.name }} ({{ pic.nokar }})</span><br>
-                                {% empty %}
-                                    No PIC assigned
-                                {% endfor %}
-                            </td>
-                            <td>
-                                {% if data.image %}
-                                    <a href="{{ data.image.url }}" target="_blank">View Image</a>
+                        {% for data in combined_data %}
+                        <tr class="{% if data.type == 'utility' %}row-utility{% else %}row-laporan{% endif %}">
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            
+                            <!-- Tanggal -->
+                            <td>{{ data.tanggal|date:"d/m/Y" }}</td>
+                            
+                            <!-- Waktu -->
+                            <td class="mobile-hide">
+                                {% if data.jam %}
+                                    {{ data.jam|date:"H:i" }}
                                 {% else %}
-                                    No Image
+                                    <span class="null-value">-</span>
                                 {% endif %}
                             </td>
+                            
+                            <!-- No WO -->
+                            <td class="mobile-hide">
+                                {% if data.nomor_wo %}
+                                    <span class="simple-badge badge-secondary">{{ data.nomor_wo|truncatechars:12 }}</span>
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Waktu Kerja -->
+                            <td class="mobile-hide">
+                                {% if data.waktu_pengerjaan %}
+                                    {{ data.waktu_pengerjaan }}
+                                {% elif data.lama_pekerjaan %}
+                                    {{ data.lama_pekerjaan }}
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Shift -->
                             <td>
-                                <!-- Tombol Edit -->
-                                <a href="{% url 'dailyactivity_app:edit_utility_data' data.id %}" class="btn btn-primary btn-sm">Edit</a>
-                                <!-- Tombol Delete -->
-                                <form action="{% url 'dailyactivity_app:delete_utility_data' data.id %}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
+                                <span class="simple-badge badge-primary">{{ data.shift.name }}</span>
+                            </td>
+                            
+                            <!-- Line/Lokasi -->
+                            <td class="mobile-hide text-truncate">
+                                {% if data.line %}
+                                    {{ data.line }}
+                                {% elif data.location %}
+                                    {{ data.location.name }}
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Mesin -->
+                            <td class="mobile-hide text-truncate">
+                                {% if data.mesin %}
+                                    {{ data.mesin }}
+                                {% elif data.machine %}
+                                    {{ data.machine.name }}
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- No Mesin -->
+                            <td class="mobile-hide">
+                                {% if data.nomer %}
+                                    <span class="simple-badge">{{ data.nomer }}</span>
+                                {% elif data.machine and data.machine.nomor %}
+                                    <span class="simple-badge">{{ data.machine.nomor }}</span>
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Masalah/Deskripsi -->
+                            <td class="text-wrap">
+                                {{ data.masalah|truncatechars:100 }}
+                                {% if data.jenis_pekerjaan %}
+                                    <div class="detail-pekerjaan">
+                                        <strong>Jenis:</strong> {{ data.jenis_pekerjaan|truncatechars:50 }}
+                                    </div>
+                                {% endif %}
+                                {% if data.catatan %}
+                                    <div class="detail-pekerjaan">
+                                        <strong>Catatan:</strong> {{ data.catatan|truncatechars:50 }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Penyebab -->
+                            <td class="mobile-hide text-wrap">
+                                {% if data.penyebab %}
+                                    {{ data.penyebab|truncatechars:60 }}
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Tindakan -->
+                            <td class="mobile-hide text-wrap">
+                                {% if data.tindakan_perbaikan %}
+                                    {{ data.tindakan_perbaikan|truncatechars:60 }}
+                                {% elif data.tindakan_pencegahan %}
+                                    {{ data.tindakan_pencegahan|truncatechars:60 }}
+                                {% elif data.tindakan %}
+                                    {{ data.tindakan|truncatechars:60 }}
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Status -->
+                            <td class="mobile-hide">
+                                {% if data.status %}
+                                    <span class="status-indicator status-active"></span>
+                                    <span class="simple-badge badge-success">{{ data.status.name|truncatechars:8 }}</span>
+                                {% elif data.status_pekerjaan %}
+                                    <span class="simple-badge badge-info">{{ data.status_pekerjaan|truncatechars:8 }}</span>
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- PIC -->
+                            <td>
+                                <div class="pic-container">
+                                    <!-- PIC Biasa -->
+                                    {% for pic in data.pic %}
+                                        <div class="pic-item">{{ pic.name|truncatechars:15 }}</div>
+                                    {% empty %}
+                                        {% if data.pic_masalah %}
+                                            <div class="pic-item">{{ data.pic_masalah|truncatechars:15 }}</div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <!-- PIC Lembur (khusus laporan) -->
+                                    {% if data.pic_lembur %}
+                                        {% for pic_lembur in data.pic_lembur %}
+                                            <div class="pic-item pic-lembur-item">⏰ {{ pic_lembur.name|truncatechars:12 }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    
+                                    {% if not data.pic and not data.pic_lembur and not data.pic_masalah %}
+                                        <span class="null-value">No PIC</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            
+                            <!-- Gambar -->
+                            <td class="mobile-hide text-center">
+                                {% if data.image %}
+                                    <a href="{{ data.image.url }}" target="_blank" class="btn-simple btn-view">
+                                        👁️ Lihat
+                                    </a>
+                                {% else %}
+                                    <span class="null-value">-</span>
+                                {% endif %}
+                            </td>
+                            
+                            <!-- Aksi -->
+                            <td>
+                                <div style="white-space: nowrap;">
+                                    {% if data.type == 'utility' %}
+                                        <a href="{% url 'dailyactivity_app:edit_utility_data' data.id %}" 
+                                           class="btn-simple btn-edit">Edit</a>
+                                        <form action="{% url 'dailyactivity_app:delete_utility_data' data.id %}" 
+                                              method="POST" style="display:inline;" 
+                                              onsubmit="return confirm('Yakin mau hapus data utility ini?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-simple btn-delete">Hapus</button>
+                                        </form>
+                                    {% else %}
+                                        <!-- Aksi untuk laporan - sesuaikan dengan URL yang ada -->
+                                        <span class="btn-simple btn-view">📝 Laporan</span>
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="17" class="text-center">No data available</td>
+                            <td colspan="16">
+                                <div class="empty-state">
+                                    <i>📁</i>
+                                    <h5>Belum ada data nih!</h5>
+                                    <p>Belum ada data utility (WO) atau laporan untuk tanggal {{ selected_date|date:"d F Y" }}</p>
+                                    <div style="margin-top: 15px;">
+                                        <small class="text-muted">
+                                            <i class="fa fa-lightbulb"></i> 
+                                            Pastikan sudah ada data {% if data_info %}{{ data_info.utility_model }} atau {{ data_info.laporan_model }}{% else %}utility atau laporan{% endif %} untuk tanggal ini
+                                        </small>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            
+            {% if combined_data %}
+            <div class="summary-info">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <strong>Total Data:</strong> {{ total_combined }} records
+                    </div>
+                    <div class="col-sm-3">
+                        <strong>🔧 WO Data:</strong> {{ total_utility }} records
+                    </div>
+                    <div class="col-sm-3">
+                        <strong>📝 Laporan:</strong> {{ total_laporan }} records
+                    </div>
+                    <div class="col-sm-3 text-right">
+                        <strong>📅 Tanggal:</strong> {{ selected_date|date:"d F Y" }}
+                    </div>
+                </div>
+                {% if data_info and data_info.has_utility and data_info.has_laporan %}
+                <div class="row mt-2">
+                    <div class="col-sm-12 text-center">
+                        <small class="text-muted">
+                            <i class="fa fa-info-circle"></i> 
+                            Menampilkan data gabungan dari {{ data_info.utility_model }} dan {{ data_info.laporan_model }}
+                        </small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
 {% endblock content %}
 
 {% block scriptcontent %}
-<!-- Plugins JS Start -->
-<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
-<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
-<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
 <script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js' %}"></script>
-<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js' %}"></script>
-<!-- Plugins JS Ends -->
 
 <script>
-    $(document).ready(function() {
-        $('#utilityDataTable').DataTable({
-            "language": {
-                "url": "{% static 'assets/js/datatable/datatables/lang/Indonesian.json' %}"
+$(document).ready(function() {
+    // Initialize DataTable dengan setting yang lebih kece
+    $('#utilityTable').DataTable({
+        "pageLength": 25,
+        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua"]],
+        "order": [[ 1, "desc" ]], // Order by tanggal (kolom 1 sekarang)
+        "responsive": true,
+        "language": {
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "search": "Cari data:",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Tidak ada data yang ditemukan",
+            "infoFiltered": "(difilter dari _MAX_ total data)",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir", 
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
             },
-            "pagingType": "full_numbers",
-            "order": [[ 1, "desc" ]]
-        });
+            "emptyTable": "Belum ada data tersedia",
+            "zeroRecords": "Tidak ada data yang cocok dengan pencarian"
+        },
+        "columnDefs": [
+            { 
+                "targets": [0, -1], // First and last column
+                "orderable": false 
+            },
+            {
+                "targets": [9, 10, 11], // Long text columns (adjusted index)
+                "className": "text-wrap"
+            }
+        ],
+        "dom": '<"row"<"col-sm-6"l><"col-sm-6"f>>' +
+               '<"row"<"col-sm-12"tr>>' +
+               '<"row"<"col-sm-5"i><"col-sm-7"p>>',
+        "autoWidth": false,
+        "scrollX": true,
+        "initComplete": function(settings, json) {
+            // Kasih info kalau data udah loaded
+            console.log('✅ Data utility berhasil dimuat!');
+            
+            // Highlight row berdasarkan type (tanpa tipe column)
+            $('.row-utility').css('border-left-color', '#3498db');
+            $('.row-laporan').css('border-left-color', '#27ae60');
+        }
     });
 
-    function confirmDelete() {
-        return confirm("Apakah Anda yakin ingin menghapus data ini?");
-    }
+    // Simple table row click untuk mobile details
+    $('.data-table tbody').on('click', 'tr', function() {
+        if ($(window).width() <= 768) {
+            $(this).toggleClass('selected');
+            
+            // Kasih feedback visual
+            if ($(this).hasClass('selected')) {
+                $(this).css('background-color', '#e3f2fd');
+            } else {
+                $(this).css('background-color', '');
+            }
+        }
+    });
+
+    // Filter buttons dihilangkan sesuai permintaan user
+    // Tidak ada lagi filter buttons untuk tipe data
+});
+
+// Auto-adjust on window resize
+$(window).on('resize', function() {
+    $('#utilityTable').DataTable().columns.adjust();
+});
+
+// Tooltip untuk PIC lembur
+$(document).ready(function() {
+    $('.pic-lembur-item').tooltip({
+        title: 'PIC Lembur - Pekerja yang lembur untuk tugas ini',
+        placement: 'top'
+    });
+});
 </script>
 {% endblock scriptcontent %}

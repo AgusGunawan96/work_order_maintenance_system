@@ -153,7 +153,7 @@ class UtilityDataForm(forms.ModelForm):
 
 class UtilityData2Form(forms.ModelForm):
     pic = forms.ModelMultipleChoiceField(
-        queryset=PICUtility2.objects.all(),  # Ambil data PIC dari model PICMechanical2
+        queryset=PICUtility2.objects.all(),  # Ambil data PIC dari model PICUtility2
         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),  # Gunakan SelectMultiple dengan styling
         required=True
     )
@@ -169,7 +169,7 @@ class UtilityData2Form(forms.ModelForm):
 
         widgets = {
             'tanggal': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'jam': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
+            'jam': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),  # Fix: ganti dari TimeInput jadi DateTimeInput
             'shift': forms.Select(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
             'masalah': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
@@ -257,22 +257,63 @@ class PICItForm(forms.ModelForm):
 #             'image': forms.FileInput(attrs={'class': 'form-control'}),
 #         }
 
+# class LaporanDataForm(forms.ModelForm):
+#     pic = forms.ModelMultipleChoiceField(
+#         queryset=PICLaporan.objects.all(),
+#         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+#         required=True
+#     )
+#     piclembur = forms.ModelMultipleChoiceField(  # Tambahkan field baru
+#         queryset=PICLembur.objects.all(),
+#         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+#         required=False  # Opsional, jadi tidak wajib diisi
+#     )
+
+#     class Meta:
+#         model = LaporanData
+#         fields = [
+#             'tanggal', 'shift', 'masalah', 'catatan', 'image', 'pic', 'piclembur'  # Tambahkan piclembur
+#         ]
+
+#         widgets = {
+#             'tanggal': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+#             'shift': forms.Select(attrs={'class': 'form-control'}),
+#             'masalah': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+#             'catatan': forms.Textarea(attrs={
+#                 'class': 'form-control catatan-textarea', 
+#                 'rows': 3, 
+#                 'placeholder': 'Masukkan catatan penting di sini...'
+#             }),  # Widget khusus untuk catatan
+#             'image': forms.FileInput(attrs={'class': 'form-control'}),
+#         }
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['catatan'].required = False  # Catatan tidak wajib diisi
+        
+#         # Tambahkan CSS class untuk catatan jika sudah ada isinya
+#         if self.instance and self.instance.catatan:
+#             self.fields['catatan'].widget.attrs['class'] += ' has-catatan'
+
 class LaporanDataForm(forms.ModelForm):
+    """Simplified form - karena sekarang handle multiple rows manual di views"""
+    
+    # Field yang udah ada (JANGAN DIHAPUS)
     pic = forms.ModelMultipleChoiceField(
         queryset=PICLaporan.objects.all(),
         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
         required=True
     )
-    piclembur = forms.ModelMultipleChoiceField(  # Tambahkan field baru
+    piclembur = forms.ModelMultipleChoiceField(
         queryset=PICLembur.objects.all(),
         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
-        required=False  # Opsional, jadi tidak wajib diisi
+        required=False
     )
 
     class Meta:
         model = LaporanData
         fields = [
-            'tanggal', 'shift', 'masalah', 'catatan', 'image', 'pic', 'piclembur'  # Tambahkan piclembur
+            # Field lama (JANGAN DIHAPUS) - simplified karena sekarang handle manual
+            'tanggal', 'shift', 'masalah', 'catatan', 'image', 'pic', 'piclembur'
         ]
 
         widgets = {
@@ -283,16 +324,78 @@ class LaporanDataForm(forms.ModelForm):
                 'class': 'form-control catatan-textarea', 
                 'rows': 3, 
                 'placeholder': 'Masukkan catatan penting di sini...'
-            }),  # Widget khusus untuk catatan
+            }),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['catatan'].required = False  # Catatan tidak wajib diisi
+        
+        # Set field tidak wajib
+        self.fields['catatan'].required = False
         
         # Tambahkan CSS class untuk catatan jika sudah ada isinya
         if self.instance and self.instance.catatan:
             self.fields['catatan'].widget.attrs['class'] += ' has-catatan'
+
+
+# Utility functions untuk dropdown data (dipanggil dari views)
+def get_nomor_wo_choices():
+    """Get nomor WO choices for template"""
+    choices = []
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT TOP 30 number_wo
+                FROM dbo.view_main
+                WHERE id_section = 6
+                AND YEAR(tgl_his) BETWEEN 2024 AND 2025
+                ORDER BY history_id DESC
+            """)
+            choices = [{'value': row[0], 'text': row[0]} for row in cursor.fetchall()]
+    except Exception as e:
+        print(f"Error fetching nomor WO choices: {e}")
+        choices = [{'value': 'WO001', 'text': 'WO001 - Sample'}]
+    return choices
+
+
+def get_lokasi_choices():
+    """Get lokasi choices for template"""
+    choices = []
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT id_line, line
+                FROM tabel_line
+                WHERE status = 'A'
+                ORDER BY line
+            """)
+            choices = [{'value': str(row[0]), 'text': row[1]} for row in cursor.fetchall()]
+    except Exception as e:
+        print(f"Error fetching lokasi choices: {e}")
+        choices = [{'value': '1', 'text': 'Line 1'}]
+    return choices
+
+
+def get_jenis_pekerjaan_choices():
+    """Get jenis pekerjaan choices for template"""
+    choices = []
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT id_pekerjaan, pekerjaan
+                FROM tabel_pekerjaan
+                WHERE status = 'A'
+                ORDER BY pekerjaan
+            """)
+            choices = [{'value': str(row[0]), 'text': row[1]} for row in cursor.fetchall()]
+    except Exception as e:
+        print(f"Error fetching jenis pekerjaan choices: {e}")
+        choices = [
+            {'value': '1', 'text': 'Maintenance'},
+            {'value': '2', 'text': 'Cleaning'}
+        ]
+    return choices
 
 
 class PICLaporanForm(forms.ModelForm):

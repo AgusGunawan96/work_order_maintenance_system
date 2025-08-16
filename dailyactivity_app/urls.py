@@ -48,10 +48,13 @@ urlpatterns = [
     path('electrical/data/<str:tanggal>/', views.data_electrical, name='data_electrical'),
     path('edit-electrical-data/<int:id>/', views.edit_electrical_data, name='edit_electrical_data'),
     path('delete-electrical-data/<int:id>/', views.delete_electrical_data, name='delete_electrical_data'),
-    path('machineelectrical/upload_excel/', views.upload_machineelectrical_excel, name='upload_machineelectrical_excel'),
+    # path('machineelectrical/upload_excel/', views.upload_machineelectrical_excel, name='upload_machineelectrical_excel'),
     # path('electrical/get_masalah/<str:number_wo>/', views.get_masalah, name='get_masalah'),
     
-
+    # URL BARU untuk AJAX endpoints
+    path('ajax/get-mesin-by-lokasi/', views.get_mesin_by_lokasi, name='get_mesin_by_lokasi'),
+    path('ajax/get-nomor-mesin/', views.get_nomor_mesin, name='get_nomor_mesin'),
+    
     path('utility/', views.utility_index, name='utility_index'),
     path('utility/submit/', views.utility_submit, name='utility_submit'),  # Uncomment this line
     path('utility/tanggal/', views.tanggal_utility, name='tanggal_utility'),

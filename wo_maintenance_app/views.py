@@ -5449,14 +5449,12 @@ def ajax_get_section_mapping_info(request):
             'traceback': traceback.format_exc()
         }, status=500)
 
+# wo_maintenance_app/views.py - FIXED section_based_daftar_laporan dengan type conversion
+
 @login_required
 def section_based_daftar_laporan(request):
     """
-    Enhanced daftar laporan dengan section-based access untuk Engineering Supervisors
-    REQUIREMENTS:
-    1. User biasa: pengajuan mereka sendiri
-    2. Engineering Supervisors: semua pengajuan di section mereka
-    3. SITI FATIMAH: semua pengajuan
+    FIXED: Enhanced daftar laporan dengan section-based access dan proper type conversion
     """
     try:
         # ===== AMBIL DATA HIERARCHY USER =====
@@ -5477,29 +5475,116 @@ def section_based_daftar_laporan(request):
         filter_form = PengajuanFilterForm(request.GET or None)
         search_query = request.GET.get('search', '').strip()
         
-        # Build additional filters
-        additional_filters = {'search_query': search_query}
-        
-        if filter_form.is_valid():
-            if filter_form.cleaned_data.get('tanggal_dari'):
-                additional_filters['tanggal_dari'] = filter_form.cleaned_data['tanggal_dari']
-            if filter_form.cleaned_data.get('tanggal_sampai'):
-                additional_filters['tanggal_sampai'] = filter_form.cleaned_data['tanggal_sampai']
-            if filter_form.cleaned_data.get('status'):
-                additional_filters['status'] = filter_form.cleaned_data['status']
-        
-        # ===== QUERY DATABASE dengan Enhanced Access =====
+        # ===== QUERY DATABASE dengan Fixed Type Conversion =====
         pengajuan_list = []
         total_records = 0
         
         try:
-            # Build query conditions
-            where_conditions, query_params = build_enhanced_pengajuan_query_conditions(
-                access_info, additional_filters
-            )
-            where_clause = "WHERE " + " AND ".join(where_conditions)
-            
             with connections['DB_Maintenance'].cursor() as cursor:
+                # ===== BUILD WHERE CONDITIONS dengan Type-safe Parameters =====
+                where_conditions = ["tp.history_id IS NOT NULL"]
+                query_params = []
+                
+                # UPDATED: Exclude final processed (status A, approve Y)
+                where_conditions.append("NOT (tp.status = %s AND tp.approve = %s)")
+                query_params.extend([STATUS_REVIEWED, APPROVE_REVIEWED])
+                
+                # ===== ACCESS-BASED CONDITIONS dengan Type Conversion =====
+                access_type = access_info.get('access_type')
+                
+                if access_type == 'SITI_FATIMAH_FULL':
+                    # SITI FATIMAH - Access ke semua approved pengajuan (status B, approve N)
+                    where_conditions.extend([
+                        "tp.status = %s",
+                        "tp.approve = %s"
+                    ])
+                    query_params.extend([STATUS_APPROVED, APPROVE_YES])
+                    
+                elif access_type.startswith('ENGINEERING_') and access_type.endswith('_SUPERVISOR'):
+                    # Engineering Supervisor - Section-based access dengan PROPER TYPE CONVERSION
+                    section_ids = access_info.get('allowed_section_ids', [])
+                    if section_ids:
+                        logger.info(f"SECTION ACCESS: User has access to section IDs: {section_ids}")
+                        
+                        # FIXED: Convert section IDs to strings untuk compatibility
+                        section_id_strings = [str(sid) for sid in section_ids]
+                        section_placeholders = ','.join(['%s'] * len(section_id_strings))
+                        
+                        # FIXED: Use proper CAST in SQL untuk type conversion
+                        where_conditions.append(f"""(
+                            CAST(tp.id_section AS varchar(10)) IN ({section_placeholders}) OR 
+                            CAST(tp.final_section_id AS varchar(10)) IN ({section_placeholders})
+                        )""")
+                        
+                        # Add section IDs as strings (twice for both conditions)
+                        query_params.extend(section_id_strings)
+                        query_params.extend(section_id_strings)
+                        
+                        logger.info(f"SECTION QUERY: Added {len(section_id_strings)} section conditions with type conversion")
+                    else:
+                        # Jika tidak ada section, tampilkan kosong
+                        where_conditions.append("1 = 0")
+                        logger.warning("SECTION ACCESS: No section IDs found, showing empty result")
+                
+                elif access_type == 'HIERARCHY_NORMAL':
+                    # Regular hierarchy access
+                    allowed_employee_numbers = access_info.get('allowed_employee_numbers', [])
+                    if allowed_employee_numbers and '*' not in allowed_employee_numbers:
+                        # Limit untuk menghindari query terlalu panjang
+                        if len(allowed_employee_numbers) > 50:
+                            allowed_employee_numbers = allowed_employee_numbers[:50]
+                        
+                        if allowed_employee_numbers:
+                            placeholders = ','.join(['%s'] * len(allowed_employee_numbers))
+                            where_conditions.append(f"tp.user_insert IN ({placeholders})")
+                            query_params.extend(allowed_employee_numbers)
+                    else:
+                        # Fallback to own pengajuan only
+                        where_conditions.append("tp.user_insert = %s")
+                        query_params.append(access_info.get('user_employee_number', ''))
+                
+                else:
+                    # Default: own pengajuan only
+                    where_conditions.append("tp.user_insert = %s")
+                    query_params.append(user_hierarchy.get('employee_number', ''))
+                
+                # ===== FORM FILTERS =====
+                if filter_form.is_valid():
+                    tanggal_dari = filter_form.cleaned_data.get('tanggal_dari')
+                    if tanggal_dari:
+                        where_conditions.append("CAST(tp.tgl_insert AS DATE) >= %s")
+                        query_params.append(tanggal_dari)
+                    
+                    tanggal_sampai = filter_form.cleaned_data.get('tanggal_sampai')
+                    if tanggal_sampai:
+                        where_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
+                        query_params.append(tanggal_sampai)
+                    
+                    status_filter = filter_form.cleaned_data.get('status')
+                    if status_filter:
+                        where_conditions.append("tp.status = %s")
+                        query_params.append(status_filter)
+                
+                # ===== SEARCH =====
+                if search_query:
+                    search_conditions = [
+                        "tp.history_id LIKE %s",
+                        "tp.oleh LIKE %s",
+                        "tp.deskripsi_perbaikan LIKE %s",
+                        "tp.number_wo LIKE %s"
+                    ]
+                    where_conditions.append(f"({' OR '.join(search_conditions)})")
+                    search_param = f"%{search_query}%"
+                    query_params.extend([search_param] * len(search_conditions))
+                
+                # ===== BUILD WHERE CLAUSE =====
+                where_clause = "WHERE " + " AND ".join(where_conditions)
+                
+                # LOG untuk debugging
+                logger.info(f"QUERY DEBUG: Where conditions count: {len(where_conditions)}")
+                logger.info(f"QUERY DEBUG: Query params count: {len(query_params)}")
+                logger.info(f"QUERY DEBUG: First few params: {query_params[:5]}")
+                
                 # ===== COUNT QUERY =====
                 count_query = f"""
                     SELECT COUNT(DISTINCT tp.history_id)
@@ -5514,6 +5599,8 @@ def section_based_daftar_laporan(request):
                 
                 cursor.execute(count_query, query_params)
                 total_records = cursor.fetchone()[0] or 0
+                
+                logger.info(f"COUNT QUERY SUCCESS: Found {total_records} total records")
                 
                 # ===== PAGINATION =====
                 page_size = 20
@@ -5549,7 +5636,7 @@ def section_based_daftar_laporan(request):
                         tp.reviewed_by,                   -- 16
                         tp.review_date,                   -- 17
                         ISNULL(final_section.seksi, tms.seksi), -- 18 (final or current section)
-                        '%s' as access_type               -- 19
+                        %s as access_type                 -- 19
                     FROM tabel_pengajuan tp
                     LEFT JOIN (
                         SELECT DISTINCT id_mesin, mesin 
@@ -5579,18 +5666,30 @@ def section_based_daftar_laporan(request):
                     {where_clause}
                     ORDER BY tp.tgl_insert DESC, tp.history_id DESC
                     OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
-                """ % access_info['access_type']
+                """
                 
-                final_params = query_params + [offset, page_size]
+                # Add access_type parameter dan pagination parameters
+                final_params = query_params + [access_info['access_type'], offset, page_size]
+                
+                logger.info(f"MAIN QUERY DEBUG: Final params count: {len(final_params)}")
+                
                 cursor.execute(main_query, final_params)
-                
                 pengajuan_list = cursor.fetchall()
                 
-                logger.info(f"Section-based query executed - Found {total_records} records for {access_info['access_type']}")
+                logger.info(f"MAIN QUERY SUCCESS: Retrieved {len(pengajuan_list)} records for {access_info['access_type']}")
                 
         except Exception as db_error:
             logger.error(f"Database error in section_based_daftar_laporan: {db_error}")
-            messages.error(request, f'Terjadi kesalahan database: {str(db_error)}')
+            logger.error(f"Query params count: {len(query_params) if 'query_params' in locals() else 'undefined'}")
+            logger.error(f"Where conditions: {where_conditions if 'where_conditions' in locals() else 'undefined'}")
+            
+            # Enhanced error info untuk debugging
+            if 'section_ids' in locals():
+                logger.error(f"Section IDs being queried: {locals()['section_ids']}")
+            
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            messages.error(request, f'Terjadi kesalahan database. Silakan coba lagi atau hubungi administrator.')
             pengajuan_list = []
             total_records = 0
             total_pages = 1
@@ -5600,8 +5699,12 @@ def section_based_daftar_laporan(request):
             next_page_number = None
             page_number = 1
         
-        # ===== GET ACCESS STATISTICS =====
-        access_stats = get_access_statistics(access_info)
+        # ===== GET ACCESS STATISTICS dengan Error Handling =====
+        access_stats = {'total_accessible': 0, 'by_status': {}}
+        try:
+            access_stats = get_access_statistics(access_info)
+        except Exception as stats_error:
+            logger.error(f"Error getting access statistics: {stats_error}")
         
         # ===== ENHANCED CONTEXT =====
         context = {
@@ -5652,7 +5755,10 @@ def section_based_daftar_laporan(request):
                 'department_section': f"{user_hierarchy.get('department_name', '')}-{user_hierarchy.get('section_name', '')}",
                 'total_pengajuan_loaded': len(pengajuan_list),
                 'excluded_final_processed': True,
-                'section_based_mode': True
+                'section_based_mode': True,
+                'query_params_count': len(query_params) if 'query_params' in locals() else 0,
+                'where_conditions_count': len(where_conditions) if 'where_conditions' in locals() else 0,
+                'type_conversion_used': 'CAST to varchar for section compatibility'
             } if request.user.is_superuser else None
         }
         
@@ -5758,3 +5864,223 @@ def debug_section_access(request):
             'error': str(e),
             'traceback': traceback.format_exc()
         }, status=500)
+    
+
+# wo_maintenance_app/views.py - ADD this debug view
+
+@login_required
+def debug_section_access_view(request):
+    """
+    Debug view untuk troubleshoot section access system
+    SUPERUSER ONLY untuk debugging
+    """
+    if not request.user.is_superuser:
+        messages.error(request, 'Akses ditolak. Hanya untuk debugging.')
+        return redirect('wo_maintenance_app:dashboard')
+    
+    debug_info = {
+        'timestamp': timezone.now().isoformat(),
+        'user_info': {},
+        'access_info': {},
+        'query_test': {},
+        'section_mapping': {},
+        'database_test': {}
+    }
+    
+    try:
+        # 1. Test user hierarchy
+        user_hierarchy = get_employee_hierarchy_data(request.user)
+        debug_info['user_info'] = {
+            'found': user_hierarchy is not None,
+            'data': user_hierarchy
+        }
+        
+        if user_hierarchy:
+            # 2. Test access info
+            try:
+                access_info = get_enhanced_pengajuan_access_for_user(user_hierarchy)
+                debug_info['access_info'] = {
+                    'success': True,
+                    'data': access_info
+                }
+                
+                # 3. Test query building
+                try:
+                    where_conditions, query_params = build_enhanced_pengajuan_query_conditions(access_info)
+                    debug_info['query_test'] = {
+                        'success': True,
+                        'where_conditions_count': len(where_conditions),
+                        'query_params_count': len(query_params),
+                        'where_conditions': where_conditions,
+                        'query_params': query_params[:10],  # First 10 params only
+                        'params_match': len([c for c in ' '.join(where_conditions) if c == '%']) <= len(query_params)
+                    }
+                    
+                    # 4. Test actual query execution
+                    try:
+                        with connections['DB_Maintenance'].cursor() as cursor:
+                            where_clause = "WHERE " + " AND ".join(where_conditions)
+                            test_query = f"""
+                                SELECT COUNT(DISTINCT tp.history_id)
+                                FROM tabel_pengajuan tp
+                                LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+                                {where_clause}
+                            """
+                            
+                            cursor.execute(test_query, query_params)
+                            count_result = cursor.fetchone()[0]
+                            
+                            debug_info['database_test'] = {
+                                'success': True,
+                                'count_result': count_result,
+                                'query_executed': True
+                            }
+                            
+                    except Exception as db_error:
+                        debug_info['database_test'] = {
+                            'success': False,
+                            'error': str(db_error),
+                            'query_executed': False
+                        }
+                    
+                except Exception as query_error:
+                    debug_info['query_test'] = {
+                        'success': False,
+                        'error': str(query_error)
+                    }
+                
+            except Exception as access_error:
+                debug_info['access_info'] = {
+                    'success': False,
+                    'error': str(access_error)
+                }
+        
+        # 5. Test section mapping
+        try:
+            debug_info['section_mapping'] = {
+                'engineering_sections': get_engineering_section_access(user_hierarchy) if user_hierarchy else None,
+                'maintenance_sections': get_maintenance_section_ids_by_keywords(['MEKANIK', 'ELEKTRIK', 'IT', 'UTILITY'])
+            }
+        except Exception as mapping_error:
+            debug_info['section_mapping'] = {
+                'error': str(mapping_error)
+            }
+        
+        # 6. Test dengan user lain (sample engineering supervisors)
+        try:
+            debug_info['sample_users'] = {}
+            
+            with connections['SDBM'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT TOP 3
+                        e.employee_number,
+                        e.fullname,
+                        d.name as department_name,
+                        s.name as section_name,
+                        t.Name as title_name
+                    FROM [hrbp].[employees] e
+                    INNER JOIN [hrbp].[position] p ON e.id = p.employeeId
+                    LEFT JOIN [hr].[department] d ON p.departmentId = d.id
+                    LEFT JOIN [hr].[section] s ON p.sectionId = s.id
+                    LEFT JOIN [hr].[title] t ON p.titleId = t.id
+                    WHERE e.is_active = 1
+                        AND p.is_active = 1
+                        AND UPPER(d.name) LIKE '%ENGINEERING%'
+                        AND UPPER(s.name) LIKE '%ENGINEERING-%'
+                        AND (
+                            t.is_supervisor = 1 OR 
+                            UPPER(t.Name) LIKE '%SUPERVISOR%'
+                        )
+                    ORDER BY s.name
+                """)
+                
+                sample_users = cursor.fetchall()
+                for user in sample_users:
+                    emp_num = user[0]
+                    try:
+                        # Create dummy user for testing
+                        from django.contrib.auth.models import User
+                        dummy_user = User(username=emp_num)
+                        test_hierarchy = get_employee_hierarchy_data(dummy_user)
+                        
+                        if test_hierarchy:
+                            test_access = get_enhanced_pengajuan_access_for_user(test_hierarchy)
+                            debug_info['sample_users'][emp_num] = {
+                                'name': user[1],
+                                'section': user[3],
+                                'access_type': test_access.get('access_type'),
+                                'allowed_sections': len(test_access.get('allowed_section_ids', []))
+                            }
+                    except Exception as user_error:
+                        debug_info['sample_users'][emp_num] = {
+                            'error': str(user_error)
+                        }
+                        
+        except Exception as sample_error:
+            debug_info['sample_users'] = {
+                'error': str(sample_error)
+            }
+        
+    except Exception as e:
+        debug_info['critical_error'] = str(e)
+        import traceback
+        debug_info['traceback'] = traceback.format_exc()
+    
+    context = {
+        'debug_info': debug_info,
+        'page_title': 'Debug Section Access System'
+    }
+    
+    return render(request, 'wo_maintenance_app/debug_section_access.html', context)
+
+
+# SIMPLE fallback view untuk testing
+@login_required
+def simple_section_test(request):
+    """
+    Simple test view untuk memastikan basic functionality bekerja
+    """
+    try:
+        user_hierarchy = get_employee_hierarchy_data(request.user)
+        
+        if not user_hierarchy:
+            return JsonResponse({
+                'success': False,
+                'error': 'User hierarchy not found',
+                'user': request.user.username
+            })
+        
+        access_info = get_enhanced_pengajuan_access_for_user(user_hierarchy)
+        
+        # Simple count query
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE history_id IS NOT NULL")
+            total_pengajuan = cursor.fetchone()[0]
+        
+        return JsonResponse({
+            'success': True,
+            'user': {
+                'username': request.user.username,
+                'fullname': user_hierarchy.get('fullname'),
+                'department': user_hierarchy.get('department_name'),
+                'section': user_hierarchy.get('section_name'),
+                'title': user_hierarchy.get('title_name')
+            },
+            'access': {
+                'type': access_info.get('access_type'),
+                'description': access_info.get('access_description'),
+                'allowed_sections': len(access_info.get('allowed_section_ids', [])),
+                'allowed_employees': len(access_info.get('allowed_employee_numbers', []))
+            },
+            'database': {
+                'total_pengajuan': total_pengajuan
+            }
+        })
+        
+    except Exception as e:
+        import traceback
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        })
