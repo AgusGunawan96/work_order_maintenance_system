@@ -1492,8 +1492,17 @@ def edit_mechanical_data(request, id):
                 return value.strip() if value and value.strip() else None
 
             # Ambil dan clean semua data dari formulir
-            tanggal = request.POST.get('tanggal')
+            tanggal_str = request.POST.get('tanggal')
             jam = request.POST.get('jam')
+
+            # Convert string ke date
+            tanggal = None
+            if tanggal_str:
+                try:
+                    tanggal = datetime.strptime(tanggal_str, "%Y-%m-%d").date()
+                except ValueError:
+                    messages.error(request, 'Format tanggal tidak valid. Gunakan YYYY-MM-DD.')
+                    return redirect('dailyactivity_app:edit_mechanical_data', id=id)
             
             # Convert ALL ID fields safely
             shift_id = safe_int_or_none(request.POST.get('shift'))
@@ -1596,10 +1605,8 @@ def edit_mechanical_data(request, id):
                         }
                     )
 
-            # Process jam field
-            jam_value = None
-            if jam:
-                jam_value = jam
+             # Process jam field
+            jam_value = jam if jam else None
 
             print(f"DEBUG EDIT - About to update with: shift={shift_instance.id}, location={location_instance.id}, machine={machine_instance.id}")
 
@@ -1710,7 +1717,92 @@ def delete_mechanical_data(request, id):
     tanggal_redirect = mechanical_data.tanggal.strftime('%Y-%m-%d')
     return redirect('dailyactivity_app:data_mechanical', tanggal=tanggal_redirect)
    
-@login_required
+# @login_required
+# def electrical_index(request):
+#     shifts = Shift.objects.all()
+#     locations = Location.objects.all()
+#     machines = Machineelectrical.objects.all()
+#     categories = Category.objects.all()
+#     status = Status.objects.all()
+#     pic_electrical = PICElectrical.objects.all()
+
+#     # Ambil 20 nomor_wo dari tabel_main di DB_Maintenance dengan filter berdasarkan section_id = 5
+#     nomor_wo_list = []
+#     with connections['DB_Maintenance'].cursor() as cursor:
+#         cursor.execute("""
+#             SELECT TOP 20 number_wo
+#             FROM dbo.tabel_main
+#             WHERE id_section = 5
+#             ORDER BY history_id DESC
+#         """)
+#         nomor_wo_list = [row[0] for row in cursor.fetchall()]  # Simpan hasil query sebelum keluar dari blok `with`
+
+#     deskripsi_perbaikan = None  # Default value untuk deskripsi_perbaikan
+#     tgl_his = None  # Default value untuk tgl_his  
+#     if request.method == 'POST':
+#         form = ElectricalDataForm(request.POST, request.FILES)
+#         if form.is_valid():
+
+#             # Ambil nilai dari form
+#             machine_number = form.cleaned_data.get('machine_number')
+#             machine_instance = form.cleaned_data.get('machine')
+
+#             # Cek apakah mesin sudah memiliki nomor
+#             if machine_number:
+#                 # Jika tidak ada nomor mesin pada instance machine, inputkan nomor mesin baru
+#                 if not machine_instance.nomor:
+#                     machine_instance.nomor = machine_number
+#                     machine_instance.save()  # Update nomor mesin
+#                 else:
+#                     # Jika nomor sudah ada, gunakan nomor yang ada
+#                     pass
+#             electrical_data = form.save(commit=False)
+#             electrical_data.user = request.user
+#             electrical_data.machine = machine_instance  # Set machine_instance sebagai mesin yang dipilih atau baru
+#             electrical_data.save()
+#             pic_ids = form.cleaned_data.get('pic')
+#             electrical_data.pic.set(pic_ids)
+#             electrical_data.nomor_wo = form.cleaned_data.get('nomor_wo')
+#             electrical_data.waktu_pengerjaan = form.cleaned_data.get('waktu_pengerjaan')
+
+#             electrical_data.save()
+#             return redirect('success_page')
+#     else:
+#         form = ElectricalDataForm()
+
+#     # Cek apakah request adalah AJAX dengan header 'HTTP_X_REQUESTED_WITH'
+#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == 'GET':
+#         nomor_wo_selected = request.GET.get('nomor_wo')
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             cursor.execute("""
+#                 SELECT deskripsi_perbaikan, tgl_his
+#                 FROM dbo.tabel_main
+#                 WHERE number_wo = %s
+#             """, [nomor_wo_selected])
+#             row = cursor.fetchone()
+#             if row:
+#                 deskripsi_perbaikan = row[0]
+#                 tgl_his = row[1]
+#         return JsonResponse({
+#             'deskripsi_perbaikan': deskripsi_perbaikan,
+#             'tgl_his': tgl_his
+#         })
+
+#     context = {
+#         'shifts': shifts,
+#         'locations': locations,
+#         'machines': machines,
+#         'categories': categories,
+#         'status': status,
+#         'pic_electrical': pic_electrical,
+#         'nomor_wo_list': nomor_wo_list,  # Kirim nomor_wo_list ke template
+#         'form': form,
+#         'deskripsi_perbaikan': deskripsi_perbaikan,  # Menambahkan deskripsi_perbaikan
+#         'tgl_his': tgl_his,  # Menambahkan tgl_his
+#     }
+#     return render(request, 'dailyactivity_app/electrical_index.html', context)
+
+@login_required 
 def electrical_index(request):
     shifts = Shift.objects.all()
     locations = Location.objects.all()
@@ -1719,68 +1811,98 @@ def electrical_index(request):
     status = Status.objects.all()
     pic_electrical = PICElectrical.objects.all()
 
-    # Ambil 20 nomor_wo dari tabel_main di DB_Maintenance dengan filter berdasarkan section_id = 5
+    # Ambil hanya 30 nomor WO paling terbaru
     nomor_wo_list = []
     with connections['DB_Maintenance'].cursor() as cursor:
         cursor.execute("""
-            SELECT TOP 20 number_wo
-            FROM dbo.tabel_main
+            SELECT TOP 30 number_wo
+            FROM dbo.view_main
             WHERE id_section = 5
+            AND YEAR(tgl_his) BETWEEN 2024 AND 2025
             ORDER BY history_id DESC
         """)
-        nomor_wo_list = [row[0] for row in cursor.fetchall()]  # Simpan hasil query sebelum keluar dari blok `with`
+        nomor_wo_list = [row[0] for row in cursor.fetchall()]
 
-    deskripsi_perbaikan = None  # Default value untuk deskripsi_perbaikan
-    tgl_his = None  # Default value untuk tgl_his  
-    if request.method == 'POST':
-        form = ElectricalDataForm(request.POST, request.FILES)
-        if form.is_valid():
+    # Default values
+    deskripsi_perbaikan = None
+    tgl_his = None
+    penyebab = None
+    line = None
+    mesin = None
+    nomer = None
+    pekerjaan = None
+    status_pekerjaan = None
+    tindakan_perbaikan = None
 
-            # Ambil nilai dari form
-            machine_number = form.cleaned_data.get('machine_number')
-            machine_instance = form.cleaned_data.get('machine')
-
-            # Cek apakah mesin sudah memiliki nomor
-            if machine_number:
-                # Jika tidak ada nomor mesin pada instance machine, inputkan nomor mesin baru
-                if not machine_instance.nomor:
-                    machine_instance.nomor = machine_number
-                    machine_instance.save()  # Update nomor mesin
-                else:
-                    # Jika nomor sudah ada, gunakan nomor yang ada
-                    pass
-            electrical_data = form.save(commit=False)
-            electrical_data.user = request.user
-            electrical_data.machine = machine_instance  # Set machine_instance sebagai mesin yang dipilih atau baru
-            electrical_data.save()
-            pic_ids = form.cleaned_data.get('pic')
-            electrical_data.pic.set(pic_ids)
-            electrical_data.nomor_wo = form.cleaned_data.get('nomor_wo')
-            electrical_data.waktu_pengerjaan = form.cleaned_data.get('waktu_pengerjaan')
-
-            electrical_data.save()
-            return redirect('success_page')
-    else:
-        form = ElectricalDataForm()
-
-    # Cek apakah request adalah AJAX dengan header 'HTTP_X_REQUESTED_WITH'
+    # Tangani Permintaan AJAX untuk nomor WO
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == 'GET':
         nomor_wo_selected = request.GET.get('nomor_wo')
+        
+        # Prepare response data
+        response_data = {
+            'deskripsi_perbaikan': None,
+            'tgl_his': None,
+            'penyebab': None,
+            'line': None,
+            'mesin': None,
+            'nomer': None,
+            'pekerjaan': None,
+            'status_pekerjaan': None,
+            'tindakan_perbaikan': None,
+            'location_id': None,
+            'machine_id': None
+        }
+        
         with connections['DB_Maintenance'].cursor() as cursor:
             cursor.execute("""
-                SELECT deskripsi_perbaikan, tgl_his
-                FROM dbo.tabel_main
+                SELECT deskripsi_perbaikan, tgl_his, penyebab, line, mesin, nomer, 
+                       pekerjaan, status_pekerjaan, tindakan_perbaikan
+                FROM dbo.view_main
                 WHERE number_wo = %s
             """, [nomor_wo_selected])
             row = cursor.fetchone()
+            
             if row:
-                deskripsi_perbaikan = row[0]
-                tgl_his = row[1]
-        return JsonResponse({
-            'deskripsi_perbaikan': deskripsi_perbaikan,
-            'tgl_his': tgl_his
-        })
+                (deskripsi_perbaikan, tgl_his, penyebab, line, mesin, 
+                 nomer, pekerjaan, status_pekerjaan, tindakan_perbaikan) = row
+                
+                response_data.update({
+                    'deskripsi_perbaikan': deskripsi_perbaikan,
+                    'tgl_his': tgl_his,
+                    'penyebab': penyebab,
+                    'line': line,
+                    'mesin': mesin,
+                    'nomer': nomer,
+                    'pekerjaan': pekerjaan,
+                    'status_pekerjaan': status_pekerjaan,
+                    'tindakan_perbaikan': tindakan_perbaikan
+                })
+                
+                # TAMBAHAN: Cari location_id berdasarkan nama line
+                if line:
+                    try:
+                        location_obj = Location.objects.filter(name__icontains=line).first()
+                        if location_obj:
+                            response_data['location_id'] = location_obj.id
+                    except:
+                        pass
+                
+                # TAMBAHAN: Cari machine_id berdasarkan nama mesin dan nomor
+                if mesin:
+                    try:
+                        machine_query = Machineelectrical.objects.filter(name__icontains=mesin)
+                        if nomer:
+                            machine_query = machine_query.filter(nomor__icontains=nomer)
+                        
+                        machine_obj = machine_query.first()
+                        if machine_obj:
+                            response_data['machine_id'] = machine_obj.id
+                    except:
+                        pass
 
+        return JsonResponse(response_data)
+
+    # Context untuk template
     context = {
         'shifts': shifts,
         'locations': locations,
@@ -1788,10 +1910,16 @@ def electrical_index(request):
         'categories': categories,
         'status': status,
         'pic_electrical': pic_electrical,
-        'nomor_wo_list': nomor_wo_list,  # Kirim nomor_wo_list ke template
-        'form': form,
-        'deskripsi_perbaikan': deskripsi_perbaikan,  # Menambahkan deskripsi_perbaikan
-        'tgl_his': tgl_his,  # Menambahkan tgl_his
+        'nomor_wo_list': nomor_wo_list,
+        'deskripsi_perbaikan': deskripsi_perbaikan,
+        'tgl_his': tgl_his,
+        'penyebab': penyebab,
+        'line': line,
+        'mesin': mesin,
+        'nomer': nomer,
+        'pekerjaan': pekerjaan,
+        'status_pekerjaan': status_pekerjaan,
+        'tindakan_perbaikan': tindakan_perbaikan,
     }
     return render(request, 'dailyactivity_app/electrical_index.html', context)
 
@@ -1812,97 +1940,336 @@ def get_machine_number_electrical(request, machine_id):
     except Machineelectrical.DoesNotExist:
         return JsonResponse({'error': 'Machine not found'}, status=404)
 
-@login_required  # Pastikan pengguna harus login untuk mengakses fungsi ini
+# @login_required  # Pastikan pengguna harus login untuk mengakses fungsi ini
+# def electrical_submit(request):
+#     if request.method == 'POST':
+#         # Ambil data dari formulir
+#         tanggal = request.POST.get('tanggal')
+#         jam = request.POST.get('jam')
+#         tgl_his = request.POST.get('tgl_his')
+#         shift_id = request.POST.get('shift')
+#         location_id = request.POST.get('location')
+#         machine_id = request.POST.get('machine')
+#         category_id = request.POST.get('category')
+#         status_id = request.POST.get('status')
+#         masalah = request.POST.get('masalah')
+#         penyebab = request.POST.get('penyebab')
+#         tindakan = request.POST.get('tindakan')
+#         image = request.FILES.get('image')
+#         pic_ids = request.POST.getlist('pic')  # Ambil daftar PIC yang dipilih
+#         nomor_wo = request.POST.get('nomor_wo')  # Ambil nomor WO
+#         waktu_pengerjaan = request.POST.get('waktu_pengerjaan')  # Ambil waktu pengerjaan
+
+#         # Ambil instance Shift
+#         try:
+#             shift_instance = Shift.objects.get(id=shift_id)
+#         except Shift.DoesNotExist:
+#             messages.error(request, 'Shift tidak ditemukan.')
+#             return redirect('dailyactivity_app:electrical_index')
+
+#         # Ambil instance Location
+#         try:
+#             location_instance = Location.objects.get(id=location_id)
+#         except Location.DoesNotExist:
+#             messages.error(request, 'Location tidak ditemukan.')
+#             return redirect('dailyactivity_app:electrical_index')
+
+#         # Ambil instance Machinemechanical
+#         try:
+#             machine_instance = Machineelectrical.objects.get(id=machine_id)
+#         except Machineelectrical.DoesNotExist:
+#             messages.error(request, 'Machine tidak ditemukan.')
+#             return redirect('dailyactivity_app:electrical_index')
+
+#         # Ambil instance Category
+#         try:
+#             category_instance = Category.objects.get(id=category_id)
+#         except Category.DoesNotExist:
+#             messages.error(request, 'Category tidak ditemukan.')
+#             return redirect('dailyactivity_app:electrical_index')
+
+#         # Ambil instance Status
+#         try:
+#             status_instance = Status.objects.get(id=status_id)
+#         except Status.DoesNotExist:
+#             messages.error(request, 'Status tidak ditemukan.')
+#             return redirect('dailyactivity_app:electrical_index')
+
+#         # Ambil user_id dari pengguna yang sedang login
+#         user_id = request.user.id
+
+#         jam_value = tgl_his if tgl_his else jam
+
+#         # Simpan data ke database
+#         electrical_data = ElectricalData.objects.create(
+#             tanggal=tanggal,
+#             jam=jam_value,
+#             shift=shift_instance,
+#             location=location_instance,
+#             machine=machine_instance,
+#             category=category_instance,
+#             status=status_instance,
+#             user_id=user_id,
+#             masalah=masalah,
+#             penyebab=penyebab,
+#             tindakan=tindakan,
+#             image=image,
+#             nomor_wo=nomor_wo,  # Simpan nomor WO
+#             waktu_pengerjaan=waktu_pengerjaan  # Simpan waktu pengerjaan3
+#         )
+
+#         # Menyimpan PIC yang dipilih
+#         for pic_id in pic_ids:
+#             try:
+#                 pic_instance = PICElectrical.objects.get(id=pic_id)
+#                 electrical_data.pic.add(pic_instance)
+#             except PICElectrical.DoesNotExist:
+#                 continue
+
+#         # Simpan pesan sukses
+#         messages.success(request, 'Data berhasil disimpan!')
+
+#         # Redirect ke mechanical_index
+#         return redirect('dailyactivity_app:electrical_index')
+
+#     return redirect('dailyactivity_app:electrical_index')
+
+@login_required  
 def electrical_submit(request):
     if request.method == 'POST':
-        # Ambil data dari formulir
-        tanggal = request.POST.get('tanggal')
-        jam = request.POST.get('jam')
-        tgl_his = request.POST.get('tgl_his')
-        shift_id = request.POST.get('shift')
-        location_id = request.POST.get('location')
-        machine_id = request.POST.get('machine')
-        category_id = request.POST.get('category')
-        status_id = request.POST.get('status')
-        masalah = request.POST.get('masalah')
-        penyebab = request.POST.get('penyebab')
-        tindakan = request.POST.get('tindakan')
-        image = request.FILES.get('image')
-        pic_ids = request.POST.getlist('pic')  # Ambil daftar PIC yang dipilih
-        nomor_wo = request.POST.get('nomor_wo')  # Ambil nomor WO
-        waktu_pengerjaan = request.POST.get('waktu_pengerjaan')  # Ambil waktu pengerjaan
-
-        # Ambil instance Shift
         try:
-            shift_instance = Shift.objects.get(id=shift_id)
-        except Shift.DoesNotExist:
-            messages.error(request, 'Shift tidak ditemukan.')
-            return redirect('dailyactivity_app:electrical_index')
+            # Function to safely convert empty string to None, then to int
+            def safe_int_or_none(value):
+                if not value or value == '' or value == 'None':
+                    return None
+                try:
+                    return int(value)
+                except (ValueError, TypeError):
+                    return None
+            
+            # Function to safely get string value
+            def safe_string(value):
+                return value.strip() if value and value.strip() else None
 
-        # Ambil instance Location
-        try:
-            location_instance = Location.objects.get(id=location_id)
-        except Location.DoesNotExist:
-            messages.error(request, 'Location tidak ditemukan.')
-            return redirect('dailyactivity_app:electrical_index')
+            # Ambil dan clean semua data dari formulir
+            tanggal = request.POST.get('tanggal')
+            jam = request.POST.get('jam')
+            tgl_his = request.POST.get('tgl_his')
+            
+            # Convert ALL ID fields safely
+            shift_id = safe_int_or_none(request.POST.get('shift'))
+            location_id = safe_int_or_none(request.POST.get('location'))
+            machine_id = safe_int_or_none(request.POST.get('machine'))
+            category_id = safe_int_or_none(request.POST.get('category'))
+            status_id = safe_int_or_none(request.POST.get('status'))
+            
+            # Text fields
+            masalah = request.POST.get('masalah', '').strip()
+            penyebab = request.POST.get('penyebab', '').strip()
+            tindakan_perbaikan = request.POST.get('tindakan_perbaikan', '').strip()
+            nomor_wo = safe_string(request.POST.get('nomor_wo'))
+            waktu_pengerjaan = safe_string(request.POST.get('waktu_pengerjaan'))
+            machine_number = safe_string(request.POST.get('machine_number'))
+            
+            # Manual machine inputs
+            manual_machine_name = safe_string(request.POST.get('manual_machine_name'))
+            manual_machine_number = safe_string(request.POST.get('manual_machine_number'))
+            
+            # File
+            image = request.FILES.get('image')
+            
+            # PIC IDs - filter empty values
+            pic_ids_raw = request.POST.getlist('pic')
+            pic_ids = [safe_int_or_none(pic_id) for pic_id in pic_ids_raw if safe_int_or_none(pic_id) is not None]
 
-        # Ambil instance Machinemechanical
-        try:
-            machine_instance = Machineelectrical.objects.get(id=machine_id)
-        except Machineelectrical.DoesNotExist:
-            messages.error(request, 'Machine tidak ditemukan.')
-            return redirect('dailyactivity_app:electrical_index')
+            print(f"DEBUG - shift_id: {shift_id}, category_id: {category_id}, status_id: {status_id}")
+            print(f"DEBUG - location_id: {location_id}, machine_id: {machine_id}")
+            print(f"DEBUG - manual_machine_name: {manual_machine_name}")
 
-        # Ambil instance Category
-        try:
-            category_instance = Category.objects.get(id=category_id)
-        except Category.DoesNotExist:
-            messages.error(request, 'Category tidak ditemukan.')
-            return redirect('dailyactivity_app:electrical_index')
+            # Validasi REQUIRED fields dengan proper error messages
+            if not shift_id:
+                messages.error(request, 'Shift harus dipilih.')
+                return redirect('dailyactivity_app:electrical_index')
+                
+            if not category_id:
+                messages.error(request, 'Jenis Pekerjaan harus dipilih.')
+                return redirect('dailyactivity_app:electrical_index')
+                
+            if not status_id:
+                messages.error(request, 'Status harus dipilih.')
+                return redirect('dailyactivity_app:electrical_index')
 
-        # Ambil instance Status
-        try:
-            status_instance = Status.objects.get(id=status_id)
-        except Status.DoesNotExist:
-            messages.error(request, 'Status tidak ditemukan.')
-            return redirect('dailyactivity_app:electrical_index')
+            if not masalah:
+                messages.error(request, 'Masalah harus diisi.')
+                return redirect('dailyactivity_app:electrical_index')
 
-        # Ambil user_id dari pengguna yang sedang login
-        user_id = request.user.id
+            if not penyebab:
+                messages.error(request, 'Penyebab harus diisi.')
+                return redirect('dailyactivity_app:electrical_index')
 
-        jam_value = tgl_his if tgl_his else jam
+            if not tindakan_perbaikan:
+                messages.error(request, 'Tindakan Perbaikan harus diisi.')
+                return redirect('dailyactivity_app:electrical_index')
 
-        # Simpan data ke database
-        electrical_data = ElectricalData.objects.create(
-            tanggal=tanggal,
-            jam=jam_value,
-            shift=shift_instance,
-            location=location_instance,
-            machine=machine_instance,
-            category=category_instance,
-            status=status_instance,
-            user_id=user_id,
-            masalah=masalah,
-            penyebab=penyebab,
-            tindakan=tindakan,
-            image=image,
-            nomor_wo=nomor_wo,  # Simpan nomor WO
-            waktu_pengerjaan=waktu_pengerjaan  # Simpan waktu pengerjaan3
-        )
-
-        # Menyimpan PIC yang dipilih
-        for pic_id in pic_ids:
+            # Get required instances
             try:
-                pic_instance = PICElectrical.objects.get(id=pic_id)
-                electrical_data.pic.add(pic_instance)
-            except PICElectrical.DoesNotExist:
-                continue
+                shift_instance = Shift.objects.get(id=shift_id)
+                category_instance = Category.objects.get(id=category_id)
+                status_instance = Status.objects.get(id=status_id)
+            except (Shift.DoesNotExist, Category.DoesNotExist, Status.DoesNotExist) as e:
+                messages.error(request, f'Data referensi tidak ditemukan: {str(e)}')
+                return redirect('dailyactivity_app:electrical_index')
 
-        # Simpan pesan sukses
-        messages.success(request, 'Data berhasil disimpan!')
+            # HANDLE LOCATION - ALWAYS CREATE ONE
+            location_instance = None
+            if location_id:
+                try:
+                    location_instance = Location.objects.get(id=location_id)
+                except Location.DoesNotExist:
+                    messages.error(request, 'Location tidak ditemukan.')
+                    return redirect('dailyactivity_app:electrical_index')
+            
+            # Create default location if none selected
+            if not location_instance:
+                location_instance, created = Location.objects.get_or_create(
+                    name="Unknown Location",
+                    defaults={'name': "Unknown Location"}
+                )
+                print(f"DEBUG - Created/found default location: {location_instance.id}")
 
-        # Redirect ke mechanical_index
-        return redirect('dailyactivity_app:electrical_index')
+            # HANDLE MACHINE - ALWAYS CREATE ONE
+            machine_instance = None
+            
+            # Option 1: Machine selected from dropdown
+            if machine_id:
+                try:
+                    machine_instance = Machineelectrical.objects.get(id=machine_id)
+                    print(f"DEBUG - Found machine from dropdown: {machine_instance.id}")
+                    
+                    # Update machine number if provided and machine doesn't have one
+                    if machine_number and not machine_instance.nomor:
+                        machine_instance.nomor = machine_number
+                        machine_instance.save()
+                        
+                except Machineelectrical.DoesNotExist:
+                    print(f"DEBUG - Machine ID {machine_id} not found")
+                    machine_instance = None
+            
+            # Option 2: Manual machine input
+            if not machine_instance and manual_machine_name:
+                try:
+                    print(f"DEBUG - Trying to create/find manual machine: {manual_machine_name}")
+                    
+                    # Check if machine already exists
+                    machine_instance = Machineelectrical.objects.filter(
+                        name__iexact=manual_machine_name
+                    ).first()
+                    
+                    if not machine_instance:
+                        # Create new machine
+                        machine_instance = Machineelectrical.objects.create(
+                            name=manual_machine_name,
+                            location=location_instance,
+                            nomor=manual_machine_number
+                        )
+                        print(f"DEBUG - Created new machine: {machine_instance.id}")
+                    else:
+                        # Update existing machine number if needed
+                        if manual_machine_number and not machine_instance.nomor:
+                            machine_instance.nomor = manual_machine_number
+                            machine_instance.save()
+                        print(f"DEBUG - Found existing machine: {machine_instance.id}")
+                        
+                except Exception as e:
+                    print(f"DEBUG - Error creating manual machine: {e}")
+                    machine_instance = None
+            
+            # Option 3: Create default machine if still none
+            if not machine_instance:
+                try:
+                    machine_instance, created = Machineelectrical.objects.get_or_create(
+                        name="Unknown Machine",
+                        location=location_instance,
+                        defaults={
+                            'name': "Unknown Machine",
+                            'location': location_instance,
+                            'nomor': None
+                        }
+                    )
+                    print(f"DEBUG - Created/found default machine: {machine_instance.id}, created: {created}")
+                except Exception as e:
+                    print(f"DEBUG - Error creating default machine: {e}")
+                    # Last resort with timestamp to avoid conflicts
+                    import time
+                    timestamp = str(int(time.time()))
+                    machine_instance = Machineelectrical.objects.create(
+                        name=f"Unknown Machine {timestamp}",
+                        location=location_instance,
+                        nomor=None
+                    )
+                    print(f"DEBUG - Created timestamped machine: {machine_instance.id}")
+
+            # Pastikan semua instance yang dibutuhkan ada
+            if not all([shift_instance, location_instance, machine_instance, category_instance, status_instance]):
+                missing = []
+                if not shift_instance: missing.append("shift")
+                if not location_instance: missing.append("location")
+                if not machine_instance: missing.append("machine")
+                if not category_instance: missing.append("category") 
+                if not status_instance: missing.append("status")
+                
+                messages.error(request, f'Instance tidak lengkap: {", ".join(missing)}')
+                return redirect('dailyactivity_app:electrical_index')
+
+            # Process jam field
+            jam_value = None
+            if tgl_his:
+                jam_value = tgl_his
+            elif jam:
+                jam_value = jam
+
+            print(f"DEBUG - About to save with: shift={shift_instance.id}, location={location_instance.id}, machine={machine_instance.id}")
+
+            # SAVE DATA TO DATABASE
+            electrical_data = ElectricalData.objects.create(
+                tanggal=tanggal,
+                jam=jam_value,
+                shift=shift_instance,
+                location=location_instance,
+                machine=machine_instance,
+                category=category_instance,
+                status=status_instance,
+                user=request.user,  # Use request.user instead of user_id
+                masalah=masalah,
+                penyebab=penyebab,
+                tindakan=tindakan_perbaikan,
+                # tindakan_perbaikan=tindakan_perbaikan,
+                image=image,
+                nomor_wo=nomor_wo,
+                waktu_pengerjaan=waktu_pengerjaan
+            )
+
+            print(f"DEBUG - electrical_data data created with ID: {electrical_data.id}")
+
+            # Add PICs
+            for pic_id in pic_ids:
+                try:
+                    pic_instance = PICElectrical.objects.get(id=pic_id)
+                    electrical_data.pic.add(pic_instance)
+                    print(f"DEBUG - Added PIC: {pic_id}")
+                except PICElectrical.DoesNotExist:
+                    print(f"DEBUG - PIC not found: {pic_id}")
+                    continue
+
+            messages.success(request, 'Data berhasil disimpan!')
+            return redirect('dailyactivity_app:electrical_index')
+
+        except Exception as e:
+            print(f"ERROR - Exception in electrical_submit: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            messages.error(request, f'Terjadi kesalahan: {str(e)}')
+            return redirect('dailyactivity_app:electrical_index')
 
     return redirect('dailyactivity_app:electrical_index')
 
@@ -1918,9 +2285,62 @@ def data_electrical(request, tanggal):
     }
     return render(request, 'dailyactivity_app/data_electrical.html', context)
 
+# @login_required
+# def edit_electrical_data(request, id):
+#     # Ambil data yang akan diedit berdasarkan id
+#     electrical_data = get_object_or_404(ElectricalData, id=id)
+#     shifts = Shift.objects.all()
+#     locations = Location.objects.all()
+#     machines = Machineelectrical.objects.all()
+#     categories = Category.objects.all()
+#     status = Status.objects.all()
+#     pic_electrical = PICElectrical.objects.all()
+
+#     if request.method == 'POST':
+#         # Memproses form data yang telah diisi ulang
+#         form = ElectricalDataForm(request.POST, request.FILES, instance=electrical_data)
+#         if form.is_valid():
+#             updated_data = form.save(commit=False)
+#             updated_data.user = request.user
+#             updated_data.nomor_wo = form.cleaned_data.get('nomor_wo')
+#             updated_data.waktu_pengerjaan = form.cleaned_data.get('waktu_pengerjaan')
+#             updated_data.save()
+
+#             # Update PIC terkait
+#             pic_ids = form.cleaned_data.get('pic')
+#             updated_data.pic.set(pic_ids)
+
+#             messages.success(request, 'Data berhasil diperbarui!')
+#             return redirect('dailyactivity_app:data_electrical', tanggal=updated_data.tanggal.strftime('%Y-%m-%d'))
+#         else:
+#             messages.error(request, 'Terjadi kesalahan saat memperbarui data. Periksa kembali isian Anda.')
+
+#     else:
+#         # Memuat form dengan data yang ada untuk ditampilkan di template
+#         form = ElectricalDataForm(instance=electrical_data)
+
+#     context = {
+#         'form': form,
+#         'shifts': shifts,
+#         'locations': locations,
+#         'machines': machines,
+#         'categories': categories,
+#         'status': status,
+#         'pic_electrical': pic_electrical,
+#         'data': electrical_data,
+#         'tanggal': electrical_data.tanggal,
+#         'jam': electrical_data.jam,
+#         'nomor_wo': electrical_data.nomor_wo,
+#         'waktu_pengerjaan': electrical_data.waktu_pengerjaan,
+#         'pic': electrical_data.pic.all(),
+#     }
+#     return render(request, 'dailyactivity_app/edit_electrical_data.html', context)
+
 @login_required
 def edit_electrical_data(request, id):
-    # Ambil data yang akan diedit berdasarkan id
+    """
+    Edit data electrical untuk model ElectricalData
+    """
     electrical_data = get_object_or_404(ElectricalData, id=id)
     shifts = Shift.objects.all()
     locations = Location.objects.all()
@@ -1930,30 +2350,170 @@ def edit_electrical_data(request, id):
     pic_electrical = PICElectrical.objects.all()
 
     if request.method == 'POST':
-        # Memproses form data yang telah diisi ulang
-        form = ElectricalDataForm(request.POST, request.FILES, instance=electrical_data)
-        if form.is_valid():
-            updated_data = form.save(commit=False)
-            updated_data.user = request.user
-            updated_data.nomor_wo = form.cleaned_data.get('nomor_wo')
-            updated_data.waktu_pengerjaan = form.cleaned_data.get('waktu_pengerjaan')
-            updated_data.save()
+        try:
+            # Function to safely convert empty string to None, then to int
+            def safe_int_or_none(value):
+                if not value or value == '' or value == 'None':
+                    return None
+                try:
+                    return int(value)
+                except (ValueError, TypeError):
+                    return None
+            
+            # Function to safely get string value
+            def safe_string(value):
+                return value.strip() if value and value.strip() else None
 
-            # Update PIC terkait
-            pic_ids = form.cleaned_data.get('pic')
-            updated_data.pic.set(pic_ids)
+            # Ambil dan clean semua data dari formulir
+            tanggal_str = request.POST.get('tanggal')
+            jam = request.POST.get('jam')
+
+            # Convert string ke date
+            tanggal = None
+            if tanggal_str:
+                try:
+                    tanggal = datetime.strptime(tanggal_str, "%Y-%m-%d").date()
+                except ValueError:
+                    messages.error(request, 'Format tanggal tidak valid. Gunakan YYYY-MM-DD.')
+                    return redirect('dailyactivity_app:edit_electrical_data', id=id)
+            
+            # Convert ALL ID fields safely
+            shift_id = safe_int_or_none(request.POST.get('shift'))
+            location_id = safe_int_or_none(request.POST.get('location'))
+            machine_id = safe_int_or_none(request.POST.get('machine'))
+            category_id = safe_int_or_none(request.POST.get('category'))
+            status_id = safe_int_or_none(request.POST.get('status'))
+            
+            # Text fields
+            masalah = request.POST.get('masalah', '').strip()
+            penyebab = request.POST.get('penyebab', '').strip()
+            tindakan_perbaikan = request.POST.get('tindakan_perbaikan', '').strip()
+            nomor_wo = safe_string(request.POST.get('nomor_wo'))
+            waktu_pengerjaan = safe_string(request.POST.get('waktu_pengerjaan'))
+            
+            # File
+            image = request.FILES.get('image')
+            
+            # PIC IDs - filter empty values
+            pic_ids_raw = request.POST.getlist('pic')
+            pic_ids = [safe_int_or_none(pic_id) for pic_id in pic_ids_raw if safe_int_or_none(pic_id) is not None]
+
+            # Validasi REQUIRED fields
+            if not shift_id:
+                messages.error(request, 'Shift harus dipilih.')
+                return redirect('dailyactivity_app:edit_electrical_data', id=id)
+                
+            if not category_id:
+                messages.error(request, 'Jenis Pekerjaan harus dipilih.')
+                return redirect('dailyactivity_app:edit_electrical_data', id=id)
+                
+            if not status_id:
+                messages.error(request, 'Status harus dipilih.')
+                return redirect('dailyactivity_app:edit_electrical_data', id=id)
+
+            if not masalah:
+                messages.error(request, 'Masalah harus diisi.')
+                return redirect('dailyactivity_app:edit_electrical_data', id=id)
+
+            if not penyebab:
+                messages.error(request, 'Penyebab harus diisi.')
+                return redirect('dailyactivity_app:edit_electrical_data', id=id)
+
+            if not tindakan_perbaikan:
+                messages.error(request, 'Tindakan Perbaikan harus diisi.')
+                return redirect('dailyactivity_app:edit_electrical_data', id=id)
+
+            # Get required instances
+            try:
+                shift_instance = Shift.objects.get(id=shift_id)
+                category_instance = Category.objects.get(id=category_id)
+                status_instance = Status.objects.get(id=status_id)
+            except (Shift.DoesNotExist, Category.DoesNotExist, Status.DoesNotExist) as e:
+                messages.error(request, f'Data referensi tidak ditemukan: {str(e)}')
+                return redirect('dailyactivity_app:edit_electrical_data', id=id)
+
+            # Handle Location - bisa None
+            location_instance = None
+            if location_id:
+                try:
+                    location_instance = Location.objects.get(id=location_id)
+                except Location.DoesNotExist:
+                    messages.error(request, 'Location tidak ditemukan.')
+                    return redirect('dailyactivity_app:edit_electrical_data', id=id)
+            
+            if not location_instance:
+                location_instance = electrical_data.location  # Keep existing location
+                if not location_instance:
+                    location_instance, created = Location.objects.get_or_create(
+                        name="Unknown Location",
+                        defaults={'name': "Unknown Location"}
+                    )
+
+            # Handle Machine - bisa None
+            machine_instance = None
+            if machine_id:
+                try:
+                    machine_instance = Machineelectrical.objects.get(id=machine_id)
+                except Machineelectrical.DoesNotExist:
+                    messages.error(request, 'Machine tidak ditemukan.')
+                    return redirect('dailyactivity_app:edit_electrical_data', id=id)
+            
+            if not machine_instance:
+                machine_instance = electrical_data.machine  # Keep existing machine
+                if not machine_instance:
+                    machine_instance, created = Machineelectrical.objects.get_or_create(
+                        name="Unknown Machine",
+                        location=location_instance,
+                        defaults={
+                            'name': "Unknown Machine",
+                            'location': location_instance,
+                            'nomor': None
+                        }
+                    )
+
+            # Process jam field
+            jam_value = jam if jam else None
+
+            # UPDATE DATA ELECTRICAL
+            electrical_data.tanggal = tanggal
+            electrical_data.jam = jam_value
+            electrical_data.shift = shift_instance
+            electrical_data.location = location_instance
+            electrical_data.machine = machine_instance
+            electrical_data.category = category_instance
+            electrical_data.status = status_instance
+            electrical_data.masalah = masalah
+            electrical_data.penyebab = penyebab
+            electrical_data.tindakan = tindakan_perbaikan  # Backward compatibility
+            # electrical_data.tindakan_perbaikan = tindakan_perbaikan
+            electrical_data.nomor_wo = nomor_wo
+            electrical_data.waktu_pengerjaan = waktu_pengerjaan
+            
+            if image:
+                electrical_data.image = image
+                
+            electrical_data.save()
+
+            # Update PICs - clear existing and add new ones
+            electrical_data.pic.clear()
+            for pic_id in pic_ids:
+                try:
+                    pic_instance = PICElectrical.objects.get(id=pic_id)
+                    electrical_data.pic.add(pic_instance)
+                except PICElectrical.DoesNotExist:
+                    continue
 
             messages.success(request, 'Data berhasil diperbarui!')
-            return redirect('dailyactivity_app:data_electrical', tanggal=updated_data.tanggal.strftime('%Y-%m-%d'))
-        else:
-            messages.error(request, 'Terjadi kesalahan saat memperbarui data. Periksa kembali isian Anda.')
+            return redirect('dailyactivity_app:data_electrical', tanggal=electrical_data.tanggal.strftime('%Y-%m-%d'))
 
-    else:
-        # Memuat form dengan data yang ada untuk ditampilkan di template
-        form = ElectricalDataForm(instance=electrical_data)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            messages.error(request, f'Terjadi kesalahan saat memperbarui data: {str(e)}')
+            return redirect('dailyactivity_app:edit_electrical_data', id=id)
 
+    # Context untuk GET request
     context = {
-        'form': form,
         'shifts': shifts,
         'locations': locations,
         'machines': machines,
@@ -1961,13 +2521,11 @@ def edit_electrical_data(request, id):
         'status': status,
         'pic_electrical': pic_electrical,
         'data': electrical_data,
-        'tanggal': electrical_data.tanggal,
-        'jam': electrical_data.jam,
-        'nomor_wo': electrical_data.nomor_wo,
-        'waktu_pengerjaan': electrical_data.waktu_pengerjaan,
-        'pic': electrical_data.pic.all(),
     }
+    
     return render(request, 'dailyactivity_app/edit_electrical_data.html', context)
+
+
 
 @login_required
 def delete_electrical_data(request, id):
@@ -4419,8 +4977,10 @@ def laporan_index(request):
     pic_lembur = PICLembur.objects.all()
     laporan_data = LaporanData.objects.all()
     
-    # Handle form submission dengan multiple rows
+    # Handle form submission dengan multiple rows - FIXED COMPLETE
     if request.method == 'POST':
+        print("=== DEBUG: Form Submission Started ===")
+        
         # Ambil data common (tanggal, shift, pic, dll)
         tanggal = request.POST.get('tanggal')
         shift_id = request.POST.get('shift')
@@ -4429,13 +4989,15 @@ def laporan_index(request):
         piclembur_ids = request.POST.getlist('piclembur')
         image = request.FILES.get('image')
         
-        # Ambil array data pekerjaan
+        print(f"Common data - Tanggal: {tanggal}, Shift: {shift_id}, Catatan: {catatan}")
+        print(f"PIC IDs: {pic_ids}, PIC Lembur IDs: {piclembur_ids}")
+        
+        # Ambil array data pekerjaan (JENIS PEKERJAAN UTILITY DIHILANGKAN DARI FORM)
         deskripsi_list = request.POST.getlist('deskripsi_pekerjaan[]')
-        jenis_pekerjaan_list = request.POST.getlist('jenis_pekerjaan[]')
         lama_pekerjaan_list = request.POST.getlist('lama_pekerjaan[]')
         pic_pekerjaan_list = request.POST.getlist('pic_pekerjaan[]')
         
-        # Ambil array data WO & Maintenance baru
+        # Ambil array data WO & Maintenance baru (SEMUA FIELD BARU)
         nomor_wo_list = request.POST.getlist('nomor_wo[]')
         status_utility_list = request.POST.getlist('status_utility[]')
         lokasi_list = request.POST.getlist('lokasi[]')
@@ -4445,52 +5007,104 @@ def laporan_index(request):
         penyebab_list = request.POST.getlist('penyebab[]')
         tindakan_perbaikan_list = request.POST.getlist('tindakan_perbaikan[]')
         
+        # Debug print semua arrays
+        print(f"Deskripsi: {deskripsi_list}")
+        print(f"Lama Pekerjaan: {lama_pekerjaan_list}")
+        print(f"PIC Pekerjaan: {pic_pekerjaan_list}")
+        print(f"Nomor WO: {nomor_wo_list}")
+        print(f"Status Utility: {status_utility_list}")
+        print(f"Lokasi: {lokasi_list}")
+        print(f"Mesin: {mesin_list}")
+        print(f"Nomor Mesin: {nomor_mesin_list}")
+        print(f"Jenis Pekerjaan Maintenance: {jenis_pekerjaan_maintenance_list}")
+        print(f"Penyebab: {penyebab_list}")
+        print(f"Tindakan Perbaikan: {tindakan_perbaikan_list}")
+        
+        # Validasi basic
+        if not tanggal or not shift_id or not deskripsi_list:
+            messages.error(request, 'Data tanggal, shift, dan minimal 1 deskripsi pekerjaan harus diisi!')
+            return redirect('dailyactivity_app:laporan_index')
+        
         try:
-            # Dapatkan shift object
-            shift = Shift.objects.get(id=shift_id) if shift_id else None
-            
-            # Loop untuk setiap baris pekerjaan
-            for i in range(len(deskripsi_list)):
-                # Create LaporanData instance untuk setiap baris
-                laporan = LaporanData(
-                    tanggal=tanggal,
-                    shift=shift,
-                    # Data utility (field lama)
-                    masalah=deskripsi_list[i],  # deskripsi -> masalah
-                    jenis_pekerjaan=jenis_pekerjaan_list[i] if i < len(jenis_pekerjaan_list) else '',
-                    lama_pekerjaan=lama_pekerjaan_list[i] if i < len(lama_pekerjaan_list) else '',
-                    pic_pekerjaan=pic_pekerjaan_list[i] if i < len(pic_pekerjaan_list) else '',
-                    catatan=catatan,
-                    user=request.user,
-                    # Data WO & Maintenance (field baru)
-                    nomor_wo=nomor_wo_list[i] if i < len(nomor_wo_list) else '',
-                    status_utility=status_utility_list[i] if i < len(status_utility_list) else 'proses',
-                    lokasi=lokasi_list[i] if i < len(lokasi_list) else '',
-                    mesin=mesin_list[i] if i < len(mesin_list) else '',
-                    nomor_mesin=nomor_mesin_list[i] if i < len(nomor_mesin_list) else '',
-                    jenis_pekerjaan_maintenance=jenis_pekerjaan_maintenance_list[i] if i < len(jenis_pekerjaan_maintenance_list) else '',
-                    penyebab=penyebab_list[i] if i < len(penyebab_list) else '',
-                    tindakan_perbaikan=tindakan_perbaikan_list[i] if i < len(tindakan_perbaikan_list) else '',
-                    # Image hanya untuk record pertama
-                    image=image if i == 0 else None
-                )
+            with transaction.atomic():
+                # Dapatkan shift object
+                shift = Shift.objects.get(id=shift_id)
+                created_laporans = []
                 
-                laporan.save()
+                print(f"=== Processing {len(deskripsi_list)} rows ===")
                 
-                # Set PIC untuk setiap laporan
-                if pic_ids:
-                    laporan.pic.set(pic_ids)
-                if piclembur_ids:
-                    laporan.piclembur.set(piclembur_ids)
+                # Loop untuk setiap baris pekerjaan - HANDLE SEMUA FIELD BARU
+                for i in range(len(deskripsi_list)):
+                    if not deskripsi_list[i].strip():  # Skip empty descriptions
+                        continue
+                        
+                    print(f"--- Processing row {i+1} ---")
+                    
+                    # Create LaporanData instance dengan SEMUA FIELD
+                    laporan = LaporanData(
+                        tanggal=tanggal,
+                        shift=shift,
+                        user=request.user,
+                        
+                        # Data utility (field lama)
+                        masalah=deskripsi_list[i].strip(),  # deskripsi -> masalah
+                        jenis_pekerjaan='',  # Dikosongkan karena input utility dihilangkan
+                        lama_pekerjaan=lama_pekerjaan_list[i].strip() if i < len(lama_pekerjaan_list) else '',
+                        pic_pekerjaan=pic_pekerjaan_list[i].strip() if i < len(pic_pekerjaan_list) else '',
+                        catatan=catatan,
+                        
+                        # Data WO & Maintenance (field baru) - COMPLETE MAPPING
+                        nomor_wo=nomor_wo_list[i].strip() if i < len(nomor_wo_list) and nomor_wo_list[i] else '',
+                        status_utility=status_utility_list[i] if i < len(status_utility_list) and status_utility_list[i] else 'proses',
+                        lokasi=lokasi_list[i].strip() if i < len(lokasi_list) and lokasi_list[i] else '',
+                        mesin=mesin_list[i].strip() if i < len(mesin_list) and mesin_list[i] else '',
+                        nomor_mesin=nomor_mesin_list[i].strip() if i < len(nomor_mesin_list) and nomor_mesin_list[i] else '',
+                        jenis_pekerjaan_maintenance=jenis_pekerjaan_maintenance_list[i].strip() if i < len(jenis_pekerjaan_maintenance_list) and jenis_pekerjaan_maintenance_list[i] else '',
+                        penyebab=penyebab_list[i].strip() if i < len(penyebab_list) and penyebab_list[i] else '',
+                        tindakan_perbaikan=tindakan_perbaikan_list[i].strip() if i < len(tindakan_perbaikan_list) and tindakan_perbaikan_list[i] else '',
+                        
+                        # Image hanya untuk record pertama
+                        image=image if i == 0 else None
+                    )
+                    
+                    # Save record
+                    laporan.save()
+                    created_laporans.append(laporan)
+                    
+                    print(f"Saved laporan {laporan.id} - WO: {laporan.nomor_wo}, Lokasi: {laporan.lokasi}")
+                    
+                    # Set PIC untuk setiap laporan (Many-to-Many)
+                    if pic_ids:
+                        pic_objects = PICLaporan.objects.filter(id__in=pic_ids)
+                        laporan.pic.set(pic_objects)
+                        print(f"Set PIC: {list(pic_objects.values_list('name', flat=True))}")
+                    
+                    if piclembur_ids:
+                        piclembur_objects = PICLembur.objects.filter(id__in=piclembur_ids)
+                        laporan.piclembur.set(piclembur_objects)
+                        print(f"Set PIC Lembur: {list(piclembur_objects.values_list('name', flat=True))}")
+                
+                # Success message
+                messages.success(request, f'✅ Berhasil menyimpan {len(created_laporans)} data laporan utility!')
+                print(f"=== SUCCESS: Saved {len(created_laporans)} records ===")
+                
+                # Redirect ke halaman sukses
+                return redirect('dailyactivity_app:tanggal_laporan')
             
-            # Redirect ke halaman sukses
-            return redirect('dailyactivity_app:tanggal_laporan')
-            
+        except Shift.DoesNotExist:
+            messages.error(request, '❌ Shift yang dipilih tidak ditemukan!')
+            print("ERROR: Shift not found")
         except Exception as e:
-            print(f"Error saving laporan: {e}")
-            # Jika error, tampilkan form dengan error message
-            form = LaporanDataForm()
+            messages.error(request, f'❌ Error menyimpan data: {str(e)}')
+            print(f"ERROR: {e}")
+            import traceback
+            traceback.print_exc()
+        
+        # Jika error, tetap tampilkan form
+        return redirect('dailyactivity_app:laporan_index')
+    
     else:
+        # GET request - tampilkan form
         form = LaporanDataForm()
     
     # Data untuk dropdown - pake fallback kalau error
@@ -4531,11 +5145,13 @@ def get_nomor_wo_list():
     try:
         with connections['DB_Maintenance'].cursor() as cursor:
             cursor.execute("""
-                SELECT TOP 30 number_wo
+                SELECT DISTINCT number_wo
                 FROM dbo.view_main
                 WHERE id_section = 6
                 AND YEAR(tgl_his) BETWEEN 2024 AND 2025
-                ORDER BY history_id DESC
+                AND number_wo IS NOT NULL
+                AND number_wo != ''
+                ORDER BY number_wo DESC
             """)
             nomor_wo_list = [{'value': row[0], 'text': row[0]} for row in cursor.fetchall()]
     except Exception as e:
@@ -4549,14 +5165,16 @@ def get_nomor_wo_list():
 
 
 def get_lokasi_list():
-    """Ambil daftar lokasi dari tabel line DB_Maintenance"""
+    """Ambil daftar lokasi dari tabel line DB_Maintenance - FIX DUPLICATE"""
     lokasi_list = []
     try:
         with connections['DB_Maintenance'].cursor() as cursor:
             cursor.execute("""
-                SELECT id_line, line
+                SELECT DISTINCT id_line, line
                 FROM tabel_line
                 WHERE status = 'A'
+                AND line IS NOT NULL
+                AND line != ''
                 ORDER BY line
             """)
             lokasi_list = [{'value': str(row[0]), 'text': row[1]} for row in cursor.fetchall()]
@@ -4579,6 +5197,8 @@ def get_jenis_pekerjaan_list():
                 SELECT id_pekerjaan, pekerjaan
                 FROM tabel_pekerjaan
                 WHERE status = 'A'
+                AND pekerjaan IS NOT NULL
+                AND pekerjaan != ''
                 ORDER BY pekerjaan
             """)
             jenis_pekerjaan_list = [{'value': str(row[0]), 'text': row[1]} for row in cursor.fetchall()]
@@ -4592,10 +5212,135 @@ def get_jenis_pekerjaan_list():
         ]
     return jenis_pekerjaan_list
 
+@login_required
+def get_wo_details(request):
+    """AJAX endpoint untuk auto-fill data berdasarkan nomor WO"""
+    nomor_wo = request.GET.get('nomor_wo')
+    
+    if not nomor_wo:
+        return JsonResponse({'error': 'Nomor WO required'})
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT 
+                    vm.deskripsi_perbaikan,
+                    vm.id_line,
+                    vm.line,
+                    vm.id_mesin,
+                    vm.mesin,
+                    vm.nomer,
+                    vm.penyebab,
+                    vm.tindakan_perbaikan
+                FROM dbo.view_main vm
+                WHERE vm.number_wo = %s
+                ORDER BY vm.history_id DESC
+            """, [nomor_wo])
+            
+            result = cursor.fetchone()
+            
+            if result:
+                return JsonResponse({
+                    'success': True,
+                    'data': {
+                        'deskripsi_perbaikan': result[0] or '',
+                        'id_line': str(result[1]) if result[1] else '',
+                        'line': result[2] or '',
+                        'id_mesin': str(result[3]) if result[3] else '',
+                        'mesin': result[4] or '',
+                        'nomer': result[5] or '',
+                        'penyebab': result[6] or '',
+                        'tindakan_perbaikan': result[7] or ''
+                    }
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Nomor WO tidak ditemukan'
+                })
+                
+    except Exception as e:
+        print(f"Error fetching WO details: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
 
 @login_required
+def get_mesin_by_lokasi_utility(request, lokasi_id):
+    """AJAX endpoint untuk dapetin daftar mesin berdasarkan lokasi - FIXED untuk handle float/string"""
+    
+    # Convert lokasi_id to integer (handle float values seperti "28.0")
+    try:
+        lokasi_id_int = int(float(lokasi_id))
+    except (ValueError, TypeError):
+        return JsonResponse([], safe=False)
+    
+    mesin_list = []
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT tm.id_mesin, tm.mesin, tm.nomer
+                FROM tabel_mesin tm
+                WHERE tm.id_line = %s 
+                AND tm.status = 'A'
+                AND tm.mesin IS NOT NULL
+                AND tm.mesin != ''
+                ORDER BY tm.mesin, tm.nomer
+            """, [lokasi_id_int])
+            
+            results = cursor.fetchall()
+            
+            # Format response sama seperti mechanical
+            for row in results:
+                mesin_list.append({
+                    'id': row[0],
+                    'name': row[1],
+                    'location_id': str(lokasi_id_int),
+                    'nomor': row[2] if row[2] else ''
+                })
+    
+    except Exception as e:
+        print(f"Error fetching mesin by lokasi {lokasi_id}: {e}")
+        # Return empty list instead of fallback untuk debugging
+        return JsonResponse([], safe=False)
+    
+    # Return format sama persis seperti mechanical
+    return JsonResponse(mesin_list, safe=False)
+
+
+@login_required
+def get_machine_number_utility(request, machine_id):
+    """AJAX endpoint untuk dapetin nomor mesin berdasarkan machine_id - FIXED untuk handle float/string"""
+    
+    # Convert machine_id to integer (handle float values)
+    try:
+        machine_id_int = int(float(machine_id))
+    except (ValueError, TypeError):
+        return JsonResponse({'error': 'Invalid machine ID'}, status=400)
+        
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT nomer
+                FROM tabel_mesin
+                WHERE id_mesin = %s
+            """, [machine_id_int])
+            
+            result = cursor.fetchone()
+            
+            if result and result[0]:
+                return JsonResponse({'nomor': result[0]})
+            else:
+                return JsonResponse({'nomor': ''})
+                
+    except Exception as e:
+        print(f"Error fetching nomor mesin {machine_id}: {e}")
+        return JsonResponse({'error': 'Machine not found'}, status=404)
+    
+@login_required
 def get_mesin_by_lokasi(request):
-    """AJAX endpoint untuk dapetin daftar mesin berdasarkan lokasi yang dipilih"""
+    """AJAX endpoint untuk dapetin daftar mesin berdasarkan lokasi yang dipilih - FIXED"""
     lokasi_id = request.GET.get('lokasi_id')
     
     if not lokasi_id:
@@ -4605,10 +5350,13 @@ def get_mesin_by_lokasi(request):
     try:
         with connections['DB_Maintenance'].cursor() as cursor:
             cursor.execute("""
-                SELECT id_mesin, mesin, nomer
-                FROM tabel_mesin
-                WHERE id_line = %s AND status = 'A'
-                ORDER BY mesin
+                SELECT DISTINCT tm.id_mesin, tm.mesin, tm.nomer
+                FROM tabel_mesin tm
+                WHERE tm.id_line = %s 
+                AND tm.status = 'A'
+                AND tm.mesin IS NOT NULL
+                AND tm.mesin != ''
+                ORDER BY tm.mesin
             """, [lokasi_id])
             
             mesin_list = [
@@ -4655,7 +5403,6 @@ def get_nomor_mesin(request):
         nomor_mesin = f"M{mesin_id:03d}"  # Fallback format
     
     return JsonResponse({'nomor_mesin': nomor_mesin})
-
 
 
 # @login_required

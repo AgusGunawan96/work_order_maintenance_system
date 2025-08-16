@@ -2,389 +2,654 @@
 {% load static %}
 {% load sass_tags %}
 {% load widget_tweaks %}
+
 {% block css %}
-<!-- Plugins css start-->
-<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/select2.scss' %}">
-<!-- Plugins css Ends-->
 <style>
+  * {
+    box-sizing: border-box;
+  }
+
   .page-body {
-    padding-top: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-  .full-width-card {
-    margin: 0 auto;
+
+  .container-fluid {
+    max-width: 100%;
     padding: 0;
-    width: 100%;
   }
-  .card {
-    margin-top: -20px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+
+  .main-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    height: calc(100vh - 20px);
+    display: flex;
+    flex-direction: column;
   }
-  .card-header h5 {
+
+  .header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+  }
+
+  .header h4 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .form-container {
+    flex: 1;
+    padding: 15px 20px;
+    overflow-y: auto;
+  }
+
+  .form-grid {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+
+  .grid-6 { grid-template-columns: repeat(6, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-1 { grid-template-columns: 1fr; }
+
+  .form-group {
     margin-bottom: 0;
-    font-size: 1.25rem;
   }
-  .card-body {
-    padding: 15px;
+
+  .form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 4px;
+    display: block;
   }
-  .form-inline-row .form-group {
-    width: 18%; /* Reduced width for inline display */
-    margin-right: 1%; /* Space between fields */
-    display: inline-block;
-    vertical-align: top;
+
+  .form-control {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    height: 36px;
+    background: white;
+    transition: border-color 0.2s;
   }
-  .form-inline-row .form-group:last-child {
-    margin-right: 0; /* Remove margin from the last item */
+
+  .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    outline: none;
+  }
+
+  textarea.form-control {
+    height: 70px;
+    resize: none;
+  }
+
+  .select2-container--default .select2-selection--single {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    height: 36px;
+    padding: 0;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 34px;
+    right: 8px;
+  }
+
+  .select2-container--default .select2-selection--multiple {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    min-height: 36px;
+    padding: 2px 5px;
+  }
+
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background: #667eea;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    padding: 2px 8px;
+    margin: 2px;
+    font-size: 0.75rem;
+  }
+
+  .machine-display {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    color: #6c757d;
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+
+  .machine-display.has-number {
+    background: #e8f5e8;
+    color: #28a745;
+    font-weight: 600;
+  }
+
+  .file-upload {
+    position: relative;
+    display: block;
+  }
+
+  .file-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .file-upload-label {
+    background: #f8f9fa;
+    border: 1px dashed #ddd;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #6c757d;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .file-upload-label:hover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+    display: block;
+    width: fit-content;
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  }
+
+  .alert {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+  }
+
+  .alert-success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+  }
+
+  .section-divider {
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+    padding-top: 15px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .grid-6 { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (max-width: 992px) {
+    .grid-6, .grid-4 { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .page-body { padding: 5px; }
+    .main-card { height: calc(100vh - 10px); }
+    .header { padding: 10px 15px; }
+    .header h4 { font-size: 1.2rem; }
+    .form-container { padding: 10px 15px; }
+    .grid-6, .grid-4, .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .form-grid { gap: 8px; margin-bottom: 10px; }
+    textarea.form-control { height: 60px; }
+  }
+
+  @media (max-width: 576px) {
+    .grid-6, .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    .header h4 { font-size: 1.1rem; }
+    .form-container { padding: 8px 12px; }
+    .form-grid { gap: 6px; margin-bottom: 8px; }
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .form-container::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .form-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+
+  .form-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+  }
+
+  .form-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
   }
 </style>
 {% endblock css %}
 
 {% block content %}
 <div class="page-body">
-  {% include 'starter_kit/layout/breadcrumb.html' %}
-
-  <!-- Notifikasi untuk pesan -->
-  {% if messages %}
-      <div class="alert alert-success" role="alert">
-          {% for message in messages %}
-              {{ message }}<br>
-          {% endfor %}
+  <div class="container-fluid">
+    <!-- Notifikasi -->
+    {% if messages %}
+      <div class="alert alert-success">
+        {% for message in messages %}{{ message }}{% endfor %}
       </div>
-  {% endif %}
-  <!-- Card Full Width -->
-  <div class="card full-width-card mt-4">
-    <div class="card-header">
-      <h5>Input Electrical Activity</h5>
-    </div>
-    <div class="card-body">
-        <form method="post" enctype="multipart/form-data" action="{% url 'dailyactivity_app:electrical_submit' %}">
-            {% csrf_token %}
-            <!-- Row for Tanggal, Jam, Shift, Location, Machine -->
-            <div class="form-inline-row">
-                <div class="form-group ">
-                    <label for="tanggal">Tanggal:</label>
-                    <input type="date" class="form-control" id="tanggal" name="tanggal" required>
-                </div>
-                <div class="form-group col-md-2">
-                  <label for="nomor_wo">Nomor WO:</label>
-                  <select class="form-control select2" id="nomor_wo" name="nomor_wo" onchange="fetchDeskripsi()">
-                      <option value="">Pilih Nomor WO</option>
-                      {% for nomor in nomor_wo_list %}
-                          <option value="{{ nomor }}">{{ nomor }}</option>
-                      {% endfor %}
-                  </select>
-              </div>
-              
-              <div class="form-group col-md-2">
-                  <label for="tgl_his"> Waktu WO:</label>
-                  <input type="datetime-local" class="form-control" id="tgl_his" name="tgl_his" value="{{ tgl_his|date:"Y-m-d\TH:i" }}" placeholder="Masukkan Tanggal Histori" readonly />
-              </div>                
-            <div class="form-group col-md-2">
-                <label for="waktu_pengerjaan">Waktu Pengerjaan:</label>
-                <input type="text" class="form-control" id="waktu_pengerjaan" name="waktu_pengerjaan" required>
-            </div>              
-                <div class="form-group">
-                    <label for="shift">Shift:</label>
-                    <select class="form-control select2" id="shift" name="shift" required>
-                        <option value="">-- Pilih Shift --</option>
-                        {% for shift in shifts %}
-                            <option value="{{ shift.id }}">{{ shift.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% comment %} <div class="form-group col-md-2">
-                  <label for="location">Location:</label>
-                  <select class="form-control select2" id="location" name="location" required>
-                      <option value="">-- Pilih Lokasi --</option>
-                      {% for loc in locations %}
-                          <option value="{{ loc.id }}">{{ loc.name }}</option>
-                      {% endfor %}
-                  </select>
-              </div>
-              
-              <div class="form-group col-md-2">
-                  <label for="machine">Machine:</label>
-                  <select class="form-control select2" id="machine" name="machine" required>
-                      <option value="">-- Pilih Mesin --</option>
-                  </select>
-              </div> {% endcomment %}
+    {% endif %}
 
-              <div class="form-group col-md-2">
-                <label for="location">Location:</label>
-                <select class="form-control select2" id="location" name="location" required>
-                    <option value="">-- Pilih Lokasi --</option>
-                    {% for loc in locations %}
-                        <option value="{{ loc.id }}">{{ loc.name }}</option>
-                    {% endfor %}
+    <!-- Main Card -->
+    <div class="main-card">
+      <!-- Header -->
+      <div class="header">
+        <h4>📋 Input Electrical Activity</h4>
+      </div>
+
+      <!-- Form Container -->
+      <div class="form-container">
+        <form method="post" enctype="multipart/form-data" action="{% url 'dailyactivity_app:electrical_submit' %}">
+          {% csrf_token %}
+          
+          <!-- Row 1: Basic Info -->
+          <div class="form-grid grid-6">
+            <div class="form-group">
+              <label class="form-label">Tanggal</label>
+              <input type="date" class="form-control" name="tanggal" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nomor WO</label>
+              <div style="display: flex; gap: 5px;">
+                <select class="form-control select2" name="nomor_wo" onchange="fetchDeskripsi()" style="flex: 1;">
+                  <option value="">Pilih WO</option>
+                  {% for nomor in nomor_wo_list %}
+                    <option value="{{ nomor }}">{{ nomor }}</option>
+                  {% endfor %}
                 </select>
-            </div>
-            
-            <div class="form-group col-md-2">
-                <label for="machine">Machine:</label>
-                <select class="form-control select2" id="machine" name="machine" required>
-                    <option value="">-- Pilih Mesin --</option>
-                </select>
-            </div>
-            
-            <div class="form-group col-md-2">
-                <label for="machine_number">Machine Number:</label>
-                <span id="machine_number_text">-- Pilih Mesin Terlebih Dahulu --</span>
-                <input type="text" class="form-control" id="machine_number_input" name="machine_number" style="display: none;" placeholder="Masukkan nomor mesin">
-            </div>
-            
-              
-                <div class="form-group col-md-2">
-                    <label for="category">Jenis Pekerjaan:</label>
-                    <select class="form-control select2" id="category" name="category" required>
-                        <option value="">-- Pilih Category --</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="status">Status:</label>
-                    <select class="form-control select2" id="status" name="status" required>
-                        <option value="">-- Pilih Status --</option>
-                        {% for status in status %}
-                            <option value="{{ status.id }}">{{ status.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group col-md-2">
-                  <label for="pic">PIC:</label>
-                  <select class="form-control select2" id="pic" name="pic" required multiple>
-                      <option value="">-- Pilih PIC --</option>
-                      {% for pic in pic_electrical %}
-                          <option value="{{ pic.id }}">
-                              {{ pic.name }} ({{ pic.nokar }})
-                          </option>
-                      {% endfor %}
-                  </select>
+                <button type="button" onclick="resetAutoFill()" style="background: #dc3545; color: white; border: none; border-radius: 4px; width: 30px; height: 36px; font-size: 12px;" title="Reset Auto-fill">✕</button>
               </div>
-            </div>       
-            <!-- Row for Masalah, Penyebab, Tindakan, and Image -->
-            <div class="form-row mt-3">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Waktu WO</label>
+              <input type="datetime-local" class="form-control" id="tgl_his" name="tgl_his" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Waktu Pengerjaan</label>
+              <input type="text" class="form-control" name="waktu_pengerjaan" placeholder="2 jam" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Shift</label>
+              <select class="form-control select2" name="shift" required>
+                <option value="">Pilih Shift</option>
+                {% for shift in shifts %}
+                  <option value="{{ shift.id }}">{{ shift.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-control select2" name="status" required>
+                <option value="">Pilih Status</option>
+                {% for status in status %}
+                  <option value="{{ status.id }}">{{ status.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 2: Location & Machine -->
+          <div class="form-grid grid-4">
+            <div class="form-group">
+              <label class="form-label">Lokasi</label>
+              <select class="form-control select2" id="location" name="location">
+                <option value="">Pilih Lokasi (Opsional)</option>
+                {% for loc in locations %}
+                  <option value="{{ loc.id }}">{{ loc.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mesin</label>
+              <select class="form-control select2" id="machine" name="machine">
+                <option value="">Pilih Mesin (Opsional)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nomor Mesin</label>
+              <div id="machine_number_text" class="machine-display">Pilih Mesin</div>
+              <input type="text" class="form-control" id="machine_number_input" name="machine_number" style="display: none;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jenis Pekerjaan</label>
+              <select class="form-control select2" name="category" required>
+                <option value="">Pilih Category</option>
+                {% for category in categories %}
+                  <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <!-- Manual Machine Input Section (Hidden by default) -->
+          <div id="manual_machine_section" style="display: none; margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #17a2b8;">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 10px;">
+              <label class="form-label" style="margin: 0; color: #17a2b8; font-weight: 600;">📝 Input Manual Mesin</label>
+              <button type="button" onclick="hideManualMachine()" style="background: #dc3545; color: white; border: none; border-radius: 4px; width: 25px; height: 25px; font-size: 12px; margin-left: auto;" title="Tutup Manual Input">✕</button>
+            </div>
+            <div class="form-grid grid-2">
               <div class="form-group">
-                  <label for="masalah">Masalah:</label>
-                  <textarea class="form-control" id="masalah" name="masalah" rows="3" required>{{ deskripsi_perbaikan }}</textarea>
-              </div>              
-                <div class="form-group" style="width: 100%;">
-                    <label for="penyebab">Penyebab:</label>
-                    <textarea class="form-control" id="penyebab" name="penyebab" rows="3" required></textarea>
-                </div>
-                <div class="form-group" style="width: 100%;">
-                    <label for="tindakan">Tindakan:</label>
-                    <textarea class="form-control" id="tindakan" name="tindakan" rows="3" required></textarea>
-                </div>
-                <div class="form-group" style="width: 100%;">
-                    <label for="image">Add Image:</label>
-                    <input type="file" class="form-control-file" id="image" name="image">
-                </div>
-            </div>       
-            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                <label class="form-label">Nama Mesin</label>
+                <input type="text" class="form-control" id="manual_machine_name" name="manual_machine_name" placeholder="Contoh: Molding Machine C">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nomor Mesin</label>
+                <input type="text" class="form-control" id="manual_machine_number" name="manual_machine_number" placeholder="Contoh: MC-003">
+              </div>
+            </div>
+          </div>
+
+          <!-- Show Manual Input Button -->
+          <div style="text-align: center; margin: 10px 0;">
+            <button type="button" id="show_manual_btn" onclick="showManualMachine()" style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;">
+              ➕ Input Mesin Manual
+            </button>
+          </div>
+
+          <!-- Row 3: PIC & Image -->
+          <div class="form-grid grid-2">
+            <div class="form-group">
+              <label class="form-label">PIC</label>
+              <select class="form-control select2" name="pic" required multiple>
+                {% for pic in pic_electrical %}
+                  <option value="{{ pic.id }}">{{ pic.name }} ({{ pic.nokar }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Upload Gambar</label>
+              <div class="file-upload">
+                <input type="file" name="image" accept="image/*">
+                <div class="file-upload-label">📷 Pilih Gambar</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <!-- Row 4: Text Areas -->
+          <div class="form-grid grid-3">
+            <div class="form-group">
+              <label class="form-label">Masalah</label>
+              <textarea class="form-control" id="masalah" name="masalah" placeholder="Deskripsi masalah..." required></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Penyebab</label>
+              <textarea class="form-control" id="penyebab" name="penyebab" placeholder="Penyebab masalah..." required></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tindakan Perbaikan</label>
+              <textarea class="form-control" id="tindakan_perbaikan" name="tindakan_perbaikan" placeholder="Tindakan yang dilakukan..." required></textarea>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="text-align: center; margin-top: 15px;">
+            <button type="submit" class="btn-submit">
+              💾 Simpan Data
+            </button>
+          </div>
         </form>
-        
+      </div>
     </div>
   </div>
 </div>
 {% endblock content %}
 
 {% block scriptcontent %}
-<!-- Plugins JS start-->
-<script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
-<script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
-<script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
-<script src="{% static 'assets/js/custom/location-machine-filter.js' %}"></script>
-<script src="{% static 'assets/js/custom/script.js' %}"></script>
 <script src="{% static 'assets/js/select2/select2.full.min.js' %}"></script>
-<script src="{% static 'assets/js/select2/select2-custom.js' %}"></script> 
-
-
-
 <script>
-  function fetchDeskripsi() {
-      var nomor_wo = document.getElementById('nomor_wo').value;
-      
-      // Jika tidak ada nomor WO yang dipilih, biarkan input masalah dan tgl_his tetap bisa diisi
-      if (nomor_wo === "") {
-          document.getElementById('masalah').readOnly = false;  // Biarkan kolom inputan bisa diisi
-          document.getElementById('tgl_his').readOnly = false;  // Biarkan tgl_his bisa diisi
-          document.getElementById('masalah').value = '';  // Kosongkan masalah jika tidak ada nomor WO
-          document.getElementById('tgl_his').value = '';  // Kosongkan tgl_his jika tidak ada nomor WO
-      } else {
-          // Jika nomor WO dipilih, lakukan AJAX untuk mendapatkan deskripsi dan tgl_his
-          $.ajax({
-              url: '',  // URL yang sama, mengarah ke views.py
-              data: {
-                  'nomor_wo': nomor_wo,  // Kirim nomor_wo ke server
-              },
-              dataType: 'json',
-              success: function(response) {
-                  if (response.deskripsi_perbaikan) {
-                      document.getElementById('masalah').value = response.deskripsi_perbaikan;
-                      document.getElementById('masalah').readOnly = true;  // Nonaktifkan input jika deskripsi ditemukan
-                  } else {
-                      document.getElementById('masalah').value = 'Deskripsi tidak ditemukan.';
-                      document.getElementById('masalah').readOnly = true;  // Nonaktifkan input jika deskripsi tidak ditemukan
-                  }
+function showManualMachine() {
+    $('#manual_machine_section').slideDown();
+    $('#show_manual_btn').hide();
+    
+    // Clear machine dropdown selection karena user pilih manual
+    $('#machine').val('').trigger('change');
+    $('#machine_number_text').text('Input Manual Aktif').removeClass('has-number');
+    $('#machine_number_input').hide();
+}
 
-                  if (response.tgl_his) {
-                      document.getElementById('tgl_his').value = response.tgl_his;  // Update tgl_his jika ada
-                      document.getElementById('tgl_his').readOnly = true;  // Nonaktifkan input jika tgl_his ditemukan
-                  } else {
-                      document.getElementById('tgl_his').value = '';  // Kosongkan jika tidak ada tgl_his
-                      document.getElementById('tgl_his').readOnly = false;  // Biarkan bisa diinput jika tgl_his tidak ditemukan
-                  }
-              },
-              error: function() {
-                  document.getElementById('masalah').value = 'Terjadi kesalahan saat mengambil data.';
-                  document.getElementById('masalah').readOnly = true;  // Nonaktifkan input jika terjadi error
-                  document.getElementById('tgl_his').value = 'Terjadi kesalahan.';
-                  document.getElementById('tgl_his').readOnly = true;  // Nonaktifkan input jika terjadi error
-              }
-          });
-      }
-  }
-</script>
+function hideManualMachine() {
+    $('#manual_machine_section').slideUp();
+    $('#show_manual_btn').show();
+    
+    // Clear manual inputs
+    $('#manual_machine_name').val('');
+    $('#manual_machine_number').val('');
+    
+    // Reset machine display
+    $('#machine_number_text').text('Pilih Mesin').removeClass('has-number');
+}
 
-{% comment %} <script>
-  $(document).ready(function() {
-      // Inisialisasi Select2 untuk dropdown nomor_wo dan dropdown lainnya
-      $('.select2').select2({
-          width: '100%', // Menyesuaikan lebar agar sesuai dengan kontrol form
-         // placeholder: 'Pilih Nomor WO', // Placeholder untuk nomor_wo
-          allowClear: true // Memungkinkan opsi kosong
-      });
+function resetAutoFill() {
+    // Reset nomor WO
+    $('[name="nomor_wo"]').val('').trigger('change');
+    
+    // Reset text fields
+    ['masalah', 'tgl_his', 'penyebab', 'tindakan_perbaikan'].forEach(fieldId => {
+        document.getElementById(fieldId).value = '';
+    });
+    
+    // Reset dropdowns
+    $('#location').val('').trigger('change');
+    $('#machine').val('').trigger('change');
+    
+    // Reset machine number display
+    $('#machine_number_text').text('Pilih Mesin').removeClass('has-number');
+    $('#machine_number_input').hide();
+    
+    // Hide manual machine section
+    hideManualMachine();
+}
 
-      // Kosongkan dropdown saat diklik
-      $('.select2').on('click', function() {
-          $(this).val(null).trigger('change'); // Hapus pilihan saat ini
-          $('#machine_number').text('-- Pilih Mesin Terlebih Dahulu --'); // Hapus tampilan nomor mesin
-      });
+function fetchDeskripsi() {
+    const nomor_wo = document.querySelector('[name="nomor_wo"]').value;
+    const textFields = ['masalah', 'tgl_his', 'penyebab', 'tindakan_perbaikan'];
+    
+    if (!nomor_wo) {
+        // Reset semua field
+        textFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            field.value = '';
+        });
+        
+        // Reset dropdowns
+        $('#location').val('').trigger('change');
+        $('#machine').val('').trigger('change');
+        $('#machine_number_text').text('Pilih Mesin').removeClass('has-number');
+        $('#machine_number_input').hide();
+        
+        return;
+    }
+    
+    $.ajax({
+        url: '',
+        data: { 'nomor_wo': nomor_wo },
+        dataType: 'json',
+        success: function(response) {
+            // Fill text fields (TANPA readonly - tetap bisa diedit)
+            textFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                const responseKey = fieldId === 'masalah' ? 'deskripsi_perbaikan' : fieldId;
+                
+                if (response[responseKey]) {
+                    field.value = response[responseKey];
+                    // HAPUS readOnly = true agar tetap bisa diedit
+                } else {
+                    field.value = '';
+                }
+            });
+            
+            // Auto-select Location
+            if (response.location_id) {
+                $('#location').val(response.location_id).trigger('change');
+                
+                // Tunggu sebentar untuk machine dropdown terisi, lalu select machine
+                setTimeout(function() {
+                    if (response.machine_id) {
+                        $('#machine').val(response.machine_id).trigger('change');
+                    }
+                }, 500);
+            }
+            
+            // Show machine number dari response
+            if (response.nomer) {
+                setTimeout(function() {
+                    $('#machine_number_text').text(response.nomer).addClass('has-number');
+                    $('#machine_number_input').hide();
+                }, 800);
+            }
+            
+            // Jika ada data mesin tapi tidak ditemukan di dropdown, show manual input
+            if (response.mesin && !response.machine_id) {
+                setTimeout(function() {
+                    showManualMachine();
+                    $('#manual_machine_name').val(response.mesin);
+                    $('#manual_machine_number').val(response.nomer || '');
+                }, 1000);
+            }
+        },
+        error: function() {
+            alert('Error mengambil data WO');
+        }
+    });
+}
 
-      // Event ketika lokasi diubah
-      $('#location').on('change', function() {
-          const locationId = $(this).val();
-          console.log('Location ID selected:', locationId);
-
-          const machineSelect = $('#machine');
-          machineSelect.empty().append('<option value="">-- Pilih Mesin --</option>');
-          $('#machine_number').text('-- Pilih Mesin Terlebih Dahulu --'); // Reset tampilan nomor mesin
-
-          if (locationId) {
-              $.ajax({
-                  url: `/dailyactivity/get_machines_by_location_electrical/${locationId}/`,
-                  method: 'GET',
-                  dataType: 'json',
-                  success: function(data) {
-                      console.log('Data fetched successfully:', data);
-                      if (Array.isArray(data) && data.length > 0) {
-                          $.each(data, function(index, machine) {
-                              // Tambahkan opsi dengan nama dan nomor mesin
-                              machineSelect.append(new Option(`${machine.name}  ${machine.nomor}`, machine.id));
-                          });
-                      } else {
-                          console.warn('Tidak ada mesin yang ditemukan untuk lokasi ini.');
-                      }
-                  },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      console.error('Gagal mengambil data mesin:', textStatus, errorThrown);
-                  }
-              });
-          }
-      });
-
-      // Event ketika mesin dipilih
-      $('#machine').on('change', function() {
-          const machineId = $(this).val();
-          console.log('Machine ID selected:', machineId);
-
-          if (machineId) {
-              $.ajax({
-                  url: `/dailyactivity/get_machine_number_electrical/${machineId}/`,  // URL untuk mengambil nomor mesin
-                  method: 'GET',
-                  dataType: 'json',
-                  success: function(data) {
-                      console.log('Nomor mesin berhasil diambil:', data);
-                      if (data && data.nomor) {
-                          $('#machine_number').text(data.nomor); // Tampilkan nomor mesin
-                      } else {
-                          $('#machine_number').text('Nomor mesin tidak tersedia');
-                      }
-                  },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      console.error('Gagal mengambil nomor mesin:', textStatus, errorThrown);
-                      $('#machine_number').text('Gagal mengambil nomor');
-                  }
-              });
-          } else {
-              $('#machine_number').text('-- Pilih Mesin Terlebih Dahulu --');
-          }
-      });
-  });
-</script> {% endcomment %}
-
-<script>
-  $(document).ready(function() {
+$(document).ready(function() {
+    // Initialize Select2
     $('.select2').select2({
         width: '100%',
-        allowClear: true
+        minimumResultsForSearch: 5
     });
 
+    // File upload handler
+    $('[name="image"]').on('change', function() {
+        const fileName = this.files[0]?.name || 'Pilih Gambar';
+        $(this).next('.file-upload-label').text('📷 ' + fileName);
+    });
+
+    // Location/Machine handler
     $('#location').on('change', function() {
         const locationId = $(this).val();
         const machineSelect = $('#machine');
-        machineSelect.empty().append('<option value="">-- Pilih Mesin --</option>');
-        $('#machine_number_text').text('-- Pilih Mesin Terlebih Dahulu --');
-        $('#machine_number_input').hide();
+        const machineDisplay = $('#machine_number_text');
+        
+        // Reset machine dropdown
+        const currentMachineValue = machineSelect.val(); // Simpan value saat ini
+        machineSelect.empty().append('<option value="">Pilih Mesin (Opsional)</option>');
+        
+        // Jangan reset machine display jika sudah ada data dari WO
+        if (!machineDisplay.hasClass('has-number')) {
+            machineDisplay.text('Pilih Mesin').removeClass('has-number');
+            $('#machine_number_input').hide();
+        }
 
         if (locationId) {
             $.ajax({
                 url: `/dailyactivity/get_machines_by_location_electrical/${locationId}/`,
-                method: 'GET',
-                dataType: 'json',
                 success: function(data) {
-                    if (Array.isArray(data) && data.length > 0) {
-                        $.each(data, function(index, machine) {
-                            machineSelect.append(new Option(`${machine.name} ${machine.nomor || ''}`, machine.id));
-                        });
+                    $.each(data, function(i, machine) {
+                        const text = machine.nomor ? `${machine.name} (${machine.nomor})` : machine.name;
+                        machineSelect.append(new Option(text, machine.id));
+                    });
+                    
+                    // Restore machine value jika ada (untuk auto-select dari WO)
+                    if (currentMachineValue) {
+                        machineSelect.val(currentMachineValue);
                     }
+                },
+                error: function() {
+                    // Jika error atau tidak ada data, user masih bisa input manual
+                    console.log('No machines found for this location, manual input available');
                 }
             });
         }
+        // Jika tidak ada location, dropdown kosong tapi manual input tetap available
     });
 
     $('#machine').on('change', function() {
         const machineId = $(this).val();
+        const machineDisplay = $('#machine_number_text');
+        const machineInput = $('#machine_number_input');
         
         if (machineId) {
-            $.ajax({
-                url: `/dailyactivity/get_machine_number_electrical/${machineId}/`,
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    if (data && data.nomor) {
-                        $('#machine_number_text').text(data.nomor);
-                        $('#machine_number_input').hide();
-                    } else {
-                        $('#machine_number_text').text('Nomor mesin tidak tersedia');
-                        $('#machine_number_input').show();
+            // Jangan override jika sudah ada data dari WO (has-number class)
+            if (!machineDisplay.hasClass('has-number')) {
+                $.ajax({
+                    url: `/dailyactivity/get_machine_number_electrical/${machineId}/`,
+                    success: function(data) {
+                        if (data?.nomor) {
+                            machineDisplay.text(data.nomor).addClass('has-number');
+                            machineInput.hide();
+                        } else {
+                            machineDisplay.text('Input Manual').removeClass('has-number');
+                            machineInput.show();
+                        }
                     }
-                },
-                error: function() {
-                    $('#machine_number_text').text('Gagal mengambil nomor');
-                    $('#machine_number_input').show();
-                }
-            });
+                });
+            }
         } else {
-            $('#machine_number_text').text('-- Pilih Mesin Terlebih Dahulu --');
-            $('#machine_number_input').hide();
+            // Reset hanya jika tidak ada data dari WO
+            if (!machineDisplay.hasClass('has-number')) {
+                machineDisplay.text('Pilih Mesin').removeClass('has-number');
+                machineInput.hide();
+            }
         }
     });
 });
-
 </script>
-
 {% endblock scriptcontent %}
-

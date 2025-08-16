@@ -12064,3 +12064,479 @@ INFO 2025-08-16 11:16:55,252 views 18400 17464   Status: A, Approve: T, Review: 
 INFO 2025-08-16 11:16:55,253 views 18400 17464   Status: A, Approve: Y, Review: 0
 INFO 2025-08-16 11:16:55,253 views 18400 17464   Status: A, Approve: Y, Review: 1
 INFO 2025-08-16 11:16:55,254 views 18400 17464 === END VALIDATION ===
+INFO 2025-08-16 11:17:39,590 basehttp 18400 11516 "GET /dailyactivity/laporan/ HTTP/1.1" 200 59027
+INFO 2025-08-16 11:17:52,103 basehttp 18400 17784 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=33.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:17:57,599 basehttp 18400 17784 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=40.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:19:18,824 basehttp 18400 16496 "GET /dailyactivity/utility/tanggal/ HTTP/1.1" 200 48946
+INFO 2025-08-16 11:19:20,342 basehttp 18400 16496 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40136
+INFO 2025-08-16 11:19:21,685 basehttp 18400 16496 "GET /dailyactivity/laporan/tanggal/?month=8&year=2025 HTTP/1.1" 200 33466
+WARNING 2025-08-16 11:19:21,781 basehttp 18400 16496 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-16 11:19:21,817 log 18400 10472 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-16 11:19:21,818 basehttp 18400 10472 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-16 11:19:21,842 log 18400 11772 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-16 11:19:21,843 basehttp 18400 11772 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-16 11:19:23,432 basehttp 18400 11772 "GET /dailyactivity/laporan/data/2025-08-15/ HTTP/1.1" 200 51853
+INFO 2025-08-16 11:19:37,224 basehttp 18400 17740 "GET /dailyactivity/laporan/ HTTP/1.1" 200 59027
+INFO 2025-08-16 11:26:38,543 basehttp 18400 12072 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=40.0 HTTP/1.1" 200 18
+WARNING 2025-08-16 11:26:43,559 basehttp 18400 1084 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-16 11:26:43,562 basehttp 18400 14200 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-16 11:26:43,566 basehttp 18400 15660 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-16 11:26:43,567 basehttp 18400 17092 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-16 11:26:43,634 basehttp 18400 13284 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+INFO 2025-08-16 11:26:46,763 basehttp 18400 16812 "GET /dailyactivity/laporan/ HTTP/1.1" 200 59027
+WARNING 2025-08-16 11:26:46,964 basehttp 18400 16812 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-16 11:26:47,014 basehttp 18400 14264 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-16 11:26:47,074 basehttp 18400 12772 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-16 11:26:47,076 basehttp 18400 12504 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-16 11:26:47,079 basehttp 18400 17880 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+INFO 2025-08-16 11:26:50,240 basehttp 18400 15052 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=33.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:33:32,659 basehttp 18400 17948 "GET /dailyactivity/mechanical/ HTTP/1.1" 302 0
+INFO 2025-08-16 11:33:32,791 basehttp 18400 17948 "GET /login/?next=/dailyactivity/mechanical/ HTTP/1.1" 200 10284
+INFO 2025-08-16 11:33:40,313 views 18400 15848 LOGIN ATTEMPT: 002186
+INFO 2025-08-16 11:33:40,342 authentication 18400 15848 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-16 11:33:40,348 views 18400 15848 LOGIN: Using existing session data for 002186
+INFO 2025-08-16 11:33:40,348 views 18400 15848 LOGIN REDIRECT: 002186 -> /dailyactivity/mechanical/
+INFO 2025-08-16 11:33:40,353 basehttp 18400 15848 "POST /login/?next=/dailyactivity/mechanical/ HTTP/1.1" 302 0
+INFO 2025-08-16 11:33:41,879 basehttp 18400 15848 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38888
+INFO 2025-08-16 11:33:50,635 basehttp 18400 17728 "GET /dailyactivity/electrical/ HTTP/1.1" 200 31447
+WARNING 2025-08-16 11:33:50,674 basehttp 18400 17728 "GET /web_seiwa/wingoapp/static/assets/js/custom/script.js HTTP/1.1" 404 1981
+INFO 2025-08-16 11:36:05,808 basehttp 18400 9772 "GET /dailyactivity/laporan/ HTTP/1.1" 200 59027
+INFO 2025-08-16 11:43:44,112 autoreload 18400 17464 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 11:43:46,152 autoreload 16256 15244 Watching for file changes with StatReloader
+INFO 2025-08-16 11:45:14,609 autoreload 16888 360 Watching for file changes with StatReloader
+INFO 2025-08-16 11:45:24,537 autoreload 15000 17628 Watching for file changes with StatReloader
+INFO 2025-08-16 11:45:32,334 autoreload 17500 14820 Watching for file changes with StatReloader
+INFO 2025-08-16 11:45:34,413 views 17500 14820 === STATUS VALIDATION ===
+INFO 2025-08-16 11:45:34,414 views 17500 14820 Expected STATUS_APPROVED: B
+INFO 2025-08-16 11:45:34,414 views 17500 14820 Expected APPROVE_YES: N
+INFO 2025-08-16 11:45:34,415 views 17500 14820 Actual values in database:
+INFO 2025-08-16 11:45:34,415 views 17500 14820   Status: , Approve: N, Review: None
+INFO 2025-08-16 11:45:34,415 views 17500 14820   Status: A, Approve: T, Review: None
+INFO 2025-08-16 11:45:34,416 views 17500 14820   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 11:45:34,416 views 17500 14820   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 11:45:34,416 views 17500 14820 === END VALIDATION ===
+INFO 2025-08-16 11:45:41,373 basehttp 17500 16948 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38800
+ERROR 2025-08-16 11:45:48,032 log 17500 9900 Internal Server Error: /dailyactivity/laporan/
+Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py", line 4524, in laporan_index
+    return render(request, 'dailyactivity_app/laporan_index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 34, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 175, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 513, in parse
+    raise self.error(token, e)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 293, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 513, in parse
+    raise self.error(token, e)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 232, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 518, in parse
+    self.unclosed_block_tag(parse_until)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 581, in unclosed_block_tag
+    raise self.error(token, msg)
+django.template.exceptions.TemplateSyntaxError: Unclosed tag on line 514: 'block'. Looking for one of: endblock.
+ERROR 2025-08-16 11:45:48,040 basehttp 17500 9900 "GET /dailyactivity/laporan/ HTTP/1.1" 500 233852
+INFO 2025-08-16 11:46:20,306 basehttp 17500 11052 "GET /dailyactivity/laporan/ HTTP/1.1" 200 180099
+INFO 2025-08-16 11:46:33,598 basehttp 17500 17120 "GET /dailyactivity/ajax/get-wo-details/?nomor_wo=25-U-08-021 HTTP/1.1" 200 281
+INFO 2025-08-16 11:46:33,679 basehttp 17500 17120 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=5.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:46:34,174 basehttp 17500 17120 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=5.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:46:49,079 basehttp 17500 17004 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=40.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:46:52,936 basehttp 17500 1656 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=26.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:47:04,984 basehttp 17500 18368 "GET /dailyactivity/laporan/ HTTP/1.1" 200 180099
+INFO 2025-08-16 11:47:11,136 basehttp 17500 4356 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=40.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:47:42,152 basehttp 17500 10500 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=33.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:47:45,589 basehttp 17500 10500 "GET /dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=26.0 HTTP/1.1" 200 18
+INFO 2025-08-16 11:48:01,834 basehttp 17500 15172 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38800
+INFO 2025-08-16 11:48:04,955 basehttp 17500 15172 "GET /dailyactivity/get_machines_by_location_mechanical/2/ HTTP/1.1" 200 3112
+INFO 2025-08-16 12:02:22,375 autoreload 17500 14820 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 12:02:24,349 autoreload 15560 11352 Watching for file changes with StatReloader
+INFO 2025-08-16 12:02:26,454 views 15560 11352 === STATUS VALIDATION ===
+INFO 2025-08-16 12:02:26,454 views 15560 11352 Expected STATUS_APPROVED: B
+INFO 2025-08-16 12:02:26,456 views 15560 11352 Expected APPROVE_YES: N
+INFO 2025-08-16 12:02:26,457 views 15560 11352 Actual values in database:
+INFO 2025-08-16 12:02:26,458 views 15560 11352   Status: , Approve: N, Review: None
+INFO 2025-08-16 12:02:26,459 views 15560 11352   Status: A, Approve: T, Review: None
+INFO 2025-08-16 12:02:26,460 views 15560 11352   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 12:02:26,460 views 15560 11352   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 12:02:26,461 views 15560 11352 === END VALIDATION ===
+INFO 2025-08-16 12:02:44,775 autoreload 15560 11352 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\urls.py changed, reloading.
+INFO 2025-08-16 12:02:46,481 autoreload 17644 18408 Watching for file changes with StatReloader
+INFO 2025-08-16 12:02:48,251 views 17644 18408 === STATUS VALIDATION ===
+INFO 2025-08-16 12:02:48,252 views 17644 18408 Expected STATUS_APPROVED: B
+INFO 2025-08-16 12:02:48,254 views 17644 18408 Expected APPROVE_YES: N
+INFO 2025-08-16 12:02:48,255 views 17644 18408 Actual values in database:
+INFO 2025-08-16 12:02:48,256 views 17644 18408   Status: , Approve: N, Review: None
+INFO 2025-08-16 12:02:48,257 views 17644 18408   Status: A, Approve: T, Review: None
+INFO 2025-08-16 12:02:48,257 views 17644 18408   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 12:02:48,258 views 17644 18408   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 12:02:48,258 views 17644 18408 === END VALIDATION ===
+INFO 2025-08-16 12:03:19,412 basehttp 17644 15156 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38800
+INFO 2025-08-16 12:03:27,026 basehttp 17644 18352 "GET /dailyactivity/laporan/ HTTP/1.1" 200 181715
+WARNING 2025-08-16 12:03:35,038 log 17644 17924 Not Found: /dailyactivity/get_mesin_by_lokasi_utility/27.0/
+WARNING 2025-08-16 12:03:35,038 basehttp 17644 17924 "GET /dailyactivity/get_mesin_by_lokasi_utility/27.0/ HTTP/1.1" 404 37907
+WARNING 2025-08-16 12:04:01,844 basehttp 17644 15420 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-16 12:04:01,846 basehttp 17644 13148 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-16 12:04:01,849 basehttp 17644 17612 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-16 12:04:01,851 basehttp 17644 13300 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-16 12:04:01,886 basehttp 17644 10896 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-16 12:04:07,312 log 17644 5664 Not Found: /dailyactivity/get_mesin_by_lokasi_utility/25.0/
+WARNING 2025-08-16 12:04:07,312 basehttp 17644 5664 "GET /dailyactivity/get_mesin_by_lokasi_utility/25.0/ HTTP/1.1" 404 37907
+WARNING 2025-08-16 12:04:17,700 log 17644 14852 Not Found: /dailyactivity/get_mesin_by_lokasi_utility/28.0/
+WARNING 2025-08-16 12:04:17,700 basehttp 17644 14852 "GET /dailyactivity/get_mesin_by_lokasi_utility/28.0/ HTTP/1.1" 404 37907
+INFO 2025-08-16 12:49:57,358 autoreload 17644 18408 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 12:49:59,915 autoreload 5288 17448 Watching for file changes with StatReloader
+INFO 2025-08-16 12:50:02,248 views 5288 17448 === STATUS VALIDATION ===
+INFO 2025-08-16 12:50:02,248 views 5288 17448 Expected STATUS_APPROVED: B
+INFO 2025-08-16 12:50:02,252 views 5288 17448 Expected APPROVE_YES: N
+INFO 2025-08-16 12:50:02,253 views 5288 17448 Actual values in database:
+INFO 2025-08-16 12:50:02,254 views 5288 17448   Status: , Approve: N, Review: None
+INFO 2025-08-16 12:50:02,255 views 5288 17448   Status: A, Approve: T, Review: None
+INFO 2025-08-16 12:50:02,257 views 5288 17448   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 12:50:02,258 views 5288 17448   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 12:50:02,258 views 5288 17448 === END VALIDATION ===
+INFO 2025-08-16 12:50:30,176 basehttp 5288 18036 "GET /dailyactivity/electrical/ HTTP/1.1" 302 0
+INFO 2025-08-16 12:50:30,529 basehttp 5288 18036 "GET /login/?next=/dailyactivity/electrical/ HTTP/1.1" 200 10284
+WARNING 2025-08-16 12:50:31,211 basehttp 5288 12548 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-16 12:50:31,211 basehttp 5288 360 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-16 12:50:31,212 basehttp 5288 18368 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+INFO 2025-08-16 12:50:37,494 views 5288 328 LOGIN ATTEMPT: 002186
+INFO 2025-08-16 12:50:37,538 authentication 5288 328 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-16 12:50:37,546 views 5288 328 LOGIN: Using existing session data for 002186
+INFO 2025-08-16 12:50:37,546 views 5288 328 LOGIN REDIRECT: 002186 -> /dailyactivity/electrical/
+INFO 2025-08-16 12:50:37,552 basehttp 5288 328 "POST /login/?next=/dailyactivity/electrical/ HTTP/1.1" 302 0
+INFO 2025-08-16 12:50:39,086 basehttp 5288 328 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39273
+INFO 2025-08-16 12:50:52,797 basehttp 5288 17908 "GET /dailyactivity/electrical/?nomor_wo=25-E-08-092 HTTP/1.1" 200 367
+INFO 2025-08-16 12:50:52,883 basehttp 5288 17908 "GET /dailyactivity/get_machines_by_location_electrical/6/ HTTP/1.1" 200 12659
+INFO 2025-08-16 12:51:02,499 basehttp 5288 13556 "GET /dailyactivity/get_machine_number_electrical/1353/ HTTP/1.1" 200 13
+INFO 2025-08-16 12:51:19,129 basehttp 5288 17440 "POST /dailyactivity/electrical/submit/ HTTP/1.1" 302 0
+INFO 2025-08-16 12:51:20,382 basehttp 5288 17440 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39326
+INFO 2025-08-16 12:55:47,025 autoreload 5288 17448 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 12:55:49,176 autoreload 17160 5364 Watching for file changes with StatReloader
+INFO 2025-08-16 12:55:51,502 views 17160 5364 === STATUS VALIDATION ===
+INFO 2025-08-16 12:55:51,503 views 17160 5364 Expected STATUS_APPROVED: B
+INFO 2025-08-16 12:55:51,504 views 17160 5364 Expected APPROVE_YES: N
+INFO 2025-08-16 12:55:51,505 views 17160 5364 Actual values in database:
+INFO 2025-08-16 12:55:51,505 views 17160 5364   Status: , Approve: N, Review: None
+INFO 2025-08-16 12:55:51,506 views 17160 5364   Status: A, Approve: T, Review: None
+INFO 2025-08-16 12:55:51,507 views 17160 5364   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 12:55:51,507 views 17160 5364   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 12:55:51,508 views 17160 5364 === END VALIDATION ===
+INFO 2025-08-16 12:56:00,315 basehttp 17160 17932 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39185
+INFO 2025-08-16 12:56:20,146 basehttp 17160 16080 "GET /dailyactivity/get_machines_by_location_electrical/2/ HTTP/1.1" 200 2171
+INFO 2025-08-16 12:56:21,592 basehttp 17160 16348 "GET /dailyactivity/get_machine_number_electrical/824/ HTTP/1.1" 200 13
+INFO 2025-08-16 12:56:33,233 basehttp 17160 2636 "POST /dailyactivity/electrical/submit/ HTTP/1.1" 302 0
+INFO 2025-08-16 12:56:34,532 basehttp 17160 2636 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39352
+INFO 2025-08-16 12:57:00,699 autoreload 17160 5364 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 12:57:02,754 autoreload 13092 18424 Watching for file changes with StatReloader
+INFO 2025-08-16 12:57:17,117 autoreload 13468 11664 Watching for file changes with StatReloader
+INFO 2025-08-16 12:57:19,410 views 13468 11664 === STATUS VALIDATION ===
+INFO 2025-08-16 12:57:19,410 views 13468 11664 Expected STATUS_APPROVED: B
+INFO 2025-08-16 12:57:19,411 views 13468 11664 Expected APPROVE_YES: N
+INFO 2025-08-16 12:57:19,411 views 13468 11664 Actual values in database:
+INFO 2025-08-16 12:57:19,412 views 13468 11664   Status: , Approve: N, Review: None
+INFO 2025-08-16 12:57:19,412 views 13468 11664   Status: A, Approve: T, Review: None
+INFO 2025-08-16 12:57:19,412 views 13468 11664   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 12:57:19,413 views 13468 11664   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 12:57:19,413 views 13468 11664 === END VALIDATION ===
+INFO 2025-08-16 12:57:24,220 basehttp 13468 13240 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39185
+INFO 2025-08-16 12:57:33,701 basehttp 13468 17256 "GET /dailyactivity/get_machines_by_location_electrical/2/ HTTP/1.1" 200 2171
+INFO 2025-08-16 12:57:34,921 basehttp 13468 17256 "GET /dailyactivity/get_machine_number_electrical/824/ HTTP/1.1" 200 13
+INFO 2025-08-16 12:57:44,565 basehttp 13468 12260 "POST /dailyactivity/electrical/submit/ HTTP/1.1" 302 0
+INFO 2025-08-16 12:57:46,027 basehttp 13468 12260 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39275
+INFO 2025-08-16 12:57:50,707 basehttp 13468 15228 "GET /dailyactivity/electrical/tanggal/ HTTP/1.1" 200 40185
+INFO 2025-08-16 12:57:52,327 basehttp 13468 10584 "GET /dailyactivity/electrical/tanggal/?month=8&year=2025 HTTP/1.1" 200 34093
+WARNING 2025-08-16 12:57:52,429 basehttp 13468 10584 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-16 12:57:52,510 log 13468 17816 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-16 12:57:52,510 log 13468 1124 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-16 12:57:52,511 basehttp 13468 17816 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-16 12:57:52,513 basehttp 13468 1124 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-16 12:57:54,475 basehttp 13468 1124 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 15343
+WARNING 2025-08-16 12:57:54,566 basehttp 13468 1124 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 12:58:02,066 basehttp 13468 16568 "POST /dailyactivity/delete-electrical-data/2964/ HTTP/1.1" 302 0
+INFO 2025-08-16 12:58:02,203 basehttp 13468 16568 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 13678
+WARNING 2025-08-16 12:58:02,275 basehttp 13468 16568 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 12:59:53,311 basehttp 13468 17416 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39274
+INFO 2025-08-16 13:00:02,439 basehttp 13468 16752 "GET /dailyactivity/electrical/?nomor_wo=25-E-08-092 HTTP/1.1" 200 367
+INFO 2025-08-16 13:00:02,501 basehttp 13468 16752 "GET /dailyactivity/get_machines_by_location_electrical/6/ HTTP/1.1" 200 12659
+INFO 2025-08-16 13:00:07,133 basehttp 13468 16752 "GET /dailyactivity/get_machine_number_electrical/1567/ HTTP/1.1" 200 13
+INFO 2025-08-16 13:00:17,808 basehttp 13468 16480 "POST /dailyactivity/electrical/submit/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:00:19,046 basehttp 13468 16480 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39275
+INFO 2025-08-16 13:00:21,970 basehttp 13468 1932 "GET /dailyactivity/electrical/tanggal/ HTTP/1.1" 200 40185
+INFO 2025-08-16 13:00:23,302 basehttp 13468 1932 "GET /dailyactivity/electrical/tanggal/?month=8&year=2025 HTTP/1.1" 200 34093
+WARNING 2025-08-16 13:00:23,377 basehttp 13468 1932 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-16 13:00:23,398 log 13468 13452 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-16 13:00:23,399 basehttp 13468 13452 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-16 13:00:23,417 log 13468 11416 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-16 13:00:23,418 basehttp 13468 11416 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-16 13:00:24,971 basehttp 13468 11416 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 15493
+WARNING 2025-08-16 13:00:25,051 basehttp 13468 11416 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:00:42,336 basehttp 13468 11112 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130705
+WARNING 2025-08-16 13:00:42,499 log 13468 11112 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:00:42,500 basehttp 13468 11112 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:01:04,001 basehttp 13468 11128 "POST /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130862
+WARNING 2025-08-16 13:01:04,156 log 13468 11128 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:01:04,156 basehttp 13468 11128 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:03:07,085 autoreload 13468 11664 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 13:03:09,257 autoreload 16376 17948 Watching for file changes with StatReloader
+INFO 2025-08-16 13:03:11,535 views 16376 17948 === STATUS VALIDATION ===
+INFO 2025-08-16 13:03:11,535 views 16376 17948 Expected STATUS_APPROVED: B
+INFO 2025-08-16 13:03:11,536 views 16376 17948 Expected APPROVE_YES: N
+INFO 2025-08-16 13:03:11,536 views 16376 17948 Actual values in database:
+INFO 2025-08-16 13:03:11,537 views 16376 17948   Status: , Approve: N, Review: None
+INFO 2025-08-16 13:03:11,537 views 16376 17948   Status: A, Approve: T, Review: None
+INFO 2025-08-16 13:03:11,538 views 16376 17948   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 13:03:11,539 views 16376 17948   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 13:03:11,540 views 16376 17948 === END VALIDATION ===
+INFO 2025-08-16 13:03:18,932 basehttp 16376 17404 "POST /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:03:19,185 basehttp 16376 17404 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130995
+WARNING 2025-08-16 13:03:19,700 log 16376 17404 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:03:19,701 basehttp 16376 17404 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:03:31,307 basehttp 16376 12604 "POST /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:03:31,524 basehttp 16376 12604 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130995
+WARNING 2025-08-16 13:03:31,675 log 16376 12604 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:03:31,676 basehttp 16376 12604 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:10:25,054 autoreload 16376 17948 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 13:10:27,261 autoreload 18112 17968 Watching for file changes with StatReloader
+INFO 2025-08-16 13:10:35,253 autoreload 14892 12976 Watching for file changes with StatReloader
+INFO 2025-08-16 13:10:45,493 autoreload 18404 18172 Watching for file changes with StatReloader
+INFO 2025-08-16 13:10:57,979 autoreload 17416 6732 Watching for file changes with StatReloader
+INFO 2025-08-16 13:11:00,251 views 17416 6732 === STATUS VALIDATION ===
+INFO 2025-08-16 13:11:00,252 views 17416 6732 Expected STATUS_APPROVED: B
+INFO 2025-08-16 13:11:00,252 views 17416 6732 Expected APPROVE_YES: N
+INFO 2025-08-16 13:11:00,252 views 17416 6732 Actual values in database:
+INFO 2025-08-16 13:11:00,253 views 17416 6732   Status: , Approve: N, Review: None
+INFO 2025-08-16 13:11:00,253 views 17416 6732   Status: A, Approve: T, Review: None
+INFO 2025-08-16 13:11:00,253 views 17416 6732   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 13:11:00,254 views 17416 6732   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 13:11:00,254 views 17416 6732 === END VALIDATION ===
+INFO 2025-08-16 13:11:01,293 basehttp 17416 18360 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130708
+WARNING 2025-08-16 13:11:01,693 log 17416 18360 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:11:01,693 basehttp 17416 18360 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:11:29,829 basehttp 17416 14820 "GET /dailyactivity/electrical/tanggal/ HTTP/1.1" 200 40185
+INFO 2025-08-16 13:11:31,179 basehttp 17416 14820 "GET /dailyactivity/electrical/tanggal/?month=8&year=2025 HTTP/1.1" 200 34093
+WARNING 2025-08-16 13:11:31,265 basehttp 17416 14820 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-16 13:11:31,308 log 17416 15728 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-16 13:11:31,308 basehttp 17416 15728 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-16 13:11:31,319 log 17416 15728 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-16 13:11:31,319 basehttp 17416 15728 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-16 13:11:32,768 basehttp 17416 2468 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 19677
+WARNING 2025-08-16 13:11:32,976 basehttp 17416 2468 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:11:43,815 basehttp 17416 10884 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130708
+WARNING 2025-08-16 13:11:43,954 log 17416 10884 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:11:43,954 basehttp 17416 10884 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+WARNING 2025-08-16 13:11:48,026 log 17416 17848 Not Found: /dailyactivity/get_machine_number_electrical/1.565/
+WARNING 2025-08-16 13:11:48,026 basehttp 17416 17848 "GET /dailyactivity/get_machine_number_electrical/1.565/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:11:52,554 basehttp 17416 17848 "POST /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:11:52,775 basehttp 17416 17848 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130878
+WARNING 2025-08-16 13:11:52,912 log 17416 17848 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:11:52,912 basehttp 17416 17848 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:12:54,245 autoreload 17416 6732 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 13:12:56,424 autoreload 2068 11800 Watching for file changes with StatReloader
+INFO 2025-08-16 13:12:58,762 views 2068 11800 === STATUS VALIDATION ===
+INFO 2025-08-16 13:12:58,762 views 2068 11800 Expected STATUS_APPROVED: B
+INFO 2025-08-16 13:12:58,764 views 2068 11800 Expected APPROVE_YES: N
+INFO 2025-08-16 13:12:58,766 views 2068 11800 Actual values in database:
+INFO 2025-08-16 13:12:58,767 views 2068 11800   Status: , Approve: N, Review: None
+INFO 2025-08-16 13:12:58,768 views 2068 11800   Status: A, Approve: T, Review: None
+INFO 2025-08-16 13:12:58,769 views 2068 11800   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 13:12:58,771 views 2068 11800   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 13:12:58,772 views 2068 11800 === END VALIDATION ===
+INFO 2025-08-16 13:13:03,782 basehttp 2068 13260 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130708
+WARNING 2025-08-16 13:13:03,954 log 2068 13260 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:13:03,955 basehttp 2068 13260 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:13:10,131 basehttp 2068 6512 "POST /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:13:10,398 basehttp 2068 6512 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 19680
+WARNING 2025-08-16 13:13:10,496 basehttp 2068 6512 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:13:15,338 basehttp 2068 14044 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130823
+WARNING 2025-08-16 13:13:15,478 log 2068 14044 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:13:15,479 basehttp 2068 14044 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+WARNING 2025-08-16 13:13:19,662 log 2068 17344 Not Found: /dailyactivity/get_machine_number_electrical/1.568/
+WARNING 2025-08-16 13:13:19,662 basehttp 2068 17344 "GET /dailyactivity/get_machine_number_electrical/1.568/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:13:21,423 basehttp 2068 17344 "POST /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:13:21,576 basehttp 2068 17344 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 19680
+WARNING 2025-08-16 13:13:21,668 basehttp 2068 17344 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:13:27,008 basehttp 2068 12804 "GET /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 200 130823
+WARNING 2025-08-16 13:13:27,167 log 2068 12804 Not Found: /dailyactivity/get_machine_number_electrical/1.567/
+WARNING 2025-08-16 13:13:27,167 basehttp 2068 12804 "GET /dailyactivity/get_machine_number_electrical/1.567/ HTTP/1.1" 404 37916
+INFO 2025-08-16 13:13:32,744 basehttp 2068 17748 "GET /dailyactivity/get_machines_by_location_electrical/4/ HTTP/1.1" 200 671
+INFO 2025-08-16 13:13:34,686 basehttp 2068 17748 "GET /dailyactivity/get_machine_number_electrical/931/ HTTP/1.1" 200 13
+INFO 2025-08-16 13:13:37,636 basehttp 2068 17748 "POST /dailyactivity/edit-electrical-data/2965/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:13:37,794 basehttp 2068 17748 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 19668
+WARNING 2025-08-16 13:13:37,891 basehttp 2068 17748 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:13:47,782 basehttp 2068 11052 "POST /dailyactivity/delete-electrical-data/2965/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:13:47,932 basehttp 2068 11052 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 17690
+WARNING 2025-08-16 13:13:48,015 basehttp 2068 11052 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:14:06,979 autoreload 2068 11800 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 13:14:09,164 autoreload 16864 3564 Watching for file changes with StatReloader
+INFO 2025-08-16 13:18:03,083 autoreload 15272 12844 Watching for file changes with StatReloader
+INFO 2025-08-16 13:18:05,357 views 15272 12844 === STATUS VALIDATION ===
+INFO 2025-08-16 13:18:05,358 views 15272 12844 Expected STATUS_APPROVED: B
+INFO 2025-08-16 13:18:05,358 views 15272 12844 Expected APPROVE_YES: N
+INFO 2025-08-16 13:18:05,359 views 15272 12844 Actual values in database:
+INFO 2025-08-16 13:18:05,359 views 15272 12844   Status: , Approve: N, Review: None
+INFO 2025-08-16 13:18:05,359 views 15272 12844   Status: A, Approve: T, Review: None
+INFO 2025-08-16 13:18:05,360 views 15272 12844   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 13:18:05,360 views 15272 12844   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 13:18:05,360 views 15272 12844 === END VALIDATION ===
+INFO 2025-08-16 13:18:06,316 basehttp 15272 4724 "GET /dailyactivity/it_project/ HTTP/1.1" 200 17555
+INFO 2025-08-16 13:30:14,493 basehttp 15272 12216 "GET /logout/?next=/dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:30:14,540 basehttp 15272 12216 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:30:14,703 basehttp 15272 12216 "GET /login/?next=/dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 10877
+INFO 2025-08-16 13:30:19,163 basehttp 15272 15612 "GET /dailyactivity/dashboard/ HTTP/1.1" 200 64010
+INFO 2025-08-16 13:30:19,164 basehttp 15272 15612 - Broken pipe from ('172.16.202.72', 56809)
+INFO 2025-08-16 13:30:25,847 views 15272 12488 LOGIN ATTEMPT: 002186
+INFO 2025-08-16 13:30:25,879 authentication 15272 12488 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-16 13:30:25,886 views 15272 12488 LOGIN: Using existing session data for 002186
+INFO 2025-08-16 13:30:25,886 views 15272 12488 LOGIN REDIRECT: 002186 -> /dailyactivity/electrical/data/2025-08-16/
+INFO 2025-08-16 13:30:25,891 basehttp 15272 12488 "POST /login/?next=/dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:30:26,047 basehttp 15272 12488 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 17690
+WARNING 2025-08-16 13:30:26,145 basehttp 15272 12488 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:30:40,460 basehttp 15272 5364 "GET /dailyactivity/electrical/tanggal/ HTTP/1.1" 200 40725
+INFO 2025-08-16 13:30:44,313 basehttp 15272 5364 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39185
+INFO 2025-08-16 13:30:47,347 basehttp 15272 5364 "GET /dailyactivity/electrical/tanggal/ HTTP/1.1" 200 40185
+INFO 2025-08-16 13:30:51,478 basehttp 15272 15364 "GET /dailyactivity/laporan/ HTTP/1.1" 200 181715
+WARNING 2025-08-16 13:30:56,589 log 15272 15364 Not Found: /dailyactivity/get_mesin_by_lokasi_utility/33.0/
+WARNING 2025-08-16 13:30:56,589 basehttp 15272 15364 "GET /dailyactivity/get_mesin_by_lokasi_utility/33.0/ HTTP/1.1" 404 37907
+WARNING 2025-08-16 13:30:59,943 log 15272 16080 Not Found: /dailyactivity/get_mesin_by_lokasi_utility/40.0/
+WARNING 2025-08-16 13:30:59,944 basehttp 15272 16080 "GET /dailyactivity/get_mesin_by_lokasi_utility/40.0/ HTTP/1.1" 404 37907
+INFO 2025-08-16 13:31:17,301 basehttp 15272 18332 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40136
+INFO 2025-08-16 13:31:18,909 basehttp 15272 18332 "GET /dailyactivity/laporan/tanggal/?month=8&year=2025 HTTP/1.1" 200 33466
+WARNING 2025-08-16 13:31:18,993 basehttp 15272 18332 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:31:21,030 basehttp 15272 10628 "GET /dailyactivity/laporan/data/2025-08-15/ HTTP/1.1" 200 51853
+INFO 2025-08-16 13:31:32,430 basehttp 15272 5664 "GET /dailyactivity/laporan/edit/601/ HTTP/1.1" 200 41527
+INFO 2025-08-16 13:32:02,500 basehttp 15272 17216 "GET /dailyactivity/laporan/data/2025-08-15/ HTTP/1.1" 200 51853
+INFO 2025-08-16 13:56:27,243 basehttp 15272 16140 "GET / HTTP/1.1" 302 0
+INFO 2025-08-16 13:56:27,361 basehttp 15272 16140 "GET /login/?next=/ HTTP/1.1" 200 10284
+INFO 2025-08-16 13:56:37,771 views 15272 17740 LOGIN ATTEMPT: 002186
+INFO 2025-08-16 13:56:37,811 authentication 15272 17740 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-16 13:56:37,818 views 15272 17740 LOGIN: Using existing session data for 002186
+INFO 2025-08-16 13:56:37,819 views 15272 17740 LOGIN REDIRECT: 002186 -> /
+INFO 2025-08-16 13:56:37,824 basehttp 15272 17740 "POST /login/?next=/ HTTP/1.1" 302 0
+INFO 2025-08-16 13:56:38,029 basehttp 15272 17740 "GET / HTTP/1.1" 200 12945
+INFO 2025-08-16 13:56:50,134 basehttp 15272 9656 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39273
+INFO 2025-08-16 13:57:00,408 basehttp 15272 14104 "GET /dailyactivity/utility/tanggal/ HTTP/1.1" 200 48946
+INFO 2025-08-16 13:57:16,633 basehttp 15272 17384 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38800
+INFO 2025-08-16 13:57:18,385 basehttp 15272 11892 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 50781
+INFO 2025-08-16 13:57:23,660 basehttp 15272 17924 "GET /dailyactivity/mechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 48933
+WARNING 2025-08-16 13:57:23,805 log 15272 17924 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-16 13:57:23,809 log 15272 15016 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-16 13:57:23,810 basehttp 15272 17924 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-16 13:57:23,812 basehttp 15272 15016 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-16 13:57:26,747 basehttp 15272 15016 "GET /dailyactivity/mechanical/data/2025-08-15/ HTTP/1.1" 200 49632
+INFO 2025-08-16 13:57:40,984 basehttp 15272 15484 "GET /dailyactivity/mechanical/tanggal/?month=7&year=2025 HTTP/1.1" 200 71867
+INFO 2025-08-16 13:57:43,827 basehttp 15272 15772 "GET /dailyactivity/mechanical/data/2025-07-31/ HTTP/1.1" 200 37978
+INFO 2025-08-16 13:58:36,366 basehttp 15272 9708 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38800
+INFO 2025-08-16 13:58:38,491 basehttp 15272 11384 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 50781
+INFO 2025-08-16 13:58:52,302 basehttp 15272 16816 "GET /dailyactivity/electrical/tanggal/ HTTP/1.1" 200 40185
+INFO 2025-08-16 13:58:58,432 basehttp 15272 2792 "GET /dailyactivity/electrical/tanggal/?month=8&year=2025 HTTP/1.1" 200 34093
+WARNING 2025-08-16 13:58:58,515 basehttp 15272 2792 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:59:00,381 basehttp 15272 6848 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 17690
+WARNING 2025-08-16 13:59:00,456 basehttp 15272 6848 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 13:59:04,571 basehttp 15272 17768 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 17690
+WARNING 2025-08-16 13:59:04,649 basehttp 15272 17768 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 14:05:11,348 basehttp 15272 17476 "GET /dailyactivity/laporan/ HTTP/1.1" 200 181715
+INFO 2025-08-16 14:05:40,604 basehttp 15272 1548 "GET / HTTP/1.1" 200 12945
+INFO 2025-08-16 14:06:21,931 basehttp 15272 17160 "GET / HTTP/1.1" 200 12945
+INFO 2025-08-16 14:06:28,380 basehttp 15272 17444 "GET /dailyactivity/utility/ HTTP/1.1" 200 38539
+INFO 2025-08-16 14:06:31,776 basehttp 15272 17444 "GET /dailyactivity/utility/tanggal/ HTTP/1.1" 200 48946
+INFO 2025-08-16 14:06:35,636 basehttp 15272 17448 "GET /dailyactivity/utility/tanggal/?month=7&year=2025 HTTP/1.1" 200 71762
+WARNING 2025-08-16 14:06:35,749 log 15272 17448 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-16 14:06:35,750 basehttp 15272 17448 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+WARNING 2025-08-16 14:06:35,754 log 15272 11376 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-16 14:06:35,754 basehttp 15272 11376 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+INFO 2025-08-16 14:06:37,473 basehttp 15272 11376 "GET /dailyactivity/utility/data/2025-07-31/ HTTP/1.1" 200 37749
+INFO 2025-08-16 14:06:45,069 basehttp 15272 6104 "GET /dailyactivity/utility/data/2025-07-31/ HTTP/1.1" 200 37749
+WARNING 2025-08-16 14:06:48,949 log 15272 16812 Not Found: /wingoapp/static/assets/images/sort_asc.png
+WARNING 2025-08-16 14:06:48,950 basehttp 15272 16812 "GET /wingoapp/static/assets/images/sort_asc.png HTTP/1.1" 404 12585
+INFO 2025-08-16 14:19:08,620 autoreload 15272 12844 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 14:19:10,876 autoreload 17988 9892 Watching for file changes with StatReloader
+INFO 2025-08-16 14:19:13,222 views 17988 9892 === STATUS VALIDATION ===
+INFO 2025-08-16 14:19:13,222 views 17988 9892 Expected STATUS_APPROVED: B
+INFO 2025-08-16 14:19:13,225 views 17988 9892 Expected APPROVE_YES: N
+INFO 2025-08-16 14:19:13,226 views 17988 9892 Actual values in database:
+INFO 2025-08-16 14:19:13,227 views 17988 9892   Status: , Approve: N, Review: None
+INFO 2025-08-16 14:19:13,228 views 17988 9892   Status: A, Approve: T, Review: None
+INFO 2025-08-16 14:19:13,229 views 17988 9892   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 14:19:13,229 views 17988 9892   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 14:19:13,230 views 17988 9892 === END VALIDATION ===
+INFO 2025-08-16 14:22:11,831 basehttp 17988 15848 "GET /dailyactivity/get_mesin_by_lokasi_utility/1/ HTTP/1.1" 200 2032
+WARNING 2025-08-16 14:22:11,973 log 17988 15848 Not Found: /favicon.ico
+WARNING 2025-08-16 14:22:11,974 basehttp 17988 15848 "GET /favicon.ico HTTP/1.1" 404 12492
+INFO 2025-08-16 14:22:19,912 basehttp 17988 16812 "GET /dailyactivity/laporan/ HTTP/1.1" 200 183966
+INFO 2025-08-16 14:22:23,629 basehttp 17988 16812 "GET /dailyactivity/get_mesin_by_lokasi_utility/33/ HTTP/1.1" 200 203
+INFO 2025-08-16 14:22:30,427 basehttp 17988 18068 "GET /dailyactivity/get_mesin_by_lokasi_utility/40/ HTTP/1.1" 200 203
+INFO 2025-08-16 14:22:36,464 basehttp 17988 12568 "GET /dailyactivity/get_mesin_by_lokasi_utility/31/ HTTP/1.1" 200 203
+INFO 2025-08-16 14:22:43,627 basehttp 17988 17072 "GET /dailyactivity/get_mesin_by_lokasi_utility/26/ HTTP/1.1" 200 1079
+INFO 2025-08-16 14:22:59,013 basehttp 17988 16040 "GET /dailyactivity/ajax/get-wo-details/?nomor_wo=25-U-08-021 HTTP/1.1" 200 281
+INFO 2025-08-16 14:22:59,078 basehttp 17988 16040 "GET /dailyactivity/get_mesin_by_lokasi_utility/5/ HTTP/1.1" 200 8378
+INFO 2025-08-16 14:22:59,576 basehttp 17988 16040 "GET /dailyactivity/get_mesin_by_lokasi_utility/5/ HTTP/1.1" 200 8378
+INFO 2025-08-16 14:23:48,104 basehttp 17988 332 "GET /dailyactivity/get_machine_number_utility/594/ HTTP/1.1" 200 13
+INFO 2025-08-16 14:23:52,643 basehttp 17988 332 "GET /dailyactivity/get_machine_number_utility/589/ HTTP/1.1" 200 13
+INFO 2025-08-16 14:24:19,326 basehttp 17988 6608 "POST /dailyactivity/laporan/submit/ HTTP/1.1" 302 0
+INFO 2025-08-16 14:24:20,423 basehttp 17988 6608 "GET /dailyactivity/laporan/ HTTP/1.1" 200 184129
+INFO 2025-08-16 14:24:32,616 basehttp 17988 17100 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40136
+INFO 2025-08-16 14:24:34,063 basehttp 17988 17100 "GET /dailyactivity/laporan/tanggal/?month=8&year=2025 HTTP/1.1" 200 33466
+WARNING 2025-08-16 14:24:34,138 basehttp 17988 17100 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-16 14:24:37,469 basehttp 17988 11704 "GET /dailyactivity/laporan/data/2025-08-15/ HTTP/1.1" 200 51853
+INFO 2025-08-16 14:24:46,546 basehttp 17988 9772 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40136
+INFO 2025-08-16 14:24:51,254 basehttp 17988 9772 "GET /dailyactivity/laporan/ HTTP/1.1" 200 183966
+INFO 2025-08-16 14:35:35,634 autoreload 17988 9892 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 14:35:37,801 autoreload 9852 14608 Watching for file changes with StatReloader
+INFO 2025-08-16 14:38:16,464 autoreload 11984 14012 Watching for file changes with StatReloader
+INFO 2025-08-16 14:40:38,538 autoreload 11984 14012 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-16 14:40:40,569 autoreload 17860 14804 Watching for file changes with StatReloader
+INFO 2025-08-16 14:40:42,885 views 17860 14804 === STATUS VALIDATION ===
+INFO 2025-08-16 14:40:42,886 views 17860 14804 Expected STATUS_APPROVED: B
+INFO 2025-08-16 14:40:42,889 views 17860 14804 Expected APPROVE_YES: N
+INFO 2025-08-16 14:40:42,890 views 17860 14804 Actual values in database:
+INFO 2025-08-16 14:40:42,891 views 17860 14804   Status: , Approve: N, Review: None
+INFO 2025-08-16 14:40:42,893 views 17860 14804   Status: A, Approve: T, Review: None
+INFO 2025-08-16 14:40:42,894 views 17860 14804   Status: A, Approve: Y, Review: 0
+INFO 2025-08-16 14:40:42,895 views 17860 14804   Status: A, Approve: Y, Review: 1
+INFO 2025-08-16 14:40:42,896 views 17860 14804 === END VALIDATION ===

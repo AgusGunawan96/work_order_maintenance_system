@@ -52,9 +52,13 @@ urlpatterns = [
     # path('electrical/get_masalah/<str:number_wo>/', views.get_masalah, name='get_masalah'),
     
     # URL BARU untuk AJAX endpoints
+    path('ajax/get-wo-details/', views.get_wo_details, name='get_wo_details'),
     path('ajax/get-mesin-by-lokasi/', views.get_mesin_by_lokasi, name='get_mesin_by_lokasi'),
     path('ajax/get-nomor-mesin/', views.get_nomor_mesin, name='get_nomor_mesin'),
-    
+     # FIXED: Follow mechanical pattern dengan path parameter
+    path('get_mesin_by_lokasi_utility/<int:lokasi_id>/', views.get_mesin_by_lokasi_utility, name='get_mesin_by_lokasi_utility'),
+    path('get_machine_number_utility/<int:machine_id>/', views.get_machine_number_utility, name='get_machine_number_utility'),
+
     path('utility/', views.utility_index, name='utility_index'),
     path('utility/submit/', views.utility_submit, name='utility_submit'),  # Uncomment this line
     path('utility/tanggal/', views.tanggal_utility, name='tanggal_utility'),
@@ -62,8 +66,10 @@ urlpatterns = [
     path('edit-utility-data/<int:id>/', views.edit_utility_data, name='edit_utility_data'),
     path('delete-utility-data/<int:id>/', views.delete_utility_data, name='delete_utility_data'),
     path('machineutility/upload_excel/', views.upload_machineutility_excel, name='upload_machineutility_excel'),
-    path('laporan/', views.laporan_index, name='laporan_index'),
-    path('laporan/submit/', views.laporan_submit, name='laporan_submit'), 
+     path('', views.laporan_index, name='laporan_index'),
+      path('laporan/', views.laporan_index, name='laporan_submit'), 
+    # path('laporan/', views.laporan_index, name='laporan_index'),
+    # path('laporan/submit/', views.laporan_submit, name='laporan_submit'), 
     path('laporan/tanggal/', views.tanggal_laporan, name='tanggal_laporan'),
     path('laporan/data/<str:tanggal>/', views.data_laporan, name='data_laporan'),
     path('laporan/edit/<int:id>/', views.edit_laporan, name='edit_laporan'),

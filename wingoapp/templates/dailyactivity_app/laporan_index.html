@@ -194,6 +194,19 @@
     margin-right: 8px;
   }
   
+  /* Auto-fill indicator */
+  .auto-filled {
+    background-color: #e8f5e8 !important;
+    border: 2px solid #4caf50 !important;
+    animation: highlightAutoFill 2s ease-in-out;
+  }
+  
+  @keyframes highlightAutoFill {
+    0% { background-color: #c8e6c9; }
+    50% { background-color: #a5d6a7; }
+    100% { background-color: #e8f5e8; }
+  }
+  
   /* Style untuk catatan khusus */
   .catatan-section {
     background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
@@ -351,27 +364,24 @@
                             <i class="fa fa-times"></i>
                         </button>
                         
-                        <!-- FIELD GROUP: Data Utility -->
+                        <!-- FIELD GROUP: Data Utility (JENIS PEKERJAAN DIHILANGKAN) -->
                         <div class="field-group">
                             <div class="field-group-title utility">Data Utility</div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <label class="field-label">📝 Deskripsi Pekerjaan:</label>
-                                    <textarea class="form-control" name="deskripsi_pekerjaan[]" rows="2" placeholder="Deskripsi detail pekerjaan yang dilakukan..." required></textarea>
+                                    <textarea class="form-control deskripsi-input" name="deskripsi_pekerjaan[]" rows="2" placeholder="Deskripsi detail pekerjaan yang dilakukan..." required></textarea>
+                                    <small class="text-muted">💡 Pilih Nomor WO untuk auto-fill deskripsi</small>
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="field-label">🔨 Jenis Pekerjaan:</label>
-                                    <input type="text" class="form-control" name="jenis_pekerjaan[]" placeholder="Contoh: Maintenance, Cleaning, Perbaikan, dll" required>
+                                <div class="col-md-4">
+                                    <label class="field-label">👤 PIC Pekerjaan:</label>
+                                    <input type="text" class="form-control" name="pic_pekerjaan[]" placeholder="Nama PIC yang bertanggung jawab" required>
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <label class="field-label">⏱️ Lama Pekerjaan:</label>
                                     <input type="text" class="form-control" name="lama_pekerjaan[]" placeholder="Contoh: 2 jam, 30 menit, 1 hari, dll" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="field-label">👤 PIC Pekerjaan:</label>
-                                    <input type="text" class="form-control" name="pic_pekerjaan[]" placeholder="Nama PIC yang bertanggung jawab" required>
                                 </div>
                             </div>
                         </div>
@@ -382,12 +392,13 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label class="field-label">📋 Nomor WO:</label>
-                                    <select class="form-control select2 nomor-wo-dropdown" name="nomor_wo[]">
+                                    <select class="form-control select2 nomor-wo-dropdown" name="nomor_wo[]" onchange="loadWODetails(this)">
                                         <option value="">-- Pilih Nomor WO --</option>
                                         {% for wo in nomor_wo_list %}
                                             <option value="{{ wo.value }}">{{ wo.text }}</option>
                                         {% endfor %}
                                     </select>
+                                    <small class="text-muted">🔄 Auto-fill data saat dipilih</small>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="field-label">🔄 Status:</label>
@@ -410,7 +421,7 @@
                             <div class="row mt-2">
                                 <div class="col-md-4">
                                     <label class="field-label">📍 Lokasi:</label>
-                                    <select class="form-control select2 lokasi-dropdown" name="lokasi[]" onchange="loadMesinByLokasi(this)">
+                                    <select class="form-control select2 lokasi-dropdown" name="lokasi[]" onchange="loadMesinByLokasiUtility(this)">
                                         <option value="">-- Pilih Lokasi --</option>
                                         {% for lokasi in lokasi_list %}
                                             <option value="{{ lokasi.value }}">{{ lokasi.text }}</option>
@@ -419,7 +430,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="field-label">⚙️ Mesin:</label>
-                                    <select class="form-control select2 mesin-dropdown" name="mesin[]" onchange="loadNomorMesin(this)">
+                                    <select class="form-control select2 mesin-dropdown" name="mesin[]" onchange="loadNomorMesinUtility(this)">
                                         <option value="">-- Pilih Mesin --</option>
                                     </select>
                                 </div>
@@ -436,11 +447,11 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="field-label">❓ Penyebab:</label>
-                                    <textarea class="form-control" name="penyebab[]" rows="2" placeholder="Jelaskan penyebab masalah..."></textarea>
+                                    <textarea class="form-control penyebab-input" name="penyebab[]" rows="2" placeholder="Jelaskan penyebab masalah..."></textarea>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="field-label">🔧 Tindakan Perbaikan:</label>
-                                    <textarea class="form-control" name="tindakan_perbaikan[]" rows="2" placeholder="Jelaskan tindakan perbaikan yang dilakukan..."></textarea>
+                                    <textarea class="form-control tindakan-input" name="tindakan_perbaikan[]" rows="2" placeholder="Jelaskan tindakan perbaikan yang dilakukan..."></textarea>
                                 </div>
                             </div>
                         </div>
@@ -454,7 +465,7 @@
                 <div class="mt-3">
                     <small class="form-text text-muted">
                         <strong>📋 Catatan:</strong> Setiap baris akan disimpan sebagai record terpisah dengan data utility dan maintenance lengkap. 
-                        Data WO & Maintenance bersifat opsional, bisa dikosongkan jika tidak ada.
+                        Pilih Nomor WO untuk auto-fill data maintenance. Data WO & Maintenance bersifat opsional.
                     </small>
                 </div>
             </div>
@@ -532,39 +543,166 @@ $(document).ready(function() {
     updateRowNumbers();
 });
 
-// FUNGSI BARU: Load mesin berdasarkan lokasi yang dipilih (per row)
-function loadMesinByLokasi(lokasiSelect) {
+// FUNGSI BARU: Auto-fill data berdasarkan nomor WO
+function loadWODetails(woSelect) {
+    var nomorWO = woSelect.value;
+    var row = woSelect.closest('.pekerjaan-row');
+    
+    if (!nomorWO) {
+        return;
+    }
+    
+    // Show loading state
+    var originalText = woSelect.options[woSelect.selectedIndex].text;
+    woSelect.options[woSelect.selectedIndex].text = "🔄 Loading...";
+    
+    fetch(`/dailyactivity/ajax/get-wo-details/?nomor_wo=${nomorWO}`)
+        .then(response => response.json())
+        .then(data => {
+            // Restore original text
+            woSelect.options[woSelect.selectedIndex].text = originalText;
+            
+            if (data.success) {
+                // Auto-fill deskripsi pekerjaan
+                var deskripsiInput = row.querySelector('.deskripsi-input');
+                if (data.data.deskripsi_perbaikan) {
+                    deskripsiInput.value = data.data.deskripsi_perbaikan;
+                    deskripsiInput.classList.add('auto-filled');
+                }
+                
+                // Auto-fill lokasi
+                var lokasiSelect = row.querySelector('.lokasi-dropdown');
+                if (data.data.id_line) {
+                    lokasiSelect.value = data.data.id_line;
+                    $(lokasiSelect).trigger('change');
+                    lokasiSelect.classList.add('auto-filled');
+                    
+                    // Auto-fill mesin setelah lokasi di-set
+                    setTimeout(() => {
+                        loadMesinByLokasiUtility(lokasiSelect, data.data.id_mesin);
+                    }, 500);
+                }
+                
+                // Auto-fill penyebab
+                var penyebabInput = row.querySelector('.penyebab-input');
+                if (data.data.penyebab) {
+                    penyebabInput.value = data.data.penyebab;
+                    penyebabInput.classList.add('auto-filled');
+                }
+                
+                // Auto-fill tindakan perbaikan
+                var tindakanInput = row.querySelector('.tindakan-input');
+                if (data.data.tindakan_perbaikan) {
+                    tindakanInput.value = data.data.tindakan_perbaikan;
+                    tindakanInput.classList.add('auto-filled');
+                }
+                
+                // Show success message
+                showNotification('✅ Data WO berhasil dimuat dan auto-filled!', 'success');
+                
+                // Remove auto-filled classes after animation
+                setTimeout(() => {
+                    row.querySelectorAll('.auto-filled').forEach(el => {
+                        el.classList.remove('auto-filled');
+                    });
+                }, 3000);
+                
+            } else {
+                showNotification('⚠️ ' + (data.message || 'Data WO tidak ditemukan'), 'warning');
+            }
+        })
+        .catch(error => {
+            // Restore original text
+            woSelect.options[woSelect.selectedIndex].text = originalText;
+            console.error('Error loading WO details:', error);
+            showNotification('❌ Error loading data WO', 'error');
+        });
+}
+
+// FUNGSI FIXED: Load mesin berdasarkan lokasi (FOLLOW MECHANICAL PATTERN WITH DEBUG)
+function loadMesinByLokasiUtility(lokasiSelect, targetMesinId = null) {
     var lokasiId = lokasiSelect.value;
     var row = lokasiSelect.closest('.pekerjaan-row');
     var mesinSelect = row.querySelector('.mesin-dropdown');
     var nomorMesinInput = row.querySelector('.nomor-mesin-input');
     
+    console.log('DEBUG: loadMesinByLokasiUtility called with lokasiId:', lokasiId);
+    
     // Reset dropdown mesin dan nomor mesin
-    mesinSelect.innerHTML = '<option value="">-- Pilih Mesin --</option>';
+    mesinSelect.innerHTML = '<option value="">-- Loading Mesin... --</option>';
     nomorMesinInput.value = '';
     
     if (lokasiId) {
-        fetch(`/dailyactivity/ajax/get-mesin-by-lokasi/?lokasi_id=${lokasiId}`)
-            .then(response => response.json())
-            .then(data => {
-                data.mesin_list.forEach(function(mesin) {
-                    var option = new Option(mesin.text, mesin.value);
-                    option.setAttribute('data-nomer', mesin.nomer);
-                    mesinSelect.add(option);
-                });
+        // Convert to integer to avoid float issues (28.0 -> 28)
+        var lokasiIdInt = parseInt(parseFloat(lokasiId));
+        var fetchUrl = `/dailyactivity/get_mesin_by_lokasi_utility/${lokasiIdInt}/`;
+        
+        console.log('DEBUG: Fetching URL:', fetchUrl);
+        
+        fetch(fetchUrl)
+            .then(response => {
+                console.log('DEBUG: Response status:', response.status);
+                console.log('DEBUG: Response headers:', response.headers);
                 
-                // Reinitialize select2 for this specific dropdown
-                $(mesinSelect).select2({
-                    width: '100%',
-                    allowClear: true
-                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(machines => {
+                console.log('DEBUG: Received machines data:', machines);
+                
+                // Clear loading option
+                mesinSelect.innerHTML = '<option value="">-- Pilih Mesin --</option>';
+                
+                if (Array.isArray(machines) && machines.length > 0) {
+                    // Add machines to dropdown (format sama seperti mechanical)
+                    machines.forEach(function(machine) {
+                        var displayName = machine.name;
+                        if (machine.nomor) {
+                            displayName += ` (${machine.nomor})`;
+                        }
+                        
+                        var option = new Option(displayName, machine.id);
+                        option.setAttribute('data-nomor', machine.nomor || '');
+                        mesinSelect.add(option);
+                    });
+                    
+                    // Auto-select mesin jika ada targetMesinId (dari WO)
+                    if (targetMesinId) {
+                        mesinSelect.value = targetMesinId;
+                        mesinSelect.classList.add('auto-filled');
+                        loadNomorMesinUtility(mesinSelect);
+                    }
+                    
+                    // Reinitialize select2
+                    $(mesinSelect).select2({
+                        width: '100%',
+                        allowClear: true
+                    });
+                    
+                    showNotification(`✅ Loaded ${machines.length} mesin untuk lokasi`, 'success');
+                } else {
+                    mesinSelect.innerHTML = '<option value="">-- Tidak ada mesin --</option>';
+                    showNotification('⚠️ Tidak ada mesin untuk lokasi ini', 'warning');
+                }
             })
             .catch(error => {
-                console.error('Error loading mesin:', error);
-                alert('Error loading data mesin. Silakan coba lagi.');
+                console.error('ERROR: Loading mesin failed:', error);
+                mesinSelect.innerHTML = '<option value="">-- Error Loading --</option>';
+                
+                // More specific error messages
+                if (error.message.includes('404')) {
+                    showNotification('❌ URL endpoint tidak ditemukan. Cek routing Django!', 'error');
+                } else if (error.message.includes('JSON')) {
+                    showNotification('❌ Response bukan JSON. Cek views.py!', 'error');
+                } else {
+                    showNotification(`❌ Error loading mesin: ${error.message}`, 'error');
+                }
             });
     } else {
-        // Reinitialize select2 for empty dropdown
+        // Reset ke default
+        mesinSelect.innerHTML = '<option value="">-- Pilih Mesin --</option>';
         $(mesinSelect).select2({
             width: '100%',
             allowClear: true
@@ -572,17 +710,89 @@ function loadMesinByLokasi(lokasiSelect) {
     }
 }
 
-// FUNGSI BARU: Load nomor mesin berdasarkan mesin yang dipilih (per row)
-function loadNomorMesin(mesinSelect) {
-    var selectedOption = mesinSelect.options[mesinSelect.selectedIndex];
-    var nomorMesin = selectedOption.getAttribute('data-nomer') || '';
+// FUNGSI FIXED: Load nomor mesin berdasarkan mesin yang dipilih (WITH DEBUG)
+function loadNomorMesinUtility(mesinSelect) {
+    var machineId = mesinSelect.value;
     var row = mesinSelect.closest('.pekerjaan-row');
     var nomorMesinInput = row.querySelector('.nomor-mesin-input');
     
-    nomorMesinInput.value = nomorMesin;
+    console.log('DEBUG: loadNomorMesinUtility called with machineId:', machineId);
+    
+    if (!machineId) {
+        nomorMesinInput.value = '';
+        return;
+    }
+    
+    // Try to get from data attribute first (faster)
+    var selectedOption = mesinSelect.options[mesinSelect.selectedIndex];
+    var nomorFromAttr = selectedOption.getAttribute('data-nomor') || '';
+    
+    console.log('DEBUG: nomorFromAttr:', nomorFromAttr);
+    
+    if (nomorFromAttr) {
+        nomorMesinInput.value = nomorFromAttr;
+        nomorMesinInput.classList.add('auto-filled');
+        return;
+    }
+    
+    // Fallback: fetch from server (follow mechanical pattern)
+    var machineIdInt = parseInt(parseFloat(machineId));
+    var fetchUrl = `/dailyactivity/get_machine_number_utility/${machineIdInt}/`;
+    
+    console.log('DEBUG: Fetching nomor mesin URL:', fetchUrl);
+    
+    fetch(fetchUrl)
+        .then(response => {
+            console.log('DEBUG: Nomor mesin response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('DEBUG: Nomor mesin data:', data);
+            
+            if (data.nomor) {
+                nomorMesinInput.value = data.nomor;
+                nomorMesinInput.classList.add('auto-filled');
+            } else {
+                nomorMesinInput.value = '';
+            }
+        })
+        .catch(error => {
+            console.error('ERROR: Loading nomor mesin failed:', error);
+            nomorMesinInput.value = '';
+            showNotification(`❌ Error loading nomor mesin: ${error.message}`, 'error');
+        });
 }
 
-// FUNGSI YANG UDAH ADA (DIUPDATE UNTUK SINGLE SECTION)
+// UTILITY: Show notifications
+function showNotification(message, type = 'info') {
+    var alertClass = 'alert-info';
+    if (type === 'success') alertClass = 'alert-success';
+    if (type === 'warning') alertClass = 'alert-warning';
+    if (type === 'error') alertClass = 'alert-danger';
+    
+    var notification = $(`
+        <div class="alert ${alertClass} alert-dismissible fade show position-fixed" 
+             style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+            ${message}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+    `);
+    
+    $('body').append(notification);
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        notification.fadeOut();
+    }, 3000);
+}
+
+// FUNGSI ADD ROW (UPDATED TANPA JENIS PEKERJAAN)
 let pekerjaanRowCount = 1;
 
 function addPekerjaanRow() {
@@ -615,27 +825,24 @@ function addPekerjaanRow() {
             <i class="fa fa-times"></i>
         </button>
         
-        <!-- FIELD GROUP: Data Utility -->
+        <!-- FIELD GROUP: Data Utility (TANPA JENIS PEKERJAAN) -->
         <div class="field-group">
             <div class="field-group-title utility">Data Utility</div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <label class="field-label">📝 Deskripsi Pekerjaan:</label>
-                    <textarea class="form-control" name="deskripsi_pekerjaan[]" rows="2" placeholder="Deskripsi detail pekerjaan yang dilakukan..." required></textarea>
+                    <textarea class="form-control deskripsi-input" name="deskripsi_pekerjaan[]" rows="2" placeholder="Deskripsi detail pekerjaan yang dilakukan..." required></textarea>
+                    <small class="text-muted">💡 Pilih Nomor WO untuk auto-fill deskripsi</small>
                 </div>
-                <div class="col-md-6">
-                    <label class="field-label">🔨 Jenis Pekerjaan:</label>
-                    <input type="text" class="form-control" name="jenis_pekerjaan[]" placeholder="Contoh: Maintenance, Cleaning, Perbaikan, dll" required>
+                <div class="col-md-4">
+                    <label class="field-label">👤 PIC Pekerjaan:</label>
+                    <input type="text" class="form-control" name="pic_pekerjaan[]" placeholder="Nama PIC yang bertanggung jawab" required>
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label class="field-label">⏱️ Lama Pekerjaan:</label>
                     <input type="text" class="form-control" name="lama_pekerjaan[]" placeholder="Contoh: 2 jam, 30 menit, 1 hari, dll" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="field-label">👤 PIC Pekerjaan:</label>
-                    <input type="text" class="form-control" name="pic_pekerjaan[]" placeholder="Nama PIC yang bertanggung jawab" required>
                 </div>
             </div>
         </div>
@@ -646,9 +853,10 @@ function addPekerjaanRow() {
             <div class="row">
                 <div class="col-md-4">
                     <label class="field-label">📋 Nomor WO:</label>
-                    <select class="form-control select2 nomor-wo-dropdown" name="nomor_wo[]">
+                    <select class="form-control select2 nomor-wo-dropdown" name="nomor_wo[]" onchange="loadWODetails(this)">
                         ${nomorWoOptions}
                     </select>
+                    <small class="text-muted">🔄 Auto-fill data saat dipilih</small>
                 </div>
                 <div class="col-md-4">
                     <label class="field-label">🔄 Status:</label>
@@ -668,13 +876,13 @@ function addPekerjaanRow() {
             <div class="row mt-2">
                 <div class="col-md-4">
                     <label class="field-label">📍 Lokasi:</label>
-                    <select class="form-control select2 lokasi-dropdown" name="lokasi[]" onchange="loadMesinByLokasi(this)">
+                    <select class="form-control select2 lokasi-dropdown" name="lokasi[]" onchange="loadMesinByLokasiUtility(this)">
                         ${lokasiOptions}
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="field-label">⚙️ Mesin:</label>
-                    <select class="form-control select2 mesin-dropdown" name="mesin[]" onchange="loadNomorMesin(this)">
+                    <select class="form-control select2 mesin-dropdown" name="mesin[]" onchange="loadNomorMesinUtility(this)">
                         <option value="">-- Pilih Mesin --</option>
                     </select>
                 </div>
@@ -691,11 +899,11 @@ function addPekerjaanRow() {
             <div class="row">
                 <div class="col-md-6">
                     <label class="field-label">❓ Penyebab:</label>
-                    <textarea class="form-control" name="penyebab[]" rows="2" placeholder="Jelaskan penyebab masalah..."></textarea>
+                    <textarea class="form-control penyebab-input" name="penyebab[]" rows="2" placeholder="Jelaskan penyebab masalah..."></textarea>
                 </div>
                 <div class="col-md-6">
                     <label class="field-label">🔧 Tindakan Perbaikan:</label>
-                    <textarea class="form-control" name="tindakan_perbaikan[]" rows="2" placeholder="Jelaskan tindakan perbaikan yang dilakukan..."></textarea>
+                    <textarea class="form-control tindakan-input" name="tindakan_perbaikan[]" rows="2" placeholder="Jelaskan tindakan perbaikan yang dilakukan..."></textarea>
                 </div>
             </div>
         </div>
