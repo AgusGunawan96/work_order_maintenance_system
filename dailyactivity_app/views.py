@@ -5471,86 +5471,86 @@ def get_nomor_mesin(request):
 #     return redirect('dailyactivity_app:laporan_index')
 
 # Update fungsi laporan_submit
-@login_required
-def laporan_submit(request):
-    if request.method == 'POST':
-        tanggal = request.POST.get('tanggal')
-        shift_id = request.POST.get('shift')
-        catatan = request.POST.get('catatan')  # Catatan khusus untuk keseluruhan
-        image = request.FILES.get('image')
-        pic_ids = request.POST.getlist('pic')
-        pic_lembur_ids = request.POST.getlist('piclembur')
+# @login_required
+# def laporan_submit(request):
+#     if request.method == 'POST':
+#         tanggal = request.POST.get('tanggal')
+#         shift_id = request.POST.get('shift')
+#         catatan = request.POST.get('catatan')  # Catatan khusus untuk keseluruhan
+#         image = request.FILES.get('image')
+#         pic_ids = request.POST.getlist('pic')
+#         pic_lembur_ids = request.POST.getlist('piclembur')
         
-        # Ambil data multiple pekerjaan dari form
-        deskripsi_list = request.POST.getlist('deskripsi_pekerjaan[]')
-        jenis_pekerjaan_list = request.POST.getlist('jenis_pekerjaan[]')
-        lama_pekerjaan_list = request.POST.getlist('lama_pekerjaan[]')
-        pic_pekerjaan_list = request.POST.getlist('pic_pekerjaan[]')
+#         # Ambil data multiple pekerjaan dari form
+#         deskripsi_list = request.POST.getlist('deskripsi_pekerjaan[]')
+#         jenis_pekerjaan_list = request.POST.getlist('jenis_pekerjaan[]')
+#         lama_pekerjaan_list = request.POST.getlist('lama_pekerjaan[]')
+#         pic_pekerjaan_list = request.POST.getlist('pic_pekerjaan[]')
 
-        # Debugging
-        print(f"Form Data - Tanggal: {tanggal}, Shift: {shift_id}")
-        print(f"Pekerjaan - Deskripsi: {deskripsi_list}")
-        print(f"Jenis: {jenis_pekerjaan_list}, Lama: {lama_pekerjaan_list}, PIC: {pic_pekerjaan_list}")
+#         # Debugging
+#         print(f"Form Data - Tanggal: {tanggal}, Shift: {shift_id}")
+#         print(f"Pekerjaan - Deskripsi: {deskripsi_list}")
+#         print(f"Jenis: {jenis_pekerjaan_list}, Lama: {lama_pekerjaan_list}, PIC: {pic_pekerjaan_list}")
 
-        # Ambil instance Shift
-        try:
-            shift_instance = Shift.objects.get(id=shift_id)
-        except Shift.DoesNotExist:
-            messages.error(request, 'Shift tidak ditemukan.')
-            return redirect('dailyactivity_app:laporan_index')
+#         # Ambil instance Shift
+#         try:
+#             shift_instance = Shift.objects.get(id=shift_id)
+#         except Shift.DoesNotExist:
+#             messages.error(request, 'Shift tidak ditemukan.')
+#             return redirect('dailyactivity_app:laporan_index')
 
-        user_id = request.user.id
+#         user_id = request.user.id
 
-        try:
-            with transaction.atomic():
-                created_laporans = []
+#         try:
+#             with transaction.atomic():
+#                 created_laporans = []
                 
-                # Simpan setiap pekerjaan sebagai record LaporanData terpisah
-                for deskripsi, jenis, lama, pic_pekerjaan in zip(
-                    deskripsi_list, jenis_pekerjaan_list, lama_pekerjaan_list, pic_pekerjaan_list
-                ):
-                    if deskripsi.strip():  # Hanya simpan jika ada deskripsi
-                        laporan_data = LaporanData.objects.create(
-                            tanggal=tanggal,
-                            shift=shift_instance,
-                            user_id=user_id,
-                            masalah=deskripsi.strip(),  # Deskripsi pekerjaan
-                            jenis_pekerjaan=jenis.strip(),
-                            lama_pekerjaan=lama.strip(),
-                            pic_pekerjaan=pic_pekerjaan.strip(),
-                            catatan=catatan,  # Catatan sama untuk semua
-                            image=image if len(created_laporans) == 0 else None,  # Image hanya di record pertama
-                        )
-                        created_laporans.append(laporan_data)
+#                 # Simpan setiap pekerjaan sebagai record LaporanData terpisah
+#                 for deskripsi, jenis, lama, pic_pekerjaan in zip(
+#                     deskripsi_list, jenis_pekerjaan_list, lama_pekerjaan_list, pic_pekerjaan_list
+#                 ):
+#                     if deskripsi.strip():  # Hanya simpan jika ada deskripsi
+#                         laporan_data = LaporanData.objects.create(
+#                             tanggal=tanggal,
+#                             shift=shift_instance,
+#                             user_id=user_id,
+#                             masalah=deskripsi.strip(),  # Deskripsi pekerjaan
+#                             jenis_pekerjaan=jenis.strip(),
+#                             lama_pekerjaan=lama.strip(),
+#                             pic_pekerjaan=pic_pekerjaan.strip(),
+#                             catatan=catatan,  # Catatan sama untuk semua
+#                             image=image if len(created_laporans) == 0 else None,  # Image hanya di record pertama
+#                         )
+#                         created_laporans.append(laporan_data)
 
-                # Set PIC dan PIC Lembur untuk semua record yang dibuat
-                for laporan in created_laporans:
-                    # Set PIC Laporan
-                    for pic_id in pic_ids:
-                        try:
-                            pic_instance = PICLaporan.objects.get(id=pic_id)
-                            laporan.pic.add(pic_instance)
-                        except PICLaporan.DoesNotExist:
-                            continue
+#                 # Set PIC dan PIC Lembur untuk semua record yang dibuat
+#                 for laporan in created_laporans:
+#                     # Set PIC Laporan
+#                     for pic_id in pic_ids:
+#                         try:
+#                             pic_instance = PICLaporan.objects.get(id=pic_id)
+#                             laporan.pic.add(pic_instance)
+#                         except PICLaporan.DoesNotExist:
+#                             continue
 
-                    # Set PIC Lembur
-                    for pic_lembur_id in pic_lembur_ids:
-                        try:
-                            pic_lembur_instance = PICLembur.objects.get(id=pic_lembur_id)
-                            laporan.piclembur.add(pic_lembur_instance)
-                        except PICLembur.DoesNotExist:
-                            continue
+#                     # Set PIC Lembur
+#                     for pic_lembur_id in pic_lembur_ids:
+#                         try:
+#                             pic_lembur_instance = PICLembur.objects.get(id=pic_lembur_id)
+#                             laporan.piclembur.add(pic_lembur_instance)
+#                         except PICLembur.DoesNotExist:
+#                             continue
 
-                print(f"Berhasil membuat {len(created_laporans)} record laporan")
+#                 print(f"Berhasil membuat {len(created_laporans)} record laporan")
 
-        except Exception as e:
-            messages.error(request, f'Kesalahan saat menyimpan data: {e}')
-            return redirect('dailyactivity_app:laporan_index')
+#         except Exception as e:
+#             messages.error(request, f'Kesalahan saat menyimpan data: {e}')
+#             return redirect('dailyactivity_app:laporan_index')
 
-        messages.success(request, f'Data laporan utility berhasil disimpan! ({len(created_laporans)} pekerjaan)')
-        return redirect('dailyactivity_app:laporan_index')
+#         messages.success(request, f'Data laporan utility berhasil disimpan! ({len(created_laporans)} pekerjaan)')
+#         return redirect('dailyactivity_app:laporan_index')
 
-    return redirect('dailyactivity_app:laporan_index')
+#     return redirect('dailyactivity_app:laporan_index')
 
 
 # @login_required
@@ -5614,13 +5614,65 @@ def data_laporan(request, tanggal):
             }
         
         grouped_laporan[key]['pekerjaan_list'].append(laporan)
+    # TAMBAHKAN DATA LOOKUP INI BUAT RESOLVE NAMA:
+    try:
+        lokasi_list = get_lokasi_list()
+    except Exception as e:
+        print(f"Error loading lokasi_list: {e}")
+        lokasi_list = []
+    
+    try:
+        jenis_pekerjaan_list = get_jenis_pekerjaan_list()
+    except Exception as e:
+        print(f"Error loading jenis_pekerjaan_list: {e}")
+        jenis_pekerjaan_list = []
+    
+    # TAMBAHKAN INI BUAT MESIN:
+    try:
+        mesin_list = get_mesin_list()
+    except Exception as e:
+        print(f"Error loading mesin_list: {e}")
+        mesin_list = []
 
     context = {
         'grouped_laporan': grouped_laporan,
         'selected_date': tanggal_parsed,
-        'current_timestamp': timezone.now().timestamp(),  # Tambahkan timestamp untuk polling
+        'current_timestamp': timezone.now().timestamp(),
+        # TAMBAHKAN LOOKUP DATA:
+        'lokasi_list': lokasi_list,
+        'jenis_pekerjaan_list': jenis_pekerjaan_list,
+        'mesin_list': mesin_list,  # Nanti lo populate
     }
     return render(request, 'dailyactivity_app/data_laporan.html', context)
+
+def get_mesin_list():
+    """Ambil daftar mesin dari tabel_mesin DB_Maintenance"""
+    mesin_list = []
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT id_mesin, mesin, nomer
+                FROM tabel_mesin
+                WHERE status = 'A'
+                AND mesin IS NOT NULL
+                AND mesin != ''
+                ORDER BY mesin
+            """)
+            mesin_list = [
+                {
+                    'value': str(row[0]), 
+                    'text': f"{row[1]} ({row[2]})" if row[2] else row[1]
+                } 
+                for row in cursor.fetchall()
+            ]
+    except Exception as e:
+        print(f"Error fetching mesin list: {e}")
+        # Fallback data
+        mesin_list = [
+            {'value': '1', 'text': 'Mesin A'},
+            {'value': '2', 'text': 'Mesin B'}
+        ]
+    return mesin_list
 
 @login_required
 def tanggal_laporan(request):
@@ -5876,8 +5928,104 @@ def tanggal_laporan(request):
 #     return render(request, 'dailyactivity_app/edit_laporan.html', context)
 
 # Update fungsi edit_laporan untuk memastikan updated_at ter-update
+# @login_required
+# def edit_laporan(request, id):
+#     # Ambil laporan yang akan diedit
+#     main_laporan = get_object_or_404(LaporanData, id=id)
+    
+#     # Ambil semua laporan yang dibuat bersamaan (dalam rentang 5 menit)
+#     time_range_start = main_laporan.created_at - timedelta(minutes=5)
+#     time_range_end = main_laporan.created_at + timedelta(minutes=5)
+    
+#     related_laporan = LaporanData.objects.filter(
+#         tanggal=main_laporan.tanggal,
+#         shift=main_laporan.shift,
+#         user=main_laporan.user,
+#         created_at__range=(time_range_start, time_range_end)
+#     ).order_by('created_at')
+    
+#     shifts = Shift.objects.all()
+#     pic_laporan = PICLaporan.objects.all()
+#     pic_lembur_list = PICLembur.objects.all()
+
+#     if request.method == 'POST':
+#         tanggal = request.POST.get('tanggal')
+#         shift_id = request.POST.get('shift')
+#         catatan = request.POST.get('catatan')
+#         image = request.FILES.get('image')
+#         pic_ids = request.POST.getlist('pic')
+#         pic_lembur_ids = request.POST.getlist('piclembur')
+        
+#         # Ambil data multiple pekerjaan dari form
+#         deskripsi_list = request.POST.getlist('deskripsi_pekerjaan[]')
+#         jenis_pekerjaan_list = request.POST.getlist('jenis_pekerjaan[]')
+#         lama_pekerjaan_list = request.POST.getlist('lama_pekerjaan[]')
+#         pic_pekerjaan_list = request.POST.getlist('pic_pekerjaan[]')
+
+#         try:
+#             shift_instance = Shift.objects.get(id=shift_id)
+#         except Shift.DoesNotExist:
+#             messages.error(request, 'Shift tidak ditemukan.')
+#             return redirect('dailyactivity_app:edit_laporan', id=id)
+
+#         try:
+#             with transaction.atomic():
+#                 # Hapus semua laporan terkait
+#                 related_laporan.delete()
+                
+#                 # Buat ulang dengan data baru
+#                 created_laporans = []
+#                 current_time = timezone.now()
+                
+#                 for deskripsi, jenis, lama, pic_pekerjaan in zip(
+#                     deskripsi_list, jenis_pekerjaan_list, lama_pekerjaan_list, pic_pekerjaan_list
+#                 ):
+#                     if deskripsi.strip():
+#                         laporan_data = LaporanData.objects.create(
+#                             tanggal=tanggal,
+#                             shift=shift_instance,
+#                             user=main_laporan.user,
+#                             masalah=deskripsi.strip(),
+#                             jenis_pekerjaan=jenis.strip(),
+#                             lama_pekerjaan=lama.strip(),
+#                             pic_pekerjaan=pic_pekerjaan.strip(),
+#                             catatan=catatan,
+#                             image=image if len(created_laporans) == 0 else None,
+#                             created_at=current_time,  # Set sama agar grouping tetap sama
+#                         )
+                        
+#                         # Update updated_at manually jika perlu
+#                         if hasattr(laporan_data, 'updated_at'):
+#                             laporan_data.updated_at = current_time
+#                             laporan_data.save()
+                        
+#                         created_laporans.append(laporan_data)
+
+#                 # Set PIC untuk semua record baru
+#                 for laporan in created_laporans:
+#                     laporan.pic.set(pic_ids)
+#                     laporan.piclembur.set(pic_lembur_ids)
+
+#             messages.success(request, f'Data berhasil diperbarui! ({len(created_laporans)} pekerjaan)')
+#             return redirect('dailyactivity_app:data_laporan', tanggal=tanggal)
+            
+#         except Exception as e:
+#             messages.error(request, f'Kesalahan saat memperbarui data: {e}')
+#             return redirect('dailyactivity_app:edit_laporan', id=id)
+
+#     context = {
+#         'main_laporan': main_laporan,
+#         'related_laporan': related_laporan,
+#         'shifts': shifts,
+#         'pic_laporan': pic_laporan,
+#         'pic_lembur_list': pic_lembur_list,
+#     }
+#     return render(request, 'dailyactivity_app/edit_laporan.html', context)
+
 @login_required
 def edit_laporan(request, id):
+    """Edit laporan utility dengan semua field baru yang enhanced"""
+    
     # Ambil laporan yang akan diedit
     main_laporan = get_object_or_404(LaporanData, id=id)
     
@@ -5892,23 +6040,76 @@ def edit_laporan(request, id):
         created_at__range=(time_range_start, time_range_end)
     ).order_by('created_at')
     
+    # Data untuk dropdown
     shifts = Shift.objects.all()
     pic_laporan = PICLaporan.objects.all()
     pic_lembur_list = PICLembur.objects.all()
+    
+    # Data untuk dropdown baru (sama seperti di laporan_index)
+    try:
+        nomor_wo_list = get_nomor_wo_list()
+    except Exception as e:
+        print(f"Error loading nomor_wo_list: {e}")
+        nomor_wo_list = []
+    
+    try:
+        lokasi_list = get_lokasi_list()
+    except Exception as e:
+        print(f"Error loading lokasi_list: {e}")
+        lokasi_list = []
+    
+    try:
+        jenis_pekerjaan_list = get_jenis_pekerjaan_list()
+    except Exception as e:
+        print(f"Error loading jenis_pekerjaan_list: {e}")
+        jenis_pekerjaan_list = []
 
     if request.method == 'POST':
+        print("=== DEBUG: Edit Form Submission Started ===")
+        
+        # Ambil data common (tanggal, shift, pic, dll)
         tanggal = request.POST.get('tanggal')
         shift_id = request.POST.get('shift')
-        catatan = request.POST.get('catatan')
-        image = request.FILES.get('image')
+        catatan = request.POST.get('catatan', '')
         pic_ids = request.POST.getlist('pic')
-        pic_lembur_ids = request.POST.getlist('piclembur')
+        piclembur_ids = request.POST.getlist('piclembur')
+        image = request.FILES.get('image')
         
-        # Ambil data multiple pekerjaan dari form
+        print(f"Common data - Tanggal: {tanggal}, Shift: {shift_id}, Catatan: {catatan}")
+        print(f"PIC IDs: {pic_ids}, PIC Lembur IDs: {piclembur_ids}")
+        
+        # Ambil array data pekerjaan (SEMUA FIELD BARU)
         deskripsi_list = request.POST.getlist('deskripsi_pekerjaan[]')
-        jenis_pekerjaan_list = request.POST.getlist('jenis_pekerjaan[]')
         lama_pekerjaan_list = request.POST.getlist('lama_pekerjaan[]')
         pic_pekerjaan_list = request.POST.getlist('pic_pekerjaan[]')
+        
+        # Ambil array data WO & Maintenance baru (SEMUA FIELD BARU)
+        nomor_wo_list_form = request.POST.getlist('nomor_wo[]')
+        status_utility_list = request.POST.getlist('status_utility[]')
+        lokasi_list_form = request.POST.getlist('lokasi[]')
+        mesin_list_form = request.POST.getlist('mesin[]')
+        nomor_mesin_list = request.POST.getlist('nomor_mesin[]')
+        jenis_pekerjaan_maintenance_list = request.POST.getlist('jenis_pekerjaan_maintenance[]')
+        penyebab_list = request.POST.getlist('penyebab[]')
+        tindakan_perbaikan_list = request.POST.getlist('tindakan_perbaikan[]')
+        
+        # Debug print semua arrays
+        print(f"Deskripsi: {deskripsi_list}")
+        print(f"Lama Pekerjaan: {lama_pekerjaan_list}")
+        print(f"PIC Pekerjaan: {pic_pekerjaan_list}")
+        print(f"Nomor WO: {nomor_wo_list_form}")
+        print(f"Status Utility: {status_utility_list}")
+        print(f"Lokasi: {lokasi_list_form}")
+        print(f"Mesin: {mesin_list_form}")
+        print(f"Nomor Mesin: {nomor_mesin_list}")
+        print(f"Jenis Pekerjaan Maintenance: {jenis_pekerjaan_maintenance_list}")
+        print(f"Penyebab: {penyebab_list}")
+        print(f"Tindakan Perbaikan: {tindakan_perbaikan_list}")
+        
+        # Validasi basic
+        if not tanggal or not shift_id or not deskripsi_list:
+            messages.error(request, 'Data tanggal, shift, dan minimal 1 deskripsi pekerjaan harus diisi!')
+            return redirect('dailyactivity_app:edit_laporan', id=id)
 
         try:
             shift_instance = Shift.objects.get(id=shift_id)
@@ -5919,54 +6120,91 @@ def edit_laporan(request, id):
         try:
             with transaction.atomic():
                 # Hapus semua laporan terkait
+                print(f"Deleting {related_laporan.count()} related laporan records")
                 related_laporan.delete()
                 
                 # Buat ulang dengan data baru
                 created_laporans = []
                 current_time = timezone.now()
                 
-                for deskripsi, jenis, lama, pic_pekerjaan in zip(
-                    deskripsi_list, jenis_pekerjaan_list, lama_pekerjaan_list, pic_pekerjaan_list
-                ):
-                    if deskripsi.strip():
-                        laporan_data = LaporanData.objects.create(
-                            tanggal=tanggal,
-                            shift=shift_instance,
-                            user=main_laporan.user,
-                            masalah=deskripsi.strip(),
-                            jenis_pekerjaan=jenis.strip(),
-                            lama_pekerjaan=lama.strip(),
-                            pic_pekerjaan=pic_pekerjaan.strip(),
-                            catatan=catatan,
-                            image=image if len(created_laporans) == 0 else None,
-                            created_at=current_time,  # Set sama agar grouping tetap sama
-                        )
+                print(f"=== Creating {len(deskripsi_list)} new records ===")
+                
+                # Loop untuk setiap baris pekerjaan - HANDLE SEMUA FIELD BARU
+                for i in range(len(deskripsi_list)):
+                    if not deskripsi_list[i].strip():  # Skip empty descriptions
+                        continue
                         
-                        # Update updated_at manually jika perlu
-                        if hasattr(laporan_data, 'updated_at'):
-                            laporan_data.updated_at = current_time
-                            laporan_data.save()
+                    print(f"--- Creating record {i+1} ---")
+                    
+                    # Create LaporanData instance dengan SEMUA FIELD
+                    laporan_data = LaporanData(
+                        tanggal=tanggal,
+                        shift=shift_instance,
+                        user=main_laporan.user,  # Keep original user
                         
-                        created_laporans.append(laporan_data)
+                        # Data utility (field lama)
+                        masalah=deskripsi_list[i].strip(),  # deskripsi -> masalah
+                        jenis_pekerjaan='',  # Dikosongkan karena input utility dihilangkan
+                        lama_pekerjaan=lama_pekerjaan_list[i].strip() if i < len(lama_pekerjaan_list) else '',
+                        pic_pekerjaan=pic_pekerjaan_list[i].strip() if i < len(pic_pekerjaan_list) else '',
+                        catatan=catatan,
+                        
+                        # Data WO & Maintenance (field baru) - COMPLETE MAPPING
+                        nomor_wo=nomor_wo_list_form[i].strip() if i < len(nomor_wo_list_form) and nomor_wo_list_form[i] else '',
+                        status_utility=status_utility_list[i] if i < len(status_utility_list) and status_utility_list[i] else 'proses',
+                        lokasi=lokasi_list_form[i].strip() if i < len(lokasi_list_form) and lokasi_list_form[i] else '',
+                        mesin=mesin_list_form[i].strip() if i < len(mesin_list_form) and mesin_list_form[i] else '',
+                        nomor_mesin=nomor_mesin_list[i].strip() if i < len(nomor_mesin_list) and nomor_mesin_list[i] else '',
+                        jenis_pekerjaan_maintenance=jenis_pekerjaan_maintenance_list[i].strip() if i < len(jenis_pekerjaan_maintenance_list) and jenis_pekerjaan_maintenance_list[i] else '',
+                        penyebab=penyebab_list[i].strip() if i < len(penyebab_list) and penyebab_list[i] else '',
+                        tindakan_perbaikan=tindakan_perbaikan_list[i].strip() if i < len(tindakan_perbaikan_list) and tindakan_perbaikan_list[i] else '',
+                        
+                        # Image hanya untuk record pertama, atau keep existing image jika tidak ada upload baru
+                        image=image if i == 0 and image else (main_laporan.image if i == 0 and not image else None),
+                        created_at=current_time,  # Set sama agar grouping tetap sama
+                    )
+                    
+                    # Save record
+                    laporan_data.save()
+                    created_laporans.append(laporan_data)
+                    
+                    print(f"Saved laporan {laporan_data.id} - WO: {laporan_data.nomor_wo}, Lokasi: {laporan_data.lokasi}")
+                    
+                    # Set PIC untuk setiap laporan (Many-to-Many)
+                    if pic_ids:
+                        pic_objects = PICLaporan.objects.filter(id__in=pic_ids)
+                        laporan_data.pic.set(pic_objects)
+                        print(f"Set PIC: {list(pic_objects.values_list('name', flat=True))}")
+                    
+                    if piclembur_ids:
+                        piclembur_objects = PICLembur.objects.filter(id__in=piclembur_ids)
+                        laporan_data.piclembur.set(piclembur_objects)
+                        print(f"Set PIC Lembur: {list(piclembur_objects.values_list('name', flat=True))}")
 
-                # Set PIC untuk semua record baru
-                for laporan in created_laporans:
-                    laporan.pic.set(pic_ids)
-                    laporan.piclembur.set(pic_lembur_ids)
-
-            messages.success(request, f'Data berhasil diperbarui! ({len(created_laporans)} pekerjaan)')
-            return redirect('dailyactivity_app:data_laporan', tanggal=tanggal)
-            
+                # Success message
+                messages.success(request, f'✅ Data berhasil diperbarui! ({len(created_laporans)} pekerjaan)')
+                print(f"=== SUCCESS: Updated with {len(created_laporans)} records ===")
+                
+                return redirect('dailyactivity_app:data_laporan', tanggal=tanggal)
+                
         except Exception as e:
-            messages.error(request, f'Kesalahan saat memperbarui data: {e}')
+            messages.error(request, f'❌ Kesalahan saat memperbarui data: {str(e)}')
+            print(f"ERROR: {e}")
+            import traceback
+            traceback.print_exc()
             return redirect('dailyactivity_app:edit_laporan', id=id)
 
+    # GET request - tampilkan form dengan data existing
     context = {
         'main_laporan': main_laporan,
         'related_laporan': related_laporan,
         'shifts': shifts,
         'pic_laporan': pic_laporan,
         'pic_lembur_list': pic_lembur_list,
+        # Data baru untuk dropdown (sama seperti laporan_index)
+        'nomor_wo_list': nomor_wo_list,
+        'lokasi_list': lokasi_list,
+        'jenis_pekerjaan_list': jenis_pekerjaan_list,
     }
     return render(request, 'dailyactivity_app/edit_laporan.html', context)
 

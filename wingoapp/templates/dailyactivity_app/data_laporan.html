@@ -272,6 +272,31 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   
+  /* Field group untuk mengorganize sections */
+  .field-group {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .field-group-title {
+    font-weight: 600;
+    color: #2e7d32;
+    font-size: 1.0em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 8px;
+  }
+  
+  .field-group-title.utility::before {
+    content: "🌿";
+    margin-right: 8px;
+  }
+  
   .pekerjaan-field {
     margin-bottom: 12px;
   }
@@ -298,6 +323,40 @@
     border-left: 3px solid #4caf50;
     font-size: 0.95em;
     line-height: 1.4;
+    min-height: 20px;
+  }
+  
+  .field-value.empty {
+    color: #9e9e9e;
+    font-style: italic;
+    background: #f5f5f5;
+    border-left-color: #e0e0e0;
+  }
+  
+  /* Status badge styling */
+  .status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .status-badge.proses {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    color: white;
+  }
+  
+  .status-badge.selesai {
+    background: linear-gradient(135deg, #4caf50, #388e3c);
+    color: white;
+  }
+  
+  .status-badge.hold {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: white;
   }
   
   /* Action buttons styling */
@@ -465,6 +524,11 @@
       padding: 10px 12px;
       font-size: 13px;
     }
+    
+    .field-group {
+      padding: 12px;
+      margin: 10px 0;
+    }
   }
   
   /* Print styles */
@@ -503,7 +567,7 @@
 <!-- Update Notification -->
 <div id="updateNotification" class="update-notification">
   <strong>🔄 Auto-refresh aktif!</strong><br>
-  <small>Halaman akan refresh setiap 1 menit</small>
+  <small>Halaman akan refresh setiap 5 menit</small>
 </div>
 
 <div class="page-body">
@@ -549,42 +613,158 @@
                 </div>
               </div>
               
-              <!-- Detail Pekerjaan List -->
+              <!-- Detail Pekerjaan List ENHANCED -->
               <div class="pekerjaan-list">
                 <div class="pekerjaan-header">
-                  Detail Pekerjaan Utility ({{ group.pekerjaan_list|length }} item)
+                  Detail Laporan Utility ({{ group.pekerjaan_list|length }} item)
                 </div>
                 
                 {% for pekerjaan in group.pekerjaan_list %}
                   <div class="pekerjaan-item">
                     <div class="pekerjaan-number">{{ forloop.counter }}</div>
                     
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="pekerjaan-field">
-                          <span class="field-label">📝 Deskripsi Pekerjaan:</span>
-                          <div class="field-value">{{ pekerjaan.masalah|linebreaksbr }}</div>
+                    <!-- FIELD GROUP: Data Utility (All in One) -->
+                    <div class="field-group">
+                      <div class="field-group-title utility">Data Utility</div>
+                      
+                      <!-- Row 1: Nomor WO, PIC Pekerjaan, Lokasi -->
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">1️⃣ Nomor WO:</span>
+                            <div class="field-value{% if not pekerjaan.nomor_wo %} empty{% endif %}">
+                              {{ pekerjaan.nomor_wo|default:"Tidak ada WO" }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">2️⃣ PIC Pekerjaan:</span>
+                            <div class="field-value{% if not pekerjaan.pic_pekerjaan %} empty{% endif %}">
+                              {{ pekerjaan.pic_pekerjaan|default:"Tidak ditentukan" }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">3️⃣ Lokasi:</span>
+                            <div class="field-value{% if not pekerjaan.lokasi %} empty{% endif %}">
+                              {% if pekerjaan.lokasi %}
+                                {% comment %}Display nama lokasi dari lookup{% endcomment %}
+                                {% for lokasi in lokasi_list %}
+                                  {% if lokasi.value == pekerjaan.lokasi %}
+                                    {{ lokasi.text }}
+                                  {% endif %}
+                                {% empty %}
+                                  {{ pekerjaan.lokasi }}
+                                {% endfor %}
+                              {% else %}
+                                Tidak ditentukan
+                              {% endif %}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                        <div class="pekerjaan-field">
-                          <span class="field-label">🔨 Jenis Pekerjaan:</span>
-                          <div class="field-value">{{ pekerjaan.jenis_pekerjaan|default:"Tidak ditentukan" }}</div>
+                      
+                      <!-- Row 2: Mesin, Nomor Mesin, Jenis Pekerjaan Maintenance -->
+                      <div class="row mt-2">
+                        <div class="col-md-4">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">4️⃣ Mesin:</span>
+                            <div class="field-value{% if not pekerjaan.mesin %} empty{% endif %}">
+                              {% if pekerjaan.mesin %}
+                                {% comment %}Simple approach: always show raw value first{% endcomment %}
+                                {{ pekerjaan.mesin }}
+                                {% comment %}Debug info untuk troubleshooting{% endcomment %}
+                                {% if mesin_list %}
+                                  <small class="text-muted">(Lookup: {{ mesin_list|length }} items available)</small>
+                                {% else %}
+                                  <small class="text-muted">(No mesin_list in context)</small>
+                                {% endif %}
+                              {% else %}
+                                Tidak ditentukan
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">5️⃣ Nomor Mesin:</span>
+                            <div class="field-value{% if not pekerjaan.nomor_mesin %} empty{% endif %}">
+                              {{ pekerjaan.nomor_mesin|default:"Tidak ditentukan" }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">6️⃣ Jenis Pekerjaan Maintenance:</span>
+                            <div class="field-value{% if not pekerjaan.jenis_pekerjaan_maintenance %} empty{% endif %}">
+                              {% if pekerjaan.jenis_pekerjaan_maintenance %}
+                                {% comment %}Display nama jenis pekerjaan dari lookup{% endcomment %}
+                                {% for jenis in jenis_pekerjaan_list %}
+                                  {% if jenis.value == pekerjaan.jenis_pekerjaan_maintenance %}
+                                    {{ jenis.text }}
+                                  {% endif %}
+                                {% empty %}
+                                  {{ pekerjaan.jenis_pekerjaan_maintenance }}
+                                {% endfor %}
+                              {% else %}
+                                Tidak ditentukan
+                              {% endif %}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div class="row mt-2">
-                      <div class="col-md-6">
-                        <div class="pekerjaan-field">
-                          <span class="field-label">⏱️ Lama Pekerjaan: (Jam)</span>
-                          <div class="field-value">{{ pekerjaan.lama_pekerjaan|default:"Tidak ditentukan" }}</div>
+                      
+                      <!-- Row 3: Lama Pekerjaan, Status -->
+                      <div class="row mt-2">
+                        <div class="col-md-6">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">7️⃣ Lama Pekerjaan:</span>
+                            <div class="field-value{% if not pekerjaan.lama_pekerjaan %} empty{% endif %}">
+                              {{ pekerjaan.lama_pekerjaan|default:"Tidak ditentukan" }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">8️⃣ Status:</span>
+                            <div class="field-value">
+                              <span class="status-badge {{ pekerjaan.status_utility|default:'proses' }}">
+                                {{ pekerjaan.get_status_utility_display|default:"Proses" }}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                        <div class="pekerjaan-field">
-                          <span class="field-label">👤 PIC Pekerjaan:</span>
-                          <div class="field-value">{{ pekerjaan.pic_pekerjaan|default:"Tidak ditentukan" }}</div>
+                      
+                      <!-- Row 4: Deskripsi Pekerjaan (Full Width) -->
+                      <div class="row mt-2">
+                        <div class="col-md-12">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">9️⃣ Deskripsi Pekerjaan:</span>
+                            <div class="field-value">{{ pekerjaan.masalah|linebreaksbr }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Row 5: Penyebab & Tindakan Perbaikan -->
+                      <div class="row mt-2">
+                        <div class="col-md-6">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">🔟 Penyebab:</span>
+                            <div class="field-value{% if not pekerjaan.penyebab %} empty{% endif %}">
+                              {{ pekerjaan.penyebab|linebreaksbr|default:"Tidak ada analisis penyebab" }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="pekerjaan-field">
+                            <span class="field-label">1️⃣1️⃣ Tindakan Perbaikan:</span>
+                            <div class="field-value{% if not pekerjaan.tindakan_perbaikan %} empty{% endif %}">
+                              {{ pekerjaan.tindakan_perbaikan|linebreaksbr|default:"Tidak ada tindakan perbaikan" }}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -600,24 +780,24 @@
                 </div>
               {% endif %}
               
-              <!-- Info Tambahan -->
+              <!-- Info Tambahan Enhanced -->
               <div class="info-section">
                 <div class="row">
                   <div class="col-md-3">
                     <div class="info-item">
-                      <span class="info-label">Tanggal:</span>
+                      <span class="info-label">📅 Tanggal:</span>
                       <span class="info-value">{{ group.meta.tanggal|date:"d F Y" }}</span>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="info-item">
-                      <span class="info-label">Shift:</span>
+                      <span class="info-label">⏰ Shift:</span>
                       <span class="info-value">{{ group.meta.shift.name }}</span>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="info-item">
-                      <span class="info-label">PIC:</span>
+                      <span class="info-label">👥 PIC:</span>
                       <span class="info-value">
                         {% for pic in group.meta.pic %}
                           {{ pic.name }}{% if not forloop.last %}, {% endif %}
@@ -629,7 +809,7 @@
                   </div>
                   <div class="col-md-3">
                     <div class="info-item">
-                      <span class="info-label">PIC Lembur:</span>
+                      <span class="info-label">🕐 PIC Lembur:</span>
                       <span class="info-value">
                         {% for pic_lembur in group.meta.piclembur %}
                           {{ pic_lembur.name }}{% if not forloop.last %}, {% endif %}
@@ -643,16 +823,28 @@
                 
                 <!-- User Info -->
                 <div class="row mt-2">
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                     <div class="info-item">
-                      <span class="info-label">Dibuat oleh:</span>
+                      <span class="info-label">👤 Dibuat oleh:</span>
                       <span class="info-value">{{ group.meta.user.get_full_name|default:group.meta.user.username }}</span>
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                     <div class="info-item">
-                      <span class="info-label">Waktu input:</span>
+                      <span class="info-label">🕒 Waktu input:</span>
                       <span class="info-value">{{ group.meta.created_at|date:"d F Y H:i" }}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="info-item">
+                      <span class="info-label">⏱️ Total Lama Pekerjaan:</span>
+                      <span class="info-value">
+                        {% for pekerjaan in group.pekerjaan_list %}
+                          {% if pekerjaan.lama_pekerjaan %}{{ pekerjaan.lama_pekerjaan }}{% if not forloop.last %} | {% endif %}{% endif %}
+                        {% empty %}
+                          <span class="text-muted">Tidak ada data</span>
+                        {% endfor %}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -662,7 +854,7 @@
               {% if group.meta.image %}
                 <div class="laporan-image">
                   <div class="info-label mb-2">
-                    <i class="fa fa-image"></i> Gambar Laporan:
+                    <i class="fa fa-image"></i> 📸 Gambar Laporan:
                   </div>
                   <img src="{{ group.meta.image.url }}" 
                        alt="Laporan Image" 
@@ -675,7 +867,7 @@
         {% else %}
           <div class="empty-state">
             <i class="fa fa-file-text-o"></i>
-            <h4>Tidak ada data laporan</h4>
+            <h4>Tidak ada data laporan utility</h4>
             <p>Tidak ada laporan untuk tanggal {{ selected_date|date:"d F Y" }}</p>
             <a href="{% url 'dailyactivity_app:laporan_index' %}" class="btn btn-primary">
               <i class="fa fa-plus"></i> Tambah Laporan Baru
@@ -755,8 +947,8 @@ function openImageModal(imageUrl) {
   $('#imageModal').modal('show');
 }
 
-// SIMPLE AUTO-REFRESH - Refresh halaman setiap 1 menit
-var REFRESH_INTERVAL = 300; // 60 detik (ubah angka ini untuk mengatur interval)
+// SIMPLE AUTO-REFRESH - Refresh halaman setiap 5 menit (300 detik)
+var REFRESH_INTERVAL = 300; // 300 detik = 5 menit (ubah angka ini untuk mengatur interval)
 var countdown = REFRESH_INTERVAL;
 var refreshTimer;
 var countdownInterval;
@@ -769,13 +961,17 @@ function updateCountdownDisplay() {
   var statusIcon = statusIndicator.querySelector('.status-icon');
   
   if (isRefreshEnabled) {
-    statusText.textContent = 'Auto-refresh dalam ' + countdown + 's';
+    var minutes = Math.floor(countdown / 60);
+    var seconds = countdown % 60;
+    var timeText = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+    
+    statusText.textContent = 'Auto-refresh dalam ' + timeText;
     statusIcon.textContent = '🔄';
     statusIndicator.className = 'realtime-status connected';
     
-    // Log untuk debugging
-    if (countdown % 10 === 0 || countdown <= 5) {
-      console.log('Auto-refresh countdown: ' + countdown + ' seconds');
+    // Log untuk debugging setiap 30 detik atau kurang dari 10 detik
+    if (countdown % 30 === 0 || countdown <= 10) {
+      console.log('Auto-refresh countdown: ' + timeText);
     }
   } else {
     statusText.textContent = 'Auto-refresh OFF (click untuk ON)';
@@ -796,7 +992,7 @@ function startCountdown() {
         console.log('Auto-refresh: Refreshing page now...');
         
         // Show refresh notification
-        showNotification('Memperbarui halaman...', 'info');
+        showNotification('Memperbarui data laporan utility...', 'info');
         
         // Update status
         var statusIndicator = document.getElementById('realtimeStatus');
@@ -850,7 +1046,7 @@ function toggleAutoRefresh() {
   
   if (isRefreshEnabled) {
     resetCountdown();
-    showNotification('Auto-refresh DIAKTIFKAN - halaman akan refresh setiap ' + REFRESH_INTERVAL + ' detik', 'success');
+    showNotification('Auto-refresh DIAKTIFKAN - halaman akan refresh setiap 5 menit', 'success');
     console.log('Auto-refresh ENABLED');
   } else {
     showNotification('Auto-refresh DINONAKTIFKAN - klik status untuk mengaktifkan', 'warning');
@@ -863,7 +1059,7 @@ function toggleAutoRefresh() {
 // Manual refresh
 function manualRefresh() {
   console.log('Manual refresh triggered');
-  showNotification('Manual refresh...', 'info');
+  showNotification('Manual refresh laporan utility...', 'info');
   
   setTimeout(function() {
     window.location.reload(true);
@@ -873,8 +1069,8 @@ function manualRefresh() {
 // Initialize auto-refresh system
 function initializeAutoRefresh() {
   console.log('=== AUTO-REFRESH SYSTEM STARTING ===');
-  console.log('Refresh interval: ' + REFRESH_INTERVAL + ' seconds');
-  console.log('Page will refresh every ' + (REFRESH_INTERVAL/60) + ' minute(s)');
+  console.log('Refresh interval: ' + REFRESH_INTERVAL + ' seconds (5 minutes)');
+  console.log('Page will refresh every 5 minutes to get latest utility data');
   
   // Reset countdown
   resetCountdown();
@@ -903,7 +1099,7 @@ function initializeAutoRefresh() {
   
   // Show welcome notification
   setTimeout(function() {
-    showNotification('Auto-refresh AKTIF - halaman akan refresh setiap ' + REFRESH_INTERVAL + ' detik', 'success');
+    showNotification('Auto-refresh AKTIF - data utility akan diperbarui setiap 5 menit', 'success');
   }, 2000);
   
   console.log('Auto-refresh system initialized successfully');
@@ -931,7 +1127,7 @@ function openImageModal(imageUrl) {
 
 // Initialize everything when document is ready
 $(document).ready(function() {
-  console.log('Document ready - initializing auto-refresh system...');
+  console.log('Document ready - initializing enhanced auto-refresh system...');
   
   // Initialize auto-refresh
   initializeAutoRefresh();
@@ -965,6 +1161,16 @@ $(document).ready(function() {
       manualRefresh();
     }
   });
+  
+  // Add hover effects for field groups
+  $('.field-group').hover(
+    function() {
+      $(this).css('background', 'rgba(255, 255, 255, 0.9)');
+    },
+    function() {
+      $(this).css('background', 'rgba(255, 255, 255, 0.7)');
+    }
+  );
   
   console.log('All event handlers attached successfully');
 });

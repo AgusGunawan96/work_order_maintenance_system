@@ -76,19 +76,20 @@
         color: var(--primary-color);
     }
 
-    /* Table Container */
+    /* Table Container - Modified for single scroll */
     .table-container {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         max-width: 100%;
         border: 1px solid var(--border-color);
         border-radius: 8px;
+        /* Removed individual border styling to prevent double scroll */
     }
 
     /* Table Styling */
     .data-table {
-        width: max-content;
-        min-width: 100%;
+        width: 100%;
+        min-width: 1200px; /* Set minimum width for horizontal scroll */
         margin: 0;
         border-collapse: collapse;
         font-size: 0.875rem;
@@ -105,8 +106,9 @@
         text-align: left;
         white-space: nowrap;
         font-size: 0.8rem;
-        position: relative;
-        top: auto;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .data-table th:last-child {
@@ -324,6 +326,10 @@
             gap: 10px;
         }
 
+        .data-table {
+            min-width: 800px; /* Reduced for mobile */
+        }
+
         .data-table th,
         .data-table td {
             padding: 8px 6px;
@@ -349,6 +355,10 @@
     }
 
     @media (max-width: 576px) {
+        .data-table {
+            min-width: 600px; /* Further reduced for small screens */
+        }
+
         .data-table th,
         .data-table td {
             padding: 6px 4px;
@@ -365,25 +375,31 @@
         }
     }
 
-    /* DataTables Override */
+    /* DataTables Override - Modified for single scroll */
     .dataTables_wrapper {
         padding: 15px;
+        overflow: visible; /* Allow natural overflow */
     }
 
+    /* Disable DataTables internal scrolling */
     .dataTables_scrollHead {
-        overflow: hidden !important;
+        display: none !important; /* Hide the scroll head to prevent double headers */
     }
 
     .dataTables_scrollBody {
-        overflow: auto !important;
+        overflow: visible !important; /* Remove internal scroll */
+        border: none !important;
+        max-height: none !important;
     }
 
     .dataTables_scrollHeadInner {
-        box-sizing: content-box !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
     }
 
     .dataTables_scrollHeadInner table {
         margin: 0 !important;
+        width: 100% !important;
     }
 
     .dataTables_wrapper .dataTables_scroll .dataTables_scrollHead table {
@@ -425,9 +441,9 @@
         border-color: var(--primary-color) !important;
     }
 
-    /* Table scroll indicator */
+    /* Table scroll indicator - Updated for single scroll */
     .table-container::after {
-        content: "👈 Geser buat liat kolom lain nih!";
+        content: "👈 Geser horizontal untuk melihat kolom lainnya";
         position: absolute;
         right: 10px;
         top: 50%;
@@ -440,7 +456,7 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.3s ease;
-        z-index: 10;
+        z-index: 5;
     }
 
     .table-container:hover::after {
@@ -754,12 +770,14 @@
 
 <script>
 $(document).ready(function() {
-    // Initialize DataTable dengan setting yang lebih kece
+    // Initialize DataTable with single scroll configuration
     $('#mechanicalTable').DataTable({
         "pageLength": 25,
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua"]],
         "order": [[ 1, "desc" ]], // Order by tanggal (kolom 1 sekarang)
-        "responsive": true,
+        "responsive": false, // Disable DataTables responsive to use our custom CSS
+        "scrollX": false, // Disable DataTables internal horizontal scrolling
+        "scrollCollapse": false, // Disable scroll collapse
         "language": {
             "lengthMenu": "Tampilkan _MENU_ data per halaman",
             "search": "Cari data:",
@@ -788,15 +806,18 @@ $(document).ready(function() {
         "dom": '<"row"<"col-sm-6"l><"col-sm-6"f>>' +
                '<"row"<"col-sm-12"tr>>' +
                '<"row"<"col-sm-5"i><"col-sm-7"p>>',
-        "autoWidth": false,
-        "scrollX": true,
+        "autoWidth": false, // Disable auto width calculation
         "initComplete": function(settings, json) {
             // Kasih info kalau data udah loaded
-            console.log('✅ Data mechanical berhasil dimuat!');
+            console.log('✅ Data mechanical berhasil dimuat dengan single scroll!');
             
-            // Highlight row berdasarkan type (tanpa tipe column)
+            // Highlight row berdasarkan type
             $('.row-mechanical').css('border-left-color', '#3498db');
             $('.row-laporan').css('border-left-color', '#27ae60');
+            
+            // Force remove any DataTables scroll containers that might still exist
+            $('.dataTables_scrollHead').remove();
+            $('.dataTables_scrollBody').contents().unwrap();
         }
     });
 
@@ -814,13 +835,24 @@ $(document).ready(function() {
         }
     });
 
-    // Filter buttons dihilangkan sesuai permintaan user
-    // Tidak ada lagi filter buttons untuk tipe data
+    // Custom horizontal scroll behavior
+    $('.table-container').on('scroll', function() {
+        const scrollLeft = $(this).scrollLeft();
+        const maxScroll = $(this)[0].scrollWidth - $(this).outerWidth();
+        
+        // Optional: Add visual feedback for scroll position
+        if (scrollLeft > 0 && scrollLeft < maxScroll) {
+            $(this).addClass('is-scrolling');
+        } else {
+            $(this).removeClass('is-scrolling');
+        }
+    });
 });
 
-// Auto-adjust on window resize
+// Auto-adjust on window resize without DataTables interference
 $(window).on('resize', function() {
-    $('#mechanicalTable').DataTable().columns.adjust();
+    // Just trigger a simple reflow instead of DataTables adjust
+    $('.table-container').trigger('scroll');
 });
 
 // Tooltip untuk PIC lembur
