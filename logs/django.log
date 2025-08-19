@@ -12814,3 +12814,1259 @@ INFO 2025-08-16 16:03:03,834 views 10248 12756   Status: A, Approve: T, Review: 
 INFO 2025-08-16 16:03:03,834 views 10248 12756   Status: A, Approve: Y, Review: 0
 INFO 2025-08-16 16:03:03,834 views 10248 12756   Status: A, Approve: Y, Review: 1
 INFO 2025-08-16 16:03:03,835 views 10248 12756 === END VALIDATION ===
+INFO 2025-08-16 16:03:08,436 basehttp 10248 12548 "GET /dailyactivity/ HTTP/1.1" 302 0
+INFO 2025-08-16 16:03:08,596 basehttp 10248 12548 "GET /login/?next=/dailyactivity/ HTTP/1.1" 200 10284
+INFO 2025-08-16 16:03:14,998 views 10248 12548 LOGIN ATTEMPT: 002186
+INFO 2025-08-16 16:03:15,030 authentication 10248 12548 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-16 16:03:15,037 views 10248 12548 LOGIN: Using existing session data for 002186
+INFO 2025-08-16 16:03:15,038 views 10248 12548 LOGIN REDIRECT: 002186 -> /dailyactivity/
+INFO 2025-08-16 16:03:15,042 basehttp 10248 12548 "POST /login/?next=/dailyactivity/ HTTP/1.1" 302 0
+INFO 2025-08-16 16:03:16,151 basehttp 10248 12548 "GET /dailyactivity/ HTTP/1.1" 200 183872
+INFO 2025-08-16 16:03:27,943 basehttp 10248 10644 "GET /dailyactivity/ajax/get-wo-details/?nomor_wo=25-U-08-021 HTTP/1.1" 200 281
+INFO 2025-08-16 16:03:28,021 basehttp 10248 10644 "GET /dailyactivity/get_mesin_by_lokasi_utility/5/ HTTP/1.1" 200 8378
+INFO 2025-08-16 16:03:28,525 basehttp 10248 17988 "GET /dailyactivity/get_mesin_by_lokasi_utility/5/ HTTP/1.1" 200 8378
+INFO 2025-08-16 16:03:35,682 basehttp 10248 17988 "GET /dailyactivity/get_mesin_by_lokasi_utility/18/ HTTP/1.1" 200 2208
+INFO 2025-08-16 16:03:53,506 basehttp 10248 17416 "POST /dailyactivity/laporan/ HTTP/1.1" 302 0
+INFO 2025-08-16 16:03:53,660 basehttp 10248 17416 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40693
+INFO 2025-08-16 16:03:55,495 basehttp 10248 17416 "GET /dailyactivity/laporan/tanggal/?month=8&year=2025 HTTP/1.1" 200 34033
+WARNING 2025-08-16 16:03:55,589 basehttp 10248 17416 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-16 16:03:55,622 log 10248 14968 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-16 16:03:55,622 basehttp 10248 14968 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-16 16:03:55,641 log 10248 9928 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-16 16:03:55,641 basehttp 10248 9928 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-16 16:03:57,179 basehttp 10248 9928 "GET /dailyactivity/laporan/data/2025-08-16/ HTTP/1.1" 200 56970
+INFO 2025-08-16 16:04:23,988 basehttp 10248 16368 "GET /dailyactivity/laporan/edit/613/ HTTP/1.1" 200 190705
+INFO 2025-08-16 16:04:24,139 basehttp 10248 16368 "GET /dailyactivity/get_mesin_by_lokasi_utility/18/ HTTP/1.1" 200 2208
+INFO 2025-08-16 16:04:47,447 basehttp 10248 16344 "POST /dailyactivity/laporan/edit/613/ HTTP/1.1" 302 0
+INFO 2025-08-16 16:04:47,596 basehttp 10248 16344 "GET /dailyactivity/laporan/data/2025-08-16/ HTTP/1.1" 200 56984
+INFO 2025-08-16 16:05:02,580 basehttp 10248 11728 "POST /dailyactivity/laporan/delete/614/ HTTP/1.1" 302 0
+INFO 2025-08-16 16:05:02,733 basehttp 10248 11728 "GET /dailyactivity/laporan/data/2025-08-16/ HTTP/1.1" 200 44176
+INFO 2025-08-16 19:54:08,758 basehttp 10248 18012 "GET /dailyactivity/laporan/data/2025-08-16/ HTTP/1.1" 302 0
+INFO 2025-08-16 19:54:08,896 basehttp 10248 18012 "GET /login/?next=/dailyactivity/laporan/data/2025-08-16/ HTTP/1.1" 200 10909
+INFO 2025-08-18 08:05:32,824 basehttp 10248 12276 "GET / HTTP/1.1" 302 0
+INFO 2025-08-18 08:05:32,937 basehttp 10248 12276 "GET /login/?next=/ HTTP/1.1" 200 10284
+INFO 2025-08-18 08:05:40,282 views 10248 12276 LOGIN ATTEMPT: 002186
+INFO 2025-08-18 08:05:40,349 authentication 10248 12276 Updated Django user data for 002186
+INFO 2025-08-18 08:05:40,349 authentication 10248 12276 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-18 08:05:40,360 views 10248 12276 LOGIN: Using existing session data for 002186
+INFO 2025-08-18 08:05:40,360 views 10248 12276 LOGIN REDIRECT: 002186 -> /
+INFO 2025-08-18 08:05:40,366 basehttp 10248 12276 "POST /login/?next=/ HTTP/1.1" 302 0
+INFO 2025-08-18 08:05:40,598 basehttp 10248 12276 "GET / HTTP/1.1" 200 12937
+INFO 2025-08-18 08:05:47,701 basehttp 10248 12276 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38880
+INFO 2025-08-18 08:05:51,160 basehttp 10248 12276 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 50773
+INFO 2025-08-18 08:05:55,050 basehttp 10248 12276 "GET /dailyactivity/mechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 50290
+WARNING 2025-08-18 08:05:55,177 log 10248 12276 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-18 08:05:55,177 basehttp 10248 12276 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+WARNING 2025-08-18 08:05:55,182 log 10248 12268 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-18 08:05:55,182 basehttp 10248 12268 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+INFO 2025-08-18 08:05:58,119 basehttp 10248 12268 "GET /dailyactivity/mechanical/data/2025-08-16/ HTTP/1.1" 200 38682
+WARNING 2025-08-18 08:06:11,719 basehttp 10248 12276 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:06:11,720 basehttp 10248 12268 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:06:11,723 basehttp 10248 15528 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 08:06:33,406 log 10248 6464 Not Found: /wingoapp/static/assets/images/sort_asc.png
+WARNING 2025-08-18 08:06:33,407 basehttp 10248 6464 "GET /wingoapp/static/assets/images/sort_asc.png HTTP/1.1" 404 12585
+INFO 2025-08-18 08:09:40,557 basehttp 10248 13432 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38792
+WARNING 2025-08-18 08:09:40,737 basehttp 10248 13432 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:09:40,792 basehttp 10248 5360 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:09:40,803 basehttp 10248 12968 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 08:09:48,993 basehttp 10248 11116 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:09:48,996 basehttp 10248 17864 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 08:09:49,000 basehttp 10248 15824 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+INFO 2025-08-18 08:12:12,005 basehttp 10248 11052 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38726
+WARNING 2025-08-18 08:12:12,180 basehttp 10248 11052 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:12:12,231 basehttp 10248 348 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:12:12,233 basehttp 10248 10884 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+INFO 2025-08-18 08:12:30,956 basehttp 10248 1408 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 50773
+INFO 2025-08-18 08:12:40,269 basehttp 10248 10028 "GET /dailyactivity/mechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 50290
+INFO 2025-08-18 08:12:42,280 basehttp 10248 10028 "GET /dailyactivity/mechanical/data/2025-08-16/ HTTP/1.1" 200 38682
+INFO 2025-08-18 08:13:47,814 basehttp 10248 10028 "GET /dailyactivity/mechanical/data/2025-08-16/ HTTP/1.1" 200 40995
+WARNING 2025-08-18 08:14:30,622 basehttp 10248 10028 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:14:30,624 basehttp 10248 11548 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:14:30,627 basehttp 10248 15116 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+INFO 2025-08-18 08:17:45,920 basehttp 10248 11220 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 50773
+WARNING 2025-08-18 08:17:46,104 basehttp 10248 11220 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:17:46,106 basehttp 10248 13740 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:17:46,151 basehttp 10248 6128 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:17:46,155 basehttp 10248 15928 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 08:17:46,162 basehttp 10248 17208 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+INFO 2025-08-18 08:17:56,536 basehttp 10248 9948 "GET /dailyactivity/ HTTP/1.1" 200 184107
+WARNING 2025-08-18 08:17:56,746 basehttp 10248 9948 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:17:56,754 basehttp 10248 1244 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:17:56,810 basehttp 10248 11140 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:17:56,814 basehttp 10248 12268 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-18 08:17:56,815 basehttp 10248 14124 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+INFO 2025-08-18 08:18:02,760 basehttp 10248 5288 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40128
+WARNING 2025-08-18 08:18:02,931 basehttp 10248 5288 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:18:02,941 basehttp 10248 17076 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:18:02,985 basehttp 10248 10004 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 08:18:02,990 basehttp 10248 17144 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-18 08:18:02,990 basehttp 10248 15380 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+INFO 2025-08-18 08:18:05,165 basehttp 10248 11392 "GET /dailyactivity/laporan/tanggal/?month=8&year=2025 HTTP/1.1" 200 34033
+WARNING 2025-08-18 08:18:05,337 basehttp 10248 11392 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:18:05,351 basehttp 10248 15648 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:18:05,405 basehttp 10248 18340 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:18:05,409 basehttp 10248 15536 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 08:18:05,414 basehttp 10248 6820 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-18 08:18:05,420 basehttp 10248 16708 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-18 08:18:07,843 basehttp 10248 17948 "GET /dailyactivity/laporan/data/2025-08-16/ HTTP/1.1" 200 61565
+WARNING 2025-08-18 08:18:08,015 basehttp 10248 17948 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:18:08,032 basehttp 10248 11832 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 08:18:08,078 basehttp 10248 12208 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 08:18:08,079 basehttp 10248 11916 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-18 08:18:08,082 basehttp 10248 17468 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+INFO 2025-08-18 08:19:44,030 basehttp 10248 15680 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 50773
+INFO 2025-08-18 08:19:45,472 basehttp 10248 15680 "GET /dailyactivity/mechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 50290
+INFO 2025-08-18 08:19:47,466 basehttp 10248 15680 "GET /dailyactivity/mechanical/data/2025-08-16/ HTTP/1.1" 200 40281
+INFO 2025-08-18 08:20:37,836 basehttp 10248 15680 "GET /dailyactivity/electrical/tanggal/ HTTP/1.1" 200 40177
+INFO 2025-08-18 08:20:39,521 basehttp 10248 15680 "GET /dailyactivity/electrical/tanggal/?month=8&year=2025 HTTP/1.1" 200 34085
+WARNING 2025-08-18 08:20:39,600 basehttp 10248 15680 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-18 08:20:41,216 basehttp 10248 360 "GET /dailyactivity/electrical/data/2025-08-16/ HTTP/1.1" 200 40566
+WARNING 2025-08-18 08:20:41,323 basehttp 10248 360 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-18 08:20:51,781 basehttp 10248 13892 "GET /dailyactivity/electrical/ HTTP/1.1" 200 39155
+INFO 2025-08-18 08:23:02,643 basehttp 10248 13892 "GET /dailyactivity/electrical/tanggal/ HTTP/1.1" 200 40177
+INFO 2025-08-18 10:29:20,584 basehttp 10248 6504 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 10:29:20,695 basehttp 10248 6504 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-18 10:29:40,234 views 10248 17424 LOGIN ATTEMPT: 002186
+INFO 2025-08-18 10:29:40,257 authentication 10248 17424 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-18 10:29:40,263 views 10248 17424 LOGIN: Using existing session data for 002186
+INFO 2025-08-18 10:29:40,263 views 10248 17424 LOGIN REDIRECT: 002186 -> /wo-maintenance/section-based/
+INFO 2025-08-18 10:29:40,267 basehttp 10248 17424 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 10:29:40,335 views 10248 17424 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-18 10:29:40,344 views 10248 17424 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-18 10:29:40,344 views 10248 17424 QUERY DEBUG: Query params count: 3
+INFO 2025-08-18 10:29:40,345 views 10248 17424 QUERY DEBUG: First few params: ['A', 'Y', '002186']
+INFO 2025-08-18 10:29:40,358 views 10248 17424 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-18 10:29:40,359 views 10248 17424 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-18 10:29:40,369 views 10248 17424 MAIN QUERY SUCCESS: Retrieved 0 records for HIERARCHY_NORMAL
+INFO 2025-08-18 10:29:40,530 basehttp 10248 17424 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 27678
+INFO 2025-08-18 10:29:46,045 views 10248 17424 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-18 10:29:46,049 views 10248 17424 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-18 10:29:46,049 views 10248 17424 QUERY DEBUG: Query params count: 3
+INFO 2025-08-18 10:29:46,050 views 10248 17424 QUERY DEBUG: First few params: ['A', 'Y', '002186']
+INFO 2025-08-18 10:29:46,067 views 10248 17424 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-18 10:29:46,067 views 10248 17424 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-18 10:29:46,078 views 10248 17424 MAIN QUERY SUCCESS: Retrieved 0 records for HIERARCHY_NORMAL
+INFO 2025-08-18 10:29:46,168 basehttp 10248 17424 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 27395
+INFO 2025-08-18 10:29:54,235 basehttp 10248 12804 "GET /logout/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 10:29:54,294 basehttp 10248 12804 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 10:29:54,395 basehttp 10248 12804 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-18 10:30:03,700 views 10248 15824 LOGIN ATTEMPT: 007522
+INFO 2025-08-18 10:30:03,723 authentication 10248 15824 Updated Django user data for 007522
+INFO 2025-08-18 10:30:03,724 authentication 10248 15824 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-18 10:30:03,724 authentication 10248 15824 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-18 10:30:03,732 views 10248 15824 LOGIN: Using existing session data for 007522
+INFO 2025-08-18 10:30:03,733 views 10248 15824 LOGIN REDIRECT: 007522 -> /wo-maintenance/section-based/
+INFO 2025-08-18 10:30:03,739 basehttp 10248 15824 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 10:30:03,807 utils 10248 15824 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 10:30:03,808 views 10248 15824 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-18 10:30:03,813 views 10248 15824 QUERY DEBUG: Where conditions count: 4
+INFO 2025-08-18 10:30:03,813 views 10248 15824 QUERY DEBUG: Query params count: 4
+INFO 2025-08-18 10:30:03,813 views 10248 15824 QUERY DEBUG: First few params: ['A', 'Y', 'B', 'N']
+INFO 2025-08-18 10:30:03,829 views 10248 15824 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-18 10:30:03,829 views 10248 15824 MAIN QUERY DEBUG: Final params count: 7
+INFO 2025-08-18 10:30:03,840 views 10248 15824 MAIN QUERY SUCCESS: Retrieved 0 records for SITI_FATIMAH_FULL
+INFO 2025-08-18 10:30:03,926 basehttp 10248 15824 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 27778
+INFO 2025-08-18 10:30:11,743 basehttp 10248 14200 "GET /wo-maintenance/review/ HTTP/1.1" 200 20436
+INFO 2025-08-18 10:30:21,784 utils 10248 11508 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 10:30:21,785 views 10248 11508 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-18 10:30:21,789 views 10248 11508 QUERY DEBUG: Where conditions count: 4
+INFO 2025-08-18 10:30:21,790 views 10248 11508 QUERY DEBUG: Query params count: 4
+INFO 2025-08-18 10:30:21,790 views 10248 11508 QUERY DEBUG: First few params: ['A', 'Y', 'B', 'N']
+INFO 2025-08-18 10:30:21,806 views 10248 11508 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-18 10:30:21,807 views 10248 11508 MAIN QUERY DEBUG: Final params count: 7
+INFO 2025-08-18 10:30:21,818 views 10248 11508 MAIN QUERY SUCCESS: Retrieved 0 records for SITI_FATIMAH_FULL
+INFO 2025-08-18 10:30:21,899 basehttp 10248 11508 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 27495
+INFO 2025-08-18 10:30:24,461 utils 10248 11508 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 10:30:24,469 views 10248 11508 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-18 10:30:24,469 views 10248 11508 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-18 10:30:24,524 views 10248 11508 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-18 10:30:24,542 views 10248 11508 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11692}
+INFO 2025-08-18 10:30:24,681 basehttp 10248 11508 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31624
+INFO 2025-08-18 10:30:26,069 utils 10248 11508 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 10:30:26,079 views 10248 11508 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-18 10:30:26,080 views 10248 11508 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-18 10:30:26,104 views 10248 11508 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-18 10:30:26,116 views 10248 11508 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11692}
+INFO 2025-08-18 10:30:26,182 basehttp 10248 11508 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31622
+INFO 2025-08-18 10:30:28,338 utils 10248 11508 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 10:30:28,339 views 10248 11508 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-18 10:30:28,344 views 10248 11508 QUERY DEBUG: Where conditions count: 4
+INFO 2025-08-18 10:30:28,345 views 10248 11508 QUERY DEBUG: Query params count: 4
+INFO 2025-08-18 10:30:28,345 views 10248 11508 QUERY DEBUG: First few params: ['A', 'Y', 'B', 'N']
+INFO 2025-08-18 10:30:28,362 views 10248 11508 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-18 10:30:28,363 views 10248 11508 MAIN QUERY DEBUG: Final params count: 7
+INFO 2025-08-18 10:30:28,373 views 10248 11508 MAIN QUERY SUCCESS: Retrieved 0 records for SITI_FATIMAH_FULL
+INFO 2025-08-18 10:30:28,449 basehttp 10248 11508 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 27495
+INFO 2025-08-18 10:30:38,198 basehttp 10248 15236 "GET /wo-maintenance/input/ HTTP/1.1" 200 48952
+INFO 2025-08-18 10:30:44,525 utils 10248 1596 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 10:30:44,526 views 10248 1596 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-18 10:30:44,531 views 10248 1596 QUERY DEBUG: Where conditions count: 4
+INFO 2025-08-18 10:30:44,532 views 10248 1596 QUERY DEBUG: Query params count: 4
+INFO 2025-08-18 10:30:44,532 views 10248 1596 QUERY DEBUG: First few params: ['A', 'Y', 'B', 'N']
+INFO 2025-08-18 10:30:44,548 views 10248 1596 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-18 10:30:44,549 views 10248 1596 MAIN QUERY DEBUG: Final params count: 7
+INFO 2025-08-18 10:30:44,559 views 10248 1596 MAIN QUERY SUCCESS: Retrieved 0 records for SITI_FATIMAH_FULL
+INFO 2025-08-18 10:30:44,643 basehttp 10248 1596 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 27495
+INFO 2025-08-18 14:13:26,979 basehttp 10248 11868 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 14:13:27,193 basehttp 10248 11868 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10900
+INFO 2025-08-18 15:07:27,365 basehttp 10248 16076 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10614
+INFO 2025-08-18 15:07:35,665 views 10248 6620 LOGIN ATTEMPT: 002186
+INFO 2025-08-18 15:07:35,691 authentication 10248 6620 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-18 15:07:35,698 views 10248 6620 LOGIN: Using existing session data for 002186
+INFO 2025-08-18 15:07:35,698 views 10248 6620 LOGIN REDIRECT: 002186 -> /wo-maintenance/section-based/
+INFO 2025-08-18 15:07:35,703 basehttp 10248 6620 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 15:07:35,782 views 10248 6620 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-18 15:07:35,791 views 10248 6620 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-18 15:07:35,792 views 10248 6620 QUERY DEBUG: Query params count: 3
+INFO 2025-08-18 15:07:35,793 views 10248 6620 QUERY DEBUG: First few params: ['A', 'Y', '002186']
+INFO 2025-08-18 15:07:35,812 views 10248 6620 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-18 15:07:35,813 views 10248 6620 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-18 15:07:35,830 views 10248 6620 MAIN QUERY SUCCESS: Retrieved 0 records for HIERARCHY_NORMAL
+INFO 2025-08-18 15:07:36,022 basehttp 10248 6620 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 27678
+INFO 2025-08-18 15:07:42,155 basehttp 10248 6620 "GET /dailyactivity/ HTTP/1.1" 200 184268
+INFO 2025-08-18 15:07:43,609 basehttp 10248 6620 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40128
+INFO 2025-08-18 15:07:45,182 basehttp 10248 6620 "GET /dailyactivity/laporan/tanggal/?month=8&year=2025 HTTP/1.1" 200 34608
+WARNING 2025-08-18 15:07:45,266 basehttp 10248 6620 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-18 15:07:45,305 log 10248 4476 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-18 15:07:45,309 basehttp 10248 4476 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-18 15:07:45,315 log 10248 15484 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-18 15:07:45,316 basehttp 10248 15484 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-18 15:07:46,855 basehttp 10248 15484 "GET /dailyactivity/laporan/data/2025-08-18/ HTTP/1.1" 200 68758
+WARNING 2025-08-18 15:07:52,019 basehttp 10248 5320 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 15:07:52,023 basehttp 10248 11116 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 15:07:52,028 basehttp 10248 15160 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 15:07:52,028 basehttp 10248 6132 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-18 15:07:52,089 basehttp 10248 15228 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+INFO 2025-08-18 15:07:58,004 basehttp 10248 15452 "GET /dailyactivity/laporan/data/2025-08-18/ HTTP/1.1" 200 68758
+WARNING 2025-08-18 15:07:58,139 basehttp 10248 15452 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 15:07:58,180 basehttp 10248 16496 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 15:07:58,238 basehttp 10248 17380 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-18 15:07:58,241 basehttp 10248 2560 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 15:07:58,241 basehttp 10248 12744 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+INFO 2025-08-18 15:11:04,471 basehttp 10248 17704 "GET /dailyactivity/laporan/data/2025-08-18/ HTTP/1.1" 200 108332
+WARNING 2025-08-18 15:11:04,630 basehttp 10248 17704 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 15:11:04,683 basehttp 10248 9900 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 15:11:04,739 basehttp 10248 10828 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 15:11:04,744 basehttp 10248 3480 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 15:11:04,758 basehttp 10248 12812 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+INFO 2025-08-18 15:13:50,633 basehttp 10248 12996 "GET /dailyactivity/laporan/data/2025-08-18/ HTTP/1.1" 200 76547
+WARNING 2025-08-18 15:13:50,772 basehttp 10248 12996 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 15:13:50,813 basehttp 10248 14544 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 15:13:50,868 basehttp 10248 11436 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 15:13:50,871 basehttp 10248 14728 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 15:13:50,873 basehttp 10248 15064 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+INFO 2025-08-18 15:14:08,309 basehttp 10248 5276 "GET /dailyactivity/laporan/edit/631/ HTTP/1.1" 200 303428
+INFO 2025-08-18 15:14:08,524 basehttp 10248 5276 "GET /dailyactivity/get_mesin_by_lokasi_utility/13/ HTTP/1.1" 200 3266
+INFO 2025-08-18 15:14:08,612 basehttp 10248 5276 "GET /dailyactivity/get_mesin_by_lokasi_utility/13/ HTTP/1.1" 200 3266
+INFO 2025-08-18 15:14:22,907 basehttp 10248 1060 "GET /dailyactivity/get_machine_number_utility/376/ HTTP/1.1" 200 13
+INFO 2025-08-18 15:14:30,543 basehttp 10248 1060 "GET /dailyactivity/get_machine_number_utility/376/ HTTP/1.1" 200 13
+INFO 2025-08-18 15:14:39,185 basehttp 10248 14660 "POST /dailyactivity/laporan/edit/631/ HTTP/1.1" 302 0
+INFO 2025-08-18 15:14:39,361 basehttp 10248 14660 "GET /dailyactivity/laporan/data/2025-08-18/ HTTP/1.1" 200 97866
+INFO 2025-08-18 15:14:45,122 basehttp 10248 14660 "GET /dailyactivity/ HTTP/1.1" 200 184421
+INFO 2025-08-18 15:51:36,236 autoreload 10248 12756 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-18 15:51:38,473 autoreload 11820 14892 Watching for file changes with StatReloader
+INFO 2025-08-18 15:51:40,808 views 11820 14892 === STATUS VALIDATION ===
+INFO 2025-08-18 15:51:40,809 views 11820 14892 Expected STATUS_APPROVED: B
+INFO 2025-08-18 15:51:40,812 views 11820 14892 Expected APPROVE_YES: N
+INFO 2025-08-18 15:51:40,813 views 11820 14892 Actual values in database:
+INFO 2025-08-18 15:51:40,815 views 11820 14892   Status: , Approve: N, Review: None
+INFO 2025-08-18 15:51:40,816 views 11820 14892   Status: A, Approve: T, Review: None
+INFO 2025-08-18 15:51:40,817 views 11820 14892   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 15:51:40,818 views 11820 14892   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 15:51:40,822 views 11820 14892 === END VALIDATION ===
+INFO 2025-08-18 15:55:50,525 autoreload 11820 14892 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-18 15:55:52,660 autoreload 11212 2984 Watching for file changes with StatReloader
+INFO 2025-08-18 15:57:22,868 autoreload 5012 12044 Watching for file changes with StatReloader
+INFO 2025-08-18 15:57:32,141 autoreload 9748 17908 Watching for file changes with StatReloader
+INFO 2025-08-18 15:57:39,271 autoreload 13452 16392 Watching for file changes with StatReloader
+INFO 2025-08-18 15:57:41,587 views 13452 16392 === STATUS VALIDATION ===
+INFO 2025-08-18 15:57:41,588 views 13452 16392 Expected STATUS_APPROVED: B
+INFO 2025-08-18 15:57:41,588 views 13452 16392 Expected APPROVE_YES: N
+INFO 2025-08-18 15:57:41,589 views 13452 16392 Actual values in database:
+INFO 2025-08-18 15:57:41,589 views 13452 16392   Status: , Approve: N, Review: None
+INFO 2025-08-18 15:57:41,589 views 13452 16392   Status: A, Approve: T, Review: None
+INFO 2025-08-18 15:57:41,590 views 13452 16392   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 15:57:41,590 views 13452 16392   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 15:57:41,590 views 13452 16392 === END VALIDATION ===
+INFO 2025-08-18 15:57:47,797 basehttp 13452 17156 "GET /dailyactivity/ HTTP/1.1" 200 184268
+INFO 2025-08-18 15:57:51,608 views 13452 2828 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-18 15:57:51,619 views 13452 2828 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-18 15:57:51,620 views 13452 2828 QUERY DEBUG: Query params count: 3
+INFO 2025-08-18 15:57:51,638 views 13452 2828 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-18 15:57:51,638 views 13452 2828 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-18 15:57:51,662 views 13452 2828 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-18 15:57:51,853 basehttp 13452 2828 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 30938
+INFO 2025-08-18 15:57:54,556 basehttp 13452 2828 "GET /logout/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 15:57:54,603 basehttp 13452 2828 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 15:57:54,730 basehttp 13452 2828 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-18 15:58:01,047 views 13452 17748 LOGIN ATTEMPT: 007522
+INFO 2025-08-18 15:58:01,075 authentication 13452 17748 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-18 15:58:01,075 authentication 13452 17748 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-18 15:58:01,091 views 13452 17748 LOGIN: Using existing session data for 007522
+INFO 2025-08-18 15:58:01,092 views 13452 17748 LOGIN REDIRECT: 007522 -> /wo-maintenance/section-based/
+INFO 2025-08-18 15:58:01,097 basehttp 13452 17748 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 15:58:01,168 utils 13452 17748 Enhanced FULL privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 15:58:01,169 views 13452 17748 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL_ALL
+INFO 2025-08-18 15:58:01,335 views 13452 17748 QUERY DEBUG: Where conditions count: 1
+INFO 2025-08-18 15:58:01,335 views 13452 17748 QUERY DEBUG: Query params count: 0
+INFO 2025-08-18 15:58:01,391 views 13452 17748 COUNT QUERY SUCCESS: Found 11416 total records
+INFO 2025-08-18 15:58:01,391 views 13452 17748 MAIN QUERY DEBUG: Final params count: 3
+INFO 2025-08-18 15:58:01,503 views 13452 17748 MAIN QUERY SUCCESS: Retrieved 20 records
+ERROR 2025-08-18 15:58:01,633 views 13452 17748 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-18 15:58:01,782 views 13452 17748 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5825, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-18 15:58:01,787 basehttp 13452 17748 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 15:58:02,091 basehttp 13452 17748 "GET /wo-maintenance/ HTTP/1.1" 200 29960
+INFO 2025-08-18 15:58:04,897 utils 13452 17748 Enhanced FULL privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 15:58:04,897 views 13452 17748 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL_ALL
+INFO 2025-08-18 15:58:04,953 views 13452 17748 QUERY DEBUG: Where conditions count: 1
+INFO 2025-08-18 15:58:04,953 views 13452 17748 QUERY DEBUG: Query params count: 0
+INFO 2025-08-18 15:58:05,003 views 13452 17748 COUNT QUERY SUCCESS: Found 11416 total records
+INFO 2025-08-18 15:58:05,004 views 13452 17748 MAIN QUERY DEBUG: Final params count: 3
+INFO 2025-08-18 15:58:05,087 views 13452 17748 MAIN QUERY SUCCESS: Retrieved 20 records
+ERROR 2025-08-18 15:58:05,228 views 13452 17748 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-18 15:58:05,230 views 13452 17748 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5825, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-18 15:58:05,234 basehttp 13452 17748 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 15:58:05,407 basehttp 13452 17748 "GET /wo-maintenance/ HTTP/1.1" 200 29960
+INFO 2025-08-18 15:58:12,614 utils 13452 17736 Enhanced FULL privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-18 15:58:12,616 views 13452 17736 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL_ALL
+INFO 2025-08-18 15:58:12,674 views 13452 17736 QUERY DEBUG: Where conditions count: 1
+INFO 2025-08-18 15:58:12,674 views 13452 17736 QUERY DEBUG: Query params count: 0
+INFO 2025-08-18 15:58:12,721 views 13452 17736 COUNT QUERY SUCCESS: Found 11416 total records
+INFO 2025-08-18 15:58:12,721 views 13452 17736 MAIN QUERY DEBUG: Final params count: 3
+INFO 2025-08-18 15:58:12,826 views 13452 17736 MAIN QUERY SUCCESS: Retrieved 20 records
+ERROR 2025-08-18 15:58:12,932 views 13452 17736 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-18 15:58:12,935 views 13452 17736 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5825, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-18 15:58:12,938 basehttp 13452 17736 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-18 15:58:13,109 basehttp 13452 17736 "GET /wo-maintenance/ HTTP/1.1" 200 29960
+INFO 2025-08-18 16:39:36,877 basehttp 13452 15868 "GET /dailyactivity/it-tanggal-project/ HTTP/1.1" 200 74830
+WARNING 2025-08-18 16:39:37,080 basehttp 13452 15868 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-18 16:39:37,135 log 13452 14536 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-18 16:39:37,136 basehttp 13452 14536 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-18 16:39:37,151 log 13452 14536 Not Found: /wingoapp/static/assets/images/sort_asc.png
+WARNING 2025-08-18 16:39:37,152 basehttp 13452 14536 "GET /wingoapp/static/assets/images/sort_asc.png HTTP/1.1" 404 12585
+INFO 2025-08-18 16:39:38,979 basehttp 13452 14536 "GET /dailyactivity/it-data-project/2025-08-18/ HTTP/1.1" 200 18790
+INFO 2025-08-18 17:15:38,639 autoreload 13452 16392 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\models.py changed, reloading.
+INFO 2025-08-18 17:15:40,809 autoreload 3316 13664 Watching for file changes with StatReloader
+INFO 2025-08-18 17:15:43,009 views 3316 13664 === STATUS VALIDATION ===
+INFO 2025-08-18 17:15:43,010 views 3316 13664 Expected STATUS_APPROVED: B
+INFO 2025-08-18 17:15:43,010 views 3316 13664 Expected APPROVE_YES: N
+INFO 2025-08-18 17:15:43,012 views 3316 13664 Actual values in database:
+INFO 2025-08-18 17:15:43,013 views 3316 13664   Status: , Approve: N, Review: None
+INFO 2025-08-18 17:15:43,015 views 3316 13664   Status: A, Approve: T, Review: None
+INFO 2025-08-18 17:15:43,016 views 3316 13664   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 17:15:43,017 views 3316 13664   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 17:15:43,018 views 3316 13664 === END VALIDATION ===
+INFO 2025-08-18 17:16:05,291 autoreload 3316 13664 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-18 17:16:07,177 autoreload 15704 4152 Watching for file changes with StatReloader
+INFO 2025-08-18 17:16:09,218 views 15704 4152 === STATUS VALIDATION ===
+INFO 2025-08-18 17:16:09,218 views 15704 4152 Expected STATUS_APPROVED: B
+INFO 2025-08-18 17:16:09,221 views 15704 4152 Expected APPROVE_YES: N
+INFO 2025-08-18 17:16:09,222 views 15704 4152 Actual values in database:
+INFO 2025-08-18 17:16:09,224 views 15704 4152   Status: , Approve: N, Review: None
+INFO 2025-08-18 17:16:09,225 views 15704 4152   Status: A, Approve: T, Review: None
+INFO 2025-08-18 17:16:09,226 views 15704 4152   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 17:16:09,227 views 15704 4152   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 17:16:09,228 views 15704 4152 === END VALIDATION ===
+INFO 2025-08-18 17:17:29,252 autoreload 15704 4152 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-18 17:17:31,338 autoreload 12308 6592 Watching for file changes with StatReloader
+INFO 2025-08-18 17:26:41,901 autoreload 3272 17528 Watching for file changes with StatReloader
+INFO 2025-08-18 17:26:44,198 views 3272 17528 === STATUS VALIDATION ===
+INFO 2025-08-18 17:26:44,199 views 3272 17528 Expected STATUS_APPROVED: B
+INFO 2025-08-18 17:26:44,199 views 3272 17528 Expected APPROVE_YES: N
+INFO 2025-08-18 17:26:44,199 views 3272 17528 Actual values in database:
+INFO 2025-08-18 17:26:44,200 views 3272 17528   Status: , Approve: N, Review: None
+INFO 2025-08-18 17:26:44,200 views 3272 17528   Status: A, Approve: T, Review: None
+INFO 2025-08-18 17:26:44,200 views 3272 17528   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 17:26:44,200 views 3272 17528   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 17:26:44,201 views 3272 17528 === END VALIDATION ===
+INFO 2025-08-18 17:26:51,049 basehttp 3272 3688 "GET /dailyactivity/it-data-project/2025-08-18/ HTTP/1.1" 302 0
+INFO 2025-08-18 17:26:51,182 basehttp 3272 3688 "GET /login/?next=/dailyactivity/it-data-project/2025-08-18/ HTTP/1.1" 200 10284
+INFO 2025-08-18 17:26:57,597 views 3272 10876 LOGIN ATTEMPT: 002186
+INFO 2025-08-18 17:26:57,629 authentication 3272 10876 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-18 17:26:57,635 views 3272 10876 LOGIN: Using existing session data for 002186
+INFO 2025-08-18 17:26:57,635 views 3272 10876 LOGIN REDIRECT: 002186 -> /dailyactivity/it-data-project/2025-08-18/
+INFO 2025-08-18 17:26:57,639 basehttp 3272 10876 "POST /login/?next=/dailyactivity/it-data-project/2025-08-18/ HTTP/1.1" 302 0
+INFO 2025-08-18 17:26:57,821 basehttp 3272 10876 "GET /dailyactivity/it-data-project/2025-08-18/ HTTP/1.1" 200 18468
+WARNING 2025-08-18 17:26:57,970 log 3272 17492 Not Found: /wingoapp/static/assets/images/sort_asc.png
+WARNING 2025-08-18 17:26:57,966 log 3272 10876 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-18 17:26:57,971 basehttp 3272 17492 "GET /wingoapp/static/assets/images/sort_asc.png HTTP/1.1" 404 12585
+WARNING 2025-08-18 17:26:57,973 basehttp 3272 10876 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+ERROR 2025-08-18 17:27:03,406 log 3272 10876 Internal Server Error: /dailyactivity/it_project/
+Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.ProgrammingError: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'tabel_pekerjaan'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py", line 7233, in it_project
+    return render(request, 'dailyactivity_app/it_project.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 194, in render
+    len_values = len(values)
+                 ^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\query.py", line 376, in __len__
+    self._fetch_all()
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\query.py", line 1867, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\models\sql\compiler.py", line 1398, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 103, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\mssql\base.py", line 619, in execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: ('42S02', "[42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'tabel_pekerjaan'. (208) (SQLExecDirectW); [42S02] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+ERROR 2025-08-18 17:27:03,417 basehttp 3272 10876 "GET /dailyactivity/it_project/ HTTP/1.1" 500 236910
+WARNING 2025-08-18 17:27:03,582 log 3272 15568 Not Found: /favicon.ico
+WARNING 2025-08-18 17:27:03,582 basehttp 3272 15568 "GET /favicon.ico HTTP/1.1" 404 12492
+INFO 2025-08-18 17:31:07,664 autoreload 3272 17528 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\web_seiwa\settings.py changed, reloading.
+INFO 2025-08-18 17:31:09,875 autoreload 10272 10220 Watching for file changes with StatReloader
+INFO 2025-08-18 17:31:12,157 views 10272 10220 === STATUS VALIDATION ===
+INFO 2025-08-18 17:31:12,157 views 10272 10220 Expected STATUS_APPROVED: B
+INFO 2025-08-18 17:31:12,159 views 10272 10220 Expected APPROVE_YES: N
+INFO 2025-08-18 17:31:12,160 views 10272 10220 Actual values in database:
+INFO 2025-08-18 17:31:12,161 views 10272 10220   Status: , Approve: N, Review: None
+INFO 2025-08-18 17:31:12,162 views 10272 10220   Status: A, Approve: T, Review: None
+INFO 2025-08-18 17:31:12,162 views 10272 10220   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 17:31:12,163 views 10272 10220   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 17:31:12,164 views 10272 10220 === END VALIDATION ===
+INFO 2025-08-18 17:31:33,270 autoreload 10272 10220 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\web_seiwa\settings.py changed, reloading.
+INFO 2025-08-18 17:31:35,388 autoreload 15748 10484 Watching for file changes with StatReloader
+INFO 2025-08-18 17:33:16,586 autoreload 12488 11244 Watching for file changes with StatReloader
+INFO 2025-08-18 17:33:24,941 autoreload 4828 2480 Watching for file changes with StatReloader
+INFO 2025-08-18 17:33:27,263 views 4828 2480 === STATUS VALIDATION ===
+INFO 2025-08-18 17:33:27,264 views 4828 2480 Expected STATUS_APPROVED: B
+INFO 2025-08-18 17:33:27,264 views 4828 2480 Expected APPROVE_YES: N
+INFO 2025-08-18 17:33:27,264 views 4828 2480 Actual values in database:
+INFO 2025-08-18 17:33:27,264 views 4828 2480   Status: , Approve: N, Review: None
+INFO 2025-08-18 17:33:27,265 views 4828 2480   Status: A, Approve: T, Review: None
+INFO 2025-08-18 17:33:27,265 views 4828 2480   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 17:33:27,265 views 4828 2480   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 17:33:27,265 views 4828 2480 === END VALIDATION ===
+ERROR 2025-08-18 17:33:35,144 log 4828 17676 Internal Server Error: /dailyactivity/it_project/
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py", line 7140, in it_project
+    if not test_maintenance_db_connection():
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'test_maintenance_db_connection' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py", line 7162, in it_project
+    logger.error(f"Error loading dropdown data: {str(e)}")
+    ^^^^^^
+NameError: name 'logger' is not defined
+ERROR 2025-08-18 17:33:35,148 basehttp 4828 17676 "GET /dailyactivity/it_project/ HTTP/1.1" 500 83815
+INFO 2025-08-18 17:34:03,651 autoreload 4828 2480 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-18 17:34:05,540 autoreload 15656 16652 Watching for file changes with StatReloader
+INFO 2025-08-18 17:34:07,588 views 15656 16652 === STATUS VALIDATION ===
+INFO 2025-08-18 17:34:07,588 views 15656 16652 Expected STATUS_APPROVED: B
+INFO 2025-08-18 17:34:07,683 views 15656 16652 Expected APPROVE_YES: N
+INFO 2025-08-18 17:34:07,684 views 15656 16652 Actual values in database:
+INFO 2025-08-18 17:34:07,684 views 15656 16652   Status: , Approve: N, Review: None
+INFO 2025-08-18 17:34:07,685 views 15656 16652   Status: A, Approve: T, Review: None
+INFO 2025-08-18 17:34:07,685 views 15656 16652   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 17:34:07,686 views 15656 16652   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 17:34:07,686 views 15656 16652 === END VALIDATION ===
+INFO 2025-08-18 17:34:13,187 views 15656 10028 DB_Maintenance connection successful
+INFO 2025-08-18 17:34:13,198 views 15656 10028 Loaded 0 lines and 0 pekerjaan
+INFO 2025-08-18 17:34:13,375 basehttp 15656 10028 "GET /dailyactivity/it_project/ HTTP/1.1" 200 23442
+INFO 2025-08-18 17:34:27,029 views 15656 10028 DB_Maintenance connection successful
+INFO 2025-08-18 17:34:27,033 views 15656 10028 Loaded 0 lines and 0 pekerjaan
+INFO 2025-08-18 17:34:27,112 basehttp 15656 10028 "GET /dailyactivity/it_project/ HTTP/1.1" 200 23442
+INFO 2025-08-18 17:34:30,958 views 15656 10028 DB_Maintenance connection successful
+INFO 2025-08-18 17:34:30,963 views 15656 10028 Loaded 0 lines and 0 pekerjaan
+INFO 2025-08-18 17:34:31,032 basehttp 15656 10028 "GET /dailyactivity/it_project/ HTTP/1.1" 200 23442
+WARNING 2025-08-18 17:35:48,450 basehttp 15656 12564 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 17:35:48,451 basehttp 15656 11736 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-18 17:35:48,451 basehttp 15656 2636 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 17:35:48,454 basehttp 15656 16540 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 17:35:48,514 basehttp 15656 14300 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+INFO 2025-08-18 17:35:50,159 views 15656 18124 DB_Maintenance connection successful
+INFO 2025-08-18 17:35:50,168 views 15656 18124 Loaded 0 lines and 0 pekerjaan
+INFO 2025-08-18 17:35:50,249 basehttp 15656 18124 "GET /dailyactivity/it_project/ HTTP/1.1" 200 23442
+WARNING 2025-08-18 17:35:50,378 basehttp 15656 18124 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 17:35:50,425 basehttp 15656 17224 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 17:35:50,474 basehttp 15656 356 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 17:35:50,476 basehttp 15656 18336 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 17:35:50,478 basehttp 15656 17532 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+INFO 2025-08-18 17:40:35,725 autoreload 15656 16652 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-18 17:40:37,889 autoreload 18160 14596 Watching for file changes with StatReloader
+INFO 2025-08-18 17:40:40,229 views 18160 14596 === STATUS VALIDATION ===
+INFO 2025-08-18 17:40:40,230 views 18160 14596 Expected STATUS_APPROVED: B
+INFO 2025-08-18 17:40:40,233 views 18160 14596 Expected APPROVE_YES: N
+INFO 2025-08-18 17:40:40,235 views 18160 14596 Actual values in database:
+INFO 2025-08-18 17:40:40,236 views 18160 14596   Status: , Approve: N, Review: None
+INFO 2025-08-18 17:40:40,237 views 18160 14596   Status: A, Approve: T, Review: None
+INFO 2025-08-18 17:40:40,239 views 18160 14596   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 17:40:40,242 views 18160 14596   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 17:40:40,243 views 18160 14596 === END VALIDATION ===
+INFO 2025-08-18 17:40:49,521 views 18160 18044 DB_Maintenance connection successful
+INFO 2025-08-18 17:40:49,531 views 18160 18044 Auto-detected active status for tabel_line: 'A' (63 records)
+INFO 2025-08-18 17:40:49,537 views 18160 18044 Found 63 lines with status='A'
+INFO 2025-08-18 17:40:49,545 views 18160 18044 Auto-detected active status for tabel_pekerjaan: 'A' (9 records)
+INFO 2025-08-18 17:40:49,550 views 18160 18044 Found 9 pekerjaan with status='A'
+INFO 2025-08-18 17:40:49,556 views 18160 18044 Loaded 63 lines and 9 pekerjaan
+INFO 2025-08-18 17:40:49,768 basehttp 18160 18044 "GET /dailyactivity/it_project/ HTTP/1.1" 200 30055
+WARNING 2025-08-18 17:40:49,902 basehttp 18160 18044 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 17:40:49,925 basehttp 18160 16412 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 17:40:49,996 basehttp 18160 9976 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 17:40:50,000 basehttp 18160 18120 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 17:40:50,000 basehttp 18160 320 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-18 17:41:18,427 log 18160 17376 Not Found: /dailyactivity/ajax/get-mesin-by-line/33,0/
+WARNING 2025-08-18 17:41:18,427 basehttp 18160 17376 "GET /dailyactivity/ajax/get-mesin-by-line/33,0/ HTTP/1.1" 404 38340
+INFO 2025-08-18 17:55:23,234 autoreload 18160 14596 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-18 17:55:25,400 autoreload 15628 9656 Watching for file changes with StatReloader
+INFO 2025-08-18 17:55:27,699 views 15628 9656 === STATUS VALIDATION ===
+INFO 2025-08-18 17:55:27,700 views 15628 9656 Expected STATUS_APPROVED: B
+INFO 2025-08-18 17:55:27,702 views 15628 9656 Expected APPROVE_YES: N
+INFO 2025-08-18 17:55:27,703 views 15628 9656 Actual values in database:
+INFO 2025-08-18 17:55:27,704 views 15628 9656   Status: , Approve: N, Review: None
+INFO 2025-08-18 17:55:27,705 views 15628 9656   Status: A, Approve: T, Review: None
+INFO 2025-08-18 17:55:27,705 views 15628 9656   Status: A, Approve: Y, Review: 0
+INFO 2025-08-18 17:55:27,706 views 15628 9656   Status: A, Approve: Y, Review: 1
+INFO 2025-08-18 17:55:27,707 views 15628 9656 === END VALIDATION ===
+INFO 2025-08-18 17:56:46,690 views 15628 18016 DB_Maintenance connection successful
+INFO 2025-08-18 17:56:46,697 views 15628 18016 Loaded 32 distinct lines and 9 pekerjaan with status='A'
+INFO 2025-08-18 17:56:46,885 basehttp 15628 18016 "GET /dailyactivity/it_project/ HTTP/1.1" 200 36519
+WARNING 2025-08-18 17:56:47,088 basehttp 15628 18016 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 17:56:47,346 basehttp 15628 17244 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-18 17:56:47,409 basehttp 15628 16652 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-18 17:56:47,412 basehttp 15628 15656 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-18 17:56:47,414 basehttp 15628 18000 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+INFO 2025-08-19 07:01:15,319 basehttp 15628 836 "GET /dailyactivity/it_project/ HTTP/1.1" 302 0
+INFO 2025-08-19 07:01:15,490 basehttp 15628 836 "GET /login/?next=/dailyactivity/it_project/ HTTP/1.1" 200 10592
+WARNING 2025-08-19 07:01:15,801 basehttp 15628 836 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-19 07:01:15,836 basehttp 15628 17020 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-19 07:01:15,839 basehttp 15628 18428 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+INFO 2025-08-19 07:01:26,098 views 15628 13596 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 07:01:26,149 authentication 15628 13596 Updated Django user data for 002186
+INFO 2025-08-19 07:01:26,150 authentication 15628 13596 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 07:01:26,160 views 15628 13596 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 07:01:26,161 views 15628 13596 LOGIN REDIRECT: 002186 -> /dailyactivity/it_project/
+INFO 2025-08-19 07:01:26,167 basehttp 15628 13596 "POST /login/?next=/dailyactivity/it_project/ HTTP/1.1" 302 0
+INFO 2025-08-19 07:01:26,257 views 15628 13596 DB_Maintenance connection successful
+INFO 2025-08-19 07:01:26,260 views 15628 13596 Loaded 32 distinct lines and 9 pekerjaan with status='A'
+INFO 2025-08-19 07:01:26,354 basehttp 15628 13596 "GET /dailyactivity/it_project/ HTTP/1.1" 200 36519
+WARNING 2025-08-19 07:01:26,559 basehttp 15628 13596 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-19 07:01:26,579 basehttp 15628 13472 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-19 07:01:26,633 basehttp 15628 15668 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-19 07:01:26,635 basehttp 15628 11108 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-19 07:01:26,637 basehttp 15628 13520 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+INFO 2025-08-19 07:09:29,933 autoreload 15628 9656 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\views.py changed, reloading.
+INFO 2025-08-19 07:09:32,075 autoreload 5668 17680 Watching for file changes with StatReloader
+INFO 2025-08-19 07:09:34,513 views 5668 17680 === STATUS VALIDATION ===
+INFO 2025-08-19 07:09:34,513 views 5668 17680 Expected STATUS_APPROVED: B
+INFO 2025-08-19 07:09:34,515 views 5668 17680 Expected APPROVE_YES: N
+INFO 2025-08-19 07:09:34,515 views 5668 17680 Actual values in database:
+INFO 2025-08-19 07:09:34,516 views 5668 17680   Status: , Approve: N, Review: None
+INFO 2025-08-19 07:09:34,517 views 5668 17680   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 07:09:34,517 views 5668 17680   Status: A, Approve: T, Review: None
+INFO 2025-08-19 07:09:34,517 views 5668 17680   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 07:09:34,518 views 5668 17680   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 07:09:34,518 views 5668 17680 === END VALIDATION ===
+INFO 2025-08-19 07:09:42,970 views 5668 14200 DB_Maintenance connection successful
+INFO 2025-08-19 07:09:42,976 views 5668 14200 Loaded 32 distinct lines and 9 pekerjaan with status='A'
+INFO 2025-08-19 07:09:43,201 basehttp 5668 14200 "GET /dailyactivity/it_project/ HTTP/1.1" 200 36519
+WARNING 2025-08-19 07:09:43,384 basehttp 5668 14200 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+WARNING 2025-08-19 07:09:43,384 basehttp 5668 12532 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-19 07:09:43,440 basehttp 5668 14636 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-19 07:09:43,443 basehttp 5668 10940 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-19 07:09:43,445 basehttp 5668 18068 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+INFO 2025-08-19 07:09:47,224 basehttp 5668 4664 "GET /dailyactivity/utility/ HTTP/1.1" 200 38699
+WARNING 2025-08-19 07:09:47,467 basehttp 5668 4664 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-19 07:09:47,512 basehttp 5668 11600 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-19 07:09:47,514 basehttp 5668 10932 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+INFO 2025-08-19 08:50:00,710 basehttp 5668 368 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 302 0
+INFO 2025-08-19 08:50:00,837 basehttp 5668 368 "GET /login/?next=/dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 10284
+INFO 2025-08-19 11:38:34,941 autoreload 16532 13884 Watching for file changes with StatReloader
+INFO 2025-08-19 11:38:37,243 views 16532 13884 === STATUS VALIDATION ===
+INFO 2025-08-19 11:38:37,244 views 16532 13884 Expected STATUS_APPROVED: B
+INFO 2025-08-19 11:38:37,244 views 16532 13884 Expected APPROVE_YES: N
+INFO 2025-08-19 11:38:37,244 views 16532 13884 Actual values in database:
+INFO 2025-08-19 11:38:37,245 views 16532 13884   Status: , Approve: N, Review: None
+INFO 2025-08-19 11:38:37,245 views 16532 13884   Status: A, Approve: T, Review: None
+INFO 2025-08-19 11:38:37,245 views 16532 13884   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 11:38:37,245 views 16532 13884   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 11:38:37,245 views 16532 13884   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 11:38:37,246 views 16532 13884 === END VALIDATION ===
+INFO 2025-08-19 11:38:56,058 autoreload 12428 11996 Watching for file changes with StatReloader
+INFO 2025-08-19 11:39:06,195 autoreload 16688 16652 Watching for file changes with StatReloader
+INFO 2025-08-19 11:39:13,655 autoreload 4212 9848 Watching for file changes with StatReloader
+INFO 2025-08-19 11:39:15,930 views 4212 9848 === STATUS VALIDATION ===
+INFO 2025-08-19 11:39:15,931 views 4212 9848 Expected STATUS_APPROVED: B
+INFO 2025-08-19 11:39:15,931 views 4212 9848 Expected APPROVE_YES: N
+INFO 2025-08-19 11:39:15,932 views 4212 9848 Actual values in database:
+INFO 2025-08-19 11:39:15,932 views 4212 9848   Status: , Approve: N, Review: None
+INFO 2025-08-19 11:39:15,932 views 4212 9848   Status: A, Approve: T, Review: None
+INFO 2025-08-19 11:39:15,933 views 4212 9848   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 11:39:15,933 views 4212 9848   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 11:39:15,933 views 4212 9848   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 11:39:15,934 views 4212 9848 === END VALIDATION ===
+INFO 2025-08-19 12:05:50,966 views 4212 4736 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 12:05:51,019 authentication 4212 4736 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 12:05:51,029 views 4212 4736 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 12:05:51,029 views 4212 4736 LOGIN REDIRECT: 002186 -> /dailyactivity/mechanical/tanggal/
+INFO 2025-08-19 12:05:51,098 basehttp 4212 4736 "POST /login/?next=/dailyactivity/mechanical/tanggal/ HTTP/1.1" 302 0
+INFO 2025-08-19 12:05:51,455 basehttp 4212 4736 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 51828
+INFO 2025-08-19 12:05:56,288 basehttp 4212 4736 "GET /dailyactivity/utility/ HTTP/1.1" 200 38611
+INFO 2025-08-19 12:06:35,469 basehttp 4212 4736 "GET /dailyactivity/utility/ HTTP/1.1" 200 38611
+INFO 2025-08-19 12:06:48,736 basehttp 4212 17224 "GET /dailyactivity/ HTTP/1.1" 200 184451
+INFO 2025-08-19 12:06:56,073 basehttp 4212 17224 "GET /dailyactivity/get_mesin_by_lokasi_utility/41/ HTTP/1.1" 200 1923
+INFO 2025-08-19 12:07:09,527 basehttp 4212 17224 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40128
+INFO 2025-08-19 12:07:12,562 basehttp 4212 17224 "GET /dailyactivity/ HTTP/1.1" 200 184451
+INFO 2025-08-19 12:07:14,950 basehttp 4212 17224 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40128
+INFO 2025-08-19 12:07:16,048 basehttp 4212 17224 "GET /dailyactivity/laporan/tanggal/?month=8&year=2025 HTTP/1.1" 200 34608
+WARNING 2025-08-19 12:07:16,149 basehttp 4212 17224 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-19 12:07:16,177 log 4212 15668 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-19 12:07:16,177 basehttp 4212 15668 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-19 12:07:16,191 log 4212 15668 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-19 12:07:16,191 basehttp 4212 15668 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-19 12:07:18,004 basehttp 4212 15668 "GET /dailyactivity/laporan/data/2025-08-18/ HTTP/1.1" 200 394532
+INFO 2025-08-19 12:07:48,826 basehttp 4212 16800 "GET /dailyactivity/utility/tanggal/ HTTP/1.1" 200 48938
+INFO 2025-08-19 12:07:50,642 basehttp 4212 16800 "GET /dailyactivity/utility/tanggal/?month=8&year=2025 HTTP/1.1" 200 51859
+INFO 2025-08-19 12:07:52,305 basehttp 4212 16800 "GET /dailyactivity/utility/data/2025-08-18/ HTTP/1.1" 200 96704
+WARNING 2025-08-19 12:08:05,614 log 4212 16800 Not Found: /wingoapp/static/assets/images/sort_asc.png
+WARNING 2025-08-19 12:08:05,615 basehttp 4212 16800 "GET /wingoapp/static/assets/images/sort_asc.png HTTP/1.1" 404 12585
+INFO 2025-08-19 12:08:08,830 basehttp 4212 16800 "GET /dailyactivity/utility/tanggal/ HTTP/1.1" 200 48938
+INFO 2025-08-19 12:08:11,444 basehttp 4212 16800 "GET /dailyactivity/laporan/tanggal/ HTTP/1.1" 200 40128
+INFO 2025-08-19 12:08:13,202 basehttp 4212 16800 "GET /dailyactivity/laporan/tanggal/?month=8&year=2025 HTTP/1.1" 200 34608
+WARNING 2025-08-19 12:08:13,291 basehttp 4212 16800 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-19 12:08:15,157 basehttp 4212 12020 "GET /dailyactivity/laporan/data/2025-08-18/ HTTP/1.1" 200 394532
+INFO 2025-08-19 12:08:55,562 basehttp 4212 12712 "GET /dailyactivity/laporan/edit/678/ HTTP/1.1" 200 191571
+INFO 2025-08-19 12:08:55,748 basehttp 4212 12712 "GET /dailyactivity/get_mesin_by_lokasi_utility/5/ HTTP/1.1" 200 8378
+INFO 2025-08-19 14:07:58,961 basehttp 4212 13884 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:07:59,286 basehttp 4212 13884 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-19 14:08:08,381 views 4212 13884 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 14:08:08,412 authentication 4212 13884 Updated Django user data for 007522
+INFO 2025-08-19 14:08:08,412 authentication 4212 13884 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 14:08:08,412 authentication 4212 13884 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 14:08:08,428 views 4212 13884 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 14:08:08,428 views 4212 13884 LOGIN REDIRECT: 007522 -> /wo-maintenance/section-based/
+INFO 2025-08-19 14:08:08,428 basehttp 4212 13884 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:08:08,501 utils 4212 13884 Enhanced FULL privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:08:08,501 views 4212 13884 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL_ALL
+INFO 2025-08-19 14:08:08,657 views 4212 13884 QUERY DEBUG: Where conditions count: 1
+INFO 2025-08-19 14:08:08,657 views 4212 13884 QUERY DEBUG: Query params count: 0
+INFO 2025-08-19 14:08:08,707 views 4212 13884 COUNT QUERY SUCCESS: Found 11442 total records
+INFO 2025-08-19 14:08:08,708 views 4212 13884 MAIN QUERY DEBUG: Final params count: 3
+INFO 2025-08-19 14:08:08,806 views 4212 13884 MAIN QUERY SUCCESS: Retrieved 20 records
+ERROR 2025-08-19 14:08:08,993 views 4212 13884 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-19 14:08:09,157 views 4212 13884 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5825, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-19 14:08:09,163 basehttp 4212 13884 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:08:09,423 basehttp 4212 13884 "GET /wo-maintenance/ HTTP/1.1" 200 29935
+INFO 2025-08-19 14:08:12,176 utils 4212 13884 Enhanced FULL privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:08:12,177 views 4212 13884 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL_ALL
+INFO 2025-08-19 14:08:12,241 views 4212 13884 QUERY DEBUG: Where conditions count: 1
+INFO 2025-08-19 14:08:12,241 views 4212 13884 QUERY DEBUG: Query params count: 0
+INFO 2025-08-19 14:08:12,287 views 4212 13884 COUNT QUERY SUCCESS: Found 11442 total records
+INFO 2025-08-19 14:08:12,287 views 4212 13884 MAIN QUERY DEBUG: Final params count: 3
+INFO 2025-08-19 14:08:12,359 views 4212 13884 MAIN QUERY SUCCESS: Retrieved 20 records
+ERROR 2025-08-19 14:08:12,490 views 4212 13884 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-19 14:08:12,492 views 4212 13884 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5825, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-19 14:08:12,494 basehttp 4212 13884 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:08:12,667 basehttp 4212 13884 "GET /wo-maintenance/ HTTP/1.1" 200 29935
+INFO 2025-08-19 14:08:25,536 autoreload 4212 9848 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\dailyactivity_app\models.py changed, reloading.
+INFO 2025-08-19 14:08:28,091 autoreload 10312 16940 Watching for file changes with StatReloader
+INFO 2025-08-19 14:08:30,411 views 10312 16940 === STATUS VALIDATION ===
+INFO 2025-08-19 14:08:30,412 views 10312 16940 Expected STATUS_APPROVED: B
+INFO 2025-08-19 14:08:30,413 views 10312 16940 Expected APPROVE_YES: N
+INFO 2025-08-19 14:08:30,414 views 10312 16940 Actual values in database:
+INFO 2025-08-19 14:08:30,415 views 10312 16940   Status: , Approve: N, Review: None
+INFO 2025-08-19 14:08:30,416 views 10312 16940   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 14:08:30,416 views 10312 16940   Status: A, Approve: T, Review: None
+INFO 2025-08-19 14:08:30,417 views 10312 16940   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 14:08:30,418 views 10312 16940   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 14:08:30,418 views 10312 16940   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 14:08:30,419 views 10312 16940 === END VALIDATION ===
+INFO 2025-08-19 14:09:48,904 autoreload 10312 16940 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-19 14:09:51,061 autoreload 2784 17956 Watching for file changes with StatReloader
+INFO 2025-08-19 14:10:03,999 autoreload 14016 13760 Watching for file changes with StatReloader
+INFO 2025-08-19 14:10:18,343 autoreload 10208 13856 Watching for file changes with StatReloader
+INFO 2025-08-19 14:10:20,615 views 10208 13856 === STATUS VALIDATION ===
+INFO 2025-08-19 14:10:20,616 views 10208 13856 Expected STATUS_APPROVED: B
+INFO 2025-08-19 14:10:20,616 views 10208 13856 Expected APPROVE_YES: N
+INFO 2025-08-19 14:10:20,617 views 10208 13856 Actual values in database:
+INFO 2025-08-19 14:10:20,617 views 10208 13856   Status: , Approve: N, Review: None
+INFO 2025-08-19 14:10:20,618 views 10208 13856   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 14:10:20,618 views 10208 13856   Status: A, Approve: T, Review: None
+INFO 2025-08-19 14:10:20,618 views 10208 13856   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 14:10:20,619 views 10208 13856   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 14:10:20,619 views 10208 13856   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 14:10:20,619 views 10208 13856 === END VALIDATION ===
+INFO 2025-08-19 14:10:26,768 basehttp 10208 9780 "GET /wo-maintenance/ HTTP/1.1" 200 29935
+INFO 2025-08-19 14:10:29,312 utils 10208 9780 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:10:29,314 views 10208 9780 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL_ALL
+INFO 2025-08-19 14:10:29,403 views 10208 9780 QUERY DEBUG: Where conditions count: 1
+INFO 2025-08-19 14:10:29,404 views 10208 9780 QUERY DEBUG: Query params count: 0
+INFO 2025-08-19 14:10:29,451 views 10208 9780 COUNT QUERY SUCCESS: Found 11442 total records
+INFO 2025-08-19 14:10:29,452 views 10208 9780 MAIN QUERY DEBUG: Final params count: 3
+INFO 2025-08-19 14:10:29,555 views 10208 9780 MAIN QUERY SUCCESS: Retrieved 20 records
+ERROR 2025-08-19 14:10:29,716 views 10208 9780 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-19 14:10:29,727 views 10208 9780 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5825, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-19 14:10:29,730 basehttp 10208 9780 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:10:29,896 basehttp 10208 9780 "GET /wo-maintenance/ HTTP/1.1" 200 29935
+INFO 2025-08-19 14:10:48,005 autoreload 10208 13856 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-19 14:10:49,963 autoreload 11332 1128 Watching for file changes with StatReloader
+INFO 2025-08-19 14:11:20,407 autoreload 9860 10644 Watching for file changes with StatReloader
+INFO 2025-08-19 14:11:22,749 views 9860 10644 === STATUS VALIDATION ===
+INFO 2025-08-19 14:11:22,749 views 9860 10644 Expected STATUS_APPROVED: B
+INFO 2025-08-19 14:11:22,750 views 9860 10644 Expected APPROVE_YES: N
+INFO 2025-08-19 14:11:22,750 views 9860 10644 Actual values in database:
+INFO 2025-08-19 14:11:22,750 views 9860 10644   Status: , Approve: N, Review: None
+INFO 2025-08-19 14:11:22,751 views 9860 10644   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 14:11:22,751 views 9860 10644   Status: A, Approve: T, Review: None
+INFO 2025-08-19 14:11:22,751 views 9860 10644   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 14:11:22,751 views 9860 10644   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 14:11:22,752 views 9860 10644   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 14:11:22,752 views 9860 10644 === END VALIDATION ===

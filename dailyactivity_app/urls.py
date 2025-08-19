@@ -170,5 +170,8 @@ urlpatterns = [
      
      path('export-excel/<int:project_id>/', views.export_excel, name='export_excel'),
      path('report-data-it/', views.report_data_it, name='report_data_it'),
+
+     path('ajax/get-mesin-by-line/<int:line_id>/', views.get_mesin_by_line, name='get_mesin_by_line'),
+    path('ajax/get-nomor-by-mesin/<int:mesin_id>/', views.get_nomor_by_mesin, name='get_nomor_by_mesin'),
      
 ]

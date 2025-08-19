@@ -5454,7 +5454,7 @@ def ajax_get_section_mapping_info(request):
 @login_required
 def section_based_daftar_laporan(request):
     """
-    FIXED: Enhanced daftar laporan dengan section-based access dan proper type conversion
+    ENHANCED: Section-based access dengan FULL ACCESS untuk SITI FATIMAH ke SEMUA pengajuan
     """
     try:
         # ===== AMBIL DATA HIERARCHY USER =====
@@ -5469,31 +5469,40 @@ def section_based_daftar_laporan(request):
         access_info = get_enhanced_pengajuan_access_for_user(user_hierarchy)
         access_info['user_employee_number'] = user_hierarchy.get('employee_number')
         
+        # ===== CHECK APAKAH USER ADALAH SITI FATIMAH =====
+        is_siti_fatimah = (
+            user_hierarchy.get('employee_number') == REVIEWER_EMPLOYEE_NUMBER or 
+            request.user.username == REVIEWER_EMPLOYEE_NUMBER
+        )
+        
         logger.info(f"Section Access for {user_hierarchy.get('fullname')}: {access_info['access_type']}")
+        if is_siti_fatimah:
+            logger.info(f"🌟 SITI FATIMAH detected - granting FULL ACCESS to ALL pengajuan")
         
         # ===== FILTER FORM =====
         filter_form = PengajuanFilterForm(request.GET or None)
         search_query = request.GET.get('search', '').strip()
         
-        # ===== QUERY DATABASE dengan Fixed Type Conversion =====
+        # ===== QUERY DATABASE dengan FULL ACCESS untuk SITI FATIMAH =====
         pengajuan_list = []
         total_records = 0
         
         try:
             with connections['DB_Maintenance'].cursor() as cursor:
-                # ===== BUILD WHERE CONDITIONS dengan Type-safe Parameters =====
+                # ===== BUILD WHERE CONDITIONS =====
                 where_conditions = ["tp.history_id IS NOT NULL"]
                 query_params = []
                 
-                # UPDATED: Exclude final processed (status A, approve Y)
-                where_conditions.append("NOT (tp.status = %s AND tp.approve = %s)")
-                query_params.extend([STATUS_REVIEWED, APPROVE_REVIEWED])
-                
-                # ===== ACCESS-BASED CONDITIONS dengan Type Conversion =====
+                # ===== ACCESS-BASED CONDITIONS =====
                 access_type = access_info.get('access_type')
                 
-                if access_type == 'SITI_FATIMAH_FULL':
-                    # SITI FATIMAH - Access ke semua approved pengajuan (status B, approve N)
+                if access_type == 'SITI_FATIMAH_FULL_ALL':
+                    # ENHANCED: SITI FATIMAH - FULL ACCESS ke SEMUA pengajuan
+                    # TIDAK ada filter status - semua ditampilkan
+                    logger.info("🌟 SITI FATIMAH: Full access to ALL pengajuan - no status restrictions")
+                    
+                elif access_type == 'SITI_FATIMAH_FULL':
+                    # Original SITI access - hanya approved
                     where_conditions.extend([
                         "tp.status = %s",
                         "tp.approve = %s"
@@ -5501,36 +5510,37 @@ def section_based_daftar_laporan(request):
                     query_params.extend([STATUS_APPROVED, APPROVE_YES])
                     
                 elif access_type.startswith('ENGINEERING_') and access_type.endswith('_SUPERVISOR'):
-                    # Engineering Supervisor - Section-based access dengan PROPER TYPE CONVERSION
+                    # Engineering Supervisor - Section-based access dengan exclude final processed
+                    where_conditions.append("NOT (tp.status = %s AND tp.approve = %s)")
+                    query_params.extend([STATUS_REVIEWED, APPROVE_REVIEWED])
+                    
                     section_ids = access_info.get('allowed_section_ids', [])
                     if section_ids:
                         logger.info(f"SECTION ACCESS: User has access to section IDs: {section_ids}")
                         
-                        # FIXED: Convert section IDs to strings untuk compatibility
                         section_id_strings = [str(sid) for sid in section_ids]
                         section_placeholders = ','.join(['%s'] * len(section_id_strings))
                         
-                        # FIXED: Use proper CAST in SQL untuk type conversion
                         where_conditions.append(f"""(
                             CAST(tp.id_section AS varchar(10)) IN ({section_placeholders}) OR 
                             CAST(tp.final_section_id AS varchar(10)) IN ({section_placeholders})
                         )""")
                         
-                        # Add section IDs as strings (twice for both conditions)
                         query_params.extend(section_id_strings)
                         query_params.extend(section_id_strings)
                         
-                        logger.info(f"SECTION QUERY: Added {len(section_id_strings)} section conditions with type conversion")
+                        logger.info(f"SECTION QUERY: Added {len(section_id_strings)} section conditions")
                     else:
-                        # Jika tidak ada section, tampilkan kosong
                         where_conditions.append("1 = 0")
                         logger.warning("SECTION ACCESS: No section IDs found, showing empty result")
                 
                 elif access_type == 'HIERARCHY_NORMAL':
-                    # Regular hierarchy access
+                    # Regular hierarchy access dengan exclude final processed
+                    where_conditions.append("NOT (tp.status = %s AND tp.approve = %s)")
+                    query_params.extend([STATUS_REVIEWED, APPROVE_REVIEWED])
+                    
                     allowed_employee_numbers = access_info.get('allowed_employee_numbers', [])
                     if allowed_employee_numbers and '*' not in allowed_employee_numbers:
-                        # Limit untuk menghindari query terlalu panjang
                         if len(allowed_employee_numbers) > 50:
                             allowed_employee_numbers = allowed_employee_numbers[:50]
                         
@@ -5539,7 +5549,6 @@ def section_based_daftar_laporan(request):
                             where_conditions.append(f"tp.user_insert IN ({placeholders})")
                             query_params.extend(allowed_employee_numbers)
                     else:
-                        # Fallback to own pengajuan only
                         where_conditions.append("tp.user_insert = %s")
                         query_params.append(access_info.get('user_employee_number', ''))
                 
@@ -5560,10 +5569,12 @@ def section_based_daftar_laporan(request):
                         where_conditions.append("CAST(tp.tgl_insert AS DATE) <= %s")
                         query_params.append(tanggal_sampai)
                     
-                    status_filter = filter_form.cleaned_data.get('status')
-                    if status_filter:
-                        where_conditions.append("tp.status = %s")
-                        query_params.append(status_filter)
+                    # Status filter - SKIP untuk SITI FATIMAH FULL ACCESS
+                    if access_type != 'SITI_FATIMAH_FULL_ALL':
+                        status_filter = filter_form.cleaned_data.get('status')
+                        if status_filter:
+                            where_conditions.append("tp.status = %s")
+                            query_params.append(status_filter)
                 
                 # ===== SEARCH =====
                 if search_query:
@@ -5580,10 +5591,8 @@ def section_based_daftar_laporan(request):
                 # ===== BUILD WHERE CLAUSE =====
                 where_clause = "WHERE " + " AND ".join(where_conditions)
                 
-                # LOG untuk debugging
                 logger.info(f"QUERY DEBUG: Where conditions count: {len(where_conditions)}")
                 logger.info(f"QUERY DEBUG: Query params count: {len(query_params)}")
-                logger.info(f"QUERY DEBUG: First few params: {query_params[:5]}")
                 
                 # ===== COUNT QUERY =====
                 count_query = f"""
@@ -5668,7 +5677,6 @@ def section_based_daftar_laporan(request):
                     OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
                 """
                 
-                # Add access_type parameter dan pagination parameters
                 final_params = query_params + [access_info['access_type'], offset, page_size]
                 
                 logger.info(f"MAIN QUERY DEBUG: Final params count: {len(final_params)}")
@@ -5676,16 +5684,12 @@ def section_based_daftar_laporan(request):
                 cursor.execute(main_query, final_params)
                 pengajuan_list = cursor.fetchall()
                 
-                logger.info(f"MAIN QUERY SUCCESS: Retrieved {len(pengajuan_list)} records for {access_info['access_type']}")
+                logger.info(f"MAIN QUERY SUCCESS: Retrieved {len(pengajuan_list)} records")
                 
         except Exception as db_error:
             logger.error(f"Database error in section_based_daftar_laporan: {db_error}")
             logger.error(f"Query params count: {len(query_params) if 'query_params' in locals() else 'undefined'}")
             logger.error(f"Where conditions: {where_conditions if 'where_conditions' in locals() else 'undefined'}")
-            
-            # Enhanced error info untuk debugging
-            if 'section_ids' in locals():
-                logger.error(f"Section IDs being queried: {locals()['section_ids']}")
             
             import traceback
             logger.error(f"Traceback: {traceback.format_exc()}")
@@ -5699,12 +5703,62 @@ def section_based_daftar_laporan(request):
             next_page_number = None
             page_number = 1
         
-        # ===== GET ACCESS STATISTICS dengan Error Handling =====
+        # ===== GET ACCESS STATISTICS =====
         access_stats = {'total_accessible': 0, 'by_status': {}}
         try:
             access_stats = get_access_statistics(access_info)
         except Exception as stats_error:
             logger.error(f"Error getting access statistics: {stats_error}")
+        
+        # ===== ENHANCED STATS UNTUK SITI FATIMAH =====
+        siti_stats = {}
+        if is_siti_fatimah and access_type == 'SITI_FATIMAH_FULL_ALL':
+            try:
+                with connections['DB_Maintenance'].cursor() as cursor:
+                    # Total semua pengajuan
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE history_id IS NOT NULL")
+                    siti_stats['total_all'] = cursor.fetchone()[0] or 0
+                    
+                    # Breakdown berdasarkan status
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '0' AND approve = '0'")
+                    siti_stats['pending'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = %s AND approve = %s", 
+                                 [STATUS_APPROVED, APPROVE_YES])
+                    siti_stats['approved_atasan'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = %s AND approve = %s", 
+                                 [STATUS_REVIEWED, APPROVE_REVIEWED])
+                    siti_stats['final_processed'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '2'")
+                    siti_stats['rejected'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '3'")
+                    siti_stats['in_progress'] = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE status = '4'")
+                    siti_stats['completed'] = cursor.fetchone()[0] or 0
+                    
+                    # Pengajuan hari ini
+                    today = timezone.now().date()
+                    cursor.execute("SELECT COUNT(*) FROM tabel_pengajuan WHERE CAST(tgl_insert AS DATE) = %s", [today])
+                    siti_stats['today'] = cursor.fetchone()[0] or 0
+                    
+                    logger.info(f"🌟 SITI FATIMAH enhanced stats: {siti_stats}")
+                        
+            except Exception as stats_error:
+                logger.error(f"Error getting SITI enhanced stats: {stats_error}")
+                siti_stats = {
+                    'total_all': 0,
+                    'pending': 0,
+                    'approved_atasan': 0,
+                    'final_processed': 0,
+                    'rejected': 0,
+                    'in_progress': 0,
+                    'completed': 0,
+                    'today': 0
+                }
         
         # ===== ENHANCED CONTEXT =====
         context = {
@@ -5725,16 +5779,21 @@ def section_based_daftar_laporan(request):
             # Enhanced section access info
             'access_info': access_info,
             'access_stats': access_stats,
-            'is_siti_fatimah': access_info['access_type'] == 'SITI_FATIMAH_FULL',
+            'is_siti_fatimah': is_siti_fatimah,
             'is_engineering_supervisor': access_info['access_type'].startswith('ENGINEERING_'),
             'section_access_display': access_info.get('access_description', ''),
+            
+            # ENHANCED: SITI FATIMAH specific
+            'siti_has_full_access': access_type == 'SITI_FATIMAH_FULL_ALL',
+            'siti_stats': siti_stats,
+            'show_all_status': access_info.get('show_all_status', False),
             
             # Engineering supervisor specific info
             'allowed_section_ids': access_info.get('allowed_section_ids', []),
             'section_keywords': access_info.get('section_keywords', []),
             
             # Page info
-            'page_title': 'Section-based Daftar Laporan',
+            'page_title': 'ENHANCED Section-based Daftar Laporan' + (' - FULL ACCESS' if is_siti_fatimah else ''),
             'enhanced_mode': True,
             'section_based_access': True,
             
@@ -5754,11 +5813,12 @@ def section_based_daftar_laporan(request):
                 'user_role': f"{user_hierarchy.get('title_name', 'Unknown')}",
                 'department_section': f"{user_hierarchy.get('department_name', '')}-{user_hierarchy.get('section_name', '')}",
                 'total_pengajuan_loaded': len(pengajuan_list),
-                'excluded_final_processed': True,
+                'siti_full_access': access_type == 'SITI_FATIMAH_FULL_ALL',
+                'no_status_filter': is_siti_fatimah,
                 'section_based_mode': True,
                 'query_params_count': len(query_params) if 'query_params' in locals() else 0,
                 'where_conditions_count': len(where_conditions) if 'where_conditions' in locals() else 0,
-                'type_conversion_used': 'CAST to varchar for section compatibility'
+                'enhanced_access_mode': True
             } if request.user.is_superuser else None
         }
         

@@ -668,25 +668,34 @@
                       
                       <!-- Row 2: Mesin, Nomor Mesin, Jenis Pekerjaan Maintenance -->
                       <div class="row mt-2">
-                        <div class="col-md-4">
-                          <div class="pekerjaan-field">
-                            <span class="field-label">4️⃣ Mesin:</span>
-                            <div class="field-value{% if not pekerjaan.mesin %} empty{% endif %}">
-                              {% if pekerjaan.mesin %}
-                                {% comment %}Simple approach: always show raw value first{% endcomment %}
-                                {{ pekerjaan.mesin }}
-                                {% comment %}Debug info untuk troubleshooting{% endcomment %}
-                                {% if mesin_list %}
-                                  <small class="text-muted">(Lookup: {{ mesin_list|length }} items available)</small>
-                                {% else %}
-                                  <small class="text-muted">(No mesin_list in context)</small>
-                                {% endif %}
-                              {% else %}
-                                Tidak ditentukan
-                              {% endif %}
-                            </div>
-                          </div>
-                        </div>
+                        <!-- Ganti bagian template untuk kolom mesin di Row 2 dengan kode ini -->
+<!-- FIXED VERSION SIMPLE - ganti bagian template untuk kolom mesin dengan kode ini -->
+<div class="col-md-4">
+  <div class="pekerjaan-field">
+    <span class="field-label">4️⃣ Mesin:</span>
+    <div class="field-value{% if not pekerjaan.mesin %} empty{% endif %}">
+      {% if pekerjaan.mesin %}
+        {% comment %}SIMPLE FIX: Try multiple comparison methods{% endcomment %}
+        {% for mesin in mesin_list %}
+          {% comment %}Method 1: Direct comparison{% endcomment %}
+          {% if mesin.value == pekerjaan.mesin %}
+            {{ mesin.text }}
+          {% comment %}Method 2: Compare without .0{% endcomment %}
+          {% elif mesin.value|cut:".0" == pekerjaan.mesin %}
+            {{ mesin.text }}
+          {% comment %}Method 3: Add .0 to pekerjaan.mesin{% endcomment %}
+          {% elif mesin.value == pekerjaan.mesin|add:".0" %}
+            {{ mesin.text }}
+          {% endif %}
+        {% empty %}
+          <span class="text-muted">Master data tidak tersedia</span>
+        {% endfor %}
+      {% else %}
+        Tidak ditentukan
+      {% endif %}
+    </div>
+  </div>
+</div>
                         <div class="col-md-4">
                           <div class="pekerjaan-field">
                             <span class="field-label">5️⃣ Nomor Mesin:</span>
@@ -770,16 +779,14 @@
                     </div>
                   </div>
                 {% endfor %}
-              </div>
-              
+              </div>              
               <!-- Catatan Khusus (jika ada) -->
               {% if group.meta.catatan %}
                 <div class="catatan-display">
                   <span class="catatan-label">Catatan Khusus:</span>
                   <div>{{ group.meta.catatan|linebreaksbr }}</div>
                 </div>
-              {% endif %}
-              
+              {% endif %}              
               <!-- Info Tambahan Enhanced -->
               <div class="info-section">
                 <div class="row">

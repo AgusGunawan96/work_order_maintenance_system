@@ -1,5 +1,5 @@
 <!-- wo_maintenance_app/templates/wo_maintenance_app/section_based_daftar_laporan.html -->
-<!-- Section-based Access Daftar Laporan Template -->
+<!-- ENHANCED: Section-based Access dengan FULL ACCESS untuk SITI FATIMAH -->
 
 {% extends 'starter_kit/base.html' %}
 {% load static %}
@@ -23,6 +23,18 @@
         box-shadow: 0 6px 20px rgba(111, 66, 193, 0.3);
         position: relative;
         overflow: hidden;
+    }
+    
+    /* ENHANCED: SITI FATIMAH Full Access Header */
+    .siti-full-access-header {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        animation: sitiFatimahGlow 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes sitiFatimahGlow {
+        0% { box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4); }
+        100% { box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6); }
     }
     
     .section-access-header::before {
@@ -92,8 +104,14 @@
         z-index: 2;
     }
     
-    .access-siti-fatimah {
+    .access-siti-fatimah-full {
         background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .access-siti-fatimah {
+        background: linear-gradient(135deg, #ff9500 0%, #ff6348 100%);
         color: white;
     }
     
@@ -105,6 +123,32 @@
     .access-hierarchy-normal {
         background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
         color: #2c2c54;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    /* ENHANCED: Stats Cards for SITI FATIMAH */
+    .siti-enhanced-stats {
+        margin-bottom: 25px;
+    }
+    
+    .siti-enhanced-stats .section-stat-card {
+        border-left: 4px solid #ff6b6b;
+    }
+    
+    .siti-enhanced-stats .stat-icon {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    }
+    
+    .siti-enhanced-stats .stat-number {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
     /* Stats Cards */
@@ -195,6 +239,11 @@
         align-items: center;
     }
     
+    /* ENHANCED: SITI FATIMAH table header */
+    .siti-table-header {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    }
+    
     .table-title {
         margin: 0;
         font-weight: 600;
@@ -227,6 +276,11 @@
         background: linear-gradient(90deg, rgba(111, 66, 193, 0.05) 0%, rgba(0, 123, 255, 0.05) 100%);
         transform: translateX(3px);
         transition: all 0.3s ease;
+    }
+    
+    /* ENHANCED: SITI FATIMAH table hover */
+    .siti-full-access .table tbody tr:hover {
+        background: linear-gradient(90deg, rgba(255, 107, 107, 0.05) 0%, rgba(238, 90, 111, 0.05) 100%);
     }
     
     /* Section Access Indicators */
@@ -262,7 +316,19 @@
         color: #721c24;
     }
     
-    /* Enhanced Status Badges */
+    .access-siti-full {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+        color: white;
+        animation: shimmer 2s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+    
+    /* ENHANCED: Status Badges untuk ALL status */
     .enhanced-status-badge {
         padding: 8px 14px;
         border-radius: 20px;
@@ -293,6 +359,21 @@
     .status-rejected {
         background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
         color: #721c24;
+    }
+    
+    .status-in-progress {
+        background: linear-gradient(135deg, #e1ecf4 0%, #bee5eb 100%);
+        color: #0c5460;
+    }
+    
+    .status-completed {
+        background: linear-gradient(135deg, #d1f2eb 0%, #a3e4d7 100%);
+        color: #00695c;
+    }
+    
+    .status-unknown {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        color: #6c757d;
     }
     
     /* Enhanced Action Buttons */
@@ -364,6 +445,23 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     
+    /* ENHANCED: SITI FATIMAH Full Access Notice */
+    .siti-full-access-notice {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 600;
+        animation: fadeInDown 0.5s ease-out;
+    }
+    
+    @keyframes fadeInDown {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
         .section-access-header {
@@ -403,13 +501,26 @@
         {% endfor %}
     {% endif %}
 
+    <!-- ENHANCED: SITI FATIMAH Full Access Notice -->
+    {% if siti_has_full_access %}
+        <div class="siti-full-access-notice">
+            🌟 <strong>SITI FATIMAH FULL ACCESS MODE</strong> 🌟
+            <br><small style="opacity: 0.9;">Anda dapat melihat SEMUA pengajuan dalam sistem - {{ total_records|default:0 }} total pengajuan</small>
+        </div>
+    {% endif %}
+
     <!-- Section Access Header -->
-    <div class="section-access-header">
+    <div class="section-access-header{% if siti_has_full_access %} siti-full-access-header{% endif %}">
         <!-- Access Type Badge -->
-        {% if access_info.access_type == 'SITI_FATIMAH_FULL' %}
+        {% if access_info.access_type == 'SITI_FATIMAH_FULL_ALL' %}
+            <div class="access-type-badge access-siti-fatimah-full">
+                <i data-feather="star"></i>
+                SITI FATIMAH - FULL ACCESS TO ALL PENGAJUAN
+            </div>
+        {% elif access_info.access_type == 'SITI_FATIMAH_FULL' %}
             <div class="access-type-badge access-siti-fatimah">
                 <i data-feather="crown"></i>
-                SITI FATIMAH - Full Access
+                SITI FATIMAH - Review Access
             </div>
         {% elif access_info.access_type|slice:":12" == 'ENGINEERING_' %}
             <div class="access-type-badge access-engineering-supervisor">
@@ -423,7 +534,7 @@
             </div>
         {% endif %}
         
-        <h4>🎯 Section-based Daftar Laporan Maintenance</h4>
+        <h4>🎯 {% if siti_has_full_access %}ENHANCED{% endif %} Section-based Daftar Laporan Maintenance</h4>
         
         <div class="access-info-grid">
             <div class="access-info-item">
@@ -435,6 +546,18 @@
                 <div class="label">Total Records</div>
                 <div class="value">{{ total_records|default:0 }} pengajuan</div>
             </div>
+            
+            {% if siti_has_full_access %}
+            <div class="access-info-item">
+                <div class="label">Access Coverage</div>
+                <div class="value">ALL STATUS & SECTIONS</div>
+            </div>
+            
+            <div class="access-info-item">
+                <div class="label">Special Privileges</div>
+                <div class="value">FULL SYSTEM ACCESS</div>
+            </div>
+            {% endif %}
             
             {% if is_engineering_supervisor %}
             <div class="access-info-item">
@@ -457,7 +580,67 @@
         </div>
     </div>
 
-    <!-- Stats Cards -->
+    <!-- ENHANCED: Stats Cards for SITI FATIMAH -->
+    {% if siti_has_full_access %}
+    <div class="section-stats-container siti-enhanced-stats">
+        <div class="row">
+            <div class="col-md-2 mb-3">
+                <div class="section-stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-number">{{ siti_stats.total_all|default:0 }}</div>
+                    <div class="stat-label">Total All</div>
+                    <div class="stat-description">Semua pengajuan</div>
+                </div>
+            </div>
+            
+            <div class="col-md-2 mb-3">
+                <div class="section-stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-number">{{ siti_stats.pending|default:0 }}</div>
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-description">Menunggu approval</div>
+                </div>
+            </div>
+            
+            <div class="col-md-2 mb-3">
+                <div class="section-stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number">{{ siti_stats.approved_atasan|default:0 }}</div>
+                    <div class="stat-label">Approved</div>
+                    <div class="stat-description">Approved atasan</div>
+                </div>
+            </div>
+            
+            <div class="col-md-2 mb-3">
+                <div class="section-stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">{{ siti_stats.final_processed|default:0 }}</div>
+                    <div class="stat-label">Final</div>
+                    <div class="stat-description">Final processed</div>
+                </div>
+            </div>
+            
+            <div class="col-md-2 mb-3">
+                <div class="section-stat-card">
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-number">{{ siti_stats.in_progress|default:0 }}</div>
+                    <div class="stat-label">Progress</div>
+                    <div class="stat-description">In progress</div>
+                </div>
+            </div>
+            
+            <div class="col-md-2 mb-3">
+                <div class="section-stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-number">{{ siti_stats.today|default:0 }}</div>
+                    <div class="stat-label">Today</div>
+                    <div class="stat-description">Pengajuan hari ini</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Regular Stats Cards -->
     <div class="section-stats-container">
         <div class="row">
             <div class="col-md-3 mb-3">
@@ -497,6 +680,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
     <!-- Filter Panel -->
     <div class="filter-panel">
@@ -507,10 +691,12 @@
             <div class="col-md-3">
                 {{ filter_form.tanggal_sampai|add_class:"form-control" }}
             </div>
+            {% if not siti_has_full_access %}
             <div class="col-md-2">
                 {{ filter_form.status|add_class:"form-control" }}
             </div>
-            <div class="col-md-3">
+            {% endif %}
+            <div class="col-md-{% if siti_has_full_access %}4{% else %}3{% endif %}">
                 <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ search_query }}">
             </div>
             <div class="col-md-1">
@@ -524,33 +710,36 @@
     <!-- Debug Panel (Superuser Only) -->
     {% if debug_info and user.is_superuser %}
     <div class="alert alert-info">
-        <h6><strong>🔧 Section Access Debug (Superuser)</strong></h6>
+        <h6><strong>🔧 ENHANCED Section Access Debug (Superuser)</strong></h6>
         <div class="row">
             <div class="col-md-6">
                 <strong>Access Info:</strong><br>
                 - Type: {{ debug_info.access_type }}<br>
                 - Employee Count: {{ debug_info.allowed_employee_count }}<br>
                 - Section Count: {{ debug_info.allowed_section_count }}<br>
-                - User Role: {{ debug_info.user_role }}
+                - User Role: {{ debug_info.user_role }}<br>
+                - SITI Full Access: {{ debug_info.siti_full_access|yesno:"Yes,No" }}
             </div>
             <div class="col-md-6">
                 <strong>Department/Section:</strong><br>
                 {{ debug_info.department_section }}<br>
                 <strong>Records Loaded:</strong> {{ debug_info.total_pengajuan_loaded }}<br>
-                <strong>Section Based:</strong> {{ debug_info.section_based_mode|yesno:"Yes,No" }}
+                <strong>Enhanced Mode:</strong> {{ debug_info.enhanced_access_mode|yesno:"Yes,No" }}<br>
+                <strong>No Status Filter:</strong> {{ debug_info.no_status_filter|yesno:"Yes,No" }}
             </div>
         </div>
     </div>
     {% endif %}
 
     <!-- Table Container -->
-    <div class="section-table-container">
-        <div class="section-table-header">
+    <div class="section-table-container{% if siti_has_full_access %} siti-full-access{% endif %}">
+        <div class="section-table-header{% if siti_has_full_access %} siti-table-header{% endif %}">
             <div class="table-title">
                 <i data-feather="database"></i>
-                Daftar Pengajuan Maintenance
+                {% if siti_has_full_access %}🌟 ENHANCED{% endif %} Daftar Pengajuan Maintenance
                 <small style="opacity: 0.8; display: block; font-size: 0.8rem; margin-top: 5px;">
                     {{ access_info.access_description }} - {{ total_records|default:0 }} pengajuan
+                    {% if siti_has_full_access %} - FULL SYSTEM ACCESS{% endif %}
                 </small>
             </div>
             <div class="table-actions">
@@ -560,6 +749,11 @@
                 <a href="{% url 'wo_maintenance_app:dashboard' %}" class="btn btn-light btn-sm">
                     <i data-feather="home"></i> Dashboard
                 </a>
+                {% if siti_has_full_access %}
+                <a href="{% url 'wo_maintenance_app:debug_siti_full_access' %}" class="btn btn-light btn-sm">
+                    <i data-feather="settings"></i> Debug
+                </a>
+                {% endif %}
             </div>
         </div>
         
@@ -588,8 +782,10 @@
                                 <strong class="text-primary">{{ pengajuan.0|default:"-" }}</strong>
                                 {% if pengajuan.9 %}<br><small class="text-muted">{{ pengajuan.9 }}</small>{% endif %}
                                 
-                                <!-- Access Indicator -->
-                                {% if pengajuan.8 == user_hierarchy.employee_number %}
+                                <!-- ENHANCED: Access Indicator -->
+                                {% if siti_has_full_access %}
+                                    <span class="section-access-indicator access-siti-full">SITI FULL</span>
+                                {% elif pengajuan.8 == user_hierarchy.employee_number %}
                                     <span class="section-access-indicator access-own">Own</span>
                                 {% elif is_engineering_supervisor %}
                                     <span class="section-access-indicator access-section">Section</span>
@@ -648,9 +844,17 @@
                                     <span class="enhanced-status-badge status-rejected">
                                         ❌ Rejected
                                     </span>
+                                {% elif pengajuan.6 == '3' %}
+                                    <span class="enhanced-status-badge status-in-progress">
+                                        🚀 Progress
+                                    </span>
+                                {% elif pengajuan.6 == '4' %}
+                                    <span class="enhanced-status-badge status-completed">
+                                        ✅ Completed
+                                    </span>
                                 {% else %}
-                                    <span class="enhanced-status-badge">
-                                        {{ pengajuan.6|default:"-" }}/{{ pengajuan.11|default:"-" }}
+                                    <span class="enhanced-status-badge status-unknown">
+                                        ❓ {{ pengajuan.6|default:"-" }}/{{ pengajuan.11|default:"-" }}
                                     </span>
                                 {% endif %}
                             </div>
@@ -702,6 +906,7 @@
             <div>
                 <small class="text-muted">
                     Halaman {{ page_number }} dari {{ total_pages }} ({{ total_records }} total)
+                    {% if siti_has_full_access %} - FULL ACCESS MODE{% endif %}
                 </small>
             </div>
             <nav>
@@ -736,6 +941,8 @@
             <p class="text-muted">
                 {% if search_query %}
                     Tidak ditemukan hasil untuk pencarian "{{ search_query }}"
+                {% elif siti_has_full_access %}
+                    Sistem belum memiliki pengajuan maintenance
                 {% else %}
                     Belum ada pengajuan maintenance yang dapat diakses dengan {{ access_info.access_description|lower }}
                 {% endif %}
@@ -756,7 +963,7 @@ $(document).ready(function() {
     // Initialize Feather Icons
     feather.replace();
     
-    // Stats animation
+    // ENHANCED: Stats animation with special effects for SITI FATIMAH
     $('.stat-number').each(function() {
         const $this = $(this);
         const countTo = parseInt($this.text()) || 0;
@@ -765,13 +972,17 @@ $(document).ready(function() {
             $({ countNum: 0 }).animate(
                 { countNum: countTo },
                 {
-                    duration: 2000,
+                    duration: {{ siti_has_full_access|yesno:"3000,2000" }}, // Slower animation for SITI
                     easing: 'linear',
                     step: function() {
                         $this.text(Math.floor(this.countNum));
                     },
                     complete: function() {
                         $this.text(this.countNum);
+                        {% if siti_has_full_access %}
+                        // Special effect for SITI FATIMAH
+                        $this.addClass('animate__animated animate__pulse');
+                        {% endif %}
                     }
                 }
             );
@@ -784,12 +995,26 @@ $(document).ready(function() {
         trigger: 'hover'
     });
     
-    // Access info logging
-    console.log('🎯 Section-based Access Information:');
+    // ENHANCED: Access info logging with SITI FATIMAH special privileges
+    console.log('🌟 ENHANCED Section-based Access Information:');
     console.log('Access Type:', '{{ access_info.access_type }}');
     console.log('Total Accessible:', {{ access_stats.total_accessible|default:0 }});
     console.log('Is Engineering Supervisor:', {{ is_engineering_supervisor|yesno:"true,false" }});
     console.log('Is SITI FATIMAH:', {{ is_siti_fatimah|yesno:"true,false" }});
+    console.log('SITI Has Full Access:', {{ siti_has_full_access|yesno:"true,false" }});
+    console.log('Show All Status:', {{ show_all_status|yesno:"true,false" }});
+    
+    {% if siti_has_full_access %}
+    console.log('🌟 SITI FATIMAH FULL ACCESS MODE ACTIVATED 🌟');
+    console.log('SITI Enhanced Stats:', {{ siti_stats|safe }});
+    
+    // Special notification for SITI FATIMAH
+    setTimeout(function() {
+        if (typeof toastr !== 'undefined') {
+            toastr.success('🌟 SITI FATIMAH Full Access Mode Active - {{ total_records|default:0 }} pengajuan accessible');
+        }
+    }, 1000);
+    {% endif %}
     
     {% if is_engineering_supervisor %}
     console.log('Section Keywords:', {{ section_keywords|safe }});
@@ -802,12 +1027,47 @@ $(document).ready(function() {
             .done(function(data) {
                 if (data.success) {
                     console.log('Access info refreshed:', data.access_info);
+                    {% if siti_has_full_access %}
+                    console.log('SITI Enhanced info refreshed:', data.siti_enhanced);
+                    {% endif %}
                 }
             })
             .fail(function() {
                 console.warn('Failed to refresh access info');
             });
     }, 300000); // 5 minutes
+    
+    // ENHANCED: SITI FATIMAH special features
+    {% if siti_has_full_access %}
+    // Add special SITI FATIMAH keyboard shortcuts
+    $(document).keydown(function(e) {
+        // Ctrl + Shift + S for SITI stats
+        if (e.ctrlKey && e.shiftKey && e.keyCode === 83) {
+            e.preventDefault();
+            console.log('🌟 SITI FATIMAH Quick Stats:', {
+                total_all: {{ siti_stats.total_all|default:0 }},
+                pending: {{ siti_stats.pending|default:0 }},
+                approved: {{ siti_stats.approved_atasan|default:0 }},
+                final_processed: {{ siti_stats.final_processed|default:0 }},
+                today: {{ siti_stats.today|default:0 }}
+            });
+            
+            if (typeof toastr !== 'undefined') {
+                toastr.info('Stats logged to console (Ctrl+Shift+I to view)');
+            }
+        }
+    });
+    
+    // Special hover effects for SITI FATIMAH
+    $('.section-stat-card').hover(
+        function() {
+            $(this).addClass('animate__animated animate__pulse animate__faster');
+        },
+        function() {
+            $(this).removeClass('animate__animated animate__pulse animate__faster');
+        }
+    );
+    {% endif %}
 });
 </script>
 {% endblock scriptcontent %}

@@ -355,8 +355,34 @@ MESSAGE_TAGS = {
 
 # ===== DATABASE ROUTERS untuk WO Maintenance =====
 DATABASE_ROUTERS = [
+    'dailyactivity_app.routers.DailyActivityDatabaseRouter', 
     'wo_maintenance_app.models.MaintenanceDatabaseRouter',
 ]
+
+# ===== DAILY ACTIVITY SETTINGS =====
+# Tambahin konfigurasi baru untuk daily activity app
+DAILY_ACTIVITY_SETTINGS = {
+    'USE_EXTERNAL_MAINTENANCE_DB': True,
+    'MAINTENANCE_DB_ALIAS': 'DB_Maintenance',
+    'ENABLE_MAINTENANCE_TABLES': True,
+    'DEBUG_DATABASE_ROUTING': DEBUG,  # Enable debug saat development
+}
+
+# ===== UPDATE LOGGING untuk Daily Activity =====
+# Tambahin logger khusus untuk daily activity
+if 'LOGGING' in locals() or 'LOGGING' in globals():
+    LOGGING['loggers']['dailyactivity_app'] = {
+        'handlers': ['file', 'console'],
+        'level': 'DEBUG' if DEBUG else 'INFO',
+        'propagate': True,
+    }
+    
+    # Logger khusus untuk database routing
+    LOGGING['loggers']['dailyactivity_db_router'] = {
+        'handlers': ['file', 'console'],
+        'level': 'DEBUG' if DEBUG else 'INFO', 
+        'propagate': True,
+    }
 
 # ===== WO MAINTENANCE SETTINGS =====
 # Konfigurasi khusus untuk WO Maintenance

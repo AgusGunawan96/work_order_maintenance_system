@@ -99,8 +99,6 @@ class MechanicalData(models.Model):
     def __str__(self):
         return f"{self.tanggal} - {self.machine.name} - {self.user.username}"
 
-
-
 class MechanicalData2(models.Model):
     tanggal = models.DateField()
     jam = models.DateTimeField(null=True, blank=True)
@@ -632,23 +630,86 @@ class ScheduleMechanicalData(models.Model):
     def __str__(self):
         return f"{self.tanggal} - {self.user.username}"
     
+# Model untuk connect ke database external DB_Maintenance  
+class TabelLine(models.Model):
+    id_line = models.FloatField(primary_key=True)
+    line = models.CharField(max_length=35, null=True, blank=True)
+    keterangan = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=1, null=True, blank=True)
+    user_insert = models.CharField(max_length=30, null=True, blank=True)
+    user_edit = models.CharField(max_length=30, null=True, blank=True)
+    tgl_insert = models.DateTimeField(null=True, blank=True)
+    tgl_edit = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        db_table = 'tabel_line'
+        managed = False  # Biar ga di-migrate Django
+
+    def __str__(self):
+        return self.line or f"Line {self.id_line}"
+
+
+class TabelMesin(models.Model):
+    id_mesin = models.FloatField(primary_key=True)
+    mesin = models.CharField(max_length=75, null=True, blank=True)
+    id_line = models.CharField(max_length=10, null=True, blank=True)
+    nomer = models.CharField(max_length=10, null=True, blank=True)
+    keterangan = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=1, null=True, blank=True)
+    user_insert = models.CharField(max_length=30, null=True, blank=True)
+    user_edit = models.CharField(max_length=30, null=True, blank=True)
+    tgl_insert = models.DateTimeField(null=True, blank=True)
+    tgl_edit = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'tabel_mesin'
+        managed = False
+
+    def __str__(self):
+        return f"{self.mesin} - {self.nomer}" if self.mesin and self.nomer else f"Mesin {self.id_mesin}"
+class TabelPekerjaan(models.Model):
+    id_pekerjaan = models.FloatField(primary_key=True)
+    pekerjaan = models.CharField(max_length=50, null=True, blank=True)
+    keterangan = models.CharField(max_length=150, null=True, blank=True)
+    gen_no = models.CharField(max_length=1, null=True, blank=True)
+    status = models.CharField(max_length=1, null=True, blank=True)
+    user_insert = models.CharField(max_length=35, null=True, blank=True)
+    user_edit = models.CharField(max_length=35, null=True, blank=True)
+    tgl_insert = models.DateTimeField(null=True, blank=True)
+    tgl_edit = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'tabel_pekerjaan'
+        managed = False
+
+    def __str__(self):
+        return self.pekerjaan or f"Pekerjaan {self.id_pekerjaan}"
+
+
+# Update model Project - tambahin field baru
 class Project(models.Model):
     project_name = models.CharField(max_length=255)
     pic_project = models.CharField(max_length=255)
     department = models.CharField(max_length=255)
     start_date = models.DateField()
     finish_date = models.DateField()
+    # Field baru untuk line, mesin, nomor dan waktu pengerjaan
+    line = models.CharField(max_length=35, null=True, blank=True)
+    mesin = models.CharField(max_length=75, null=True, blank=True)  
+    nomor_mesin = models.CharField(max_length=10, null=True, blank=True)
+    waktu_pengerjaan = models.CharField(max_length=100, null=True, blank=True)
+    jenis_pekerjaan = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
     class Meta:
         db_table = 'dailyactivity_app_projects'
-
+    
     def __str__(self):
         return self.project_name
 
 
+# Update model ProjectIssue - tambahin field tindakan dan perbaikan
 class ProjectIssue(models.Model):
     STATUS_CHOICES = (
         ('0', '0%'),
@@ -663,22 +724,75 @@ class ProjectIssue(models.Model):
         ('90', '90%'),
         ('100', '100%'),
     )
-
+    
     project = models.ForeignKey(
         Project, 
         related_name='issues',
         on_delete=models.CASCADE
     )
     issue = models.TextField()
+    # Field baru - tindakan dan perbaikan
+    tindakan = models.TextField(null=True, blank=True, verbose_name='Tindakan')
+    perbaikan = models.TextField(null=True, blank=True, verbose_name='Perbaikan')
     pic = models.CharField(max_length=255)
     due_date = models.DateField()
     status = models.CharField(max_length=20, null=True, blank=True, choices=STATUS_CHOICES) 
     remark = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
     class Meta:
         db_table = 'dailyactivity_app_project_issues'
-
+    
     def __str__(self):
         return f"Issue for {self.project.project_name}: {self.issue[:30]}..."
+       
+# class Project(models.Model):
+#     project_name = models.CharField(max_length=255)
+#     pic_project = models.CharField(max_length=255)
+#     department = models.CharField(max_length=255)
+#     start_date = models.DateField()
+#     finish_date = models.DateField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+
+#     class Meta:
+#         db_table = 'dailyactivity_app_projects'
+
+#     def __str__(self):
+#         return self.project_name
+
+
+# class ProjectIssue(models.Model):
+#     STATUS_CHOICES = (
+#         ('0', '0%'),
+#         ('10', '10%'),
+#         ('20', '20%'),
+#         ('30', '30%'),
+#         ('40', '40%'),
+#         ('50', '50%'),
+#         ('60', '60%'),
+#         ('70', '70%'),
+#         ('80', '80%'),
+#         ('90', '90%'),
+#         ('100', '100%'),
+#     )
+
+#     project = models.ForeignKey(
+#         Project, 
+#         related_name='issues',
+#         on_delete=models.CASCADE
+#     )
+#     issue = models.TextField()
+#     pic = models.CharField(max_length=255)
+#     due_date = models.DateField()
+#     status = models.CharField(max_length=20, null=True, blank=True, choices=STATUS_CHOICES) 
+#     remark = models.TextField(null=True, blank=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+
+#     class Meta:
+#         db_table = 'dailyactivity_app_project_issues'
+
+#     def __str__(self):
+#         return f"Issue for {self.project.project_name}: {self.issue[:30]}..."

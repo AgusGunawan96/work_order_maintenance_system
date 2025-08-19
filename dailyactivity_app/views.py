@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from dailyactivity_app.models import Shift, Location, Category, Status, Machinemechanical, Machineelectrical, Machineutility, MechanicalData, ElectricalData, UtilityData, PICMechanical, PICElectrical, PICUtility, TabelMain, MechanicalData2, PICMechanical2, UtilityData2, PICUtility2, ItData, PICIt, LaporanData, LaporanDataPIC, PICLaporan, PICLembur, LaporanMechanicalData, PICLaporanMechanical, PICLemburMechanical, ScheduleMechanicalData, LaporanMechanicalDataPIC, LemburMechanicalDataPIC, Project, ProjectIssue, LemburDataPIC, LaporanUtility, LaporanPekerjaan, DetailPekerjaan
+from dailyactivity_app.models import Shift, Location, Category, Status, Machinemechanical, Machineelectrical, Machineutility, MechanicalData, ElectricalData, UtilityData, PICMechanical, PICElectrical, PICUtility, TabelMain, MechanicalData2, PICMechanical2, UtilityData2, PICUtility2, ItData, PICIt, LaporanData, LaporanDataPIC, PICLaporan, PICLembur, LaporanMechanicalData, PICLaporanMechanical, PICLemburMechanical, ScheduleMechanicalData, LaporanMechanicalDataPIC, LemburMechanicalDataPIC, Project, ProjectIssue, LemburDataPIC, LaporanUtility, LaporanPekerjaan, DetailPekerjaan, TabelLine, TabelMesin, TabelPekerjaan
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from dailyactivity_app.forms import MechanicalDataForm, ElectricalDataForm, UtilityDataForm, PICMechanicalForm, PICElectricalForm, PICUtilityForm, MechanicalData2Form, PICMechanical2Form, UtilityData2Form, PICUtility2Form, ItDataForm, PICItForm, LaporanDataForm, PICLaporanForm, PICLemburForm, LaporanMechanicalDataForm, PICLaporanMechanicalForm, PICLemburMechanicalForm, ScheduleMechanicalDataForm, IssueForm
@@ -7074,19 +7074,179 @@ def delete_schedule(request, id):
     schedule.delete()
     return redirect('dailyactivity_app:data_schedule', tanggal=schedule.tanggal)  # Redirect kembali ke halaman yang sesuai
 
+# @login_required
+# def it_project(request):
+#     if request.method == 'POST':
+#         # Ambil data dari form
+#         project_name = request.POST.get('project_name')
+#         pic_project = request.POST.get('pic_project')
+#         department = request.POST.get('department')
+#         start_date = request.POST.get('start_date')
+#         finish_date = request.POST.get('finish_date')
+
+#         if not all([project_name, pic_project, department, start_date, finish_date]):
+#             messages.error(request, "Semua field wajib diisi.")
+#             return render(request, 'dailyactivity_app/it_project.html')
+
+#         # Simpan data proyek
+#         try:
+#             project = Project.objects.create(
+#                 project_name=project_name,
+#                 pic_project=pic_project,
+#                 department=department,
+#                 start_date=start_date,
+#                 finish_date=finish_date
+#             )
+#         except Exception as e:
+#             messages.error(request, f"Terjadi kesalahan saat menyimpan proyek: {str(e)}")
+#             return render(request, 'dailyactivity_app/it_project.html')
+
+#         # Menyimpan setiap issue terkait proyek
+#         issues_count = len([key for key in request.POST.keys() if key.startswith('issue_')])
+#         for i in range(1, issues_count + 1):
+#             issue = request.POST.get(f'issue_{i}', '').strip()
+#             if not issue:
+#                 continue  # Lewati issue jika tidak diisi
+
+#             pic = request.POST.get(f'issue_pic_{i}', '').strip() or None
+#             due_date = request.POST.get(f'issue_due_{i}', '').strip() or None
+#             status = request.POST.get(f'issue_status_{i}', 'Pending').strip()
+#             remark = request.POST.get(f'issue_remark_{i}', '').strip() or None
+
+#             try:
+#                 ProjectIssue.objects.create(
+#                     project=project,
+#                     issue=issue,
+#                     pic=pic,
+#                     due_date=due_date,
+#                     status=status,
+#                     remark=remark
+#                 )
+#             except Exception as e:
+#                 messages.error(request, f"Terjadi kesalahan saat menyimpan issue {i}: {str(e)}")
+
+#         # Berikan feedback sukses
+#         messages.success(request, "Proyek dan issue berhasil disimpan.")
+#         return render(request, 'dailyactivity_app/it_project.html', {'project': project})
+
+#     # Jika GET, tampilkan halaman kosong
+#     return render(request, 'dailyactivity_app/it_project.html')
+
+# Update view it_project buat handle field baru dengan explicit database
+
+logger = logging.getLogger('dailyactivity_app')
+
+def get_active_status_value(table_name):
+    """
+    Deteksi otomatis nilai status yang tepat untuk tabel
+    """
+    try:
+        connection = connections['DB_Maintenance']
+        with connection.cursor() as cursor:
+            # Cari status dengan record terbanyak (kemungkinan status aktif)
+            cursor.execute(f"""
+                SELECT TOP 1 status, COUNT(*) as count
+                FROM {table_name}
+                WHERE status IS NOT NULL AND status != ''
+                GROUP BY status
+                ORDER BY count DESC
+            """)
+            result = cursor.fetchone()
+            
+            if result:
+                status_value = result[0]
+                logger.info(f"Auto-detected active status for {table_name}: '{status_value}' ({result[1]} records)")
+                return status_value
+            else:
+                logger.warning(f"No status found for {table_name}, using None")
+                return None
+                
+    except Exception as e:
+        logger.error(f"Error detecting status for {table_name}: {str(e)}")
+        return '1'  # fallback
+    
 @login_required
 def it_project(request):
+    try:
+        # Test koneksi maintenance database dulu
+        if not test_maintenance_db_connection():
+            messages.error(request, "Koneksi ke database maintenance bermasalah. Hubungi IT support!")
+            context = {
+                'lines': [],
+                'pekerjaan_list': [],
+                'db_error': True
+            }
+            return render(request, 'dailyactivity_app/it_project.html', context)
+        
+        # Ambil data lines dengan DISTINCT dan status A
+        connection = connections['DB_Maintenance']
+        with connection.cursor() as cursor:
+            # Query distinct lines dengan status A
+            cursor.execute("""
+                SELECT DISTINCT id_line, line, keterangan 
+                FROM tabel_line 
+                WHERE status = 'A' AND line IS NOT NULL AND line != ''
+                ORDER BY line
+            """)
+            line_data = cursor.fetchall()
+            
+            # Convert ke format yang bisa dipakai template
+            lines = []
+            for row in line_data:
+                lines.append({
+                    'id_line': row[0],
+                    'line': row[1],
+                    'keterangan': row[2] or ''
+                })
+        
+        # Ambil data pekerjaan dengan status A
+        pekerjaan_list = TabelPekerjaan.objects.using('DB_Maintenance').filter(
+            status='A'
+        ).order_by('pekerjaan')
+        
+        logger.info(f"Loaded {len(lines)} distinct lines and {pekerjaan_list.count()} pekerjaan with status='A'")
+        
+        # Debug log
+        if len(lines) > 0:
+            logger.debug(f"Sample line: {lines[0]}")
+        if pekerjaan_list.exists():
+            sample_pekerjaan = pekerjaan_list.first()
+            logger.debug(f"Sample pekerjaan: ID={sample_pekerjaan.id_pekerjaan}, Name='{sample_pekerjaan.pekerjaan}'")
+        
+    except Exception as e:
+        logger.error(f"Error loading dropdown data: {str(e)}")
+        messages.error(request, f"Error mengambil data dropdown: {str(e)}")
+        context = {
+            'lines': [],
+            'pekerjaan_list': [],
+            'db_error': True
+        }
+        return render(request, 'dailyactivity_app/it_project.html', context)
+    
     if request.method == 'POST':
-        # Ambil data dari form
+        # Handle POST request
         project_name = request.POST.get('project_name')
         pic_project = request.POST.get('pic_project')
         department = request.POST.get('department')
         start_date = request.POST.get('start_date')
         finish_date = request.POST.get('finish_date')
+        
+        # Field baru
+        line = request.POST.get('line')
+        mesin = request.POST.get('mesin')
+        nomor_mesin = request.POST.get('nomor_mesin')
+        waktu_pengerjaan = request.POST.get('waktu_pengerjaan')
+        jenis_pekerjaan = request.POST.get('jenis_pekerjaan')
 
-        if not all([project_name, pic_project, department, start_date, finish_date]):
-            messages.error(request, "Semua field wajib diisi.")
-            return render(request, 'dailyactivity_app/it_project.html')
+        # Validasi
+        required_fields = [project_name, pic_project, department, start_date, finish_date]
+        if not all(required_fields):
+            messages.error(request, "Field wajib harus diisi: Nama Project, PIC, Department, Start Date, Finish Date!")
+            context = {
+                'lines': lines,
+                'pekerjaan_list': pekerjaan_list
+            }
+            return render(request, 'dailyactivity_app/it_project.html', context)
 
         # Simpan data proyek
         try:
@@ -7095,42 +7255,66 @@ def it_project(request):
                 pic_project=pic_project,
                 department=department,
                 start_date=start_date,
-                finish_date=finish_date
+                finish_date=finish_date,
+                line=line,
+                mesin=mesin,
+                nomor_mesin=nomor_mesin,
+                waktu_pengerjaan=waktu_pengerjaan,
+                jenis_pekerjaan=jenis_pekerjaan
             )
+            logger.info(f"Project created successfully: {project.project_name}")
         except Exception as e:
+            logger.error(f"Error creating project: {str(e)}")
             messages.error(request, f"Terjadi kesalahan saat menyimpan proyek: {str(e)}")
-            return render(request, 'dailyactivity_app/it_project.html')
+            context = {
+                'lines': lines,
+                'pekerjaan_list': pekerjaan_list
+            }
+            return render(request, 'dailyactivity_app/it_project.html', context)
 
-        # Menyimpan setiap issue terkait proyek
+        # Handle issues
         issues_count = len([key for key in request.POST.keys() if key.startswith('issue_')])
         for i in range(1, issues_count + 1):
             issue = request.POST.get(f'issue_{i}', '').strip()
             if not issue:
-                continue  # Lewati issue jika tidak diisi
+                continue
 
             pic = request.POST.get(f'issue_pic_{i}', '').strip() or None
             due_date = request.POST.get(f'issue_due_{i}', '').strip() or None
-            status = request.POST.get(f'issue_status_{i}', 'Pending').strip()
+            status = request.POST.get(f'issue_status_{i}', '0').strip()
             remark = request.POST.get(f'issue_remark_{i}', '').strip() or None
+            tindakan = request.POST.get(f'issue_tindakan_{i}', '').strip() or None
+            perbaikan = request.POST.get(f'issue_perbaikan_{i}', '').strip() or None
 
             try:
                 ProjectIssue.objects.create(
                     project=project,
                     issue=issue,
+                    tindakan=tindakan,
+                    perbaikan=perbaikan,
                     pic=pic,
                     due_date=due_date,
                     status=status,
                     remark=remark
                 )
             except Exception as e:
+                logger.error(f"Error creating issue {i}: {str(e)}")
                 messages.error(request, f"Terjadi kesalahan saat menyimpan issue {i}: {str(e)}")
 
-        # Berikan feedback sukses
-        messages.success(request, "Proyek dan issue berhasil disimpan.")
-        return render(request, 'dailyactivity_app/it_project.html', {'project': project})
+        messages.success(request, "Proyek dan issue berhasil disimpan mantap!")
+        return render(request, 'dailyactivity_app/it_project.html', {
+            'project': project,
+            'lines': lines,
+            'pekerjaan_list': pekerjaan_list
+        })
 
-    # Jika GET, tampilkan halaman kosong
-    return render(request, 'dailyactivity_app/it_project.html')
+    # Jika GET, tampilkan halaman kosong dengan data dropdown
+    context = {
+        'lines': lines,
+        'pekerjaan_list': pekerjaan_list
+    }
+    return render(request, 'dailyactivity_app/it_project.html', context)
+
 
 @login_required
 def it_tanggal_project(request):
@@ -7192,7 +7376,56 @@ def it_data_project(request, date=None):
     }
     return render(request, 'dailyactivity_app/it_data_project.html', context)
 
-@login_required
+# @login_required
+# def it_project_detail(request, project_id):
+#     project = get_object_or_404(Project, id=project_id)
+#     issues = project.issues.all()
+
+#     if request.method == 'POST':
+#         issue_keys = [
+#             key for key in request.POST
+#             if key.startswith('issue_') and not key.endswith(('pic', 'due', 'status', 'remark'))
+#         ]
+
+#         for key in issue_keys:
+#             issue_index = key.split('_')[1]
+#             issue_text = request.POST.get(key, "").strip()
+#             if not issue_text:
+#                 continue  # Lewati jika issue kosong
+
+#             # Ambil input terkait berdasarkan index
+#             pic_text = request.POST.get(f'issue_pic_{issue_index}', "").strip() or None
+#             due_date = request.POST.get(f'issue_due_{issue_index}', "").strip()
+#             # status = request.POST.get(f'issue_status_{issue_index}', "Pending").strip()
+#             status = request.POST.get(f'issue_status_{issue_index}', "0") + "%"
+#             remark = request.POST.get(f'issue_remark_{issue_index}', "").strip() or None
+#             # Format tanggal jika kosong
+#             if not due_date:
+#                 due_date = None
+#             try:
+#                 ProjectIssue.objects.create(
+#                     project=project,
+#                     issue=issue_text,
+#                     pic=pic_text,
+#                     due_date=due_date,
+#                     status=status,
+#                     remark=remark,
+#                 )
+#             except Exception as e:
+#                 # Tambahkan logging atau flash message untuk menangani error
+#                 print(f"Error saat menyimpan issue: {e}")
+#                 # Anda dapat menggunakan messages framework untuk menampilkan error di UI
+#         # Redirect untuk mencegah form resubmission
+#         return redirect('dailyactivity_app:it_project_detail', project_id=project_id)
+
+#     context = {
+#         'project': project,
+#         'issues': issues,
+#     }
+#     return render(request, 'dailyactivity_app/it_project_detail.html', context)
+
+# Update view it_project_detail buat handle field baru
+@login_required  
 def it_project_detail(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     issues = project.issues.all()
@@ -7200,7 +7433,7 @@ def it_project_detail(request, project_id):
     if request.method == 'POST':
         issue_keys = [
             key for key in request.POST
-            if key.startswith('issue_') and not key.endswith(('pic', 'due', 'status', 'remark'))
+            if key.startswith('issue_') and not key.endswith(('pic', 'due', 'status', 'remark', 'tindakan', 'perbaikan'))
         ]
 
         for key in issue_keys:
@@ -7212,16 +7445,23 @@ def it_project_detail(request, project_id):
             # Ambil input terkait berdasarkan index
             pic_text = request.POST.get(f'issue_pic_{issue_index}', "").strip() or None
             due_date = request.POST.get(f'issue_due_{issue_index}', "").strip()
-            # status = request.POST.get(f'issue_status_{issue_index}', "Pending").strip()
-            status = request.POST.get(f'issue_status_{issue_index}', "0") + "%"
+            status = request.POST.get(f'issue_status_{issue_index}', "0") 
             remark = request.POST.get(f'issue_remark_{issue_index}', "").strip() or None
+            
+            # Field baru
+            tindakan = request.POST.get(f'issue_tindakan_{issue_index}', "").strip() or None
+            perbaikan = request.POST.get(f'issue_perbaikan_{issue_index}', "").strip() or None
+            
             # Format tanggal jika kosong
             if not due_date:
                 due_date = None
+                
             try:
                 ProjectIssue.objects.create(
                     project=project,
                     issue=issue_text,
+                    tindakan=tindakan,
+                    perbaikan=perbaikan,
                     pic=pic_text,
                     due_date=due_date,
                     status=status,
@@ -7230,7 +7470,7 @@ def it_project_detail(request, project_id):
             except Exception as e:
                 # Tambahkan logging atau flash message untuk menangani error
                 print(f"Error saat menyimpan issue: {e}")
-                # Anda dapat menggunakan messages framework untuk menampilkan error di UI
+                
         # Redirect untuk mencegah form resubmission
         return redirect('dailyactivity_app:it_project_detail', project_id=project_id)
 
@@ -7294,6 +7534,93 @@ def submit_issues(request):
 
     return render(request, 'dailyactivity_app/it_project.html')
 
+# @login_required
+# def export_excel(request, project_id):
+#     # Ambil project berdasarkan ID
+#     project = get_object_or_404(Project, id=project_id)
+
+#     # Buat workbook dan sheet
+#     workbook = openpyxl.Workbook()
+#     sheet = workbook.active
+#     sheet.title = 'Monitoring IT Project'
+
+#     # Set font dan alignment untuk judul
+#     title_font = Font(bold=True, size=14)
+#     bold_font = Font(bold=True)
+#     alignment_center = Alignment(horizontal="center", vertical="center")
+#     thin_border = Border(
+#         left=Side(style="thin"),
+#         right=Side(style="thin"),
+#         top=Side(style="thin"),
+#         bottom=Side(style="thin")
+#     )
+#     # Tambahkan judul
+#     sheet.merge_cells("A1:F1")
+#     sheet["A1"] = f"Monitoring IT Project - {project.project_name}"
+#     sheet["A1"].font = title_font
+#     sheet["A1"].alignment = alignment_center
+
+#     # Detail proyek
+#     details = [
+#         ("Name of project", project.project_name),
+#         ("PIC Project", project.pic_project),
+#         ("Dept", project.department),
+#         ("Start project", project.start_date.strftime('%b-%y') if project.start_date else "N/A"),
+#         ("Finish Project", project.finish_date.strftime('%b-%y') if project.finish_date else "N/A"),
+#     ]
+#     # Tambahkan detail proyek ke sheet
+#     row = 3
+#     for detail in details:
+#         sheet[f"A{row}"] = detail[0]
+#         sheet[f"B{row}"] = f": {detail[1]}" 
+#         sheet[f"A{row}"].font = bold_font
+#         row += 1
+
+#     # Tambahkan header tabel
+#     headers = ["NO", "Issue", "PIC", "Due Date", "Status", "Remark"]
+#     header_row = row + 1
+#     for col_num, header in enumerate(headers, start=1):
+#         cell = sheet.cell(row=header_row, column=col_num, value=header)
+#         cell.font = bold_font
+#         cell.alignment = alignment_center
+#         cell.border = thin_border
+
+#     # Tambahkan data tabel
+#     data_start_row = header_row + 1
+#     current_row = data_start_row
+#     row_num = 1
+
+#     # Ambil issues untuk project spesifik
+#     issues = ProjectIssue.objects.filter(project=project)
+#     for issue in issues:
+#         sheet.cell(row=current_row, column=1, value=row_num).alignment = alignment_center
+#         sheet.cell(row=current_row, column=1).border = thin_border
+#         sheet.cell(row=current_row, column=2, value=issue.issue).border = thin_border
+#         sheet.cell(row=current_row, column=3, value=issue.pic).border = thin_border
+#         sheet.cell(row=current_row, column=4, value=issue.due_date.strftime('%Y-%m-%d') if issue.due_date else "").border = thin_border
+#         sheet.cell(row=current_row, column=5, value=issue.status).border = thin_border
+#         sheet.cell(row=current_row, column=6, value=issue.remark).border = thin_border
+
+#         current_row += 1
+#         row_num += 1
+
+#     # Atur lebar kolom
+#     column_widths = [5, 50, 15, 15, 15, 20]
+#     for i, width in enumerate(column_widths, start=1):
+#         sheet.column_dimensions[openpyxl.utils.get_column_letter(i)].width = width
+
+#     # Konfigurasi response
+#     response = HttpResponse(
+#         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+#     )
+#     response['Content-Disposition'] = f'attachment; filename="Monitoring_IT_Project_{project.project_name}.xlsx"'
+
+#     # Simpan workbook ke response
+#     workbook.save(response)
+#     return response
+
+# dailyactivity_app/views.py - Update fungsi export_excel
+
 @login_required
 def export_excel(request, project_id):
     # Ambil project berdasarkan ID
@@ -7314,20 +7641,27 @@ def export_excel(request, project_id):
         top=Side(style="thin"),
         bottom=Side(style="thin")
     )
+    
     # Tambahkan judul
-    sheet.merge_cells("A1:F1")
+    sheet.merge_cells("A1:J1")
     sheet["A1"] = f"Monitoring IT Project - {project.project_name}"
     sheet["A1"].font = title_font
     sheet["A1"].alignment = alignment_center
 
-    # Detail proyek
+    # Detail proyek - update dengan field baru
     details = [
         ("Name of project", project.project_name),
         ("PIC Project", project.pic_project),
         ("Dept", project.department),
         ("Start project", project.start_date.strftime('%b-%y') if project.start_date else "N/A"),
         ("Finish Project", project.finish_date.strftime('%b-%y') if project.finish_date else "N/A"),
+        ("Line", project.line or "N/A"),
+        ("Mesin", project.mesin or "N/A"),
+        ("Nomor Mesin", project.nomor_mesin or "N/A"),
+        ("Waktu Pengerjaan", project.waktu_pengerjaan or "N/A"),
+        ("Jenis Pekerjaan", project.jenis_pekerjaan or "N/A"),
     ]
+    
     # Tambahkan detail proyek ke sheet
     row = 3
     for detail in details:
@@ -7336,8 +7670,8 @@ def export_excel(request, project_id):
         sheet[f"A{row}"].font = bold_font
         row += 1
 
-    # Tambahkan header tabel
-    headers = ["NO", "Issue", "PIC", "Due Date", "Status", "Remark"]
+    # Tambahkan header tabel - update dengan kolom baru
+    headers = ["NO", "Issue", "Tindakan", "Perbaikan", "PIC", "Due Date", "Status", "Remark"]
     header_row = row + 1
     for col_num, header in enumerate(headers, start=1):
         cell = sheet.cell(row=header_row, column=col_num, value=header)
@@ -7345,7 +7679,7 @@ def export_excel(request, project_id):
         cell.alignment = alignment_center
         cell.border = thin_border
 
-    # Tambahkan data tabel
+    # Tambahkan data tabel - update dengan field baru
     data_start_row = header_row + 1
     current_row = data_start_row
     row_num = 1
@@ -7356,16 +7690,18 @@ def export_excel(request, project_id):
         sheet.cell(row=current_row, column=1, value=row_num).alignment = alignment_center
         sheet.cell(row=current_row, column=1).border = thin_border
         sheet.cell(row=current_row, column=2, value=issue.issue).border = thin_border
-        sheet.cell(row=current_row, column=3, value=issue.pic).border = thin_border
-        sheet.cell(row=current_row, column=4, value=issue.due_date.strftime('%Y-%m-%d') if issue.due_date else "").border = thin_border
-        sheet.cell(row=current_row, column=5, value=issue.status).border = thin_border
-        sheet.cell(row=current_row, column=6, value=issue.remark).border = thin_border
+        sheet.cell(row=current_row, column=3, value=issue.tindakan or "Belum ada tindakan").border = thin_border
+        sheet.cell(row=current_row, column=4, value=issue.perbaikan or "Belum ada perbaikan").border = thin_border
+        sheet.cell(row=current_row, column=5, value=issue.pic).border = thin_border
+        sheet.cell(row=current_row, column=6, value=issue.due_date.strftime('%Y-%m-%d') if issue.due_date else "").border = thin_border
+        sheet.cell(row=current_row, column=7, value=f"{issue.status}%").border = thin_border
+        sheet.cell(row=current_row, column=8, value=issue.remark or "").border = thin_border
 
         current_row += 1
         row_num += 1
 
-    # Atur lebar kolom
-    column_widths = [5, 50, 15, 15, 15, 20]
+    # Atur lebar kolom - update untuk kolom baru
+    column_widths = [5, 30, 25, 25, 15, 15, 10, 25]
     for i, width in enumerate(column_widths, start=1):
         sheet.column_dimensions[openpyxl.utils.get_column_letter(i)].width = width
 
@@ -7507,3 +7843,179 @@ def delete_project(request, project_id):
         project.delete()
         return JsonResponse({'success': True, 'message': 'Project deleted successfully'})
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
+
+def get_lines_with_dynamic_status():
+    """
+    Ambil data lines dengan deteksi status otomatis
+    """
+    try:
+        # Coba dulu dengan status = '1'
+        lines = TabelLine.objects.using('DB_Maintenance').filter(status='1')
+        if lines.exists():
+            logger.info(f"Found {lines.count()} lines with status='1'")
+            return lines.order_by('line')
+        
+        # Kalau kosong, coba deteksi status yang tepat
+        active_status = get_active_status_value('tabel_line')
+        if active_status:
+            lines = TabelLine.objects.using('DB_Maintenance').filter(status=active_status)
+            if lines.exists():
+                logger.info(f"Found {lines.count()} lines with status='{active_status}'")
+                return lines.order_by('line')
+        
+        # Kalau masih kosong, ambil semua data
+        all_lines = TabelLine.objects.using('DB_Maintenance').all()
+        logger.warning(f"Using all lines data: {all_lines.count()} records")
+        return all_lines.order_by('line')
+        
+    except Exception as e:
+        logger.error(f"Error getting lines: {str(e)}")
+        return TabelLine.objects.none()
+
+def get_pekerjaan_with_dynamic_status():
+    """
+    Ambil data pekerjaan dengan deteksi status otomatis
+    """
+    try:
+        # Coba dulu dengan status = '1'
+        pekerjaan = TabelPekerjaan.objects.using('DB_Maintenance').filter(status='1')
+        if pekerjaan.exists():
+            logger.info(f"Found {pekerjaan.count()} pekerjaan with status='1'")
+            return pekerjaan.order_by('pekerjaan')
+        
+        # Kalau kosong, coba deteksi status yang tepat
+        active_status = get_active_status_value('tabel_pekerjaan')
+        if active_status:
+            pekerjaan = TabelPekerjaan.objects.using('DB_Maintenance').filter(status=active_status)
+            if pekerjaan.exists():
+                logger.info(f"Found {pekerjaan.count()} pekerjaan with status='{active_status}'")
+                return pekerjaan.order_by('pekerjaan')
+        
+        # Kalau masih kosong, ambil semua data
+        all_pekerjaan = TabelPekerjaan.objects.using('DB_Maintenance').all()
+        logger.warning(f"Using all pekerjaan data: {all_pekerjaan.count()} records")
+        return all_pekerjaan.order_by('pekerjaan')
+        
+    except Exception as e:
+        logger.error(f"Error getting pekerjaan: {str(e)}")
+        return TabelPekerjaan.objects.none()
+
+def get_mesin_with_dynamic_status(line_id):
+    """
+    Ambil data mesin dengan deteksi status otomatis
+    """
+    try:
+        # Coba dulu dengan status = '1'
+        mesin = TabelMesin.objects.using('DB_Maintenance').filter(
+            id_line=str(line_id), 
+            status='1'
+        )
+        if mesin.exists():
+            return mesin
+        
+        # Kalau kosong, coba deteksi status yang tepat
+        active_status = get_active_status_value('tabel_mesin')
+        if active_status:
+            mesin = TabelMesin.objects.using('DB_Maintenance').filter(
+                id_line=str(line_id),
+                status=active_status
+            )
+            if mesin.exists():
+                return mesin
+        
+        # Kalau masih kosong, ambil berdasarkan line saja (tanpa filter status)
+        all_mesin = TabelMesin.objects.using('DB_Maintenance').filter(id_line=str(line_id))
+        logger.warning(f"Using all mesin data for line {line_id}: {all_mesin.count()} records")
+        return all_mesin
+        
+    except Exception as e:
+        logger.error(f"Error getting mesin for line {line_id}: {str(e)}")
+        return TabelMesin.objects.none()
+
+def test_maintenance_db_connection():
+    """Test koneksi ke database DB_Maintenance"""
+    try:
+        connection = connections['DB_Maintenance']
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        logger.info("DB_Maintenance connection successful")
+        return True
+    except Exception as e:
+        logger.error(f"DB_Maintenance connection failed: {str(e)}")
+        return False
+
+# AJAX view buat ambil mesin - FIXED untuk status A dan error handling
+def get_mesin_by_line(request, line_id):
+    """Ajax view untuk mengambil mesin berdasarkan line"""
+    try:
+        if not test_maintenance_db_connection():
+            return JsonResponse({'error': 'Koneksi database maintenance gagal!'}, status=500)
+        
+        logger.info(f"Getting mesin for line_id: {line_id}")
+        
+        # Coba dengan status A dulu
+        mesin_list = TabelMesin.objects.using('DB_Maintenance').filter(
+            id_line=str(line_id),
+            status='A'
+        ).values('id_mesin', 'mesin', 'nomer')
+        
+        # Fallback ke status 1 kalau ga ada
+        if not mesin_list.exists():
+            logger.warning(f"No mesin with status='A', trying status='1' for line {line_id}")
+            mesin_list = TabelMesin.objects.using('DB_Maintenance').filter(
+                id_line=str(line_id),
+                status='1'
+            ).values('id_mesin', 'mesin', 'nomer')
+        
+        # Fallback tanpa status filter kalau masih kosong
+        if not mesin_list.exists():
+            logger.warning(f"No mesin with status filter, trying all for line {line_id}")
+            mesin_list = TabelMesin.objects.using('DB_Maintenance').filter(
+                id_line=str(line_id)
+            ).values('id_mesin', 'mesin', 'nomer')
+        
+        mesin_data = []
+        for mesin in mesin_list:
+            mesin_data.append({
+                'id': int(mesin['id_mesin']) if mesin['id_mesin'] else 0,
+                'name': mesin['mesin'] or 'Tidak ada nama',
+                'nomer': mesin['nomer'] or ''
+            })
+        
+        logger.info(f"Found {len(mesin_data)} mesin for line_id {line_id}")
+        return JsonResponse({'mesin': mesin_data})
+    
+    except Exception as e:
+        logger.error(f"Error in get_mesin_by_line: {str(e)}")
+        return JsonResponse({'error': f'Error mengambil data mesin: {str(e)}'}, status=500)
+
+def get_nomor_by_mesin(request, mesin_id):
+    """Ajax view buat ngambil nomor berdasarkan mesin yang dipilih"""
+    try:
+        if not test_maintenance_db_connection():
+            return JsonResponse({'error': 'Koneksi ke database maintenance gagal bro!'}, status=500)
+        
+        # Query dengan status A dulu
+        try:
+            mesin = TabelMesin.objects.using('DB_Maintenance').get(
+                id_mesin=mesin_id,
+                status='A'
+            )
+        except TabelMesin.DoesNotExist:
+            # Kalau ga ada dengan status A, coba tanpa filter status
+            try:
+                mesin = TabelMesin.objects.using('DB_Maintenance').get(id_mesin=mesin_id)
+                logger.warning(f"Found mesin {mesin_id} without status='A'")
+            except TabelMesin.DoesNotExist:
+                return JsonResponse({'error': 'Mesin ga ditemukan bro!'}, status=404)
+        
+        return JsonResponse({
+            'success': True,
+            'nomor': mesin.nomer or '',
+            'mesin_name': mesin.mesin or ''
+        })
+    
+    except Exception as e:
+        logger.error(f"Error in get_nomor_by_mesin: {str(e)}")
+        return JsonResponse({'error': f'Error mengambil nomor mesin: {str(e)}'}, status=500)
+

@@ -1,107 +1,239 @@
 {% extends 'starter_kit/base.html' %}
 {% load static %}
 {% load sass_tags %}
+
 {% block css %}
 <!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/prism.scss' %}">
+<!-- Bootstrap Select CSS for searchable dropdowns -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
+<!-- Custom CSS untuk dropdown -->
+<style>
+.bootstrap-select .dropdown-toggle {
+    height: calc(1.5em + 0.75rem + 2px);
+    border: 1px solid #ced4da;
+}
+.bootstrap-select .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+}
+.required-field {
+    color: #dc3545;
+    font-weight: bold;
+}
+.form-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #007bff;
+}
+.loading-spinner {
+    display: none;
+    margin-left: 10px;
+}
+</style>
 <!-- Plugins css Ends-->
 {% endblock css %}
+
 {% block content %}
 <div class="page-body">
   {% include 'starter_kit/layout/breadcrumb.html' %}
   <div class="container">
     <div class="card">
       <div class="card-header">
-        <h3>IT Project Managementt</h3>
+        <h3><i class="fa fa-project-diagram"></i> IT Project Management</h3>
+        <small class="text-muted">Kelola project IT dengan fitur tracking issues yang lengkap</small>
       </div>
       <div class="card-body">
        <form method="POST">
           {% csrf_token %} 
-          {% comment %} <form method="POST" action="{% url 'dailyactivity_app:submit_issues' %}">
-            {% csrf_token %}
-            <input type="hidden" name="project_id" value="{{ project.id }}"> {% endcomment %}
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="projectName">Nama Project</label>
-              <input type="text" class="form-control" id="projectName" name="project_name" required>
+          
+          <!-- Section 1: Informasi Project -->
+          <div class="form-section">
+            <h5><i class="fa fa-info-circle"></i> Informasi Project</h5>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="projectName">Nama Project <span class="required-field">*</span></label>
+                <input type="text" class="form-control" id="projectName" name="project_name" 
+                       placeholder="Masukkan nama project..." required>
+              </div>
+              <div class="col-md-6">
+                <label for="picProject">PIC Project <span class="required-field">*</span></label>
+                <input type="text" class="form-control" id="picProject" name="pic_project" 
+                       placeholder="Nama PIC yang bertanggung jawab..." required>
+              </div>
             </div>
-            <div class="col-md-6">
-              <label for="picProject">PIC Project</label>
-              <input type="text" class="form-control" id="picProject" name="pic_project" required>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="department">Department <span class="required-field">*</span></label>
+                <input type="text" class="form-control" id="department" name="department" 
+                       placeholder="Nama department..." required>
+              </div>
+              <div class="col-md-6">
+                <label for="waktuPengerjaan">Waktu Pengerjaan</label>
+                <input type="text" class="form-control" id="waktuPengerjaan" name="waktu_pengerjaan" 
+                       placeholder="Contoh: 2 jam, 1 hari, 1 minggu...">
+                <small class="form-text text-muted">Estimasi waktu pengerjaan (opsional)</small>
+              </div>
             </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="department">Department</label>
-              <input type="text" class="form-control" id="department" name="department" required>
-            </div>
-            <div class="col-md-3">
-              <label for="dateStart">Start Date</label>
-              <input type="date" class="form-control" id="dateStart" name="start_date" required>
-            </div>
-            <div class="col-md-3">
-              <label for="dateFinish">Finish Date</label>
-              <input type="date" class="form-control" id="dateFinish" name="finish_date" required>
+
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label for="dateStart">Start Date <span class="required-field">*</span></label>
+                <input type="date" class="form-control" id="dateStart" name="start_date" required>
+              </div>
+              <div class="col-md-3">
+                <label for="dateFinish">Finish Date <span class="required-field">*</span></label>
+                <input type="date" class="form-control" id="dateFinish" name="finish_date" required>
+              </div>
+              <div class="col-md-6">
+                <label for="jenisPekerjaan">Jenis Pekerjaan <span class="required-field">*</span></label>
+                <select class="form-control selectpicker" id="jenisPekerjaan" name="jenis_pekerjaan" 
+                        data-live-search="true" data-size="7" title="-- Cari dan pilih jenis pekerjaan --" required>
+                  {% for pekerjaan in pekerjaan_list %}
+                  <option value="{{ pekerjaan.pekerjaan }}" data-subtext="ID: {{ pekerjaan.id_pekerjaan }}">
+                    {{ pekerjaan.pekerjaan }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
           </div>
 
-          <h4>Issues List</h4>
-          <table class="table table-bordered" id="issuesTable">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Issue</th>
-                <th>PIC</th>
-                <th>Due Date</th>
-                <th>Status</th>
-                <th>Remark</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td><input type="text" class="form-control" name="issue_1"></td>
-                <td><input type="text" class="form-control" name="issue_pic_1"></td>
-                <td><input type="date" class="form-control" name="issue_due_1"></td>
-                <td>
-                  <select class="form-control" name="issue_status_1">
-                    <option value="0">0%</option>
-                    <option value="10">10%</option>
-                    <option value="20">20%</option>
-                    <option value="30">30%</option>
-                    <option value="40">40%</option>
-                    <option value="50">50%</option>
-                    <option value="60">60%</option>
-                    <option value="70">70%</option>
-                    <option value="80">80%</option>
-                    <option value="90">90%</option>
-                    <option value="100">100%</option>
+          <!-- Section 2: Line, Mesin, Nomor -->
+          <div class="form-section">
+            <h5><i class="fa fa-cogs"></i> Informasi Line & Mesin</h5>
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label for="line">Line <span class="required-field">*</span></label>
+                <select class="form-control selectpicker" id="line" name="line" 
+                        data-live-search="true" data-size="7" title="-- Cari dan pilih line --" required>
+                  {% for line in lines %}
+                  <option value="{{ line.line }}" data-id="{{ line.id_line }}" data-subtext="Status: A">
+                    {{ line.line }}
+                    {% if line.keterangan %} - {{ line.keterangan }}{% endif %}
+                  </option>
+                  {% endfor %}
                 </select>
-                </td>
-                <td><input type="text" class="form-control" name="issue_remark_1" required></td>
-                <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
-              </tr>
-            </tbody>
-          </table>
-          <button type="button" id="addRow" class="btn btn-primary">Add Row</button>
-          <button type="submit" class="btn btn-success">Submit</button>
+                <small class="form-text text-muted">Pilih line produksi</small>
+              </div>
+              <div class="col-md-4">
+                <label for="mesin">
+                  Mesin 
+                  <span class="loading-spinner" id="mesinLoading">
+                    <i class="fa fa-spinner fa-spin"></i> Loading...
+                  </span>
+                </label>
+                <select class="form-control selectpicker" id="mesin" name="mesin" 
+                        data-live-search="true" data-size="7" title="-- Pilih line dulu --" disabled>
+                  <option value="">-- Pilih Line Dulu --</option>
+                </select>
+                <small class="form-text text-muted">Mesin akan muncul setelah pilih line</small>
+              </div>
+              <div class="col-md-4">
+                <label for="nomorMesin">Nomor Mesin</label>
+                <input type="text" class="form-control" id="nomorMesin" name="nomor_mesin" readonly 
+                       placeholder="Otomatis terisi setelah pilih mesin">
+                <small class="form-text text-muted">Nomor akan terisi otomatis</small>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <!-- Section 3: Issues List -->
+          <div class="form-section">
+            <h5><i class="fa fa-tasks"></i> Issues List</h5>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover" id="issuesTable">
+                <thead class="thead-dark">
+                  <tr>
+                    <th style="width: 5%">No</th>
+                    <th style="width: 15%">Issue</th>
+                    <th style="width: 15%">Tindakan</th>
+                    <th style="width: 15%">Perbaikan</th>
+                    <th style="width: 10%">PIC</th>
+                    <th style="width: 10%">Due Date</th>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 15%">Remark</th>
+                    <th style="width: 5%">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-center font-weight-bold">1</td>
+                    <td><textarea class="form-control" name="issue_1" rows="2" placeholder="Deskripsikan masalah yang terjadi..." required></textarea></td>
+                    <td><textarea class="form-control" name="issue_tindakan_1" rows="2" placeholder="Tindakan yang telah diambil..."></textarea></td>
+                    <td><textarea class="form-control" name="issue_perbaikan_1" rows="2" placeholder="Cara perbaikan yang dilakukan..."></textarea></td>
+                    <td><input type="text" class="form-control" name="issue_pic_1" placeholder="Nama PIC" required></td>
+                    <td><input type="date" class="form-control" name="issue_due_1" required></td>
+                    <td>
+                      <select class="form-control" name="issue_status_1">
+                        <option value="0">0%</option>
+                        <option value="10">10%</option>
+                        <option value="20">20%</option>
+                        <option value="30">30%</option>
+                        <option value="40">40%</option>
+                        <option value="50">50%</option>
+                        <option value="60">60%</option>
+                        <option value="70">70%</option>
+                        <option value="80">80%</option>
+                        <option value="90">90%</option>
+                        <option value="100">100%</option>
+                      </select>
+                    </td>
+                    <td><textarea class="form-control" name="issue_remark_1" rows="2" placeholder="Catatan tambahan..." required></textarea></td>
+                    <td class="text-center">
+                      <button type="button" class="btn btn-danger btn-sm remove-row" title="Hapus baris ini">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-3">
+              <button type="button" id="addRow" class="btn btn-primary mr-2">
+                <i class="fa fa-plus"></i> Tambah Issue
+              </button>
+              <button type="submit" class="btn btn-success mr-2">
+                <i class="fa fa-save"></i> Simpan Project
+              </button>
+              <button type="reset" class="btn btn-secondary">
+                <i class="fa fa-undo"></i> Reset Form
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </div>
   </div>
 </div>
 {% endblock content %}
+
 {% block scriptcontent %}
 <!-- Plugins JS start-->
 <script src="{% static 'assets/js/prism/prism.min.js' %}"></script>
 <script src="{% static 'assets/js/clipboard/clipboard.min.js' %}"></script>
 <script src="{% static 'assets/js/custom-card/custom-card.js' %}"></script>
+<!-- Bootstrap Select JS for searchable dropdowns -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
 <!-- Plugins JS Ends-->
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const table = document.getElementById('issuesTable').getElementsByTagName('tbody')[0];
     const addRowButton = document.getElementById('addRow');
+    const lineSelect = document.getElementById('line');
+    const mesinSelect = document.getElementById('mesin');
+    const nomorMesinInput = document.getElementById('nomorMesin');
+    const mesinLoading = document.getElementById('mesinLoading');
+
+    // Initialize Bootstrap Select
+    $('.selectpicker').selectpicker();
 
     // Fungsi untuk memperbarui nomor urut dan nama elemen input
     function updateRowIndexes() {
@@ -110,7 +242,7 @@
             row.cells[0].textContent = index + 1;
 
             // Update nama atribut input dan select
-            const inputs = row.querySelectorAll('input, select');
+            const inputs = row.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
                 const nameParts = input.name.split('_');
                 nameParts[nameParts.length - 1] = index + 1; // Perbarui indeks akhir
@@ -119,16 +251,105 @@
         });
     }
 
-    // Menambahkan baris baru
+    // Event handler untuk perubahan line - FIXED!
+    $(lineSelect).on('changed.bs.select', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const lineId = selectedOption.getAttribute('data-id');
+        
+        console.log('Line changed, ID:', lineId); // Debug log
+        
+        // Reset mesin dan nomor
+        $(mesinSelect).empty();
+        $(mesinSelect).selectpicker('refresh');
+        $(mesinSelect).prop('disabled', true);
+        $(mesinSelect).selectpicker('refresh');
+        nomorMesinInput.value = '';
+        
+        // Show loading
+        mesinLoading.style.display = 'inline';
+        
+        if (lineId) {
+            // AJAX call untuk ambil mesin berdasarkan line
+            fetch(`/dailyactivity/ajax/get-mesin-by-line/${lineId}/`)
+                .then(response => {
+                    console.log('Response status:', response.status); // Debug log
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Response data:', data); // Debug log
+                    
+                    // Clear existing options
+                    $(mesinSelect).empty();
+                    $(mesinSelect).append('<option value="">-- Pilih Mesin --</option>');
+                    
+                    if (data.success && data.mesin && data.mesin.length > 0) {
+                        data.mesin.forEach(mesin => {
+                            const option = $('<option></option>')
+                                .attr('value', mesin.name)
+                                .attr('data-id', mesin.id)
+                                .attr('data-nomer', mesin.nomer)
+                                .text(`${mesin.name} - ${mesin.nomer}`);
+                            $(mesinSelect).append(option);
+                        });
+                        
+                        $(mesinSelect).prop('disabled', false);
+                        $(mesinSelect).selectpicker('refresh');
+                        
+                        // Show success message
+                        console.log(`Loaded ${data.mesin.length} mesin for line ${lineId}`);
+                    } else {
+                        $(mesinSelect).append('<option value="">-- Tidak ada mesin untuk line ini --</option>');
+                        $(mesinSelect).selectpicker('refresh');
+                        console.warn('No mesin found for line:', lineId);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading mesin:', error);
+                    $(mesinSelect).empty();
+                    $(mesinSelect).append('<option value="">-- Error loading mesin --</option>');
+                    $(mesinSelect).selectpicker('refresh');
+                    
+                    // Show user-friendly error
+                    alert('Gagal memuat data mesin. Silakan coba lagi atau hubungi IT support.');
+                })
+                .finally(() => {
+                    // Hide loading
+                    mesinLoading.style.display = 'none';
+                });
+        } else {
+            $(mesinSelect).append('<option value="">-- Pilih Line Dulu --</option>');
+            $(mesinSelect).selectpicker('refresh');
+            mesinLoading.style.display = 'none';
+        }
+    });
+
+    // Event handler untuk perubahan mesin
+    $(mesinSelect).on('changed.bs.select', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const nomer = selectedOption.getAttribute('data-nomer');
+        
+        if (nomer) {
+            nomorMesinInput.value = nomer;
+        } else {
+            nomorMesinInput.value = '';
+        }
+    });
+
+    // Menambahkan baris baru untuk issues
     addRowButton.addEventListener('click', function () {
         const rowCount = table.rows.length + 1;
         const newRow = table.insertRow();
 
         // Tambahkan sel ke baris baru
         newRow.innerHTML = `
-            <td>${rowCount}</td>
-            <td><input type="text" class="form-control" name="issue_${rowCount}" placeholder="Enter Issue" required></td>
-            <td><input type="text" class="form-control" name="issue_pic_${rowCount}" placeholder="Enter PIC" required></td>
+            <td class="text-center font-weight-bold">${rowCount}</td>
+            <td><textarea class="form-control" name="issue_${rowCount}" rows="2" placeholder="Deskripsikan masalah yang terjadi..." required></textarea></td>
+            <td><textarea class="form-control" name="issue_tindakan_${rowCount}" rows="2" placeholder="Tindakan yang telah diambil..."></textarea></td>
+            <td><textarea class="form-control" name="issue_perbaikan_${rowCount}" rows="2" placeholder="Cara perbaikan yang dilakukan..."></textarea></td>
+            <td><input type="text" class="form-control" name="issue_pic_${rowCount}" placeholder="Nama PIC" required></td>
             <td><input type="date" class="form-control" name="issue_due_${rowCount}" required></td>
             <td>
                 <select class="form-control" name="issue_status_${rowCount}">
@@ -145,73 +366,49 @@
                     <option value="100">100%</option>
                 </select>
             </td>
-            <td><input type="text" class="form-control" name="issue_remark_${rowCount}" placeholder="Enter Remark" required></td>
-            <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
+            <td><textarea class="form-control" name="issue_remark_${rowCount}" rows="2" placeholder="Catatan tambahan..." required></textarea></td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm remove-row" title="Hapus baris ini">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
         `;
     });
 
     // Menghapus baris
     table.addEventListener('click', function (e) {
-        if (e.target.classList.contains('remove-row')) {
-            const row = e.target.closest('tr');
-            row.remove(); // Hapus baris
+        if (e.target.classList.contains('remove-row') || e.target.closest('.remove-row')) {
+            if (table.rows.length > 1) {
+                const row = e.target.closest('tr');
+                row.remove(); // Hapus baris
 
-            // Perbarui nomor urut dan nama elemen input setelah baris dihapus
-            updateRowIndexes();
+                // Perbarui nomor urut dan nama elemen input setelah baris dihapus
+                updateRowIndexes();
+            } else {
+                alert('Minimal harus ada 1 issue dalam project!');
+            }
+        }
+    });
+
+    // Auto-set minimum date untuk date inputs
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dateStart').setAttribute('min', today);
+    document.getElementById('dateFinish').setAttribute('min', today);
+
+    // Update minimum finish date ketika start date berubah
+    document.getElementById('dateStart').addEventListener('change', function() {
+        document.getElementById('dateFinish').setAttribute('min', this.value);
+    });
+
+    // Konfirmasi sebelum reset form
+    document.querySelector('button[type="reset"]').addEventListener('click', function(e) {
+        if (!confirm('Yakin mau reset semua data yang udah diisi?')) {
+            e.preventDefault();
+        } else {
+            // Reset selectpicker juga
+            $('.selectpicker').selectpicker('refresh');
         }
     });
 });
-  
 </script>
-
-{% comment %} <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const table = document.getElementById('issuesTable').getElementsByTagName('tbody')[0];
-    const addRowButton = document.getElementById('addRow');
-
-    // Add row functionality
-    addRowButton.addEventListener('click', function () {
-      const rowCount = table.rows.length;
-      const newRow = table.insertRow();
-
-      // Create cells for the new row
-      newRow.innerHTML = `
-        <td>${rowCount + 1}</td>
-        <td><input type="text" class="form-control" name="issue_${rowCount + 1}"></td>
-        <td><input type="text" class="form-control" name="issue_pic_${rowCount + 1}"></td>
-        <td><input type="date" class="form-control" name="issue_due_${rowCount + 1}"></td>
-        <td>
-         <select class="form-control" name="issue_status_${rowCount + 1}">
-    <option value="0">0%</option>
-    <option value="10">10%</option>
-    <option value="20">20%</option>
-    <option value="30">30%</option>
-    <option value="40">40%</option>
-    <option value="50">50%</option>
-    <option value="60">60%</option>
-    <option value="70">70%</option>
-    <option value="80">80%</option>
-    <option value="90">90%</option>
-    <option value="100">100%</option>
-</select>
-        </td>
-        <td><input type="text" class="form-control" name="issue_remark_${rowCount + 1}" required></td>
-        <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
-      `;
-    });
-
-    // Remove row functionality
-    table.addEventListener('click', function (e) {
-      if (e.target.classList.contains('remove-row')) {
-        const row = e.target.closest('tr');
-        row.remove();
-
-        // Update row numbers
-        Array.from(table.rows).forEach((row, index) => {
-          row.cells[0].textContent = index + 1;
-        });
-      }
-    });
-  });
-</script> {% endcomment %}
 {% endblock scriptcontent %}
