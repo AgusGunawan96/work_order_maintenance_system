@@ -16,6 +16,163 @@ APPROVE_NO = '0'          # Not Approved
 APPROVE_YES = 'Y'         # FIXED: Approved menggunakan 'Y' bukan '1'
 APPROVE_REJECTED = '2'    # Rejected
 
+# wo_maintenance_app/forms.py - Tambahkan form ini buat filter tabel_main
+
+class TabelMainFilterForm(forms.Form):
+    """
+    Form buat filter data di tabel_main khusus buat SITI FATIMAH
+    Pake bahasa gaul dong biar asik!
+    """
+    
+    # Filter tanggal
+    tanggal_dari = forms.DateField(
+        label='Tanggal Dari',
+        required=False,
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control',
+            'placeholder': 'Pilih tanggal mulai'
+        }),
+        help_text='Tanggal awal pengajuan'
+    )
+    
+    tanggal_sampai = forms.DateField(
+        label='Tanggal Sampai', 
+        required=False,
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control',
+            'placeholder': 'Pilih tanggal akhir'
+        }),
+        help_text='Tanggal akhir pengajuan'
+    )
+    
+    # Filter status
+    STATUS_CHOICES = [
+        ('', 'Semua Status'),
+        ('0', '⏳ Pending'),
+        ('1', '✅ Approved'),
+        ('2', '❌ Rejected'),
+        ('3', '🚀 In Progress'),
+        ('4', '✅ Completed'),
+        ('5', '⚠️ On Hold'),
+    ]
+    
+    status = forms.ChoiceField(
+        label='Status',
+        choices=STATUS_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        })
+    )
+    
+    # Filter status pekerjaan
+    STATUS_PEKERJAAN_CHOICES = [
+        ('', 'Semua Status Pekerjaan'),
+        ('0', '⏳ Belum Mulai'),
+        ('1', '🚀 Sedang Dikerjakan'),
+        ('2', '✅ Selesai'),
+        ('3', '⚠️ Tertunda'),
+        ('4', '❌ Dibatalkan'),
+    ]
+    
+    status_pekerjaan = forms.ChoiceField(
+        label='Status Pekerjaan',
+        choices=STATUS_PEKERJAAN_CHOICES, 
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        })
+    )
+    
+    # Filter line/section
+    line_filter = forms.ChoiceField(
+        label='Filter Line',
+        choices=[],
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        })
+    )
+    
+    section_filter = forms.ChoiceField(
+        label='Filter Section',
+        choices=[],
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-control'
+        })
+    )
+    
+    # Filter PIC
+    pic_filter = forms.CharField(
+        label='Filter PIC',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Cari berdasarkan PIC...'
+        }),
+        help_text='PIC Produksi atau Maintenance'
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Load choices dari database
+        self.load_dynamic_choices()
+    
+    def load_dynamic_choices(self):
+        """Load pilihan dinamis dari database - asik kan otomatis!"""
+        try:
+            from django.db import connections
+            
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # Load line choices
+                cursor.execute("""
+                    SELECT DISTINCT tm.id_line, tl.line
+                    FROM tabel_main tm
+                    LEFT JOIN tabel_line tl ON tm.id_line = tl.id_line
+                    WHERE tl.line IS NOT NULL AND tl.line != ''
+                    ORDER BY tl.line
+                """)
+                
+                line_choices = [('', 'Semua Line')]
+                for row in cursor.fetchall():
+                    if row[0] and row[1]:
+                        line_choices.append((str(row[0]), row[1]))
+                
+                self.fields['line_filter'].choices = line_choices
+                
+                # Load section choices
+                cursor.execute("""
+                    SELECT DISTINCT tm.id_section, tms.seksi
+                    FROM tabel_main tm
+                    LEFT JOIN tabel_msection tms ON tm.id_section = tms.id_section
+                    WHERE tms.seksi IS NOT NULL AND tms.seksi != ''
+                    ORDER BY tms.seksi
+                """)
+                
+                section_choices = [('', 'Semua Section')]
+                for row in cursor.fetchall():
+                    if row[0] and row[1]:
+                        section_choices.append((str(row[0]), row[1]))
+                
+                self.fields['section_filter'].choices = section_choices
+                
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error loading dynamic choices buat tabel_main: {e}")
+            
+            # Fallback choices kalo error
+            self.fields['line_filter'].choices = [('', 'Error loading lines')]
+            self.fields['section_filter'].choices = [('', 'Error loading sections')]
+
+
+# Export buat diimport di views
+__all__ = ['TabelMainFilterForm']
+
 
 class PengajuanMaintenanceForm(forms.Form):
     """Form untuk input pengajuan maintenance baru - FIXED"""

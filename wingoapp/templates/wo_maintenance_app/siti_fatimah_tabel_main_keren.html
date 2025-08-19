@@ -1,0 +1,1121 @@
+<!-- wo_maintenance_app/templates/wo_maintenance_app/siti_fatimah_tabel_main_keren.html -->
+<!-- Template Keren Abis buat SITI FATIMAH akses Tabel Main -->
+<!-- Pake bahasa gaul ya biar asik! -->
+
+{% extends 'starter_kit/base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% load widget_tweaks %}
+
+{% block css %}
+{{ block.super }}
+<style>
+    .page-body {
+        padding-top: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    /* Header Keren SITI FATIMAH */
+    .siti-keren-header {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        position: relative;
+        overflow: hidden;
+        animation: sitiFatimahKeren 4s ease-in-out infinite alternate;
+    }
+    
+    @keyframes sitiFatimahKeren {
+        0% { 
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            transform: translateY(0px);
+        }
+        100% { 
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+            transform: translateY(-2px);
+        }
+    }
+    
+    .siti-keren-header::before {
+        content: '🌟';
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 3rem;
+        opacity: 0.3;
+        animation: blink 2s ease-in-out infinite;
+    }
+    
+    @keyframes blink {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+    }
+    
+    .siti-keren-header h2 {
+        margin: 0 0 15px 0;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .siti-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Stats Cards yang Keren */
+    .stats-keren-container {
+        margin-bottom: 30px;
+    }
+    
+    .stat-card-keren {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: all 0.4s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border: 3px solid transparent;
+        background-clip: padding-box;
+    }
+    
+    .stat-card-keren::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #ff6b6b, #ee5a6f, #ff9ff3, #667eea);
+        background-size: 300% 100%;
+        animation: gradientShift 3s ease-in-out infinite;
+    }
+    
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .stat-card-keren:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(255, 107, 107, 0.3);
+        border-color: #ff6b6b;
+    }
+    
+    .stat-icon-keren {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 1.8rem;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+    
+    .stat-number-keren {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+        line-height: 1;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .stat-label-keren {
+        font-size: 1rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+    
+    .stat-description-keren {
+        font-size: 0.85rem;
+        color: #adb5bd;
+        line-height: 1.4;
+    }
+    
+    /* Filter Panel Keren */
+    .filter-panel-keren {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-left: 5px solid #ff6b6b;
+    }
+    
+    .filter-panel-keren h5 {
+        color: #ff6b6b;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    /* Table Container Keren */
+    .table-container-keren {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border: 3px solid #ff6b6b;
+    }
+    
+    .table-header-keren {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        padding: 25px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .table-title-keren {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.3rem;
+        flex: 1;
+    }
+    
+    .table-actions-keren {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .table-keren {
+        width: 100%;
+        margin: 0;
+    }
+    
+    .table-keren th {
+        background: #f8f9fa;
+        color: #495057;
+        font-weight: 700;
+        border: none;
+        padding: 20px 15px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        border-bottom: 2px solid #ff6b6b;
+    }
+    
+    .table-keren td {
+        padding: 20px 15px;
+        vertical-align: middle;
+        border-bottom: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    
+    .table-keren tbody tr:hover {
+        background: linear-gradient(90deg, rgba(255, 107, 107, 0.08) 0%, rgba(238, 90, 111, 0.08) 100%);
+        transform: translateX(5px);
+        box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+    }
+    
+    /* Status Badges Keren */
+    .status-badge-keren {
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        letter-spacing: 0.5px;
+    }
+    
+    .status-pending-keren {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+        border: 2px solid #f39c12;
+    }
+    
+    .status-approved-keren {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border: 2px solid #27ae60;
+    }
+    
+    .status-rejected-keren {
+        background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
+        color: #721c24;
+        border: 2px solid #e74c3c;
+    }
+    
+    .status-progress-keren {
+        background: linear-gradient(135deg, #cce7ff 0%, #b3d7ff 100%);
+        color: #004085;
+        border: 2px solid #3498db;
+    }
+    
+    .status-completed-keren {
+        background: linear-gradient(135deg, #d1f2eb 0%, #a3e4d7 100%);
+        color: #00695c;
+        border: 2px solid #1abc9c;
+    }
+    
+    .status-hold-keren {
+        background: linear-gradient(135deg, #e1ecf4 0%, #bee5eb 100%);
+        color: #0c5460;
+        border: 2px solid #17a2b8;
+    }
+    
+    .status-unknown-keren {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        color: #6c757d;
+        border: 2px solid #95a5a6;
+    }
+    
+    /* Action Buttons Keren */
+    .action-btn-keren {
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        transition: all 0.4s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin: 3px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .action-btn-keren:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        text-decoration: none;
+    }
+    
+    .btn-detail-keren {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: 2px solid #667eea;
+    }
+    
+    .btn-edit-keren {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border: 2px solid #f093fb;
+    }
+    
+    .btn-download-keren {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        border: 2px solid #4facfe;
+    }
+    
+    /* Empty State Keren */
+    .empty-state-keren {
+        text-align: center;
+        padding: 80px 20px;
+        color: #6c757d;
+        background: white;
+        border-radius: 20px;
+        margin: 20px 0;
+        border: 3px dashed #ff6b6b;
+    }
+    
+    .empty-icon-keren {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 25px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+    }
+    
+    /* Search Bar Keren */
+    .search-bar-keren {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        border-left: 5px solid #ff6b6b;
+    }
+    
+    /* Pagination Keren */
+    .pagination-keren {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .page-link-keren {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 15px;
+        margin: 0 5px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .page-link-keren:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .page-link-keren.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transform: scale(1.1);
+    }
+    
+    /* Success Messages Keren */
+    .alert-success-keren {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border: 2px solid #27ae60;
+        border-radius: 15px;
+        color: #155724;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+    
+    /* Info Panel Keren */
+    .info-panel-keren {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .siti-keren-header {
+            padding: 20px 15px;
+            text-align: center;
+        }
+        
+        .table-header-keren {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .action-btn-keren {
+            font-size: 0.7rem;
+            padding: 6px 12px;
+        }
+        
+        .stat-card-keren {
+            margin-bottom: 20px;
+        }
+    }
+    
+    /* Loading Animation Keren */
+    .loading-keren {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 107, 107, 0.3);
+        border-radius: 50%;
+        border-top-color: #ff6b6b;
+        animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div class="page-body">
+    {% include 'starter_kit/layout/breadcrumb.html' %}
+
+    <!-- Messages Keren -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}-keren alert-dismissible fade show" role="alert">
+                {{ message|linebreaks }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Header Keren SITI FATIMAH -->
+    <div class="siti-keren-header">
+        <h2>🌟 HAI SITI FATIMAH YANG KEREN! 🌟</h2>
+        <div class="siti-subtitle">
+            Welcome to Master Data Tabel Main - Lu punya akses penuh ke semua data maintenance yang ada bro!
+            <br><small style="opacity: 0.8;">{{ total_records|default:0 }} total pengajuan tersedia | Database: {{ database_name }}</small>
+        </div>
+        
+        <div class="info-panel-keren">
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>👤 User:</strong> {{ user_hierarchy.fullname|default:"SITI FATIMAH" }}
+                </div>
+                <div class="col-md-4">
+                    <strong>📊 Table Source:</strong> {{ table_source|upper }}
+                </div>
+                <div class="col-md-4">
+                    <strong>🕒 Last Access:</strong> <span id="currentTime">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards Keren -->
+    <div class="stats-keren-container">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                <div class="stat-card-keren">
+                    <div class="stat-icon-keren">📊</div>
+                    <div class="stat-number-keren" data-count="{{ siti_main_stats.total_all|default:0 }}">0</div>
+                    <div class="stat-label-keren">Total All</div>
+                    <div class="stat-description-keren">Semua data pengajuan</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                <div class="stat-card-keren">
+                    <div class="stat-icon-keren">📅</div>
+                    <div class="stat-number-keren" data-count="{{ siti_main_stats.today|default:0 }}">0</div>
+                    <div class="stat-label-keren">Today</div>
+                    <div class="stat-description-keren">Pengajuan hari ini</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                <div class="stat-card-keren">
+                    <div class="stat-icon-keren">📆</div>
+                    <div class="stat-number-keren" data-count="{{ siti_main_stats.this_month|default:0 }}">0</div>
+                    <div class="stat-label-keren">This Month</div>
+                    <div class="stat-description-keren">Bulan ini</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                <div class="stat-card-keren">
+                    <div class="stat-icon-keren">🚀</div>
+                    <div class="stat-number-keren" data-count="{{ siti_main_stats.ongoing|default:0 }}">0</div>
+                    <div class="stat-label-keren">Ongoing</div>
+                    <div class="stat-description-keren">Belum selesai</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                <div class="stat-card-keren">
+                    <div class="stat-icon-keren">✅</div>
+                    <div class="stat-number-keren" data-count="{% for status in siti_main_stats.by_status_pekerjaan %}{% if status.value == '2' %}{{ status.count }}{% endif %}{% endfor %}">0</div>
+                    <div class="stat-label-keren">Completed</div>
+                    <div class="stat-description-keren">Sudah selesai</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                <div class="stat-card-keren">
+                    <div class="stat-icon-keren">⚡</div>
+                    <div class="stat-number-keren" data-count="{{ total_records|default:0 }}">0</div>
+                    <div class="stat-label-keren">Current View</div>
+                    <div class="stat-description-keren">Data yang ditampilkan</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Bar Keren -->
+    <div class="search-bar-keren">
+        <form method="GET" class="d-flex">
+            {% for field in filter_form.hidden_fields %}{{ field }}{% endfor %}
+            <input type="text" name="search" class="form-control me-2" 
+                   placeholder="🔍 Cari data keren disini bro... (history_id, deskripsi, PIC, dll)" 
+                   value="{{ search_query }}" style="border-radius: 15px; border: 2px solid #ff6b6b;">
+            <button type="submit" class="action-btn-keren btn-detail-keren">
+                <i data-feather="search"></i> Cari
+            </button>
+        </form>
+    </div>
+
+    <!-- Filter Panel Keren -->
+    <div class="filter-panel-keren">
+        <h5><i data-feather="filter"></i> Filter Data Yang Asik</h5>
+        <form method="GET" id="filterFormKeren">
+            {% if search_query %}
+                <input type="hidden" name="search" value="{{ search_query }}">
+            {% endif %}
+            
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">📅 Tanggal Dari</label>
+                    {{ filter_form.tanggal_dari|add_class:"form-control" }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">📅 Tanggal Sampai</label>
+                    {{ filter_form.tanggal_sampai|add_class:"form-control" }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">📊 Status</label>
+                    {{ filter_form.status|add_class:"form-control" }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">🛠️ Status Pekerjaan</label>
+                    {{ filter_form.status_pekerjaan|add_class:"form-control" }}
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">🏭 Line</label>
+                    {{ filter_form.line_filter|add_class:"form-control" }}
+                </div>
+            </div>
+            
+            <div class="row g-3 mt-2">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">🎯 Section</label>
+                    {{ filter_form.section_filter|add_class:"form-control" }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">👥 PIC Filter</label>
+                    {{ filter_form.pic_filter|add_class:"form-control" }}
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="action-btn-keren btn-detail-keren me-2">
+                        <i data-feather="filter"></i> Filter Asik
+                    </button>
+                    <a href="{% url 'wo_maintenance_app:siti_fatimah_tabel_main_keren' %}" class="action-btn-keren btn-edit-keren me-2">
+                        <i data-feather="refresh-cw"></i> Reset Filter
+                    </a>
+                    <button type="button" class="action-btn-keren btn-download-keren" onclick="refreshStats()">
+                        <i data-feather="activity"></i> Refresh Stats
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table Container Keren -->
+    <div class="table-container-keren">
+        <div class="table-header-keren">
+            <div class="table-title-keren">
+                <i data-feather="database"></i>
+                🌟 Master Data Tabel Main Yang Super Keren
+                <small style="opacity: 0.9; display: block; font-size: 0.85rem; margin-top: 5px;">
+                    Showing {{ pengajuan_list|length }} of {{ total_records|default:0 }} total records
+                    {% if search_query %} - Filter: "{{ search_query }}"{% endif %}
+                </small>
+            </div>
+            <div class="table-actions-keren">
+                <a href="{% url 'wo_maintenance_app:dashboard' %}" class="btn btn-light btn-sm">
+                    <i data-feather="home"></i> Dashboard
+                </a>
+                <button type="button" class="btn btn-light btn-sm" onclick="exportData()">
+                    <i data-feather="download"></i> Export
+                </button>
+                <button type="button" class="btn btn-light btn-sm" onclick="printData()">
+                    <i data-feather="printer"></i> Print
+                </button>
+            </div>
+        </div>
+        
+        {% if pengajuan_list %}
+        <div class="table-responsive">
+            <table class="table table-keren mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">History ID</th>
+                        <th style="width: 150px;">Pengaju</th>
+                        <th style="width: 120px;">Line</th>
+                        <th style="width: 150px;">Mesin</th>
+                        <th style="width: 120px;">Section</th>
+                        <th style="width: 130px;">Pekerjaan</th>
+                        <th>Deskripsi</th>
+                        <th style="width: 120px;">Status</th>
+                        <th style="width: 130px;">Status Pekerjaan</th>
+                        <th style="width: 140px;">PIC Produksi</th>
+                        <th style="width: 140px;">PIC Maintenance</th>
+                        <th style="width: 120px;">Tanggal</th>
+                        <th style="width: 120px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pengajuan in pengajuan_list %}
+                    <tr>
+                        <td>
+                            <div class="position-relative">
+                                <strong class="text-primary">{{ pengajuan.0|default:"-" }}</strong>
+                                {% if pengajuan.9 %}<br><small class="text-muted">{{ pengajuan.9 }}</small>{% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <strong>{{ pengajuan.1|default:"-" }}</strong>
+                                {% if pengajuan.8 %}
+                                    <br><small class="text-muted">{{ pengajuan.8 }}</small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if pengajuan.10 and pengajuan.10 != 'N/A' %}
+                                <span class="badge bg-info rounded-pill">{{ pengajuan.10 }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ pengajuan.2|default:"-" }}</td>
+                        <td>{{ pengajuan.3|default:"-" }}</td>
+                        <td>{{ pengajuan.4|default:"-" }}</td>
+                        <td>
+                            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;" title="{{ pengajuan.5|default:'-' }}">
+                                {{ pengajuan.5|default:"-"|truncatechars:60 }}
+                            </div>
+                        </td>
+                        <td>
+                            {% if pengajuan.6 == '0' %}
+                                <span class="status-badge-keren status-pending-keren">
+                                    ⏳ Pending
+                                </span>
+                            {% elif pengajuan.6 == '1' %}
+                                <span class="status-badge-keren status-approved-keren">
+                                    ✅ Approved
+                                </span>
+                            {% elif pengajuan.6 == '2' %}
+                                <span class="status-badge-keren status-rejected-keren">
+                                    ❌ Rejected
+                                </span>
+                            {% elif pengajuan.6 == '3' %}
+                                <span class="status-badge-keren status-progress-keren">
+                                    🚀 In Progress
+                                </span>
+                            {% elif pengajuan.6 == '4' %}
+                                <span class="status-badge-keren status-completed-keren">
+                                    ✅ Completed
+                                </span>
+                            {% elif pengajuan.6 == '5' %}
+                                <span class="status-badge-keren status-hold-keren">
+                                    ⚠️ On Hold
+                                </span>
+                            {% else %}
+                                <span class="status-badge-keren status-unknown-keren">
+                                    ❓ {{ pengajuan.6|default:"-" }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if pengajuan.11 == '0' %}
+                                <span class="status-badge-keren status-pending-keren">
+                                    ⏳ Belum Mulai
+                                </span>
+                            {% elif pengajuan.11 == '1' %}
+                                <span class="status-badge-keren status-progress-keren">
+                                    🚀 Dikerjakan
+                                </span>
+                            {% elif pengajuan.11 == '2' %}
+                                <span class="status-badge-keren status-completed-keren">
+                                    ✅ Selesai
+                                </span>
+                            {% elif pengajuan.11 == '3' %}
+                                <span class="status-badge-keren status-hold-keren">
+                                    ⚠️ Tertunda
+                                </span>
+                            {% elif pengajuan.11 == '4' %}
+                                <span class="status-badge-keren status-rejected-keren">
+                                    ❌ Dibatalkan
+                                </span>
+                            {% else %}
+                                <span class="status-badge-keren status-unknown-keren">
+                                    ❓ {{ pengajuan.11|default:"-" }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ pengajuan.14|default:"-" }}</strong>
+                        </td>
+                        <td>
+                            <strong>{{ pengajuan.15|default:"-" }}</strong>
+                        </td>
+                        <td>
+                            {% if pengajuan.7 %}
+                                {{ pengajuan.7|date:"d/m/Y" }}
+                                <br><small class="text-muted">{{ pengajuan.7|date:"H:i" }}</small>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                {% if pengajuan.0 %}
+                                    <!-- Detail Button -->
+                                    <button type="button" class="action-btn-keren btn-detail-keren" 
+                                            onclick="showDetail('{{ pengajuan.0 }}')" title="Lihat Detail Keren">
+                                        <i data-feather="eye"></i> Detail
+                                    </button>
+                                    
+                                    <!-- Edit Button -->
+                                    <button type="button" class="action-btn-keren btn-edit-keren" 
+                                            onclick="editData('{{ pengajuan.0 }}')" title="Edit Data">
+                                        <i data-feather="edit"></i> Edit
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination Keren -->
+        {% if total_pages > 1 %}
+        <div class="pagination-keren">
+            <div>
+                <small class="text-muted fw-bold">
+                    Halaman {{ page_number }} dari {{ total_pages }} ({{ total_records }} total records yang keren)
+                </small>
+            </div>
+            <nav>
+                <div class="d-flex align-items-center">
+                    {% if has_previous %}
+                        <a class="page-link-keren" href="?page={{ previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                            <i data-feather="chevron-left"></i> Previous
+                        </a>
+                    {% endif %}
+                    
+                    <span class="page-link-keren active mx-2">{{ page_number }}</span>
+                    
+                    {% if has_next %}
+                        <a class="page-link-keren" href="?page={{ next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                            Next <i data-feather="chevron-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <!-- Empty State Keren -->
+        <div class="empty-state-keren">
+            <div class="empty-icon-keren">
+                <i data-feather="folder"></i>
+            </div>
+            <h5 class="text-muted">Waduh! Gak ada data yang ketemu nih bro!</h5>
+            <p class="text-muted">
+                {% if search_query %}
+                    Hasil pencarian "{{ search_query }}" gak nemu data yang cocok nih.
+                {% else %}
+                    Belum ada data maintenance di tabel_main yang sesuai filter lu.
+                {% endif %}
+            </p>
+            <button type="button" class="action-btn-keren btn-detail-keren" onclick="location.reload()">
+                <i data-feather="refresh-cw"></i> Refresh Data
+            </button>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Debug Info (Superuser only) -->
+    {% if debug_info and user.is_superuser %}
+    <div class="alert alert-info mt-4">
+        <h6><strong>🔧 Debug Info Keren (Superuser Mode)</strong></h6>
+        <div class="row">
+            <div class="col-md-6">
+                <strong>Access Info:</strong><br>
+                - Type: {{ debug_info.access_type }}<br>
+                - Table: {{ debug_info.table_source }}<br>
+                - User Role: {{ debug_info.user_role }}<br>
+                - Keren Level: {{ debug_info.keren_level }}
+            </div>
+            <div class="col-md-6">
+                <strong>Data Info:</strong><br>
+                - Records Loaded: {{ debug_info.total_pengajuan_loaded }}<br>
+                - Filter Count: {{ debug_info.filter_count }}<br>
+                - Database: {{ debug_info.database }}<br>
+                - Full Access: {{ debug_info.siti_main_full_access|yesno:"Yes,No" }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block scriptcontent %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    // Initialize Feather Icons yang keren
+    feather.replace();
+    
+    // Update current time yang asik
+    function updateCurrentTime() {
+        const now = new Date();
+        const timeString = now.toLocaleString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        $('#currentTime').text(timeString);
+    }
+    
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+    
+    // Animasi counter yang keren abis
+    $('.stat-number-keren').each(function() {
+        const $this = $(this);
+        const countTo = parseInt($this.data('count')) || 0;
+        
+        if (countTo > 0) {
+            $({ countNum: 0 }).animate(
+                { countNum: countTo },
+                {
+                    duration: 3000, // 3 detik buat animasi yang asik
+                    easing: 'easeOutCubic',
+                    step: function() {
+                        $this.text(Math.floor(this.countNum).toLocaleString('id-ID'));
+                    },
+                    complete: function() {
+                        $this.text(this.countNum.toLocaleString('id-ID'));
+                        // Efek sparkle keren
+                        $this.addClass('animate__animated animate__pulse');
+                        setTimeout(() => {
+                            $this.removeClass('animate__animated animate__pulse');
+                        }, 1000);
+                    }
+                }
+            );
+        }
+    });
+    
+    // Enhanced tooltips yang asik
+    $('.action-btn-keren').tooltip({
+        placement: 'top',
+        trigger: 'hover',
+        html: true
+    });
+    
+    $('.status-badge-keren').tooltip({
+        placement: 'top',
+        trigger: 'hover'
+    });
+    
+    // Auto-save filter preferences (pake localStorage)
+    $('#filterFormKeren input, #filterFormKeren select').on('change', function() {
+        const filterData = $('#filterFormKeren').serialize();
+        localStorage.setItem('sitiFilterPreferences', filterData);
+    });
+    
+    // Load saved filter preferences
+    const savedFilters = localStorage.getItem('sitiFilterPreferences');
+    if (savedFilters && !window.location.search) {
+        // Kalo gak ada query string, load dari localStorage
+        console.log('Loading saved filter preferences:', savedFilters);
+    }
+    
+    // Logging yang keren buat SITI FATIMAH
+    console.log('🌟 SITI FATIMAH Tabel Main Dashboard Loaded Successfully! 🌟');
+    console.log('Table Source:', '{{ table_source }}');
+    console.log('Total Records:', {{ total_records|default:0 }});
+    console.log('Current User:', '{{ user_hierarchy.fullname|default:"SITI FATIMAH" }}');
+    console.log('Stats:', {{ siti_main_stats|safe }});
+    console.log('Keren Mode:', {{ keren_mode|yesno:"ACTIVATED,DEACTIVATED" }});
+    
+    // Real-time stats update setiap 5 menit
+    setInterval(function() {
+        refreshStats();
+    }, 300000); // 5 menit
+    
+    // Table row click untuk detail (optional)
+    $('.table-keren tbody tr').on('click', function(e) {
+        if (!$(e.target).closest('button, a').length) {
+            const historyId = $(this).find('td:first strong').text().trim();
+            if (historyId && historyId !== '-') {
+                showDetail(historyId);
+            }
+        }
+    });
+    
+    // Enhanced keyboard shortcuts buat SITI FATIMAH
+    $(document).keydown(function(e) {
+        // Ctrl + F untuk focus ke search
+        if (e.ctrlKey && e.keyCode === 70) {
+            e.preventDefault();
+            $('input[name="search"]').focus().select();
+        }
+        
+        // Ctrl + R untuk refresh stats
+        if (e.ctrlKey && e.keyCode === 82) {
+            e.preventDefault();
+            refreshStats();
+        }
+        
+        // Ctrl + E untuk export
+        if (e.ctrlKey && e.keyCode === 69) {
+            e.preventDefault();
+            exportData();
+        }
+        
+        // Ctrl + P untuk print
+        if (e.ctrlKey && e.keyCode === 80) {
+            e.preventDefault();
+            printData();
+        }
+    });
+    
+    // Success notification untuk SITI FATIMAH
+    setTimeout(function() {
+        if (typeof toastr !== 'undefined') {
+            toastr.success('🌟 Selamat datang SITI FATIMAH yang keren! Dashboard berhasil dimuat dengan {{ total_records|default:0 }} data tabel_main!', 'Welcome!', {
+                timeOut: 5000,
+                progressBar: true,
+                positionClass: 'toast-top-right'
+            });
+        }
+    }, 1000);
+});
+
+// Function buat show detail yang keren
+function showDetail(historyId) {
+    if (!historyId) return;
+    
+    // Bisa redirect ke halaman detail atau show modal
+    console.log('Showing detail for:', historyId);
+    
+    // Contoh: redirect ke detail page
+    // window.location.href = `/wo-maintenance/detail/${historyId}/`;
+    
+    // Atau show modal dengan AJAX
+    if (typeof toastr !== 'undefined') {
+        toastr.info(`Detail untuk ${historyId} akan ditampilkan (feature coming soon!)`, 'Detail', {
+            timeOut: 3000
+        });
+    }
+}
+
+// Function buat edit data
+function editData(historyId) {
+    if (!historyId) return;
+    
+    console.log('Editing data for:', historyId);
+    
+    if (typeof toastr !== 'undefined') {
+        toastr.info(`Edit data ${historyId} (feature coming soon!)`, 'Edit', {
+            timeOut: 3000
+        });
+    }
+}
+
+// Function buat refresh stats yang asik
+function refreshStats() {
+    const $btn = $('button:contains("Refresh Stats")');
+    const originalHtml = $btn.html();
+    
+    $btn.html('<span class="loading-keren"></span> Refreshing...');
+    $btn.prop('disabled', true);
+    
+    $.get('{% url "wo_maintenance_app:ajax_siti_tabel_main_stats_keren" %}')
+        .done(function(data) {
+            if (data.success) {
+                console.log('Stats refreshed:', data.stats);
+                
+                // Update stat numbers dengan animasi
+                $('.stat-number-keren').each(function() {
+                    const $this = $(this);
+                    const newCount = data.stats.total_all || 0; // Sesuaikan dengan field yang sesuai
+                    
+                    $({ countNum: parseInt($this.text()) || 0 }).animate(
+                        { countNum: newCount },
+                        {
+                            duration: 1000,
+                            step: function() {
+                                $this.text(Math.floor(this.countNum).toLocaleString('id-ID'));
+                            },
+                            complete: function() {
+                                $this.text(this.countNum.toLocaleString('id-ID'));
+                            }
+                        }
+                    );
+                });
+                
+                if (typeof toastr !== 'undefined') {
+                    toastr.success('Stats berhasil di-refresh bro!', 'Success');
+                }
+            } else {
+                if (typeof toastr !== 'undefined') {
+                    toastr.error('Error refreshing stats: ' + data.error, 'Error');
+                }
+            }
+        })
+        .fail(function() {
+            if (typeof toastr !== 'undefined') {
+                toastr.error('Gagal refresh stats. Coba lagi nanti ya!', 'Error');
+            }
+        })
+        .always(function() {
+            $btn.html(originalHtml);
+            $btn.prop('disabled', false);
+            feather.replace();
+        });
+}
+
+// Function buat export data
+function exportData() {
+    if (typeof toastr !== 'undefined') {
+        toastr.info('Export feature coming soon! Stay tuned bro!', 'Export', {
+            timeOut: 3000
+        });
+    }
+    console.log('Export data requested');
+}
+
+// Function buat print data
+function printData() {
+    window.print();
+}
+
+// Enhanced error handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript Error:', e.error);
+    if (typeof toastr !== 'undefined') {
+        toastr.error('Terjadi error JavaScript. Check console untuk detail.', 'Error');
+    }
+});
+</script>
+{% endblock scriptcontent %}

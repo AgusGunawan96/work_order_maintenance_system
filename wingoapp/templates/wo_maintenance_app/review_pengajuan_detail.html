@@ -1,5 +1,5 @@
 <!-- wo_maintenance_app/templates/wo_maintenance_app/review_pengajuan_detail.html -->
-<!-- UPDATED Template untuk Section Change Support -->
+<!-- FIXED Template tanpa Template Syntax Error -->
 
 {% extends 'starter_kit/base.html' %}
 {% load static %}
@@ -105,7 +105,7 @@
         color: #6c757d;
     }
     
-    /* Pengajuan Info Card */
+    /* Cards */
     .pengajuan-info-card {
         background: white;
         border-radius: 12px;
@@ -185,22 +185,16 @@
         display: block;
     }
     
-    .form-control {
+    .form-control, .form-select {
         border-radius: 8px;
         border: 2px solid #e9ecef;
         padding: 12px 15px;
         transition: all 0.3s ease;
     }
     
-    .form-control:focus {
+    .form-control:focus, .form-select:focus {
         border-color: #007bff;
         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-    
-    .form-select {
-        border-radius: 8px;
-        border: 2px solid #e9ecef;
-        padding: 12px 15px;
     }
     
     .btn-review {
@@ -217,16 +211,12 @@
         background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
     }
     
-    .btn-review.btn-danger {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    }
-    
     .btn-review:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     }
     
-    /* Already Reviewed State */
+    /* Already Reviewed */
     .already-reviewed-card {
         background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
         border: none;
@@ -268,7 +258,7 @@
         font-size: 0.9rem;
     }
     
-    /* UPDATED: Final Processing Alert */
+    /* Alerts */
     .final-processing-alert {
         background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
         color: white;
@@ -292,7 +282,6 @@
         line-height: 1.4;
     }
     
-    /* NEW: Section Change Alert */
     .section-change-alert {
         background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
         color: #212529;
@@ -518,7 +507,6 @@
             </div>
             {% endif %}
             
-            <!-- Final Status Info -->
             {% if pengajuan.review_status == '1' %}
             <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid rgba(21, 87, 36, 0.2);">
                 <div class="review-summary-item">
@@ -560,7 +548,7 @@
                 {% endif %}
             </div>
             
-            <!-- NEW: Target Section Selection -->
+            <!-- Target Section Selection -->
             <div class="form-group" id="target-section-group">
                 <label class="form-label" for="{{ review_form.target_section.id_for_label }}">
                     <i data-feather="target"></i>
@@ -617,12 +605,10 @@
             Kembali ke Daftar Review
         </a>
         
-        {% if is_siti_fatimah %}
         <a href="{% url 'wo_maintenance_app:review_dashboard' %}" class="btn btn-outline-secondary">
             <i data-feather="home"></i>
             Review Dashboard
         </a>
-        {% endif %}
     </div>
 </div>
 {% endblock content %}
@@ -729,12 +715,7 @@ $(document).ready(function() {
         $('#target-section-group').hide();
     }
     
-    console.log('=== REVIEW SYSTEM dengan Section Change ===');
-    console.log('Pengajuan ID:', '{{ pengajuan.history_id }}');
-    console.log('Current Status:', '{{ pengajuan.status }}/{{ pengajuan.approve }}');
-    console.log('Current Section:', '{{ pengajuan.section_tujuan }}');
-    console.log('Section Change Enabled: true');
-    console.log('Ready for review by SITI FATIMAH');
+    console.log('Review System dengan Section Change loaded successfully');
 });
 </script>
 {% endblock scriptcontent %}

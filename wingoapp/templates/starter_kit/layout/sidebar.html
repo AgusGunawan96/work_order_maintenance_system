@@ -127,50 +127,12 @@
       </a>
     </li>
     
-    <!-- MAIN: Section-based Daftar Laporan (Smart Access) -->
-    <li>
-      <a href="{% url 'wo_maintenance_app:section_based_daftar_laporan' %}">
-        <i data-feather="database"></i><span>Daftar Laporan</span>
-        <small class="text-muted d-block" style="font-size: 0.7rem; margin-top: 2px;">
-          Smart Section Access
-        </small>
-      </a>
-    </li>
     
-    <!-- Alternative Views (for testing/fallback) -->
-    <li class="dropdown-submenu">
-      <a href="javascript:void(0)">
-        <i data-feather="layers"></i><span>Alternative Views</span>
-      </a>
-      <ul class="nav-submenu">
-        <li>
-          <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}">
-            <i data-feather="star"></i><span>Enhanced View</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'wo_maintenance_app:daftar_laporan' %}">
-            <i data-feather="list"></i><span>Legacy View</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-
-    <!-- SITI FATIMAH Review (conditional) -->
-    {% if request.user.username == '007522' %}
-    <li class="dropdown-divider"></li>
     <li>
-      <a href="{% url 'wo_maintenance_app:review_dashboard' %}">
-        <i data-feather="clipboard"></i><span>Review Dashboard</span>
-        <small class="text-success d-block" style="font-size: 0.7rem; margin-top: 2px;">
-          SITI FATIMAH Only
-        </small>
+      <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}">
+        <i data-feather="star"></i><span>Daftar Pengajuan</span>
       </a>
     </li>
-    {% endif %}
-  </ul>
-</li>
-
 
 
 {% if perms.dailyactivity_app %}

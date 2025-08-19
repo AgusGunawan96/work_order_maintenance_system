@@ -14095,3 +14095,1394 @@ INFO 2025-08-19 14:11:37,677 views 9860 11728 COUNT QUERY SUCCESS: Found 0 total
 INFO 2025-08-19 14:11:37,677 views 9860 11728 MAIN QUERY DEBUG: Final params count: 5
 INFO 2025-08-19 14:11:37,689 views 9860 11728 MAIN QUERY SUCCESS: Retrieved 0 records
 INFO 2025-08-19 14:11:37,773 basehttp 9860 11728 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 31040
+INFO 2025-08-19 14:30:28,725 autoreload 9860 10644 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\forms.py changed, reloading.
+INFO 2025-08-19 14:30:30,881 autoreload 10996 14792 Watching for file changes with StatReloader
+INFO 2025-08-19 14:30:40,538 autoreload 2040 13800 Watching for file changes with StatReloader
+INFO 2025-08-19 14:30:48,301 autoreload 9736 16056 Watching for file changes with StatReloader
+INFO 2025-08-19 14:30:59,758 autoreload 14192 16416 Watching for file changes with StatReloader
+INFO 2025-08-19 14:31:02,014 views 14192 16416 === STATUS VALIDATION ===
+INFO 2025-08-19 14:31:02,014 views 14192 16416 Expected STATUS_APPROVED: B
+INFO 2025-08-19 14:31:02,015 views 14192 16416 Expected APPROVE_YES: N
+INFO 2025-08-19 14:31:02,015 views 14192 16416 Actual values in database:
+INFO 2025-08-19 14:31:02,015 views 14192 16416   Status: , Approve: N, Review: None
+INFO 2025-08-19 14:31:02,016 views 14192 16416   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 14:31:02,016 views 14192 16416   Status: A, Approve: T, Review: None
+INFO 2025-08-19 14:31:02,016 views 14192 16416   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 14:31:02,017 views 14192 16416   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 14:31:02,017 views 14192 16416   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 14:31:02,017 views 14192 16416 === END VALIDATION ===
+INFO 2025-08-19 14:31:07,189 utils 14192 9760 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:31:07,189 views 14192 9760 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 14:31:07,252 views 14192 9760 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:31:07,252 views 14192 9760 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 14:31:07,268 views 14192 9760 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:31:07,268 views 14192 9760 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 14:31:07,279 views 14192 9760 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:31:07,500 basehttp 14192 9760 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 31040
+INFO 2025-08-19 14:31:09,626 utils 14192 9760 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:31:09,627 views 14192 9760 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 14:31:09,668 views 14192 9760 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:31:09,668 views 14192 9760 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 14:31:09,684 views 14192 9760 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:31:09,684 views 14192 9760 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 14:31:09,695 views 14192 9760 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:31:09,773 basehttp 14192 9760 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 31040
+INFO 2025-08-19 14:32:19,813 basehttp 14192 1220 "GET /logout/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:32:19,864 basehttp 14192 1220 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:32:19,989 basehttp 14192 1220 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-19 14:32:26,142 views 14192 16968 LOGIN ATTEMPT: 001605
+INFO 2025-08-19 14:32:26,173 authentication 14192 16968 Updated Django user data for 001605
+INFO 2025-08-19 14:32:26,174 authentication 14192 16968 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-19 14:32:26,182 views 14192 16968 LOGIN: Using existing session data for 001605
+INFO 2025-08-19 14:32:26,183 views 14192 16968 LOGIN REDIRECT: 001605 -> /wo-maintenance/section-based/
+INFO 2025-08-19 14:32:26,188 basehttp 14192 16968 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:32:26,266 utils 14192 16968 FIXED: Direct section match found: ENGINEERING-ELECTRIC
+INFO 2025-08-19 14:32:26,276 utils 14192 16968 FIXED: Added default elektrik section ID 2
+INFO 2025-08-19 14:32:26,279 utils 14192 16968 FIXED: Found 2 matching sections for keywords ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL', 'LISTRIK', 'POWER', 'ELEC']: [5, 2]
+INFO 2025-08-19 14:32:26,281 utils 14192 16968 FIXED: Discovered additional elektrik sections: [5]
+INFO 2025-08-19 14:32:26,281 utils 14192 16968 FIXED: Enhanced elektrik section IDs: [5, 2]
+INFO 2025-08-19 14:32:26,282 views 14192 16968 Section Access for TUMPAL BERLIN HARIANJA: ENGINEERING_ELECTRIC_SUPERVISOR
+INFO 2025-08-19 14:32:26,283 views 14192 16968 SECTION ACCESS: User has access to section IDs: [5, 2]
+INFO 2025-08-19 14:32:26,283 views 14192 16968 SECTION QUERY: Added 2 section conditions
+INFO 2025-08-19 14:32:26,284 views 14192 16968 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:32:26,285 views 14192 16968 QUERY DEBUG: Query params count: 6
+INFO 2025-08-19 14:32:26,306 views 14192 16968 COUNT QUERY SUCCESS: Found 10 total records
+INFO 2025-08-19 14:32:26,306 views 14192 16968 MAIN QUERY DEBUG: Final params count: 9
+INFO 2025-08-19 14:32:26,357 views 14192 16968 MAIN QUERY SUCCESS: Retrieved 20 records
+INFO 2025-08-19 14:32:26,358 utils 14192 16968 UTILS: Added section conditions with type conversion for IDs: ['5', '2']
+INFO 2025-08-19 14:32:26,492 basehttp 14192 16968 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 94532
+INFO 2025-08-19 14:32:40,380 basehttp 14192 16968 "GET /logout/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:32:40,435 basehttp 14192 16968 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:32:40,544 basehttp 14192 16968 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-19 14:32:46,290 views 14192 16968 LOGIN ATTEMPT: 002104
+INFO 2025-08-19 14:32:46,317 authentication 14192 16968 Updated Django user data for 002104
+INFO 2025-08-19 14:32:46,318 authentication 14192 16968 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-19 14:32:46,329 views 14192 16968 LOGIN: Using existing session data for 002104
+INFO 2025-08-19 14:32:46,330 views 14192 16968 LOGIN REDIRECT: 002104 -> /wo-maintenance/section-based/
+INFO 2025-08-19 14:32:46,336 basehttp 14192 16968 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:32:46,412 utils 14192 16968 FIXED: Direct section match found: ENGINEERING-IT
+INFO 2025-08-19 14:32:46,424 utils 14192 16968 FIXED: Found 2 matching sections for keywords ['IT', 'INFORMATION', 'TECHNOLOGY', 'SISTEM', 'KOMPUTER', 'ICT']: [6, 8]
+INFO 2025-08-19 14:32:46,425 views 14192 16968 Section Access for BADRI KIMAN: ENGINEERING_IT_SUPERVISOR
+INFO 2025-08-19 14:32:46,426 views 14192 16968 SECTION ACCESS: User has access to section IDs: [6, 8]
+INFO 2025-08-19 14:32:46,427 views 14192 16968 SECTION QUERY: Added 2 section conditions
+INFO 2025-08-19 14:32:46,428 views 14192 16968 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:32:46,428 views 14192 16968 QUERY DEBUG: Query params count: 6
+INFO 2025-08-19 14:32:46,449 views 14192 16968 COUNT QUERY SUCCESS: Found 1 total records
+INFO 2025-08-19 14:32:46,449 views 14192 16968 MAIN QUERY DEBUG: Final params count: 9
+INFO 2025-08-19 14:32:46,487 views 14192 16968 MAIN QUERY SUCCESS: Retrieved 20 records
+INFO 2025-08-19 14:32:46,488 utils 14192 16968 UTILS: Added section conditions with type conversion for IDs: ['6', '8']
+INFO 2025-08-19 14:32:46,590 basehttp 14192 16968 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 98669
+INFO 2025-08-19 14:40:39,077 autoreload 14192 16416 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\forms.py changed, reloading.
+INFO 2025-08-19 14:40:41,295 autoreload 6524 11112 Watching for file changes with StatReloader
+INFO 2025-08-19 14:44:11,552 autoreload 15776 6620 Watching for file changes with StatReloader
+INFO 2025-08-19 14:44:13,920 views 15776 6620 === STATUS VALIDATION ===
+INFO 2025-08-19 14:44:13,920 views 15776 6620 Expected STATUS_APPROVED: B
+INFO 2025-08-19 14:44:13,921 views 15776 6620 Expected APPROVE_YES: N
+INFO 2025-08-19 14:44:13,921 views 15776 6620 Actual values in database:
+INFO 2025-08-19 14:44:13,921 views 15776 6620   Status: , Approve: N, Review: None
+INFO 2025-08-19 14:44:13,921 views 15776 6620   Status: A, Approve: T, Review: None
+INFO 2025-08-19 14:44:13,921 views 15776 6620   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 14:44:13,922 views 15776 6620   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 14:44:13,922 views 15776 6620   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 14:44:13,922 views 15776 6620 === END VALIDATION ===
+INFO 2025-08-19 14:44:18,416 utils 15776 10584 FIXED: Direct section match found: ENGINEERING-IT
+INFO 2025-08-19 14:44:18,427 utils 15776 10584 FIXED: Found 2 matching sections for keywords ['IT', 'INFORMATION', 'TECHNOLOGY', 'SISTEM', 'KOMPUTER', 'ICT']: [6, 8]
+INFO 2025-08-19 14:44:18,427 views 15776 10584 Section Access for BADRI KIMAN: ENGINEERING_IT_SUPERVISOR
+INFO 2025-08-19 14:44:18,428 views 15776 10584 SECTION ACCESS: User has access to section IDs: [6, 8]
+INFO 2025-08-19 14:44:18,428 views 15776 10584 SECTION QUERY: Added 2 section conditions
+INFO 2025-08-19 14:44:18,429 views 15776 10584 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:44:18,429 views 15776 10584 QUERY DEBUG: Query params count: 6
+INFO 2025-08-19 14:44:18,448 views 15776 10584 COUNT QUERY SUCCESS: Found 1 total records
+INFO 2025-08-19 14:44:18,449 views 15776 10584 MAIN QUERY DEBUG: Final params count: 9
+INFO 2025-08-19 14:44:18,481 views 15776 10584 MAIN QUERY SUCCESS: Retrieved 20 records
+INFO 2025-08-19 14:44:18,482 utils 15776 10584 UTILS: Added section conditions with type conversion for IDs: ['6', '8']
+INFO 2025-08-19 14:44:18,696 basehttp 15776 10584 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 98449
+INFO 2025-08-19 14:44:24,502 basehttp 15776 9624 "GET /logout/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:44:24,554 basehttp 15776 9624 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:44:24,661 basehttp 15776 9624 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-19 14:44:30,511 views 15776 9624 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 14:44:30,524 authentication 15776 9624 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 14:44:30,525 authentication 15776 9624 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 14:44:30,533 views 15776 9624 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 14:44:30,534 views 15776 9624 LOGIN REDIRECT: 007522 -> /wo-maintenance/section-based/
+INFO 2025-08-19 14:44:30,539 basehttp 15776 9624 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:44:30,612 utils 15776 9624 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:44:30,613 views 15776 9624 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 14:44:30,669 views 15776 9624 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:44:30,670 views 15776 9624 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 14:44:30,688 views 15776 9624 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:44:30,688 views 15776 9624 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 14:44:30,700 views 15776 9624 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:44:30,795 basehttp 15776 9624 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 32285
+INFO 2025-08-19 14:44:39,656 utils 15776 13608 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:44:41,386 basehttp 15776 13608 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 130762
+INFO 2025-08-19 14:44:41,511 basehttp 15776 13608 "GET /web_seiwa/wingoapp/static/assets/fonts/theme-font/SFProText-Heavy.woff2 HTTP/1.1" 200 103760
+INFO 2025-08-19 14:44:51,844 utils 15776 11196 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:44:52,977 basehttp 15776 11196 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/?page=2 HTTP/1.1" 200 131018
+INFO 2025-08-19 14:45:05,814 utils 15776 14580 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:45:06,928 basehttp 15776 14580 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 130762
+INFO 2025-08-19 14:45:36,119 utils 15776 9836 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:45:37,244 basehttp 15776 9836 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 130152
+INFO 2025-08-19 14:45:39,736 utils 15776 9836 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:45:40,856 basehttp 15776 9836 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 130152
+INFO 2025-08-19 14:46:29,736 basehttp 15776 14524 "GET /wo-maintenance/review/ HTTP/1.1" 200 20788
+INFO 2025-08-19 14:48:17,633 utils 15776 10376 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:48:18,764 basehttp 15776 10376 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 130152
+INFO 2025-08-19 14:48:20,743 basehttp 15776 10376 "GET /logout/?next=/wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:48:20,795 basehttp 15776 10376 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:48:20,908 basehttp 15776 10376 "GET /login/?next=/wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 10284
+INFO 2025-08-19 14:48:29,391 views 15776 6104 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 14:48:29,400 authentication 15776 6104 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 14:48:29,406 views 15776 6104 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 14:48:29,406 views 15776 6104 LOGIN REDIRECT: 002186 -> /wo-maintenance/siti-fatimah/tabel-main-keren/
+INFO 2025-08-19 14:48:29,410 basehttp 15776 6104 "POST /login/?next=/wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:48:29,487 basehttp 15776 6104 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:48:29,672 basehttp 15776 6104 "GET /wo-maintenance/ HTTP/1.1" 200 29609
+INFO 2025-08-19 14:48:38,707 views 15776 13384 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-19 14:48:38,712 views 15776 13384 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:48:38,713 views 15776 13384 QUERY DEBUG: Query params count: 3
+INFO 2025-08-19 14:48:38,730 views 15776 13384 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:48:38,731 views 15776 13384 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-19 14:48:38,742 views 15776 13384 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:48:38,842 basehttp 15776 13384 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 31586
+INFO 2025-08-19 14:49:03,973 views 15776 17260 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-19 14:49:03,977 views 15776 17260 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:49:03,978 views 15776 17260 QUERY DEBUG: Query params count: 3
+INFO 2025-08-19 14:49:03,994 views 15776 17260 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:49:03,994 views 15776 17260 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-19 14:49:04,007 views 15776 17260 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:49:04,092 basehttp 15776 17260 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 30940
+INFO 2025-08-19 14:49:18,047 views 15776 16432 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-19 14:49:18,052 views 15776 16432 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:49:18,052 views 15776 16432 QUERY DEBUG: Query params count: 3
+INFO 2025-08-19 14:49:18,069 views 15776 16432 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:49:18,069 views 15776 16432 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-19 14:49:18,083 views 15776 16432 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:49:18,205 basehttp 15776 16432 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 30377
+INFO 2025-08-19 14:49:23,038 views 15776 13216 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-19 14:49:23,043 views 15776 13216 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:49:23,043 views 15776 13216 QUERY DEBUG: Query params count: 3
+INFO 2025-08-19 14:49:23,061 views 15776 13216 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:49:23,062 views 15776 13216 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-19 14:49:23,085 views 15776 13216 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:49:23,180 basehttp 15776 13216 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 30377
+INFO 2025-08-19 14:49:25,047 basehttp 15776 13216 "GET /wo-maintenance/input/ HTTP/1.1" 200 48141
+INFO 2025-08-19 14:49:53,159 basehttp 15776 14364 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=41&_=1755589765160 HTTP/1.1" 200 1284
+INFO 2025-08-19 14:51:36,804 basehttp 15776 14844 "GET /wo-maintenance/input/ HTTP/1.1" 200 48141
+INFO 2025-08-19 14:52:10,668 basehttp 15776 14844 "GET /wo-maintenance/input/ HTTP/1.1" 200 48141
+INFO 2025-08-19 14:52:23,637 views 15776 14844 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-19 14:52:23,649 views 15776 14844 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:52:23,649 views 15776 14844 QUERY DEBUG: Query params count: 3
+INFO 2025-08-19 14:52:23,667 views 15776 14844 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:52:23,667 views 15776 14844 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-19 14:52:23,680 views 15776 14844 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:52:23,769 basehttp 15776 14844 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 30377
+INFO 2025-08-19 14:52:57,767 views 15776 14844 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-19 14:52:57,771 views 15776 14844 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:52:57,771 views 15776 14844 QUERY DEBUG: Query params count: 3
+INFO 2025-08-19 14:52:57,788 views 15776 14844 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:52:57,788 views 15776 14844 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-19 14:52:57,799 views 15776 14844 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:52:57,898 basehttp 15776 14844 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 30379
+INFO 2025-08-19 14:53:00,328 basehttp 15776 14844 "GET /wo-maintenance/input/ HTTP/1.1" 200 48143
+INFO 2025-08-19 14:53:11,212 basehttp 15776 14844 "GET /wo-maintenance/ HTTP/1.1" 200 29048
+INFO 2025-08-19 14:53:40,855 basehttp 15776 14844 "GET /wo-maintenance/ HTTP/1.1" 200 29048
+INFO 2025-08-19 14:53:45,244 views 15776 14844 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+INFO 2025-08-19 14:53:45,250 views 15776 14844 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:53:45,250 views 15776 14844 QUERY DEBUG: Query params count: 3
+INFO 2025-08-19 14:53:45,267 views 15776 14844 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:53:45,267 views 15776 14844 MAIN QUERY DEBUG: Final params count: 6
+INFO 2025-08-19 14:53:45,279 views 15776 14844 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:53:45,372 basehttp 15776 14844 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 30379
+INFO 2025-08-19 14:53:56,765 basehttp 15776 14844 "GET /logout/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:53:56,824 basehttp 15776 14844 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:53:56,955 basehttp 15776 14844 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-19 14:54:03,615 views 15776 14844 LOGIN ATTEMPT: 001605
+INFO 2025-08-19 14:54:03,641 authentication 15776 14844 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-19 14:54:03,650 views 15776 14844 LOGIN: Using existing session data for 001605
+INFO 2025-08-19 14:54:03,651 views 15776 14844 LOGIN REDIRECT: 001605 -> /wo-maintenance/section-based/
+INFO 2025-08-19 14:54:03,657 basehttp 15776 14844 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:54:03,734 utils 15776 14844 FIXED: Direct section match found: ENGINEERING-ELECTRIC
+INFO 2025-08-19 14:54:03,739 utils 15776 14844 FIXED: Added default elektrik section ID 2
+INFO 2025-08-19 14:54:03,741 utils 15776 14844 FIXED: Found 2 matching sections for keywords ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL', 'LISTRIK', 'POWER', 'ELEC']: [5, 2]
+INFO 2025-08-19 14:54:03,742 utils 15776 14844 FIXED: Discovered additional elektrik sections: [5]
+INFO 2025-08-19 14:54:03,743 utils 15776 14844 FIXED: Enhanced elektrik section IDs: [5, 2]
+INFO 2025-08-19 14:54:03,744 views 15776 14844 Section Access for TUMPAL BERLIN HARIANJA: ENGINEERING_ELECTRIC_SUPERVISOR
+INFO 2025-08-19 14:54:03,745 views 15776 14844 SECTION ACCESS: User has access to section IDs: [5, 2]
+INFO 2025-08-19 14:54:03,748 views 15776 14844 SECTION QUERY: Added 2 section conditions
+INFO 2025-08-19 14:54:03,749 views 15776 14844 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:54:03,750 views 15776 14844 QUERY DEBUG: Query params count: 6
+INFO 2025-08-19 14:54:03,770 views 15776 14844 COUNT QUERY SUCCESS: Found 10 total records
+INFO 2025-08-19 14:54:03,771 views 15776 14844 MAIN QUERY DEBUG: Final params count: 9
+INFO 2025-08-19 14:54:03,824 views 15776 14844 MAIN QUERY SUCCESS: Retrieved 20 records
+INFO 2025-08-19 14:54:03,825 utils 15776 14844 UTILS: Added section conditions with type conversion for IDs: ['5', '2']
+INFO 2025-08-19 14:54:03,935 basehttp 15776 14844 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 94657
+INFO 2025-08-19 14:54:12,532 utils 15776 14844 FIXED: Direct section match found: ENGINEERING-ELECTRIC
+INFO 2025-08-19 14:54:12,537 utils 15776 14844 FIXED: Added default elektrik section ID 2
+INFO 2025-08-19 14:54:12,538 utils 15776 14844 FIXED: Found 2 matching sections for keywords ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL', 'LISTRIK', 'POWER', 'ELEC']: [5, 2]
+INFO 2025-08-19 14:54:12,540 utils 15776 14844 FIXED: Discovered additional elektrik sections: [5]
+INFO 2025-08-19 14:54:12,540 utils 15776 14844 FIXED: Enhanced elektrik section IDs: [5, 2]
+INFO 2025-08-19 14:54:12,541 views 15776 14844 Section Access for TUMPAL BERLIN HARIANJA: ENGINEERING_ELECTRIC_SUPERVISOR
+INFO 2025-08-19 14:54:12,542 views 15776 14844 SECTION ACCESS: User has access to section IDs: [5, 2]
+INFO 2025-08-19 14:54:12,545 views 15776 14844 SECTION QUERY: Added 2 section conditions
+INFO 2025-08-19 14:54:12,546 views 15776 14844 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:54:12,546 views 15776 14844 QUERY DEBUG: Query params count: 6
+INFO 2025-08-19 14:54:12,566 views 15776 14844 COUNT QUERY SUCCESS: Found 10 total records
+INFO 2025-08-19 14:54:12,567 views 15776 14844 MAIN QUERY DEBUG: Final params count: 9
+INFO 2025-08-19 14:54:12,617 views 15776 14844 MAIN QUERY SUCCESS: Retrieved 20 records
+INFO 2025-08-19 14:54:12,617 utils 15776 14844 UTILS: Added section conditions with type conversion for IDs: ['5', '2']
+INFO 2025-08-19 14:54:12,712 basehttp 15776 14844 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 94372
+INFO 2025-08-19 14:54:14,364 basehttp 15776 14844 "GET /wo-maintenance/input/ HTTP/1.1" 200 48179
+INFO 2025-08-19 14:54:17,923 basehttp 15776 14844 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=2&_=1755590054475 HTTP/1.1" 200 1110
+INFO 2025-08-19 14:54:20,751 basehttp 15776 14844 "GET /wo-maintenance/input/ HTTP/1.1" 200 48179
+INFO 2025-08-19 14:54:25,371 utils 15776 14844 FIXED: Direct section match found: ENGINEERING-ELECTRIC
+INFO 2025-08-19 14:54:25,376 utils 15776 14844 FIXED: Added default elektrik section ID 2
+INFO 2025-08-19 14:54:25,377 utils 15776 14844 FIXED: Found 2 matching sections for keywords ['ELEKTRIK', 'ELECTRIC', 'ELECTRICAL', 'LISTRIK', 'POWER', 'ELEC']: [5, 2]
+INFO 2025-08-19 14:54:25,378 utils 15776 14844 FIXED: Discovered additional elektrik sections: [5]
+INFO 2025-08-19 14:54:25,378 utils 15776 14844 FIXED: Enhanced elektrik section IDs: [5, 2]
+INFO 2025-08-19 14:54:25,379 views 15776 14844 Section Access for TUMPAL BERLIN HARIANJA: ENGINEERING_ELECTRIC_SUPERVISOR
+INFO 2025-08-19 14:54:25,380 views 15776 14844 SECTION ACCESS: User has access to section IDs: [5, 2]
+INFO 2025-08-19 14:54:25,380 views 15776 14844 SECTION QUERY: Added 2 section conditions
+INFO 2025-08-19 14:54:25,380 views 15776 14844 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:54:25,381 views 15776 14844 QUERY DEBUG: Query params count: 6
+INFO 2025-08-19 14:54:25,403 views 15776 14844 COUNT QUERY SUCCESS: Found 10 total records
+INFO 2025-08-19 14:54:25,404 views 15776 14844 MAIN QUERY DEBUG: Final params count: 9
+INFO 2025-08-19 14:54:25,455 views 15776 14844 MAIN QUERY SUCCESS: Retrieved 20 records
+INFO 2025-08-19 14:54:25,455 utils 15776 14844 UTILS: Added section conditions with type conversion for IDs: ['5', '2']
+INFO 2025-08-19 14:54:25,549 basehttp 15776 14844 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 94372
+INFO 2025-08-19 14:54:48,491 basehttp 15776 16416 "GET /logout/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:54:48,545 basehttp 15776 16416 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:54:48,656 basehttp 15776 16416 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-19 14:54:54,381 views 15776 16416 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 14:54:54,397 authentication 15776 16416 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 14:54:54,397 authentication 15776 16416 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 14:54:54,403 views 15776 16416 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 14:54:54,404 views 15776 16416 LOGIN REDIRECT: 007522 -> /wo-maintenance/section-based/
+INFO 2025-08-19 14:54:54,408 basehttp 15776 16416 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 14:54:54,477 utils 15776 16416 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:54:54,478 views 15776 16416 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 14:54:54,505 views 15776 16416 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:54:54,508 views 15776 16416 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 14:54:54,524 views 15776 16416 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:54:54,525 views 15776 16416 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 14:54:54,535 views 15776 16416 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:54:54,621 basehttp 15776 16416 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 31114
+INFO 2025-08-19 14:54:57,886 utils 15776 16416 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:54:59,005 basehttp 15776 16416 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 129591
+INFO 2025-08-19 14:56:55,919 autoreload 15776 6620 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-19 14:56:58,142 autoreload 14588 14908 Watching for file changes with StatReloader
+INFO 2025-08-19 14:57:00,539 views 14588 14908 === STATUS VALIDATION ===
+INFO 2025-08-19 14:57:00,540 views 14588 14908 Expected STATUS_APPROVED: B
+INFO 2025-08-19 14:57:00,543 views 14588 14908 Expected APPROVE_YES: N
+INFO 2025-08-19 14:57:00,543 views 14588 14908 Actual values in database:
+INFO 2025-08-19 14:57:00,544 views 14588 14908   Status: , Approve: N, Review: None
+INFO 2025-08-19 14:57:00,545 views 14588 14908   Status: A, Approve: T, Review: None
+INFO 2025-08-19 14:57:00,546 views 14588 14908   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 14:57:00,546 views 14588 14908   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 14:57:00,547 views 14588 14908   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 14:57:00,548 views 14588 14908 === END VALIDATION ===
+INFO 2025-08-19 14:58:16,595 autoreload 14588 14908 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-19 14:58:18,618 autoreload 11384 15232 Watching for file changes with StatReloader
+INFO 2025-08-19 14:58:28,949 autoreload 17948 15436 Watching for file changes with StatReloader
+INFO 2025-08-19 14:58:31,241 views 17948 15436 === STATUS VALIDATION ===
+INFO 2025-08-19 14:58:31,242 views 17948 15436 Expected STATUS_APPROVED: B
+INFO 2025-08-19 14:58:31,242 views 17948 15436 Expected APPROVE_YES: N
+INFO 2025-08-19 14:58:31,243 views 17948 15436 Actual values in database:
+INFO 2025-08-19 14:58:31,243 views 17948 15436   Status: , Approve: N, Review: None
+INFO 2025-08-19 14:58:31,243 views 17948 15436   Status: A, Approve: T, Review: None
+INFO 2025-08-19 14:58:31,244 views 17948 15436   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 14:58:31,244 views 17948 15436   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 14:58:31,244 views 17948 15436   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 14:58:31,245 views 17948 15436 === END VALIDATION ===
+INFO 2025-08-19 14:58:39,774 basehttp 17948 12280 "GET /wo-maintenance/ HTTP/1.1" 200 29728
+INFO 2025-08-19 14:58:42,018 utils 17948 12280 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:58:43,169 basehttp 17948 12280 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 129591
+INFO 2025-08-19 14:58:48,410 utils 17948 12280 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 14:58:48,411 views 17948 12280 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 14:58:48,453 views 17948 12280 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 14:58:48,454 views 17948 12280 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 14:58:48,470 views 17948 12280 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 14:58:48,470 views 17948 12280 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 14:58:48,481 views 17948 12280 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 14:58:48,569 basehttp 17948 12280 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 30831
+INFO 2025-08-19 15:10:05,388 autoreload 17948 15436 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\__init__.py changed, reloading.
+INFO 2025-08-19 15:10:07,625 autoreload 2040 11704 Watching for file changes with StatReloader
+INFO 2025-08-19 15:10:09,868 views 2040 11704 === STATUS VALIDATION ===
+INFO 2025-08-19 15:10:09,868 views 2040 11704 Expected STATUS_APPROVED: B
+INFO 2025-08-19 15:10:09,870 views 2040 11704 Expected APPROVE_YES: N
+INFO 2025-08-19 15:10:09,871 views 2040 11704 Actual values in database:
+INFO 2025-08-19 15:10:09,871 views 2040 11704   Status: , Approve: N, Review: None
+INFO 2025-08-19 15:10:09,872 views 2040 11704   Status: A, Approve: T, Review: None
+INFO 2025-08-19 15:10:09,872 views 2040 11704   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 15:10:09,873 views 2040 11704   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 15:10:09,873 views 2040 11704   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 15:10:09,874 views 2040 11704 === END VALIDATION ===
+INFO 2025-08-19 15:19:19,378 autoreload 2040 11704 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\models.py changed, reloading.
+INFO 2025-08-19 15:19:21,558 autoreload 14660 11928 Watching for file changes with StatReloader
+INFO 2025-08-19 15:27:47,961 autoreload 14024 18388 Watching for file changes with StatReloader
+INFO 2025-08-19 15:27:50,208 views 14024 18388 === STATUS VALIDATION ===
+INFO 2025-08-19 15:27:50,209 views 14024 18388 Expected STATUS_APPROVED: B
+INFO 2025-08-19 15:27:50,210 views 14024 18388 Expected APPROVE_YES: N
+INFO 2025-08-19 15:27:50,210 views 14024 18388 Actual values in database:
+INFO 2025-08-19 15:27:50,210 views 14024 18388   Status: , Approve: N, Review: None
+INFO 2025-08-19 15:27:50,211 views 14024 18388   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 15:27:50,211 views 14024 18388   Status: A, Approve: T, Review: None
+INFO 2025-08-19 15:27:50,211 views 14024 18388   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 15:27:50,212 views 14024 18388   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 15:27:50,212 views 14024 18388   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 15:27:50,212 views 14024 18388 === END VALIDATION ===
+INFO 2025-08-19 15:28:09,731 utils 14024 15928 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:28:09,732 views 14024 15928 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 15:28:09,806 views 14024 15928 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 15:28:09,807 views 14024 15928 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 15:28:09,824 views 14024 15928 COUNT QUERY SUCCESS: Found 0 total records
+INFO 2025-08-19 15:28:09,825 views 14024 15928 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 15:28:09,839 views 14024 15928 MAIN QUERY SUCCESS: Retrieved 0 records
+INFO 2025-08-19 15:28:10,110 basehttp 14024 15928 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 31411
+INFO 2025-08-19 15:28:13,243 utils 14024 18312 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:28:14,485 basehttp 14024 18312 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 129591
+INFO 2025-08-19 15:40:03,281 autoreload 14024 18388 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-19 15:40:05,434 autoreload 15552 15276 Watching for file changes with StatReloader
+INFO 2025-08-19 15:46:45,456 autoreload 2080 6920 Watching for file changes with StatReloader
+INFO 2025-08-19 15:46:47,778 views 2080 6920 === STATUS VALIDATION ===
+INFO 2025-08-19 15:46:47,778 views 2080 6920 Expected STATUS_APPROVED: B
+INFO 2025-08-19 15:46:47,778 views 2080 6920 Expected APPROVE_YES: N
+INFO 2025-08-19 15:46:47,778 views 2080 6920 Actual values in database:
+INFO 2025-08-19 15:46:47,779 views 2080 6920   Status: , Approve: N, Review: None
+INFO 2025-08-19 15:46:47,779 views 2080 6920   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 15:46:47,779 views 2080 6920   Status: A, Approve: T, Review: None
+INFO 2025-08-19 15:46:47,779 views 2080 6920   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 15:46:47,779 views 2080 6920   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 15:46:47,779 views 2080 6920   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 15:46:47,779 views 2080 6920 === END VALIDATION ===
+INFO 2025-08-19 15:47:40,554 utils 2080 11832 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:47:40,604 views 2080 11832 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 15:47:40,638 views 2080 11832 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 15:47:40,638 views 2080 11832 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 15:47:40,664 views 2080 11832 COUNT QUERY SUCCESS: Found 0 total records from tabel_pengajuan
+INFO 2025-08-19 15:47:40,664 views 2080 11832 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 15:47:40,666 views 2080 11832 MAIN QUERY DEBUG: Data source: tabel_pengajuan
+INFO 2025-08-19 15:47:40,708 views 2080 11832 MAIN QUERY SUCCESS: Retrieved 0 records from tabel_pengajuan
+ERROR 2025-08-19 15:47:40,981 views 2080 11832 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-19 15:47:40,990 views 2080 11832 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5960, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-19 15:47:40,994 basehttp 2080 11832 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 15:47:41,193 basehttp 2080 11832 "GET /wo-maintenance/ HTTP/1.1" 200 29742
+INFO 2025-08-19 15:47:46,157 utils 2080 18428 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:47:46,182 views 2080 18428 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 15:47:46,214 views 2080 18428 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 15:47:46,214 views 2080 18428 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 15:47:46,229 views 2080 18428 COUNT QUERY SUCCESS: Found 0 total records from tabel_pengajuan
+INFO 2025-08-19 15:47:46,229 views 2080 18428 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 15:47:46,231 views 2080 18428 MAIN QUERY DEBUG: Data source: tabel_pengajuan
+INFO 2025-08-19 15:47:46,241 views 2080 18428 MAIN QUERY SUCCESS: Retrieved 0 records from tabel_pengajuan
+ERROR 2025-08-19 15:47:46,364 views 2080 18428 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-19 15:47:46,367 views 2080 18428 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5960, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-19 15:47:46,370 basehttp 2080 18428 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 15:47:46,535 basehttp 2080 18428 "GET /wo-maintenance/ HTTP/1.1" 200 29742
+INFO 2025-08-19 15:50:34,401 utils 2080 1128 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:50:34,434 views 2080 1128 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 15:50:34,467 views 2080 1128 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 15:50:34,468 views 2080 1128 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 15:50:34,484 views 2080 1128 COUNT QUERY SUCCESS: Found 0 total records from tabel_pengajuan
+INFO 2025-08-19 15:50:34,485 views 2080 1128 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 15:50:34,487 views 2080 1128 MAIN QUERY DEBUG: Data source: tabel_pengajuan
+INFO 2025-08-19 15:50:34,497 views 2080 1128 MAIN QUERY SUCCESS: Retrieved 0 records from tabel_pengajuan
+ERROR 2025-08-19 15:50:34,653 views 2080 1128 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-19 15:50:34,658 views 2080 1128 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5960, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-19 15:50:34,660 basehttp 2080 1128 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 15:50:34,851 basehttp 2080 1128 "GET /wo-maintenance/ HTTP/1.1" 200 29742
+INFO 2025-08-19 15:50:44,306 utils 2080 17104 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:50:45,771 basehttp 2080 17104 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 129902
+INFO 2025-08-19 15:51:37,478 utils 2080 18100 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:51:38,615 basehttp 2080 18100 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 129605
+INFO 2025-08-19 15:51:39,875 utils 2080 18100 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:51:39,910 views 2080 18100 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+INFO 2025-08-19 15:51:39,940 views 2080 18100 QUERY DEBUG: Where conditions count: 3
+INFO 2025-08-19 15:51:39,941 views 2080 18100 QUERY DEBUG: Query params count: 2
+INFO 2025-08-19 15:51:39,949 views 2080 18100 COUNT QUERY SUCCESS: Found 0 total records from tabel_pengajuan
+INFO 2025-08-19 15:51:39,949 views 2080 18100 MAIN QUERY DEBUG: Final params count: 5
+INFO 2025-08-19 15:51:39,950 views 2080 18100 MAIN QUERY DEBUG: Data source: tabel_pengajuan
+INFO 2025-08-19 15:51:39,962 views 2080 18100 MAIN QUERY SUCCESS: Retrieved 0 records from tabel_pengajuan
+ERROR 2025-08-19 15:51:40,117 views 2080 18100 Critical error in section_based_daftar_laporan: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+ERROR 2025-08-19 15:51:40,122 views 2080 18100 Critical traceback: Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 5960, in section_based_daftar_laporan
+    return render(request, 'wo_maintenance_app/section_based_daftar_laporan.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'debug_siti_full_access' not found. 'debug_siti_full_access' is not a valid view function or pattern name.
+
+INFO 2025-08-19 15:51:40,126 basehttp 2080 18100 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 15:51:40,309 basehttp 2080 18100 "GET /wo-maintenance/ HTTP/1.1" 200 29742
+INFO 2025-08-19 15:51:42,940 utils 2080 18100 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 15:51:44,102 basehttp 2080 18100 "GET /wo-maintenance/siti-fatimah/tabel-main-keren/ HTTP/1.1" 200 129916
+INFO 2025-08-19 15:57:45,072 autoreload 2080 6920 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-19 15:57:47,216 autoreload 14964 6524 Watching for file changes with StatReloader
+INFO 2025-08-19 15:57:49,474 views 14964 6524 === STATUS VALIDATION ===
+INFO 2025-08-19 15:57:49,474 views 14964 6524 Expected STATUS_APPROVED: B
+INFO 2025-08-19 15:57:49,477 views 14964 6524 Expected APPROVE_YES: N
+INFO 2025-08-19 15:57:49,478 views 14964 6524 Actual values in database:
+INFO 2025-08-19 15:57:49,478 views 14964 6524   Status: , Approve: N, Review: None
+INFO 2025-08-19 15:57:49,479 views 14964 6524   Status: A, Approve: T, Review: None
+INFO 2025-08-19 15:57:49,480 views 14964 6524   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 15:57:49,481 views 14964 6524   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 15:57:49,482 views 14964 6524   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 15:57:49,482 views 14964 6524 === END VALIDATION ===
+INFO 2025-08-19 15:58:17,900 autoreload 14964 6524 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-19 15:58:19,738 autoreload 3524 6840 Watching for file changes with StatReloader
+INFO 2025-08-19 15:59:20,700 autoreload 17424 1224 Watching for file changes with StatReloader
+INFO 2025-08-19 15:59:27,743 autoreload 17432 13544 Watching for file changes with StatReloader
+INFO 2025-08-19 15:59:30,015 views 17432 13544 === STATUS VALIDATION ===
+INFO 2025-08-19 15:59:30,015 views 17432 13544 Expected STATUS_APPROVED: B
+INFO 2025-08-19 15:59:30,016 views 17432 13544 Expected APPROVE_YES: N
+INFO 2025-08-19 15:59:30,016 views 17432 13544 Actual values in database:
+INFO 2025-08-19 15:59:30,017 views 17432 13544   Status: , Approve: N, Review: None
+INFO 2025-08-19 15:59:30,017 views 17432 13544   Status: A, Approve: T, Review: None
+INFO 2025-08-19 15:59:30,018 views 17432 13544   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 15:59:30,018 views 17432 13544   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 15:59:30,018 views 17432 13544   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 15:59:30,019 views 17432 13544 === END VALIDATION ===
+INFO 2025-08-19 15:59:35,480 basehttp 17432 14896 "GET / HTTP/1.1" 302 0
+INFO 2025-08-19 15:59:35,626 basehttp 17432 14896 "GET /login/?next=/ HTTP/1.1" 200 10284
+INFO 2025-08-19 15:59:44,324 views 17432 11620 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 15:59:44,361 authentication 17432 11620 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 15:59:44,361 authentication 17432 11620 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 15:59:44,370 views 17432 11620 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 15:59:44,371 views 17432 11620 LOGIN REDIRECT: 007522 -> /
+INFO 2025-08-19 15:59:44,377 basehttp 17432 11620 "POST /login/?next=/ HTTP/1.1" 302 0
+ERROR 2025-08-19 15:59:44,744 log 17432 11620 Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\master_app\views.py", line 766, in index
+    return render (request, 'master_app/dashboard.html', {'employee_data': employee_data})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 208, in render
+    return template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 177, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 322, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'siti_fatimah_tabel_main_keren' not found. 'siti_fatimah_tabel_main_keren' is not a valid view function or pattern name.
+ERROR 2025-08-19 15:59:44,753 basehttp 17432 11620 "GET / HTTP/1.1" 500 239295
+INFO 2025-08-19 16:00:26,168 basehttp 17432 17852 "GET / HTTP/1.1" 200 13259
+INFO 2025-08-19 16:00:31,725 utils 17432 13972 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:00:31,726 views 17432 13972 Section Access for SITI FATIMAH: SITI_FATIMAH_FULL
+ERROR 2025-08-19 16:00:31,752 views 17432 13972 Database error in section_based_daftar_laporan: not enough arguments for format string
+INFO 2025-08-19 16:00:31,857 basehttp 17432 13972 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 28091
+INFO 2025-08-19 16:00:38,294 basehttp 17432 13972 "GET /logout/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:00:38,346 basehttp 17432 13972 "GET /wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:00:38,457 basehttp 17432 13972 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:00:47,406 views 17432 13776 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 16:00:47,423 authentication 17432 13776 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 16:00:47,432 views 17432 13776 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 16:00:47,432 views 17432 13776 LOGIN REDIRECT: 002186 -> /wo-maintenance/section-based/
+INFO 2025-08-19 16:00:47,438 basehttp 17432 13776 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:00:47,516 views 17432 13776 Section Access for AGUS GUNAWAN: HIERARCHY_NORMAL
+ERROR 2025-08-19 16:00:47,542 views 17432 13776 Database error in section_based_daftar_laporan: not enough arguments for format string
+INFO 2025-08-19 16:00:47,645 basehttp 17432 13776 "GET /wo-maintenance/section-based/ HTTP/1.1" 200 27991
+INFO 2025-08-19 16:03:33,509 autoreload 17432 13544 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-19 16:03:35,668 autoreload 17292 1568 Watching for file changes with StatReloader
+INFO 2025-08-19 16:05:39,641 autoreload 11052 10468 Watching for file changes with StatReloader
+INFO 2025-08-19 16:05:41,953 views 11052 10468 === STATUS VALIDATION ===
+INFO 2025-08-19 16:05:41,953 views 11052 10468 Expected STATUS_APPROVED: B
+INFO 2025-08-19 16:05:41,954 views 11052 10468 Expected APPROVE_YES: N
+INFO 2025-08-19 16:05:41,954 views 11052 10468 Actual values in database:
+INFO 2025-08-19 16:05:41,954 views 11052 10468   Status: , Approve: N, Review: None
+INFO 2025-08-19 16:05:41,955 views 11052 10468   Status: A, Approve: T, Review: None
+INFO 2025-08-19 16:05:41,955 views 11052 10468   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 16:05:41,955 views 11052 10468   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 16:05:41,955 views 11052 10468   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 16:05:41,956 views 11052 10468 === END VALIDATION ===
+WARNING 2025-08-19 16:05:48,271 log 11052 17776 Not Found: /wo-maintenance/section-based/
+WARNING 2025-08-19 16:05:48,272 basehttp 11052 17776 "GET /wo-maintenance/section-based/ HTTP/1.1" 404 24650
+INFO 2025-08-19 16:05:53,681 basehttp 11052 660 "GET /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:06:00,115 views 11052 1160 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 16:06:00,158 authentication 11052 1160 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 16:06:00,161 views 11052 1160 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 16:06:00,161 views 11052 1160 LOGIN REDIRECT: 002186 -> /wo-maintenance/section-based/
+INFO 2025-08-19 16:06:00,222 basehttp 11052 1160 "POST /login/?next=/wo-maintenance/section-based/ HTTP/1.1" 302 0
+WARNING 2025-08-19 16:06:00,281 log 11052 1160 Not Found: /wo-maintenance/section-based/
+WARNING 2025-08-19 16:06:00,281 basehttp 11052 1160 "GET /wo-maintenance/section-based/ HTTP/1.1" 404 24650
+ERROR 2025-08-19 16:06:07,617 log 11052 1160 Internal Server Error: /wo-maintenance/
+Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 1613, in dashboard_index
+    return render(request, 'wo_maintenance_app/dashboard.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 208, in render
+    return template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 177, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\defaulttags.py", line 472, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'section_based_daftar_laporan' not found. 'section_based_daftar_laporan' is not a valid view function or pattern name.
+ERROR 2025-08-19 16:06:07,641 basehttp 11052 1160 "GET /wo-maintenance/ HTTP/1.1" 500 242683
+INFO 2025-08-19 16:08:08,538 basehttp 11052 1160 "GET /wo-maintenance/ HTTP/1.1" 200 29269
+INFO 2025-08-19 16:08:10,419 basehttp 11052 1160 "GET /wo-maintenance/input/ HTTP/1.1" 200 48503
+INFO 2025-08-19 16:08:14,739 views 11052 1160 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:08:14,821 basehttp 11052 1160 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28153
+INFO 2025-08-19 16:08:17,516 basehttp 11052 1160 "GET /wo-maintenance/input/ HTTP/1.1" 200 48364
+INFO 2025-08-19 16:09:07,516 basehttp 11052 1160 "GET /wo-maintenance/input/ HTTP/1.1" 200 48494
+INFO 2025-08-19 16:09:11,865 views 11052 4904 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:09:11,944 basehttp 11052 4904 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28283
+INFO 2025-08-19 16:09:15,554 views 11052 4904 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:09:15,623 basehttp 11052 4904 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28283
+INFO 2025-08-19 16:09:16,761 views 11052 4904 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:09:16,835 basehttp 11052 4904 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 28281
+INFO 2025-08-19 16:09:20,261 basehttp 11052 17884 "GET /wo-maintenance/input/ HTTP/1.1" 200 48494
+INFO 2025-08-19 16:09:21,405 views 11052 17884 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:09:21,487 basehttp 11052 17884 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28283
+INFO 2025-08-19 16:09:28,201 basehttp 11052 17884 "GET /logout/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:09:28,248 basehttp 11052 17884 "GET /wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:09:28,354 basehttp 11052 17884 "GET /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:09:35,494 views 11052 11776 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 16:09:35,506 authentication 11052 11776 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 16:09:35,507 authentication 11052 11776 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 16:09:35,514 views 11052 11776 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 16:09:35,514 views 11052 11776 LOGIN REDIRECT: 007522 -> /wo-maintenance/enhanced/
+INFO 2025-08-19 16:09:35,519 basehttp 11052 11776 "POST /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:09:35,589 utils 11052 11776 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:09:35,626 views 11052 11776 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:09:35,627 views 11052 11776 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:09:35,655 views 11052 11776 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:09:35,680 views 11052 11776 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:09:35,756 basehttp 11052 11776 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31725
+INFO 2025-08-19 16:11:35,060 basehttp 11052 13640 "GET /logout/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:11:35,115 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:11:35,222 basehttp 11052 13640 "GET /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:11:41,009 views 11052 13640 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 16:11:41,033 authentication 11052 13640 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 16:11:41,041 views 11052 13640 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 16:11:41,042 views 11052 13640 LOGIN REDIRECT: 002186 -> /wo-maintenance/enhanced/
+INFO 2025-08-19 16:11:41,048 basehttp 11052 13640 "POST /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:11:41,161 views 11052 13640 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:11:41,265 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28597
+INFO 2025-08-19 16:11:43,993 basehttp 11052 13640 "GET /wo-maintenance/input/ HTTP/1.1" 200 48499
+INFO 2025-08-19 16:11:48,888 basehttp 11052 13640 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755594704129 HTTP/1.1" 200 208
+INFO 2025-08-19 16:12:12,736 forms 11052 13640 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-19 16:12:12,756 views 11052 13640 SUCCESS: Pengajuan WO20250819001 berhasil disimpan
+INFO 2025-08-19 16:12:12,757 basehttp 11052 13640 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:12:12,866 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:12:12,933 basehttp 11052 13640 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31821
+INFO 2025-08-19 16:12:16,360 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 27685
+INFO 2025-08-19 16:12:22,445 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:12:22,508 basehttp 11052 13640 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31483
+INFO 2025-08-19 16:12:25,407 basehttp 11052 13640 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:12:25,455 basehttp 11052 13640 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:12:25,566 basehttp 11052 13640 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:12:31,243 views 11052 13640 LOGIN ATTEMPT: 002104
+INFO 2025-08-19 16:12:31,262 authentication 11052 13640 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-19 16:12:31,269 views 11052 13640 LOGIN: Using existing session data for 002104
+INFO 2025-08-19 16:12:31,270 views 11052 13640 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-19 16:12:31,274 basehttp 11052 13640 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:12:31,410 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:12:31,480 basehttp 11052 13640 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34814
+INFO 2025-08-19 16:12:37,812 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 32346
+INFO 2025-08-19 16:12:46,249 basehttp 11052 13640 "GET /logout/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:12:46,297 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:12:46,408 basehttp 11052 13640 "GET /login/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:12:52,473 views 11052 13640 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 16:12:52,500 authentication 11052 13640 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 16:12:52,500 authentication 11052 13640 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 16:12:52,508 views 11052 13640 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 16:12:52,508 views 11052 13640 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250819001/
+INFO 2025-08-19 16:12:52,512 basehttp 11052 13640 "POST /login/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:12:52,570 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:12:52,589 utils 11052 13640 SITI FATIMAH approval privilege granted for user: AGUS GUNAWAN
+INFO 2025-08-19 16:12:52,665 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 31055
+INFO 2025-08-19 16:12:56,760 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:12:56,769 views 11052 13640 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:12:56,770 views 11052 13640 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:12:56,789 views 11052 13640 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:12:56,799 views 11052 13640 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:12:56,870 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31421
+INFO 2025-08-19 16:13:00,210 basehttp 11052 13640 "GET /wo-maintenance/input/ HTTP/1.1" 200 48822
+INFO 2025-08-19 16:13:02,069 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:13:02,077 views 11052 13640 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:13:02,078 views 11052 13640 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:13:02,104 views 11052 13640 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:13:02,116 views 11052 13640 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:13:02,178 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31421
+INFO 2025-08-19 16:13:04,007 basehttp 11052 13640 "GET /wo-maintenance/review/ HTTP/1.1" 200 20233
+INFO 2025-08-19 16:13:07,186 basehttp 11052 13640 "GET /wo-maintenance/input/ HTTP/1.1" 200 48822
+INFO 2025-08-19 16:13:09,786 basehttp 11052 13640 "GET /logout/?next=/wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:13:09,847 basehttp 11052 13640 "GET /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:13:09,951 basehttp 11052 13640 "GET /login/?next=/wo-maintenance/input/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:13:16,025 views 11052 13640 LOGIN ATTEMPT: 002104
+INFO 2025-08-19 16:13:16,047 authentication 11052 13640 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-19 16:13:16,069 views 11052 13640 LOGIN: Using existing session data for 002104
+INFO 2025-08-19 16:13:16,070 views 11052 13640 LOGIN REDIRECT: 002104 -> /wo-maintenance/input/
+INFO 2025-08-19 16:13:16,078 basehttp 11052 13640 "POST /login/?next=/wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:13:16,209 basehttp 11052 13640 "GET /wo-maintenance/input/ HTTP/1.1" 200 50644
+INFO 2025-08-19 16:13:28,255 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:13:28,321 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 34506
+INFO 2025-08-19 16:13:30,625 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 32346
+INFO 2025-08-19 16:13:35,409 views 11052 13640 Pengajuan WO20250819001 approved by BADRI KIMAN - sent to review queue (status=B, approve=N)
+INFO 2025-08-19 16:13:35,416 views 11052 13640 Pengajuan WO20250819001 disetujui by BADRI KIMAN
+INFO 2025-08-19 16:13:35,418 basehttp 11052 13640 "POST /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:13:35,571 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 30469
+INFO 2025-08-19 16:13:41,600 basehttp 11052 13640 "GET /logout/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:13:41,647 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:13:41,749 basehttp 11052 13640 "GET /login/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:13:53,524 views 11052 13640 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 16:13:53,536 authentication 11052 13640 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 16:13:53,536 authentication 11052 13640 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 16:13:53,545 views 11052 13640 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 16:13:53,545 views 11052 13640 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250819001/
+INFO 2025-08-19 16:13:53,549 basehttp 11052 13640 "POST /login/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:13:53,605 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:13:53,708 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 28985
+INFO 2025-08-19 16:13:57,736 basehttp 11052 13640 "GET /wo-maintenance/input/ HTTP/1.1" 200 48822
+INFO 2025-08-19 16:13:58,864 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:13:58,868 views 11052 13640 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:13:58,869 views 11052 13640 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:13:58,888 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:13:58,905 views 11052 13640 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:13:58,977 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 35134
+INFO 2025-08-19 16:14:06,298 views 11052 13640 REVIEW: Starting review for WO20250819001 by 007522
+INFO 2025-08-19 16:14:06,322 views 11052 13640 REVIEW: Rendering template for WO20250819001
+INFO 2025-08-19 16:14:06,398 basehttp 11052 13640 "GET /wo-maintenance/review/pengajuan/WO20250819001/ HTTP/1.1" 200 29096
+INFO 2025-08-19 16:14:19,307 views 11052 13640 REVIEW: Starting review for WO20250819001 by 007522
+INFO 2025-08-19 16:14:19,323 views 11052 13640 REVIEW: Processing POST request for WO20250819001
+WARNING 2025-08-19 16:14:19,393 views 11052 13640 REVIEW: Form validation failed for WO20250819001: <ul class="errorlist"><li>review_notes<ul class="errorlist"><li>Bidang ini tidak boleh kosong.</li><li>Catatan review wajib diisi untuk dokumentasi</li></ul></li></ul>
+INFO 2025-08-19 16:14:19,394 views 11052 13640 REVIEW: Rendering template for WO20250819001
+INFO 2025-08-19 16:14:19,464 basehttp 11052 13640 "POST /wo-maintenance/review/pengajuan/WO20250819001/ HTTP/1.1" 200 29409
+INFO 2025-08-19 16:14:33,944 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:14:33,958 views 11052 13640 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:14:33,959 views 11052 13640 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:14:33,993 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:14:34,002 views 11052 13640 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:14:34,069 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 35134
+INFO 2025-08-19 16:14:38,045 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:14:38,129 basehttp 11052 13640 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 28702
+INFO 2025-08-19 16:14:41,670 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:14:41,677 views 11052 13640 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:14:41,678 views 11052 13640 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:14:41,699 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:14:41,709 views 11052 13640 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:14:41,777 basehttp 11052 13640 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 35132
+INFO 2025-08-19 16:14:48,177 utils 11052 13640 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:14:48,185 views 11052 13640 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:14:48,186 views 11052 13640 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:14:48,211 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:14:48,221 views 11052 13640 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:14:48,298 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 35134
+INFO 2025-08-19 16:14:51,873 basehttp 11052 13640 "GET /logout/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:14:51,925 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:14:52,027 basehttp 11052 13640 "GET /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:14:59,721 views 11052 13640 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 16:14:59,745 authentication 11052 13640 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 16:14:59,751 views 11052 13640 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 16:14:59,751 views 11052 13640 LOGIN REDIRECT: 002186 -> /wo-maintenance/enhanced/
+INFO 2025-08-19 16:14:59,755 basehttp 11052 13640 "POST /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:14:59,877 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:14:59,948 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31562
+INFO 2025-08-19 16:15:03,069 views 11052 13640 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:15:03,146 basehttp 11052 13640 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31253
+INFO 2025-08-19 16:16:51,554 autoreload 11052 10468 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-19 16:16:53,731 autoreload 3788 13808 Watching for file changes with StatReloader
+INFO 2025-08-19 16:16:55,964 views 3788 13808 === STATUS VALIDATION ===
+INFO 2025-08-19 16:16:55,964 views 3788 13808 Expected STATUS_APPROVED: B
+INFO 2025-08-19 16:16:55,967 views 3788 13808 Expected APPROVE_YES: N
+INFO 2025-08-19 16:16:55,968 views 3788 13808 Actual values in database:
+INFO 2025-08-19 16:16:55,969 views 3788 13808   Status: , Approve: N, Review: None
+INFO 2025-08-19 16:16:55,969 views 3788 13808   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 16:16:55,970 views 3788 13808   Status: A, Approve: T, Review: None
+INFO 2025-08-19 16:16:55,971 views 3788 13808   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 16:16:55,972 views 3788 13808   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 16:16:55,972 views 3788 13808   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 16:16:55,973 views 3788 13808   Status: B, Approve: N, Review: 0
+INFO 2025-08-19 16:16:55,974 views 3788 13808 === END VALIDATION ===
+INFO 2025-08-19 16:17:28,475 autoreload 3788 13808 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\forms.py changed, reloading.
+INFO 2025-08-19 16:17:30,568 autoreload 17344 12488 Watching for file changes with StatReloader
+INFO 2025-08-19 16:17:32,809 views 17344 12488 === STATUS VALIDATION ===
+INFO 2025-08-19 16:17:32,810 views 17344 12488 Expected STATUS_APPROVED: B
+INFO 2025-08-19 16:17:32,813 views 17344 12488 Expected APPROVE_YES: N
+INFO 2025-08-19 16:17:32,813 views 17344 12488 Actual values in database:
+INFO 2025-08-19 16:17:32,814 views 17344 12488   Status: , Approve: N, Review: None
+INFO 2025-08-19 16:17:32,815 views 17344 12488   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 16:17:32,816 views 17344 12488   Status: A, Approve: T, Review: None
+INFO 2025-08-19 16:17:32,816 views 17344 12488   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 16:17:32,817 views 17344 12488   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 16:17:32,818 views 17344 12488   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 16:17:32,818 views 17344 12488   Status: B, Approve: N, Review: 0
+INFO 2025-08-19 16:17:32,819 views 17344 12488 === END VALIDATION ===
+INFO 2025-08-19 16:18:46,330 autoreload 17344 12488 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\utils.py changed, reloading.
+INFO 2025-08-19 16:18:48,434 autoreload 14588 9676 Watching for file changes with StatReloader
+INFO 2025-08-19 16:20:24,457 autoreload 12236 5388 Watching for file changes with StatReloader
+INFO 2025-08-19 16:20:26,768 views 12236 5388 === STATUS VALIDATION ===
+INFO 2025-08-19 16:20:26,769 views 12236 5388 Expected STATUS_APPROVED: B
+INFO 2025-08-19 16:20:26,770 views 12236 5388 Expected APPROVE_YES: N
+INFO 2025-08-19 16:20:26,770 views 12236 5388 Actual values in database:
+INFO 2025-08-19 16:20:26,770 views 12236 5388   Status: , Approve: N, Review: None
+INFO 2025-08-19 16:20:26,771 views 12236 5388   Status: A, Approve: N, Review: 0
+INFO 2025-08-19 16:20:26,771 views 12236 5388   Status: A, Approve: T, Review: None
+INFO 2025-08-19 16:20:26,771 views 12236 5388   Status: A, Approve: T, Review: 0
+INFO 2025-08-19 16:20:26,772 views 12236 5388   Status: A, Approve: Y, Review: 0
+INFO 2025-08-19 16:20:26,772 views 12236 5388   Status: A, Approve: Y, Review: 1
+INFO 2025-08-19 16:20:26,772 views 12236 5388   Status: B, Approve: N, Review: 0
+INFO 2025-08-19 16:20:26,773 views 12236 5388 === END VALIDATION ===
+INFO 2025-08-19 16:20:34,112 views 12236 2040 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:20:34,304 basehttp 12236 2040 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31256
+INFO 2025-08-19 16:20:37,410 basehttp 12236 11836 "GET /logout/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:20:37,461 basehttp 12236 11836 "GET /wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:20:37,586 basehttp 12236 11836 "GET /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:20:45,634 views 12236 11836 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 16:20:45,648 authentication 12236 11836 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 16:20:45,648 authentication 12236 11836 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 16:20:45,659 views 12236 11836 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 16:20:45,660 views 12236 11836 LOGIN REDIRECT: 007522 -> /wo-maintenance/enhanced/
+INFO 2025-08-19 16:20:45,667 basehttp 12236 11836 "POST /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:20:45,732 utils 12236 11836 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:20:45,747 views 12236 11836 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:20:45,749 views 12236 11836 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:20:45,773 views 12236 11836 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:20:45,784 views 12236 11836 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:20:45,849 basehttp 12236 11836 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 35446
+INFO 2025-08-19 16:20:49,407 utils 12236 17760 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:20:49,415 views 12236 17760 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:20:49,416 views 12236 17760 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:20:49,441 views 12236 17760 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:20:49,451 views 12236 17760 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:20:49,517 basehttp 12236 17760 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 35137
+INFO 2025-08-19 16:20:51,787 views 12236 17760 REVIEW: Starting review for WO20250819001 by 007522
+INFO 2025-08-19 16:20:51,807 views 12236 17760 REVIEW: Rendering template for WO20250819001
+INFO 2025-08-19 16:20:51,873 basehttp 12236 17760 "GET /wo-maintenance/review/pengajuan/WO20250819001/ HTTP/1.1" 200 30868
+INFO 2025-08-19 16:21:06,842 views 12236 9948 REVIEW: Starting review for WO20250819001 by 007522
+INFO 2025-08-19 16:21:06,862 views 12236 9948 REVIEW: Processing POST request for WO20250819001
+INFO 2025-08-19 16:21:06,862 views 12236 9948 REVIEW: Form valid - Action: process, Target: elektrik
+INFO 2025-08-19 16:21:06,887 views 12236 9948 REVIEW: Successfully processed WO20250819001 - final status A/Y
+INFO 2025-08-19 16:21:06,887 views 12236 9948 REVIEW: Processing section change to elektrik
+INFO 2025-08-19 16:21:06,892 utils 12236 9948 Auto-discovered: it -> ID 6 (Utility)
+INFO 2025-08-19 16:21:06,893 utils 12236 9948 Auto-discovered: elektrik -> ID 5 (Elektrik)
+INFO 2025-08-19 16:21:06,893 utils 12236 9948 Auto-discovered: mekanik -> ID 4 (Mekanik)
+INFO 2025-08-19 16:21:06,894 utils 12236 9948 Auto-discovered: utility -> ID 6 (Utility)
+WARNING 2025-08-19 16:21:06,894 utils 12236 9948 Fallback mapping: civil -> ID 5
+INFO 2025-08-19 16:21:06,913 views 12236 9948 REVIEW: Updated section from ID 8 to ID 5
+ERROR 2025-08-19 16:21:06,917 utils 12236 9948 Error getting SDBM supervisors for elektrik: unsupported format character 'S' (0x53) at index 1420
+INFO 2025-08-19 16:21:06,918 views 12236 9948 REVIEW: Successfully processed review for WO20250819001
+INFO 2025-08-19 16:21:06,929 basehttp 12236 9948 "POST /wo-maintenance/review/pengajuan/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:06,987 views 12236 9948 REVIEW: Starting review for WO20250819001 by 007522
+WARNING 2025-08-19 16:21:07,000 views 12236 9948 REVIEW: Pengajuan WO20250819001 not ready for review
+INFO 2025-08-19 16:21:07,001 basehttp 12236 9948 "GET /wo-maintenance/review/pengajuan/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:07,095 views 12236 9948 Found 0 pengajuan for review by SITI FATIMAH (status=B, approve=N)
+INFO 2025-08-19 16:21:07,278 basehttp 12236 9948 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 200 30747
+INFO 2025-08-19 16:21:12,311 utils 12236 9948 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:21:12,320 views 12236 9948 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:21:12,321 views 12236 9948 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:21:12,347 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:21:12,357 views 12236 9948 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11731}
+INFO 2025-08-19 16:21:12,423 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31424
+INFO 2025-08-19 16:21:16,930 utils 12236 9948 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:21:16,953 views 12236 9948 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:21:16,955 views 12236 9948 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:21:16,981 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:21:17,002 views 12236 9948 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11731}
+INFO 2025-08-19 16:21:17,071 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31424
+INFO 2025-08-19 16:21:20,746 basehttp 12236 9948 "GET /logout/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:20,796 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:20,904 basehttp 12236 9948 "GET /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:21:27,883 views 12236 9948 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 16:21:27,897 authentication 12236 9948 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 16:21:27,904 views 12236 9948 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 16:21:27,905 views 12236 9948 LOGIN REDIRECT: 002186 -> /wo-maintenance/enhanced/
+INFO 2025-08-19 16:21:27,910 basehttp 12236 9948 "POST /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:28,015 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:21:28,095 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28600
+INFO 2025-08-19 16:21:30,638 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:21:30,703 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28291
+INFO 2025-08-19 16:21:33,941 basehttp 12236 9948 "GET /wo-maintenance/input/ HTTP/1.1" 200 48502
+INFO 2025-08-19 16:21:36,225 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:21:36,292 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28291
+INFO 2025-08-19 16:21:40,727 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:21:40,812 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28291
+INFO 2025-08-19 16:21:44,003 basehttp 12236 9948 "GET /logout/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:44,051 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:44,154 basehttp 12236 9948 "GET /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:21:49,766 views 12236 9948 LOGIN ATTEMPT: 002104
+INFO 2025-08-19 16:21:49,790 authentication 12236 9948 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-19 16:21:49,798 views 12236 9948 LOGIN: Using existing session data for 002104
+INFO 2025-08-19 16:21:49,799 views 12236 9948 LOGIN REDIRECT: 002104 -> /wo-maintenance/enhanced/
+INFO 2025-08-19 16:21:49,804 basehttp 12236 9948 "POST /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:49,921 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:21:49,993 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 31219
+INFO 2025-08-19 16:21:55,771 basehttp 12236 9948 "GET /logout/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:55,825 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:21:55,926 basehttp 12236 9948 "GET /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:22:01,547 views 12236 9948 LOGIN ATTEMPT: 001605
+INFO 2025-08-19 16:22:01,557 authentication 12236 9948 Successful SDBM authentication for 001605 - TUMPAL BERLIN HARIANJA
+INFO 2025-08-19 16:22:01,563 views 12236 9948 LOGIN: Using existing session data for 001605
+INFO 2025-08-19 16:22:01,564 views 12236 9948 LOGIN REDIRECT: 001605 -> /wo-maintenance/enhanced/
+INFO 2025-08-19 16:22:01,569 basehttp 12236 9948 "POST /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:22:01,668 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:22:01,735 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28654
+INFO 2025-08-19 16:22:05,388 views 12236 9948 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:22:05,452 basehttp 12236 9948 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28343
+INFO 2025-08-19 16:24:01,528 basehttp 12236 14976 "GET /logout/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:24:01,582 basehttp 12236 14976 "GET /wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:24:01,686 basehttp 12236 14976 "GET /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:24:08,165 views 12236 12844 LOGIN ATTEMPT: 002186
+INFO 2025-08-19 16:24:08,189 authentication 12236 12844 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-19 16:24:08,197 views 12236 12844 LOGIN: Using existing session data for 002186
+INFO 2025-08-19 16:24:08,198 views 12236 12844 LOGIN REDIRECT: 002186 -> /wo-maintenance/enhanced/
+INFO 2025-08-19 16:24:08,204 basehttp 12236 12844 "POST /login/?next=/wo-maintenance/enhanced/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:24:08,317 views 12236 12844 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:24:08,389 basehttp 12236 12844 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28600
+INFO 2025-08-19 16:24:12,034 basehttp 12236 12844 "GET /wo-maintenance/input/ HTTP/1.1" 200 48502
+INFO 2025-08-19 16:24:16,564 basehttp 12236 15784 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755595452181 HTTP/1.1" 200 208
+INFO 2025-08-19 16:24:35,950 forms 12236 9852 Validation SUCCESS: Other (ID: 801.0) di Engineering
+INFO 2025-08-19 16:24:35,971 views 12236 9852 SUCCESS: Pengajuan WO20250819001 berhasil disimpan
+INFO 2025-08-19 16:24:35,972 basehttp 12236 9852 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:24:36,075 views 12236 9852 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:24:36,142 basehttp 12236 9852 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31829
+INFO 2025-08-19 16:24:40,569 basehttp 12236 6508 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:24:40,620 basehttp 12236 6508 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:24:40,731 basehttp 12236 6508 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:24:46,263 views 12236 6508 LOGIN ATTEMPT: 002104
+INFO 2025-08-19 16:24:46,276 authentication 12236 6508 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-19 16:24:46,282 views 12236 6508 LOGIN: Using existing session data for 002104
+INFO 2025-08-19 16:24:46,282 views 12236 6508 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-19 16:24:46,286 basehttp 12236 6508 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:24:46,387 views 12236 6508 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:24:46,463 basehttp 12236 6508 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 34822
+INFO 2025-08-19 16:24:49,605 basehttp 12236 6508 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 32354
+INFO 2025-08-19 16:24:53,756 views 12236 6508 Pengajuan WO20250819001 approved by BADRI KIMAN - sent to review queue (status=B, approve=N)
+INFO 2025-08-19 16:24:53,764 views 12236 6508 Pengajuan WO20250819001 disetujui by BADRI KIMAN
+INFO 2025-08-19 16:24:53,766 basehttp 12236 6508 "POST /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:24:53,936 basehttp 12236 6508 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 30477
+INFO 2025-08-19 16:25:08,801 basehttp 12236 12772 "GET /logout/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:25:08,859 basehttp 12236 12772 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:25:08,960 basehttp 12236 12772 "GET /login/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 10284
+INFO 2025-08-19 16:25:20,196 views 12236 13048 LOGIN ATTEMPT: 007522
+INFO 2025-08-19 16:25:20,209 authentication 12236 13048 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-19 16:25:20,210 authentication 12236 13048 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-19 16:25:20,217 views 12236 13048 LOGIN: Using existing session data for 007522
+INFO 2025-08-19 16:25:20,218 views 12236 13048 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/WO20250819001/
+INFO 2025-08-19 16:25:20,222 basehttp 12236 13048 "POST /login/?next=/wo-maintenance/detail/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:25:20,291 utils 12236 13048 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:25:20,376 basehttp 12236 13048 "GET /wo-maintenance/detail/WO20250819001/ HTTP/1.1" 200 28993
+INFO 2025-08-19 16:25:27,557 utils 12236 14964 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:25:27,619 views 12236 14964 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:25:27,621 views 12236 14964 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:25:27,700 views 12236 14964 Enhanced query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-19 16:25:27,721 views 12236 14964 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11729}
+INFO 2025-08-19 16:25:27,794 basehttp 12236 14964 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 35142
+INFO 2025-08-19 16:25:29,650 views 12236 14964 REVIEW: Starting review for WO20250819001 by 007522
+INFO 2025-08-19 16:25:29,671 views 12236 14964 REVIEW: Rendering template for WO20250819001
+INFO 2025-08-19 16:25:29,737 basehttp 12236 14964 "GET /wo-maintenance/review/pengajuan/WO20250819001/ HTTP/1.1" 200 30873
+INFO 2025-08-19 16:25:41,904 views 12236 2636 REVIEW: Starting review for WO20250819001 by 007522
+INFO 2025-08-19 16:25:41,930 views 12236 2636 REVIEW: Processing POST request for WO20250819001
+INFO 2025-08-19 16:25:41,932 views 12236 2636 REVIEW: Form valid - Action: process, Target: elektrik
+INFO 2025-08-19 16:25:41,947 views 12236 2636 REVIEW: Successfully processed WO20250819001 - final status A/Y
+INFO 2025-08-19 16:25:41,947 views 12236 2636 REVIEW: Processing section change to elektrik
+INFO 2025-08-19 16:25:41,949 utils 12236 2636 Auto-discovered: it -> ID 6 (Utility)
+INFO 2025-08-19 16:25:41,950 utils 12236 2636 Auto-discovered: elektrik -> ID 5 (Elektrik)
+INFO 2025-08-19 16:25:41,952 utils 12236 2636 Auto-discovered: mekanik -> ID 4 (Mekanik)
+INFO 2025-08-19 16:25:41,953 utils 12236 2636 Auto-discovered: utility -> ID 6 (Utility)
+WARNING 2025-08-19 16:25:41,954 utils 12236 2636 Fallback mapping: civil -> ID 5
+INFO 2025-08-19 16:25:41,978 views 12236 2636 REVIEW: Updated section from ID 8 to ID 5
+ERROR 2025-08-19 16:25:41,983 utils 12236 2636 Error getting SDBM supervisors for elektrik: unsupported format character 'S' (0x53) at index 1420
+INFO 2025-08-19 16:25:41,984 views 12236 2636 REVIEW: Successfully processed review for WO20250819001
+INFO 2025-08-19 16:25:41,998 basehttp 12236 2636 "POST /wo-maintenance/review/pengajuan/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:25:42,064 views 12236 2636 REVIEW: Starting review for WO20250819001 by 007522
+WARNING 2025-08-19 16:25:42,082 views 12236 2636 REVIEW: Pengajuan WO20250819001 not ready for review
+INFO 2025-08-19 16:25:42,083 basehttp 12236 2636 "GET /wo-maintenance/review/pengajuan/WO20250819001/ HTTP/1.1" 302 0
+INFO 2025-08-19 16:25:42,169 views 12236 2636 Found 0 pengajuan for review by SITI FATIMAH (status=B, approve=N)
+INFO 2025-08-19 16:25:42,244 basehttp 12236 2636 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 200 30747
+INFO 2025-08-19 16:30:09,434 basehttp 12236 14540 "GET /wo-maintenance/ajax/review/pending-count/ HTTP/1.1" 200 118
+INFO 2025-08-19 16:30:11,685 basehttp 12236 14540 "GET /wo-maintenance/review/ HTTP/1.1" 200 20236
+INFO 2025-08-19 16:30:13,512 basehttp 12236 14400 "GET /wo-maintenance/ HTTP/1.1" 200 29725
+INFO 2025-08-19 16:30:16,910 utils 12236 14400 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:30:16,924 views 12236 14400 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:30:16,925 views 12236 14400 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:30:16,949 views 12236 14400 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:30:16,957 views 12236 14400 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:30:17,025 basehttp 12236 14400 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31422
+INFO 2025-08-19 16:30:20,114 utils 12236 14400 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:30:20,123 views 12236 14400 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:30:20,124 views 12236 14400 SITI FATIMAH mode: querying pengajuan ready for review (status=B, approve=N)
+INFO 2025-08-19 16:30:20,159 views 12236 14400 Enhanced query executed successfully - Found 0 records for view_mode: approved
+INFO 2025-08-19 16:30:20,169 views 12236 14400 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:30:20,240 basehttp 12236 14400 "GET /wo-maintenance/enhanced/?mode=approved HTTP/1.1" 200 31459
+INFO 2025-08-19 16:30:21,430 views 12236 14400 Found 0 pengajuan for review by SITI FATIMAH (status=B, approve=N)
+INFO 2025-08-19 16:30:21,505 basehttp 12236 14400 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 200 30019
+INFO 2025-08-19 16:30:23,683 utils 12236 14664 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:30:23,689 views 12236 14664 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:30:23,690 views 12236 14664 SITI FATIMAH mode: querying pengajuan ready for review (status=B, approve=N)
+INFO 2025-08-19 16:30:23,716 views 12236 14664 Enhanced query executed successfully - Found 0 records for view_mode: approved
+INFO 2025-08-19 16:30:23,728 views 12236 14664 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:30:23,786 basehttp 12236 14664 "GET /wo-maintenance/daftar/?mode=approved HTTP/1.1" 200 31457
+INFO 2025-08-19 16:30:32,871 basehttp 12236 10468 "GET /wo-maintenance/review/ HTTP/1.1" 200 20236
+INFO 2025-08-19 16:31:08,156 basehttp 12236 2820 "GET /wo-maintenance/ HTTP/1.1" 200 28771
+INFO 2025-08-19 16:31:10,987 basehttp 12236 2820 "GET /wo-maintenance/input/ HTTP/1.1" 200 47871
+INFO 2025-08-19 16:31:12,187 utils 12236 3528 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:31:12,194 views 12236 3528 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:31:12,195 views 12236 3528 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:31:12,220 views 12236 3528 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:31:12,232 views 12236 3528 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:31:12,310 basehttp 12236 3528 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 30470
+INFO 2025-08-19 16:43:41,216 basehttp 12236 14852 "GET /wo-maintenance/ HTTP/1.1" 200 28771
+INFO 2025-08-19 16:43:51,675 basehttp 12236 15232 "GET /dailyactivity/mechanical/ HTTP/1.1" 200 38021
+INFO 2025-08-19 16:51:39,737 utils 12236 11928 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:51:39,752 views 12236 11928 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:51:39,754 views 12236 11928 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:51:39,778 views 12236 11928 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:51:39,790 views 12236 11928 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:51:39,886 basehttp 12236 11928 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 30470
+INFO 2025-08-19 16:51:46,577 basehttp 12236 11928 "GET /wo-maintenance/input/ HTTP/1.1" 200 47871
+INFO 2025-08-19 16:51:48,296 utils 12236 11928 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 16:51:48,303 views 12236 11928 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 16:51:48,304 views 12236 11928 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 16:51:48,329 views 12236 11928 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 16:51:48,339 views 12236 11928 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 16:51:48,402 basehttp 12236 11928 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 30470
+INFO 2025-08-19 17:06:23,084 basehttp 12236 4476 "GET /wo-maintenance/input/ HTTP/1.1" 200 47871
+INFO 2025-08-19 17:06:25,628 utils 12236 4476 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-19 17:06:25,640 views 12236 4476 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-19 17:06:25,641 views 12236 4476 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-19 17:06:25,664 views 12236 4476 Enhanced query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-19 17:06:25,674 views 12236 4476 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11730}
+INFO 2025-08-19 17:06:25,746 basehttp 12236 4476 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 30470
