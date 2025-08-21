@@ -1,5 +1,5 @@
 <!-- wo_maintenance_app/templates/wo_maintenance_app/enhanced_daftar_laporan.html -->
-<!-- UPDATED Template dengan New Status Logic -->
+<!-- FIXED: Template yang menampilkan final processed untuk user pembuat pengajuan -->
 
 {% extends 'starter_kit/base.html' %}
 {% load static %}
@@ -13,281 +13,7 @@
         padding-top: 20px;
     }
     
-    /* Error Handling Styles */
-    .error-container {
-        background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
-        color: #721c24;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
-        border-left: 4px solid #dc3545;
-    }
-    
-    .error-container h5 {
-        margin: 0 0 10px 0;
-        font-weight: 600;
-    }
-    
-    .error-actions {
-        margin-top: 15px;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-    
-    .error-btn {
-        background: #dc3545;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        text-decoration: none;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border: none;
-        transition: all 0.3s ease;
-    }
-    
-    .error-btn:hover {
-        background: #c82333;
-        transform: translateY(-1px);
-        text-decoration: none;
-        color: white;
-    }
-    
-    /* SDBM Integration Styles */
-    .sdbm-integration-header {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
-    }
-    
-    .sdbm-integration-header h4 {
-        margin: 0 0 8px 0;
-        font-weight: 600;
-    }
-    
-    .sdbm-integration-header .integration-info {
-        opacity: 0.9;
-        font-size: 0.95rem;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-    
-    .integration-badge {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 4px 12px;
-        border-radius: 15px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-    
-    /* Enhanced View Mode Switcher */
-    .enhanced-mode-switch {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 25px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    .mode-switch-title {
-        color: #495057;
-        font-weight: 600;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .mode-buttons {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-    
-    .mode-btn {
-        padding: 12px 20px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        border: 2px solid #e9ecef;
-        background: white;
-        color: #495057;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        position: relative;
-    }
-    
-    .mode-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        text-decoration: none;
-        color: #495057;
-    }
-    
-    .mode-btn.active {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        border-color: #28a745;
-        color: white;
-        transform: scale(1.05);
-    }
-    
-    .mode-btn .badge-count {
-        background: rgba(255, 255, 255, 0.9);
-        color: #495057;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-left: 5px;
-    }
-    
-    .mode-btn.active .badge-count {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-    }
-    
-    /* Enhanced Stats Cards */
-    .sdbm-stats-container {
-        margin-bottom: 25px;
-    }
-    
-    .sdbm-stat-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        text-align: center;
-        border-left: 4px solid #28a745;
-        transition: all 0.3s ease;
-        height: 100%;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .sdbm-stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #28a745, #20c997);
-    }
-    
-    .sdbm-stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
-    }
-    
-    .stat-icon {
-        width: 48px;
-        height: 48px;
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 15px;
-        color: white;
-        font-size: 1.5rem;
-    }
-    
-    .stat-number {
-        font-size: 2.2rem;
-        font-weight: bold;
-        color: #28a745;
-        margin-bottom: 5px;
-        line-height: 1;
-    }
-    
-    .stat-label {
-        font-size: 0.9rem;
-        color: #6c757d;
-        text-transform: uppercase;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
-    
-    .stat-description {
-        font-size: 0.8rem;
-        color: #adb5bd;
-        margin-top: 8px;
-        line-height: 1.3;
-    }
-    
-    /* Enhanced Table Styles */
-    .enhanced-table-container {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    
-    .table-header {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        color: white;
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .table-header.siti-mode {
-        background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%);
-    }
-    
-    .table-title {
-        margin: 0;
-        font-weight: 600;
-        flex: 1;
-    }
-    
-    .table-actions {
-        display: flex;
-        gap: 10px;
-    }
-    
-    .table-responsive {
-        border-radius: 0;
-        box-shadow: none;
-    }
-    
-    .table th {
-        background: #f8f9fa;
-        color: #495057;
-        font-weight: 600;
-        border: none;
-        padding: 15px 12px;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .table td {
-        padding: 15px 12px;
-        vertical-align: middle;
-        border-bottom: 1px solid #e9ecef;
-    }
-    
-    .table tbody tr:hover {
-        background-color: #f8f9fa;
-        transform: translateX(2px);
-        transition: all 0.2s ease;
-    }
-    
-    /* UPDATED: Enhanced Status Badges untuk New Status Logic */
+    /* Enhanced Status Badges dengan Final Processed */
     .enhanced-status-badge {
         padding: 6px 12px;
         border-radius: 20px;
@@ -312,11 +38,35 @@
     .status-final-processed {
         background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
         color: #155724;
+        border: 2px solid #28a745;
+        animation: finalGlow 2s ease-in-out infinite;
     }
     
     .status-rejected {
         background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
         color: #721c24;
+    }
+    
+    /* Final processed glow animation */
+    @keyframes finalGlow {
+        0%, 100% { box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); }
+        50% { box-shadow: 0 0 15px rgba(40, 167, 69, 0.6); }
+    }
+    
+    /* Own pengajuan indicator */
+    .own-pengajuan-row {
+        background: linear-gradient(90deg, rgba(40, 167, 69, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+        border-left: 4px solid #28a745;
+    }
+    
+    .own-pengajuan-badge {
+        background: #28a745;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        margin-left: 5px;
     }
     
     /* Enhanced Action Buttons */
@@ -355,78 +105,108 @@
         color: #212529;
     }
     
-    /* Empty State */
-    .enhanced-empty-state {
-        text-align: center;
-        padding: 80px 20px;
-        color: #6c757d;
-        background: white;
-        border-radius: 12px;
-        margin: 20px 0;
+    .btn-final-complete {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: 2px solid #28a745;
+        animation: completePulse 3s ease-in-out infinite;
     }
     
-    .empty-state-icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 20px;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: 50%;
+    @keyframes completePulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    /* Stats Cards */
+    .sdbm-integration-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+    
+    .sdbm-integration-header h4 {
+        margin: 0 0 8px 0;
+        font-weight: 600;
+    }
+    
+    .integration-info {
+        opacity: 0.9;
+        font-size: 0.95rem;
         display: flex;
         align-items: center;
-        justify-content: center;
-        color: #adb5bd;
-        font-size: 2rem;
+        gap: 15px;
+        flex-wrap: wrap;
     }
     
-    /* Debug Panel (Superuser Only) */
-    .debug-panel {
+    .integration-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    /* Enhanced Table Styles */
+    .enhanced-table-container {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .table-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .table-header.siti-mode {
+        background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%);
+    }
+    
+    .table th {
         background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 20px;
-        font-family: monospace;
-        font-size: 12px;
+        color: #495057;
+        font-weight: 600;
+        border: none;
+        padding: 15px 12px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
-    .debug-panel h6 {
-        color: #495057;
-        margin-bottom: 10px;
-        font-family: sans-serif;
-        font-size: 14px;
+    .table td {
+        padding: 15px 12px;
+        vertical-align: middle;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: translateX(2px);
+        transition: all 0.2s ease;
     }
     
     /* Responsive Design */
     @media (max-width: 768px) {
-        .sdbm-integration-header {
-            padding: 15px;
-        }
-        
-        .integration-info {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-        }
-        
-        .mode-buttons {
-            justify-content: center;
-        }
-        
-        .mode-btn {
-            flex: 1;
-            min-width: 120px;
-            justify-content: center;
+        .enhanced-action-btn {
+            font-size: 0.7rem;
+            padding: 4px 8px;
         }
         
         .table-header {
             flex-direction: column;
             gap: 15px;
             text-align: center;
-        }
-        
-        .enhanced-action-btn {
-            font-size: 0.7rem;
-            padding: 4px 8px;
         }
     }
 </style>
@@ -436,21 +216,13 @@
 <div class="page-body">
     {% include 'starter_kit/layout/breadcrumb.html' %}
 
-    <!-- Error Handling -->
+    <!-- Messages -->
     {% if messages %}
         {% for message in messages %}
             {% if message.tags == 'error' %}
-            <div class="error-container">
-                <h5>⚠️ Terjadi Kesalahan</h5>
-                <p>{{ message|linebreaks }}</p>
-                <div class="error-actions">
-                    <a href="{% url 'wo_maintenance_app:dashboard' %}" class="error-btn">
-                        <i data-feather="home"></i> Kembali ke Dashboard
-                    </a>
-                    <button onclick="location.reload()" class="error-btn">
-                        <i data-feather="refresh-cw"></i> Refresh Halaman
-                    </button>
-                </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> {{ message|linebreaks }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% else %}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -461,14 +233,14 @@
         {% endfor %}
     {% endif %}
 
-    <!-- UPDATED: SDBM Integration Header dengan New Status Info -->
+    <!-- FIXED: SDBM Integration Header dengan Final Processed Info -->
     <div class="sdbm-integration-header">
-        <h4>🎯 Enhanced WO Maintenance dengan New Status Flow</h4>
+        <h4>🎯 Enhanced WO Maintenance - User Visibility Fixed</h4>
         <div class="integration-info">
             <span>Status Flow: Pending (0/0) → Approved Atasan (B/N) → Final Processed (A/Y)</span>
             <div class="integration-badge">
                 <div style="width: 8px; height: 8px; background: rgba(255,255,255,0.8); border-radius: 50%; animation: pulse 2s infinite;"></div>
-                New Status Active
+                Final Processed Visible to Owner
             </div>
             {% if is_siti_fatimah %}
             <div class="integration-badge">
@@ -478,123 +250,21 @@
         </div>
     </div>
 
-    <!-- User Hierarchy Info -->
+    <!-- User Info -->
     {% if employee_data %}
-    <div class="hierarchy-info{% if is_siti_fatimah and view_mode == 'approved' %} siti-mode{% endif %}">
-        <div>
-            <div class="user-name">
-                {{ employee_data.fullname|default:employee_data.nickname }}
-                {% if is_siti_fatimah %}
-                    <span style="font-size: 0.9rem; opacity: 0.9;"> - REVIEWER MODE</span>
-                {% endif %}
-            </div>
-            <div class="info-text">
-                {{ employee_data.department_name|default:"-" }} 
-                {% if employee_data.section_name %}> {{ employee_data.section_name }}{% endif %}
-            </div>
-        </div>
-        <div>
-            {% if is_siti_fatimah %}
-                <span class="role-badge" style="background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%); color: white;">🎯 SITI FATIMAH - REVIEWER</span>
-            {% endif %}
-            <span class="role-badge">{{ employee_data.title_name|default:"-" }}</span>
-        </div>
+    <div class="alert alert-info">
+        <strong>{{ employee_data.fullname|default:employee_data.nickname }}</strong>
+        {% if is_siti_fatimah %}
+            <span class="badge bg-primary ms-2">SITI FATIMAH - REVIEWER</span>
+        {% endif %}
+        <br>
+        <small>{{ employee_data.department_name|default:"-" }} 
+        {% if employee_data.section_name %}> {{ employee_data.section_name }}{% endif %}
+        | {{ employee_data.title_name|default:"-" }}</small>
     </div>
     {% endif %}
 
-    <!-- Enhanced Mode Switch -->
-    <div class="enhanced-mode-switch">
-        <div class="mode-switch-title">
-            <i data-feather="layers"></i>
-            View Mode Selection
-            {% if is_siti_fatimah %}
-                <span class="badge bg-success ms-2">SITI FATIMAH</span>
-            {% endif %}
-        </div>
-        <div class="mode-buttons">
-            <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}?mode=normal" 
-               class="mode-btn {% if view_mode == 'normal' %}active{% endif %}">
-                <i data-feather="list"></i>
-                Normal View
-                <span class="badge-count">{{ access_methods.hierarchy|default:0 }}</span>
-            </a>
-            
-            {% if is_siti_fatimah %}
-            <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}?mode=approved" 
-               class="mode-btn {% if view_mode == 'approved' %}active{% endif %}">
-                <i data-feather="check-circle"></i>
-                Ready for Review
-                <span class="badge-count">{{ siti_stats.pending_review|default:0 }}</span>
-            </a>
-            
-            <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}" 
-               class="mode-btn">
-                <i data-feather="clipboard"></i>
-                Review Dashboard
-                <span class="badge-count">{{ siti_stats.pending_review|default:0 }}</span>
-            </a>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- UPDATED: Enhanced Stats Cards dengan New Status -->
-    {% if is_siti_fatimah %}
-    <div class="sdbm-stats-container">
-        <div class="row">
-            <div class="col-md-3 mb-3">
-                <div class="sdbm-stat-card">
-                    <div class="stat-icon">🔄</div>
-                    <div class="stat-number">{{ siti_stats.pending_review|default:0 }}</div>
-                    <div class="stat-label">Ready for Review</div>
-                    <div class="stat-description">Pengajuan siap review (Status B/N)</div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="sdbm-stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-number">{{ siti_stats.already_reviewed|default:0 }}</div>
-                    <div class="stat-label">Reviewed</div>
-                    <div class="stat-description">Sudah direview oleh SITI</div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="sdbm-stat-card">
-                    <div class="stat-icon">🎯</div>
-                    <div class="stat-number">{{ siti_stats.final_processed|default:0 }}</div>
-                    <div class="stat-label">Final Processed</div>
-                    <div class="stat-description">Selesai diproses (Status A/Y)</div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="sdbm-stat-card">
-                    <div class="stat-icon">📊</div>
-                    <div class="stat-number">{{ total_records|default:0 }}</div>
-                    <div class="stat-label">Total Current</div>
-                    <div class="stat-description">Total yang ditampilkan</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Debug Panel (Superuser Only) -->
-    {% if debug_info and user.is_superuser %}
-    <div class="debug-panel">
-        <h6>🔧 New Status System Debug Info (Superuser Only)</h6>
-        <div class="debug-info">
-            <div><strong>Status Constants:</strong></div>
-            <div>- PENDING: {{ debug_info.status_values.pending }} ({{ debug_info.status_values.pending }}/0)</div>
-            <div>- APPROVED ATASAN: {{ debug_info.status_values.approved }} ({{ debug_info.status_values.approved }}/{{ debug_info.status_values.approve_yes }})</div>
-            <div>- FINAL PROCESSED: {{ debug_info.status_values.reviewed }} ({{ debug_info.status_values.reviewed }}/{{ debug_info.status_values.approve_reviewed }})</div>
-            <div><strong>View Mode:</strong> {{ debug_info.view_mode }}</div>
-            <div><strong>User Role:</strong> {{ debug_info.user_role }}</div>
-            <div><strong>Excluded Final Processed:</strong> {{ debug_info.excluded_final_processed }}</div>
-            <div><strong>Total Loaded:</strong> {{ debug_info.total_pengajuan_loaded }}</div>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Enhanced Table Container -->
+    <!-- FIXED: Enhanced Table Container -->
     <div class="enhanced-table-container">
         <div class="table-header{% if is_siti_fatimah and view_mode == 'approved' %} siti-mode{% endif %}">
             <div class="table-title">
@@ -605,7 +275,7 @@
                     Enhanced Daftar Pengajuan Maintenance
                 {% endif %}
                 <small style="opacity: 0.8; display: block; font-size: 0.8rem; margin-top: 5px;">
-                    Total: {{ total_records|default:0 }} pengajuan (excluding final processed A/Y)
+                    Total: {{ total_records|default:0 }} pengajuan (including your final processed)
                 </small>
             </div>
             <div class="table-actions">
@@ -639,10 +309,13 @@
                 </thead>
                 <tbody>
                     {% for pengajuan in pengajuan_list %}
-                    <tr>
+                    <tr {% if pengajuan.22 == 1 %}class="own-pengajuan-row"{% endif %}>
                         <td>
                             <div class="position-relative">
                                 <strong class="text-primary">{{ pengajuan.0|default:"-" }}</strong>
+                                {% if pengajuan.22 == 1 %}
+                                    <span class="own-pengajuan-badge">MY</span>
+                                {% endif %}
                                 {% if pengajuan.9 %}<br><small class="text-muted">{{ pengajuan.9 }}</small>{% endif %}
                             </div>
                         </td>
@@ -671,7 +344,7 @@
                         </td>
                         <td>
                             <div>
-                                <!-- UPDATED: Status badges dengan new logic -->
+                                <!-- FIXED: Status badges dengan final processed visibility -->
                                 {% if pengajuan.6 == '0' %}
                                     <span class="enhanced-status-badge status-pending">
                                         ⏳ Pending
@@ -683,6 +356,9 @@
                                 {% elif pengajuan.6 == 'A' and pengajuan.11 == 'Y' %}
                                     <span class="enhanced-status-badge status-final-processed">
                                         🎯 Final Processed
+                                        {% if pengajuan.22 == 1 %}
+                                            <br><small style="opacity: 0.9;">✅ Completed by SITI FATIMAH</small>
+                                        {% endif %}
                                     </span>
                                 {% elif pengajuan.6 == '2' %}
                                     <span class="enhanced-status-badge status-rejected">
@@ -716,109 +392,89 @@
                             {% endif %}
                         </td>
                         <td>
-    <div class="d-flex flex-column gap-1">
-        {% if pengajuan.0 %}
-            <!-- Detail Button - Always Available -->
-            <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" 
-               class="enhanced-action-btn btn-detail" title="Detail">
-                <i data-feather="eye"></i> Detail
-            </a>
-            
-            <!-- UPDATED: Review Button Logic untuk SITI FATIMAH -->
-            {% if is_siti_fatimah %}
-                {% comment %}
-                SITI FATIMAH can review if:
-                1. Pengajuan is approved by atasan (status='B' AND approve='N') 
-                2. NOT yet reviewed (review_status is NULL or '0')
-                {% endcomment %}
-                
-                <!-- Check if this is approved by atasan -->
-                {% if pengajuan.6 == 'B' and pengajuan.11 == 'N' %}
-                    <!-- Check review status -->
-                    {% if pengajuan.15 == '0' or pengajuan.15 is None %}
-                        <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
-                           class="enhanced-action-btn btn-review" title="Review Pengajuan">
-                            <i data-feather="clipboard"></i> Review
-                        </a>
-                    {% elif pengajuan.15 == '1' %}
-                        <!-- Already reviewed (processed) -->
-                        <span class="enhanced-action-btn" style="background: #d4edda; color: #155724; cursor: default;" title="Sudah Direview">
-                            <i data-feather="check-circle"></i> Reviewed
-                        </span>
-                    {% elif pengajuan.15 == '2' %}
-                        <!-- Already reviewed (rejected) -->
-                        <span class="enhanced-action-btn" style="background: #f8d7da; color: #721c24; cursor: default;" title="Sudah Ditolak">
-                            <i data-feather="x-circle"></i> Rejected
-                        </span>
-                    {% endif %}
-                {% else %}
-                    <!-- Not ready for review yet -->
-                    {% if pengajuan.6 == '0' %}
-                        <span class="enhanced-action-btn" style="background: #fff3cd; color: #856404; cursor: default;" title="Menunggu Approval Atasan">
-                            <i data-feather="clock"></i> Pending Approval
-                        </span>
-                    {% elif pengajuan.6 == '2' %}
-                        <span class="enhanced-action-btn" style="background: #f8d7da; color: #721c24; cursor: default;" title="Ditolak">
-                            <i data-feather="x-circle"></i> Rejected
-                        </span>
-                    {% elif pengajuan.6 == 'A' and pengajuan.11 == 'Y' %}
-                        <span class="enhanced-action-btn" style="background: #d4edda; color: #155724; cursor: default;" title="Sudah Final Processed">
-                            <i data-feather="check-circle-2"></i> Final
-                        </span>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-            
-            <!-- Regular Approval Button untuk atasan (non-SITI FATIMAH) -->
-            {% if can_approve and not is_siti_fatimah and pengajuan.6 == '0' and pengajuan.11 == '0' %}
-                <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}#approval" 
-                   class="enhanced-action-btn btn-approve" title="Approve">
-                    <i data-feather="check-circle"></i> Approve
-                </a>
-            {% endif %}
-            
-            <!-- Debug Button for Superuser -->
-            {% if user.is_superuser %}
-                <button type="button" 
-                        class="enhanced-action-btn" 
-                        style="background: #6c757d; color: white; font-size: 0.6rem;" 
-                        onclick="showDebugInfo('{{ pengajuan.0 }}', '{{ pengajuan.6 }}', '{{ pengajuan.11 }}', '{{ pengajuan.15 }}', {{ is_siti_fatimah|yesno:"true,false" }})"
-                        title="Debug Info">
-                    <i data-feather="info"></i> Debug
-                </button>
-            {% endif %}
-        {% endif %}
-    </div>
-</td>
+                            <div class="d-flex flex-column gap-1">
+                                {% if pengajuan.0 %}
+                                    <!-- Detail Button - Always Available -->
+                                    <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}" 
+                                       class="enhanced-action-btn btn-detail" title="Detail">
+                                        <i data-feather="eye"></i> Detail
+                                    </a>
+                                    
+                                    <!-- FIXED: Final Processed untuk Own Pengajuan -->
+                                    {% if pengajuan.6 == 'A' and pengajuan.11 == 'Y' and pengajuan.22 == 1 %}
+                                        <span class="enhanced-action-btn btn-final-complete" title="Final Processed - Your Pengajuan Completed">
+                                            <i data-feather="check-circle-2"></i> Completed
+                                        </span>
+                                    
+                                    <!-- Review Button Logic untuk SITI FATIMAH -->
+                                    {% elif is_siti_fatimah and pengajuan.6 == 'B' and pengajuan.11 == 'N' %}
+                                        {% if pengajuan.15 == '0' or pengajuan.15 is None %}
+                                            <a href="{% url 'wo_maintenance_app:review_pengajuan_detail' pengajuan.0 %}" 
+                                               class="enhanced-action-btn btn-review" title="Review Pengajuan">
+                                                <i data-feather="clipboard"></i> Review
+                                            </a>
+                                        {% elif pengajuan.15 == '1' %}
+                                            <span class="enhanced-action-btn" style="background: #d4edda; color: #155724; cursor: default;" title="Sudah Direview">
+                                                <i data-feather="check-circle"></i> Reviewed
+                                            </span>
+                                        {% elif pengajuan.15 == '2' %}
+                                            <span class="enhanced-action-btn" style="background: #f8d7da; color: #721c24; cursor: default;" title="Sudah Ditolak">
+                                                <i data-feather="x-circle"></i> Rejected
+                                            </span>
+                                        {% endif %}
+                                    
+                                    <!-- Regular Approval Button untuk atasan (non-SITI FATIMAH) -->
+                                    {% elif can_approve and not is_siti_fatimah and pengajuan.6 == '0' and pengajuan.11 == '0' %}
+                                        <a href="{% url 'wo_maintenance_app:detail_laporan' pengajuan.0 %}#approval" 
+                                           class="enhanced-action-btn btn-approve" title="Approve">
+                                            <i data-feather="check-circle"></i> Approve
+                                        </a>
+                                    
+                                    <!-- Status indicators untuk user lain -->
+                                    {% elif pengajuan.6 == '0' %}
+                                        <span class="enhanced-action-btn" style="background: #fff3cd; color: #856404; cursor: default;" title="Menunggu Approval Atasan">
+                                            <i data-feather="clock"></i> Pending
+                                        </span>
+                                    {% elif pengajuan.6 == '2' %}
+                                        <span class="enhanced-action-btn" style="background: #f8d7da; color: #721c24; cursor: default;" title="Ditolak">
+                                            <i data-feather="x-circle"></i> Rejected
+                                        </span>
+                                    {% elif pengajuan.6 == 'B' and pengajuan.11 == 'N' %}
+                                        <span class="enhanced-action-btn" style="background: #cce7ff; color: #004085; cursor: default;" title="Approved - Waiting SITI Review">
+                                            <i data-feather="check"></i> Approved
+                                        </span>
+                                    {% endif %}
+                                    
+                                    <!-- Debug Button for Superuser -->
+                                    {% if user.is_superuser %}
+                                        <button type="button" 
+                                                class="enhanced-action-btn" 
+                                                style="background: #6c757d; color: white; font-size: 0.6rem;" 
+                                                onclick="showDebugInfo('{{ pengajuan.0 }}', '{{ pengajuan.6 }}', '{{ pengajuan.11 }}', '{{ pengajuan.15 }}', {{ is_siti_fatimah|yesno:"true,false" }}, {{ pengajuan.22|default:0 }})"
+                                                title="Debug Info">
+                                            <i data-feather="info"></i> Debug
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
         {% else %}
-        <!-- Enhanced Empty State -->
-        <div class="enhanced-empty-state">
-            <div class="empty-state-icon">
-                {% if view_mode == 'approved' %}
-                    <i data-feather="check-circle"></i>
-                {% else %}
-                    <i data-feather="inbox"></i>
-                {% endif %}
-            </div>
-            <h5 class="text-muted">
-                {% if view_mode == 'approved' %}
-                    Tidak ada pengajuan ready for review
-                {% else %}
-                    Tidak ada data pengajuan
-                {% endif %}
-            </h5>
+        <!-- Empty State -->
+        <div class="text-center p-5">
+            <i data-feather="inbox" style="width: 48px; height: 48px; color: #6c757d;"></i>
+            <h5 class="text-muted mt-3">Tidak ada data pengajuan</h5>
             <p class="text-muted">
                 {% if search_query %}
                     Tidak ditemukan hasil untuk pencarian "{{ search_query }}"
                 {% elif view_mode == 'approved' %}
                     Belum ada pengajuan work order yang approved atasan (status B/N)
                 {% else %}
-                    Belum ada pengajuan maintenance yang dapat diakses (excluding final processed A/Y)
+                    Belum ada pengajuan maintenance yang dapat diakses
                 {% endif %}
             </p>
             <a href="{% url 'wo_maintenance_app:input_laporan' %}" class="btn btn-primary">
@@ -842,14 +498,15 @@ $(document).ready(function() {
     // Initialize Feather Icons
     feather.replace();
     
-    // UPDATED: Debug function untuk new status system
-    window.showDebugInfo = function(historyId, status, approve, reviewStatus, isSiti) {
-        console.log('=== NEW STATUS SYSTEM DEBUG ===');
+    // FIXED: Debug function dengan ownership info
+    window.showDebugInfo = function(historyId, status, approve, reviewStatus, isSiti, isOwn) {
+        console.log('=== FIXED USER VISIBILITY DEBUG ===');
         console.log('History ID:', historyId);
         console.log('Status:', status, '(0=Pending, B=Approved Atasan, A=Final Processed, 2=Rejected)');
         console.log('Approve:', approve, '(0=No, N=Approved Atasan, Y=Final Processed, 2=Rejected)');
         console.log('Review Status:', reviewStatus, '(0=Pending Review, 1=Reviewed, 2=Review Rejected)');
         console.log('Is SITI FATIMAH:', isSiti);
+        console.log('Is Own Pengajuan:', isOwn === 1 ? 'YES' : 'NO');
         
         // Status flow explanation
         console.log('--- STATUS FLOW ---');
@@ -858,90 +515,52 @@ $(document).ready(function() {
         } else if (status === 'B' && approve === 'N') {
             console.log('➡️ APPROVED BY ATASAN: Ready for SITI review');
         } else if (status === 'A' && approve === 'Y') {
-            console.log('➡️ FINAL PROCESSED: Completed by SITI (should be hidden from list)');
+            console.log('➡️ FINAL PROCESSED: Completed by SITI');
+            if (isOwn === 1) {
+                console.log('✅ USER CAN SEE: This is their own pengajuan');
+            } else {
+                console.log('❌ HIDDEN: Not own pengajuan, should be hidden');
+            }
         } else if (status === '2') {
             console.log('➡️ REJECTED: Rejected by atasan or review');
         } else {
             console.log('➡️ UNKNOWN STATUS COMBINATION');
         }
         
-        // Review availability
-        if (isSiti) {
-            if (status === 'B' && approve === 'N' && (reviewStatus === '0' || reviewStatus === null)) {
-                console.log('✅ SITI CAN REVIEW: Status B/N and not yet reviewed');
+        // Visibility check
+        if (status === 'A' && approve === 'Y') {
+            if (isOwn === 1) {
+                console.log('✅ VISIBILITY: User can see their final processed pengajuan');
             } else {
-                console.log('❌ SITI CANNOT REVIEW: Either not B/N or already reviewed');
+                console.log('❌ VISIBILITY: Final processed pengajuan should be hidden from others');
             }
         }
         
-        alert('Debug info printed to console. Check browser console (F12) for details.');
+        alert('Fixed visibility debug info printed to console. Check browser console (F12) for details.');
     };
     
-    // Stats animation (with error handling)
-    $('.stat-number').each(function() {
-        const $this = $(this);
-        const countTo = parseInt($this.text()) || 0;
-        
-        if (countTo > 0) {
-            $({ countNum: 0 }).animate(
-                { countNum: countTo },
-                {
-                    duration: 1500,
-                    easing: 'linear',
-                    step: function() {
-                        $this.text(Math.floor(this.countNum));
-                    },
-                    complete: function() {
-                        $this.text(this.countNum);
-                    }
-                }
-            );
-        }
+    // Highlight own pengajuan
+    $('.own-pengajuan-row').each(function() {
+        const $row = $(this);
+        setTimeout(function() {
+            $row.addClass('highlight');
+        }, Math.random() * 1000);
     });
     
     // Enhanced tooltip untuk action buttons
     $('.enhanced-action-btn').tooltip();
     
-    // Show notification function
-    function showNotification(message, type = 'info') {
-        const alertClass = type === 'info' ? 'alert-info' : 'alert-success';
-        const notification = $(`
-            <div class="alert ${alertClass} alert-dismissible fade show position-fixed" 
-                 style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        `);
-        
-        $('body').append(notification);
-        
-        setTimeout(function() {
-            notification.fadeOut();
-        }, 5000);
-    }
-    
-    // Error handling for failed operations
-    window.onerror = function(msg, url, lineNo, columnNo, error) {
-        console.error('JavaScript Error:', msg, 'at', url, ':', lineNo);
-        return false;
-    };
-    
-    // UPDATED: Log new status integration info
-    console.log('🎯 Enhanced WO Maintenance - New Status System');
+    // Log fixed status integration info
+    console.log('🎯 Enhanced WO Maintenance - FIXED User Visibility');
     console.log('View Mode:', '{{ view_mode|default:"normal" }}');
     console.log('Is SITI FATIMAH:', {{ is_siti_fatimah|yesno:"true,false" }});
     console.log('Total Records:', {{ total_records|default:0 }});
-    console.log('Status Constants:');
-    console.log('- PENDING: 0/0');
-    console.log('- APPROVED ATASAN: B/N');
-    console.log('- FINAL PROCESSED: A/Y (hidden from list)');
-    console.log('- REJECTED: 2/2');
+    console.log('✅ FIXED: Users can now see their own final processed pengajuan');
+    console.log('✅ FIXED: Final processed (A/Y) shown with special styling for owners');
     
-    // Success message if no errors
+    // Success message
     setTimeout(function() {
-        if (!$('.error-container').length) {
-            console.log('✅ New Status System loaded successfully');
-        }
+        console.log('✅ Fixed User Visibility System loaded successfully');
     }, 1000);
 });
 </script>

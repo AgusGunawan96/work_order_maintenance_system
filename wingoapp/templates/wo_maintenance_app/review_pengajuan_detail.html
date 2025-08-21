@@ -548,7 +548,7 @@
                 {% endif %}
             </div>
             
-            <!-- Target Section Selection -->
+            {% comment %} <!-- Target Section Selection -->
             <div class="form-group" id="target-section-group">
                 <label class="form-label" for="{{ review_form.target_section.id_for_label }}">
                     <i data-feather="target"></i>
@@ -569,7 +569,30 @@
                     <h6>⚠️ Section Change Preview:</h6>
                     <p id="section-change-text"></p>
                 </div>
-            </div>
+            </div> {% endcomment %}
+            <!-- Target Section Selection dengan Enhanced Validation -->
+<div class="form-group" id="target-section-group">
+    <label class="form-label" for="{{ review_form.target_section.id_for_label }}">
+        <i data-feather="target"></i>
+        Target Section (Optional)
+    </label>
+    <select class="form-select" name="{{ review_form.target_section.name }}" id="{{ review_form.target_section.id_for_label }}">
+        {% for value, label in review_form.target_section.field.choices %}
+            <option value="{{ value }}" data-section-id="{% if value == 'it' %}1{% elif value == 'elektrik' %}2{% elif value == 'mekanik' %}3{% elif value == 'utility' %}4{% elif value == 'civil' %}5{% endif %}">{{ label }}</option>
+        {% endfor %}
+    </select>
+    <small class="form-text text-muted">
+        <strong>FIXED Section Mapping:</strong> IT=1, Elektrik=2, Mekanik=3, Utility=4, Civil=5<br>
+        Section tujuan pengajuan akan otomatis berubah sesuai pilihan ini.
+    </small>
+    
+    <!-- Enhanced Section Change Preview -->
+    <div id="section-change-preview" class="section-change-alert" style="display: none;">
+        <h6>⚠️ Section Change Preview:</h6>
+        <p id="section-change-text"></p>
+        <div id="section-debug-info" style="font-size: 0.8rem; opacity: 0.7;"></div>
+    </div>
+</div>
             
             <div class="form-group">
                 <label class="form-label" for="{{ review_form.review_notes.id_for_label }}">
@@ -617,23 +640,64 @@
 {{ block.super }}
 <script>
 $(document).ready(function() {
-    // Initialize Feather Icons
-    feather.replace();
-    
-    // Section Change Preview
+    // FIXED: Enhanced section change preview dengan mapping yang benar
     $('#{{ review_form.target_section.id_for_label }}').on('change', function() {
-        const selectedSection = $(this).val();
-        const selectedText = $(this).find('option:selected').text();
+        const selectedValue = $(this).val();
+        const selectedOption = $(this).find('option:selected');
+        const selectedText = selectedOption.text();
+        
+        // FIXED: Section mapping sesuai database aktual
+        const sectionMapping = {
+            'mekanik': { id: 4, code: 'M', name: 'Mekanik' },
+            'elektrik': { id: 5, code: 'E', name: 'Elektrik' },
+            'utility': { id: 6, code: 'U', name: 'Utility' },
+            'it': { id: 8, code: 'I', name: 'IT' }
+        };
+        
         const currentSection = '{{ pengajuan.section_tujuan|default:"Section Saat Ini" }}';
+        const currentSectionId = {{ pengajuan.current_section_id|default:0 }};
+        
+        console.log('FIXED SECTION CHANGE PREVIEW:');
+        console.log('  Selected Value:', selectedValue);
+        console.log('  Selected Text:', selectedText);
+        console.log('  Current Section:', currentSection);
+        console.log('  Current Section ID:', currentSectionId);
+        
         const preview = $('#section-change-preview');
         const previewText = $('#section-change-text');
+        const debugInfo = $('#section-debug-info');
         
-        if (selectedSection) {
-            if (selectedText.includes('-- Tetap di Section')) {
-                preview.hide();
+        if (selectedValue && selectedValue !== '') {
+            if (!selectedText.includes('-- Pilih Section')) {
+                const targetInfo = sectionMapping[selectedValue];
+                
+                if (targetInfo) {
+                    let changeText = '';
+                    let debugText = '';
+                    
+                    if (targetInfo.id !== currentSectionId) {
+                        changeText = `Section tujuan akan BERUBAH dari "${currentSection}" (ID: ${currentSectionId}) ke "${targetInfo.name}" (ID: ${targetInfo.id}, Code: ${targetInfo.code})`;
+                        debugText = `Debug: ${selectedValue} -> ID ${targetInfo.id} -> Code ${targetInfo.code} (Changed: YES)`;
+                    } else {
+                        changeText = `Section tujuan akan TETAP di "${targetInfo.name}" (ID: ${targetInfo.id}, Code: ${targetInfo.code})`;
+                        debugText = `Debug: ${selectedValue} -> ID ${targetInfo.id} -> Code ${targetInfo.code} (Changed: NO)`;
+                    }
+                    
+                    // Number WO preview
+                    const today = new Date();
+                    const year = today.getFullYear().toString().substr(-2);
+                    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+                    const exampleNumber = `${year}-${targetInfo.code}-${month}-0001`;
+                    changeText += `\nFormat Number WO: ${exampleNumber}`;
+                    
+                    previewText.text(changeText);
+                    debugInfo.text(debugText);
+                    preview.show();
+                } else {
+                    preview.hide();
+                }
             } else {
-                previewText.text(`Section tujuan akan berubah dari "${currentSection}" ke "${selectedText}"`);
-                preview.show();
+                preview.hide();
             }
         } else {
             preview.hide();
@@ -659,52 +723,46 @@ $(document).ready(function() {
         }
     });
     
-    // Form validation dengan section change confirmation
+    // FIXED: Enhanced form validation dengan section debug
     $('#reviewForm').on('submit', function(e) {
         const action = $('select[name="action"]').val();
-        const notes = $('textarea[name="review_notes"]').val().trim();
         const targetSection = $('#{{ review_form.target_section.id_for_label }}').val();
         
-        if (!action) {
-            e.preventDefault();
-            alert('Silakan pilih action review.');
-            $('select[name="action"]').focus();
-            return false;
-        }
+        // FIXED: Section mapping untuk validation
+        const sectionMapping = {
+            'mekanik': { id: 4, code: 'M', name: 'Mekanik' },
+            'elektrik': { id: 5, code: 'E', name: 'Elektrik' },
+            'utility': { id: 6, code: 'U', name: 'Utility' },
+            'it': { id: 8, code: 'I', name: 'IT' }
+        };
         
-        if (!notes) {
-            e.preventDefault();
-            alert('Silakan masukkan catatan review.');
-            $('textarea[name="review_notes"]').focus();
-            return false;
-        }
+        console.log('FIXED FORM SUBMISSION DEBUG:');
+        console.log('  Action:', action);
+        console.log('  Target Section:', targetSection);
         
-        // Confirmation dengan section change info
-        let confirmMessage = '';
-        if (action === 'process') {
-            confirmMessage = 'PERHATIAN: Final Processing\n\n';
-            confirmMessage += 'Pengajuan ini akan diubah statusnya menjadi A/Y (Final Processed).\n';
+        if (action === 'process' && targetSection) {
+            const targetInfo = sectionMapping[targetSection];
             
-            if (targetSection) {
-                const selectedText = $('#{{ review_form.target_section.id_for_label }} option:selected').text();
-                if (!selectedText.includes('-- Tetap di Section')) {
-                    confirmMessage += `Section tujuan akan berubah ke: ${selectedText}\n`;
+            if (targetInfo) {
+                const today = new Date();
+                const year = today.getFullYear().toString().substr(-2);
+                const month = (today.getMonth() + 1).toString().padStart(2, '0');
+                const exampleNumber = `${year}-${targetInfo.code}-${month}-0001`;
+                
+                const confirmMessage = `KONFIRMASI SECTION CHANGE:\n\n` +
+                                     `Target Section: "${targetSection}"\n` +
+                                     `Section ID: ${targetInfo.id}\n` +
+                                     `Section Code: ${targetInfo.code}\n` +
+                                     `Section Name: "${targetInfo.name}"\n` +
+                                     `Number WO Format: ${exampleNumber}\n\n` +
+                                     `Apakah Anda yakin ingin memproses dengan section ini?`;
+                
+                if (!confirm(confirmMessage)) {
+                    e.preventDefault();
+                    return false;
                 }
             }
-            
-            confirmMessage += '\nApakah Anda yakin ingin memproses pengajuan ini?';
-            
-        } else if (action === 'reject') {
-            confirmMessage = 'Apakah Anda yakin ingin menolak pengajuan ini?\n\nPengajuan yang ditolak akan diubah statusnya menjadi Rejected.';
         }
-        
-        if (!confirm(confirmMessage)) {
-            e.preventDefault();
-            return false;
-        }
-        
-        // Disable submit button
-        $('#submitButton').prop('disabled', true).html('<i data-feather="loader"></i> Processing...');
         
         return true;
     });
@@ -715,7 +773,19 @@ $(document).ready(function() {
         $('#target-section-group').hide();
     }
     
-    console.log('Review System dengan Section Change loaded successfully');
+    console.log('FIXED Review System dengan Section Mapping 4=M, 5=E, 6=U, 8=I loaded successfully');
 });
+
+// FIXED: Helper function untuk convert section
+function getSectionInfo(sectionKey) {
+    const sectionMapping = {
+        'mekanik': { id: 4, code: 'M', name: 'Mekanik' },
+        'elektrik': { id: 5, code: 'E', name: 'Elektrik' },
+        'utility': { id: 6, code: 'U', name: 'Utility' },
+        'it': { id: 8, code: 'I', name: 'IT' }
+    };
+    
+    return sectionMapping[sectionKey] || null;
+}
 </script>
 {% endblock scriptcontent %}

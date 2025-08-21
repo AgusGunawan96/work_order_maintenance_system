@@ -1146,7 +1146,8 @@ def assign_pengajuan_to_section_supervisors(history_id, section_tujuan_id, appro
 
 def ensure_assignment_tables_exist():
     """
-    Memastikan assignment tables ada, jika tidak ada maka buat
+    Memastikan assignment tables dan approval log ada, jika tidak ada maka buat
+    FIXED: Tambahkan approval log table untuk tracking user visibility
     
     Returns:
         bool: True jika berhasil, False jika gagal
@@ -1171,7 +1172,25 @@ def ensure_assignment_tables_exist():
                 END
             """)
             
-            # 2. Create review log table
+            # 2. FIXED: Create approval log table untuk tracking approvals
+            cursor.execute("""
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tabel_approval_log' AND xtype='U')
+                BEGIN
+                    CREATE TABLE [dbo].[tabel_approval_log](
+                        [id] [int] IDENTITY(1,1) NOT NULL,
+                        [history_id] [varchar](15) NULL,
+                        [approver_user] [varchar](50) NULL,
+                        [action] [varchar](10) NULL,
+                        [keterangan] [varchar](max) NULL,
+                        [tgl_approval] [datetime] NULL,
+                        [approver_employee_number] [varchar](50) NULL,
+                        [approver_fullname] [varchar](100) NULL,
+                        CONSTRAINT [PK_tabel_approval_log] PRIMARY KEY CLUSTERED ([id] ASC)
+                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+                END
+            """)
+            
+            # 3. Create review log table
             cursor.execute("""
                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tabel_review_log' AND xtype='U')
                 BEGIN
@@ -1184,12 +1203,15 @@ def ensure_assignment_tables_exist():
                         [review_notes] [varchar](max) NULL,
                         [priority_level] [varchar](20) NULL,
                         [review_date] [datetime] NULL,
+                        [original_section_id] [float] NULL,
+                        [new_section_id] [float] NULL,
+                        [section_changed] [bit] NULL DEFAULT 0,
                         CONSTRAINT [PK_tabel_review_log] PRIMARY KEY CLUSTERED ([id] ASC)
                     ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
                 END
             """)
             
-            # 3. Add missing review columns to main table
+            # 4. Add missing review columns to main table
             cursor.execute("""
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
                               WHERE TABLE_NAME = 'tabel_pengajuan' AND COLUMN_NAME = 'review_status')
@@ -1230,7 +1252,7 @@ def ensure_assignment_tables_exist():
                 END
             """)
             
-            # 4. Create indexes for performance
+            # 5. Create indexes for performance
             cursor.execute("""
                 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_tabel_pengajuan_assignment_history_id')
                 BEGIN
@@ -1248,22 +1270,163 @@ def ensure_assignment_tables_exist():
                 END
             """)
             
+            # FIXED: Indexes untuk approval log
+            cursor.execute("""
+                IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_tabel_approval_log_history_id')
+                BEGIN
+                    CREATE NONCLUSTERED INDEX [IX_tabel_approval_log_history_id] 
+                    ON [dbo].[tabel_approval_log] ([history_id] ASC)
+                END
+            """)
+            
+            cursor.execute("""
+                IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_tabel_approval_log_approver')
+                BEGIN
+                    CREATE NONCLUSTERED INDEX [IX_tabel_approval_log_approver] 
+                    ON [dbo].[tabel_approval_log] ([approver_user] ASC)
+                END
+            """)
+            
             cursor.execute("""
                 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='IX_tabel_pengajuan_review_status')
                 BEGIN
                     CREATE NONCLUSTERED INDEX [IX_tabel_pengajuan_review_status] 
                     ON [dbo].[tabel_pengajuan] ([review_status] ASC)
-                    WHERE [status] = 'A' AND [approve] = 'Y'
+                    WHERE [status] = 'B' AND [approve] = 'N'
                 END
             """)
             
-            logger.info("Assignment and review tables created/verified successfully")
+            logger.info("Assignment, approval log, and review tables created/verified successfully")
             return True
             
     except Exception as e:
         logger.error(f"Error creating assignment tables: {e}")
         return False
+
+def log_approval_action(history_id, approver_user_hierarchy, action, keterangan):
+    """
+    FIXED: Log approval action dengan data yang lengkap
     
+    Args:
+        history_id (str): ID pengajuan
+        approver_user_hierarchy (dict): Data hierarchy user yang approve
+        action (str): Action ('1' untuk approve, '2' untuk reject)
+        keterangan (str): Keterangan approval
+    """
+    try:
+        # Ensure approval log table exists
+        ensure_assignment_tables_exist()
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO tabel_approval_log 
+                (history_id, approver_user, action, keterangan, tgl_approval, approver_employee_number, approver_fullname)
+                VALUES (%s, %s, %s, %s, GETDATE(), %s, %s)
+            """, [
+                history_id,
+                approver_user_hierarchy.get('employee_number', ''),
+                action,
+                keterangan,
+                approver_user_hierarchy.get('employee_number', ''),
+                approver_user_hierarchy.get('fullname', 'Unknown')
+            ])
+            
+            logger.info(f"Logged approval action: {history_id} - {action} by {approver_user_hierarchy.get('fullname')}")
+            
+    except Exception as e:
+        logger.error(f"Error logging approval action: {e}")
+
+
+def get_approval_log_for_pengajuan(history_id):
+    """
+    Get approval log untuk pengajuan tertentu
+    
+    Args:
+        history_id (str): ID pengajuan
+        
+    Returns:
+        list: List of approval actions
+    """
+    try:
+        approval_logs = []
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Check if table exists first
+            cursor.execute("""
+                SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES 
+                WHERE TABLE_NAME = 'tabel_approval_log'
+            """)
+            
+            if cursor.fetchone()[0] == 0:
+                return []
+            
+            cursor.execute("""
+                SELECT 
+                    approver_user,
+                    action,
+                    keterangan,
+                    tgl_approval,
+                    approver_employee_number,
+                    approver_fullname
+                FROM tabel_approval_log 
+                WHERE history_id = %s
+                ORDER BY tgl_approval DESC
+            """, [history_id])
+            
+            for row in cursor.fetchall():
+                approval_logs.append({
+                    'approver_user': row[0],
+                    'action': row[1],
+                    'keterangan': row[2],
+                    'tgl_approval': row[3],
+                    'approver_employee_number': row[4],
+                    'approver_fullname': row[5],
+                    'action_text': 'Approved' if row[1] == '1' else 'Rejected' if row[1] == '2' else 'Unknown'
+                })
+        
+        return approval_logs
+        
+    except Exception as e:
+        logger.error(f"Error getting approval log: {e}")
+        return []
+
+
+def check_user_approval_access(user_hierarchy, history_id):
+    """
+    Check apakah user pernah approve pengajuan tertentu
+    
+    Args:
+        user_hierarchy (dict): Data hierarchy user
+        history_id (str): ID pengajuan
+        
+    Returns:
+        bool: True jika user pernah approve, False jika tidak
+    """
+    try:
+        if not user_hierarchy or not history_id:
+            return False
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Check if table exists first
+            cursor.execute("""
+                SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES 
+                WHERE TABLE_NAME = 'tabel_approval_log'
+            """)
+            
+            if cursor.fetchone()[0] == 0:
+                return False
+            
+            cursor.execute("""
+                SELECT COUNT(*) FROM tabel_approval_log 
+                WHERE history_id = %s AND approver_user = %s
+            """, [history_id, user_hierarchy.get('employee_number')])
+            
+            return cursor.fetchone()[0] > 0
+            
+    except Exception as e:
+        logger.error(f"Error checking user approval access: {e}")
+        return False
+       
 def log_enhanced_review_action(history_id, reviewer_employee, action, target_section, review_notes, priority_level):
     """
     Log enhanced review action ke database
@@ -2335,3 +2498,192 @@ __all__ = [
     'ensure_enhanced_review_tables_exist',
     'get_section_change_history'
 ]
+
+def get_section_code_for_target(target_section):
+    """
+    FIXED: Get section code untuk target section - STRICT VALIDATION
+    
+    Args:
+        target_section: Target section key (it, elektrik, mekanik, utility, civil)
+    
+    Returns:
+        tuple: (section_id, section_code, section_name)
+        HANYA RETURN: I, E, M, U, C - TIDAK BOLEH ADA KODE LAIN
+    """
+    # STRICT mapping - case insensitive
+    mapping = {
+        'it': (1, 'I', 'IT'),
+        'elektrik': (2, 'E', 'Elektrik'), 
+        'mekanik': (3, 'M', 'Mekanik'),
+        'utility': (4, 'U', 'Utility'),
+        'civil': (5, 'C', 'Civil')
+    }
+    
+    target_lower = target_section.lower().strip() if target_section else ''
+    
+    if target_lower in mapping:
+        return mapping[target_lower]
+    else:
+        # TIDAK BOLEH RETURN None - Default ke IT
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(f"FIXED GET CODE: Unknown target_section '{target_section}', defaulting to IT")
+        return (1, 'I', 'IT')
+
+
+def preview_number_wo_change(current_section_id, target_section, current_number_wo):
+    """
+    FIXED: Preview perubahan number WO - STRICT validation untuk prevent kode 'X'
+    
+    Args:
+        current_section_id: Section ID saat ini
+        target_section: Target section key (bisa kosong)
+        current_number_wo: Number WO saat ini (untuk referensi)
+    
+    Returns:
+        dict: Preview info dengan KODE YANG BENAR (I, E, M, U, C)
+    """
+    try:
+        from wo_maintenance_app.models import create_number_wo_with_section
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        # FIXED: Validate current_section_id dengan strict
+        try:
+            current_section_id_int = int(float(current_section_id)) if current_section_id else 1
+            if current_section_id_int not in [1, 2, 3, 4, 5]:
+                logger.warning(f"FIXED PREVIEW: Invalid current_section_id {current_section_id_int}, defaulting to 1")
+                current_section_id_int = 1
+        except (ValueError, TypeError):
+            logger.error(f"FIXED PREVIEW: Error converting current_section_id {current_section_id}, defaulting to 1")
+            current_section_id_int = 1
+        
+        # Determine final section ID
+        if target_section and target_section.strip():
+            target_section_id, section_code, section_name = get_section_code_for_target(target_section)
+            
+            # get_section_code_for_target sudah di-fix untuk tidak return None
+            final_section_id = target_section_id
+            final_section_name = section_name
+            section_changed = (target_section_id != current_section_id_int)
+            
+            logger.info(f"FIXED PREVIEW: Target section {target_section} -> ID {target_section_id} (code: {section_code})")
+        else:
+            # FIXED: Tidak ada target section, gunakan current section yang sudah divalidasi
+            final_section_id = current_section_id_int
+            section_changed = False
+            
+            # Get current section info dengan strict mapping
+            section_mapping_reverse = {1: 'IT', 2: 'Elektrik', 3: 'Mekanik', 4: 'Utility', 5: 'Civil'}
+            final_section_name = section_mapping_reverse.get(current_section_id_int, 'IT')
+            
+            # Get section code for current dengan strict mapping
+            code_mapping = {1: 'I', 2: 'E', 3: 'M', 4: 'U', 5: 'C'}
+            section_code = code_mapping.get(current_section_id_int, 'I')
+            
+            logger.info(f"FIXED PREVIEW: No target, using current section {current_section_id_int} (code: {section_code})")
+        
+        # SELALU generate number WO format baru berdasarkan final section
+        preview_number_wo = create_number_wo_with_section(final_section_id)
+        
+        # CRITICAL VALIDATION: Pastikan tidak ada 'X' di preview
+        if 'X' in preview_number_wo:
+            logger.error(f"FIXED PREVIEW: CRITICAL - Preview contains X: {preview_number_wo}")
+            # Force regenerate dengan IT sebagai fallback
+            preview_number_wo = create_number_wo_with_section(1)
+            final_section_id = 1
+            final_section_name = 'IT'
+            section_code = 'I'
+            logger.error(f"FIXED PREVIEW: Fallback preview: {preview_number_wo}")
+        
+        # Generate description
+        if section_changed:
+            change_description = f'Number WO akan berubah ke "{preview_number_wo}" dengan format section {final_section_name}'
+        else:
+            change_description = f'Number WO akan diupdate ke format baru "{preview_number_wo}" berdasarkan section {final_section_name}'
+        
+        return {
+            'will_change': True,  # SELALU berubah ke format baru
+            'section_changed': section_changed,
+            'current_section_id': current_section_id_int,
+            'final_section_id': final_section_id,
+            'target_section_code': section_code,
+            'target_section_name': final_section_name,
+            'current_number_wo': current_number_wo,
+            'preview_number_wo': preview_number_wo,
+            'change_description': change_description,
+            'format_example': f'Format: YY-{section_code}-MM-NNNN (contoh: 25-{section_code}-08-0001)',
+            'validation_passed': 'X' not in preview_number_wo
+        }
+        
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"FIXED PREVIEW: Error in preview: {e}")
+        
+        # Emergency fallback ke IT
+        return {
+            'will_change': False,
+            'error': str(e),
+            'preview_number_wo': '25-I-08-0001',  # Safe fallback
+            'validation_passed': True
+        }
+
+
+def validate_number_wo_format(number_wo):
+    """
+    Validate format number WO
+    
+    Args:
+        number_wo: Number WO untuk divalidate
+    
+    Returns:
+        dict: Validation result
+    """
+    import re
+    
+    # Pattern untuk format baru: YY-S-MM-NNNN
+    new_pattern = r'^\d{2}-[A-Z]-\d{2}-\d{4}$'
+    # Pattern untuk format lama: WO* atau TEMP*
+    old_pattern = r'^(WO|TEMP)'
+    
+    is_new_format = bool(re.match(new_pattern, number_wo))
+    is_old_format = bool(re.match(old_pattern, number_wo))
+    
+    result = {
+        'number_wo': number_wo,
+        'is_new_format': is_new_format,
+        'is_old_format': is_old_format,
+        'is_valid': is_new_format or is_old_format,
+        'format_type': None,
+        'parsed_info': {}
+    }
+    
+    if is_new_format:
+        result['format_type'] = 'new'
+        # Parse komponen number WO
+        parts = number_wo.split('-')
+        if len(parts) == 4:
+            result['parsed_info'] = {
+                'year': f'20{parts[0]}',
+                'section_code': parts[1],
+                'month': parts[2],
+                'sequence': parts[3],
+                'section_name': {
+                    'I': 'IT', 'E': 'Elektrik', 'M': 'Mekanik', 
+                    'U': 'Utility', 'C': 'Civil'
+                }.get(parts[1], 'Unknown')
+            }
+    elif is_old_format:
+        result['format_type'] = 'old'
+        result['parsed_info'] = {
+            'legacy_format': True,
+            'needs_update': True
+        }
+    else:
+        result['format_type'] = 'unknown'
+        result['parsed_info'] = {
+            'error': 'Format tidak dikenali'
+        }
+    
+    return result

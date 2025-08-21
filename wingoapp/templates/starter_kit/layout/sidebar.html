@@ -1,5 +1,59 @@
 {% load static %}
 {% load sass_tags %}
+
+<style>
+/* Enhanced styling untuk History menu */
+.nav-submenu a[href*="history"] {
+    position: relative;
+}
+
+.nav-submenu a[href*="history"]:hover {
+    background: linear-gradient(135deg, #6f42c1 0%, #007bff 100%);
+    color: white;
+    transform: translateX(5px);
+    transition: all 0.3s ease;
+}
+
+.nav-submenu a[href*="history"].active {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border-left: 3px solid #28a745;
+}
+
+/* Badge styling */
+.nav-submenu .badge {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.badge-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+/* Divider styling untuk Review Section */
+.nav-divider {
+    padding: 10px 15px 5px 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-top: 1px solid #e9ecef;
+    margin-top: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .nav-submenu a[href*="history"]:hover {
+        transform: none;
+    }
+}
+</style>
 <!-- page sidebar starts -->
 <header class="main-nav">
   <div class="logo-wrapper">
@@ -134,6 +188,34 @@
       </a>
     </li>
 
+    <!-- NEW: History Pengajuan -->
+    <li>       
+      <a href="{% url 'wo_maintenance_app:history_pengajuan_list' %}">         
+        <i data-feather="archive"></i><span>History Pengajuan</span>       
+      </a>     
+    </li>
+
+    <!-- Divider untuk Review Section (khusus SITI FATIMAH) -->
+    {% if user.username == '007522' or employee_data.employee_number == '007522' %}
+    <li class="nav-divider">Review System</li>
+    
+    <!-- Review Dashboard -->
+    <li>       
+      <a href="{% url 'wo_maintenance_app:review_dashboard' %}">         
+        <i data-feather="check-circle"></i><span>Review Dashboard</span>       
+      </a>     
+    </li>
+    
+    <!-- Review Pengajuan -->
+    <li>       
+      <a href="{% url 'wo_maintenance_app:review_pengajuan_list' %}">         
+        <i data-feather="clipboard"></i><span>Review Pengajuan</span>       
+      </a>     
+    </li>
+    {% endif %}
+    
+  </ul> 
+
 
 {% if perms.dailyactivity_app %}
 <li class="dropdown">
@@ -167,3 +249,63 @@
   </nav>
 </header>
 <!-- page Sidebar Ends-->
+
+<!-- Script untuk highlight active menu -->
+<script>
+$(document).ready(function() {
+    // Get current URL path
+    const currentPath = window.location.pathname;
+    
+    // Remove active class from all menu items
+    $('.nav-submenu a').removeClass('active');
+    
+    // Add active class based on current path
+    if (currentPath.includes('/wo-maintenance/')) {
+        if (currentPath.includes('/dashboard') || currentPath === '/wo-maintenance/') {
+            $('a[href*="dashboard"]').addClass('active');
+        } else if (currentPath.includes('/input')) {
+            $('a[href*="input_laporan"]').addClass('active');
+        } else if (currentPath.includes('/daftar') || currentPath.includes('/list')) {
+            $('a[href*="enhanced_daftar_laporan"]').addClass('active');
+        } else if (currentPath.includes('/history')) {
+            $('a[href*="history_pengajuan_list"]').addClass('active');
+        } else if (currentPath.includes('/review')) {
+            if (currentPath.includes('/dashboard')) {
+                $('a[href*="review_dashboard"]').addClass('active');
+            } else {
+                $('a[href*="review_pengajuan_list"]').addClass('active');
+            }
+        }
+    }
+    
+    // Enhanced styling untuk History menu
+    $('a[href*="history_pengajuan_list"]').parent().hover(
+        function() {
+            $(this).find('i').attr('data-feather', 'archive');
+            feather.replace();
+        },
+        function() {
+            $(this).find('i').attr('data-feather', 'archive');
+            feather.replace();
+        }
+    );
+    
+    // Badge notification untuk history items yang perlu attention (optional)
+    {% if user.is_authenticated %}
+    // Check for open history items
+    $.ajax({
+        url: '{% url "wo_maintenance_app:ajax_get_history_stats" %}',
+        method: 'GET',
+        success: function(response) {
+            if (response.success && response.stats.open > 0) {
+                const badge = `<span class="badge badge-warning">${response.stats.open}</span>`;
+                $('a[href*="history_pengajuan_list"] span:first').after(badge);
+            }
+        },
+        error: function() {
+            // Silent fail
+        }
+    });
+    {% endif %}
+});
+</script>
