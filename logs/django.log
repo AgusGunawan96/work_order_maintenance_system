@@ -19389,3 +19389,819 @@ INFO 2025-08-22 09:44:15,857 views 276 11920 History query executed - Found 3255
 INFO 2025-08-22 09:44:16,029 basehttp 276 11920 "GET /wo-maintenance/history/ HTTP/1.1" 200 104859
 INFO 2025-08-22 09:45:24,785 utils 276 5172 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
 INFO 2025-08-22 09:45:24,888 basehttp 276 5172 "GET /wo-maintenance/history/25-08-0390/ HTTP/1.1" 200 49289
+INFO 2025-08-22 10:27:43,351 utils 276 15168 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:27:43,665 views 276 15168 History query executed - Found 32556 records
+INFO 2025-08-22 10:27:43,834 basehttp 276 15168 "GET /wo-maintenance/history/ HTTP/1.1" 200 104869
+INFO 2025-08-22 10:28:01,836 utils 276 15168 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:28:02,241 views 276 15168 History query executed - Found 32556 records
+INFO 2025-08-22 10:28:02,424 basehttp 276 15168 "GET /wo-maintenance/history/?page=2 HTTP/1.1" 200 105602
+INFO 2025-08-22 10:28:33,980 utils 276 14320 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:28:34,309 views 276 14320 History query executed - Found 31461 records
+INFO 2025-08-22 10:28:34,478 basehttp 276 14320 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 105292
+INFO 2025-08-22 10:30:54,794 autoreload 276 11500 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 10:30:56,746 autoreload 14752 15588 Watching for file changes with StatReloader
+INFO 2025-08-22 10:30:58,766 views 14752 15588 === STATUS VALIDATION ===
+INFO 2025-08-22 10:30:58,767 views 14752 15588 Expected STATUS_APPROVED: B
+INFO 2025-08-22 10:30:58,768 views 14752 15588 Expected APPROVE_YES: N
+INFO 2025-08-22 10:30:58,769 views 14752 15588 Actual values in database:
+INFO 2025-08-22 10:30:58,770 views 14752 15588   Status: , Approve: N, Review: None
+INFO 2025-08-22 10:30:58,771 views 14752 15588   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 10:30:58,772 views 14752 15588   Status: A, Approve: T, Review: None
+INFO 2025-08-22 10:30:58,772 views 14752 15588   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 10:30:58,773 views 14752 15588   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 10:30:58,774 views 14752 15588   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 10:30:58,775 views 14752 15588 === END VALIDATION ===
+INFO 2025-08-22 10:32:10,961 autoreload 14752 15588 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-22 10:32:12,881 autoreload 16896 13976 Watching for file changes with StatReloader
+INFO 2025-08-22 10:35:46,749 autoreload 11052 16404 Watching for file changes with StatReloader
+INFO 2025-08-22 10:35:54,286 autoreload 1216 4484 Watching for file changes with StatReloader
+INFO 2025-08-22 10:35:56,198 views 1216 4484 === STATUS VALIDATION ===
+INFO 2025-08-22 10:35:56,199 views 1216 4484 Expected STATUS_APPROVED: B
+INFO 2025-08-22 10:35:56,199 views 1216 4484 Expected APPROVE_YES: N
+INFO 2025-08-22 10:35:56,200 views 1216 4484 Actual values in database:
+INFO 2025-08-22 10:35:56,200 views 1216 4484   Status: , Approve: N, Review: None
+INFO 2025-08-22 10:35:56,200 views 1216 4484   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 10:35:56,201 views 1216 4484   Status: A, Approve: T, Review: None
+INFO 2025-08-22 10:35:56,201 views 1216 4484   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 10:35:56,201 views 1216 4484   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 10:35:56,202 views 1216 4484   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 10:35:56,202 views 1216 4484 === END VALIDATION ===
+INFO 2025-08-22 10:36:03,125 utils 1216 11144 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:36:03,432 views 1216 11144 History query executed - Found 31461 records
+INFO 2025-08-22 10:36:03,715 basehttp 1216 11144 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 106501
+INFO 2025-08-22 10:36:06,383 utils 1216 11144 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:36:08,110 views 1216 11144 Monitoring accessed by SITI FATIMAH - 114210 records loaded
+ERROR 2025-08-22 10:36:08,115 views 1216 11144 Error in monitoring_informasi_system: base.html
+ERROR 2025-08-22 10:36:08,224 views 1216 11144 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 161, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 8387, in monitoring_informasi_system
+    return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 64, in render
+    reraise(exc, self.backend)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 85, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+INFO 2025-08-22 10:36:08,227 basehttp 1216 11144 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 10:36:08,453 basehttp 1216 11144 "GET /wo-maintenance/ HTTP/1.1" 200 34063
+INFO 2025-08-22 10:36:13,848 utils 1216 13740 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:36:15,999 views 1216 13740 Monitoring accessed by SITI FATIMAH - 114210 records loaded
+ERROR 2025-08-22 10:36:16,001 views 1216 13740 Error in monitoring_informasi_system: base.html
+ERROR 2025-08-22 10:36:16,006 views 1216 13740 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 161, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 8387, in monitoring_informasi_system
+    return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 64, in render
+    reraise(exc, self.backend)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 85, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+INFO 2025-08-22 10:36:16,010 basehttp 1216 13740 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 10:36:16,190 basehttp 1216 13740 "GET /wo-maintenance/ HTTP/1.1" 200 34063
+WARNING 2025-08-22 10:36:23,896 basehttp 1216 12972 "GET /web_seiwa/wingoapp/static/assets/js/prism/prism.min.js.map HTTP/1.1" 404 1999
+WARNING 2025-08-22 10:36:23,896 basehttp 1216 11184 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js.map HTTP/1.1" 404 2023
+WARNING 2025-08-22 10:36:23,899 basehttp 1216 16968 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js.map HTTP/1.1" 404 2014
+WARNING 2025-08-22 10:36:23,901 basehttp 1216 16740 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js.map HTTP/1.1" 404 2044
+WARNING 2025-08-22 10:36:23,939 basehttp 1216 10940 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/prism.min.css.map HTTP/1.1" 404 2014
+INFO 2025-08-22 10:36:27,918 utils 1216 16760 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:36:29,722 views 1216 16760 Monitoring accessed by SITI FATIMAH - 114210 records loaded
+ERROR 2025-08-22 10:36:29,724 views 1216 16760 Error in monitoring_informasi_system: base.html
+ERROR 2025-08-22 10:36:29,726 views 1216 16760 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 161, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 8387, in monitoring_informasi_system
+    return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 64, in render
+    reraise(exc, self.backend)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 85, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+INFO 2025-08-22 10:36:29,728 basehttp 1216 16760 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 10:36:29,909 basehttp 1216 16760 "GET /wo-maintenance/ HTTP/1.1" 200 34063
+INFO 2025-08-22 10:39:43,490 autoreload 1216 4484 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-22 10:39:45,376 autoreload 17236 12304 Watching for file changes with StatReloader
+INFO 2025-08-22 10:40:30,058 autoreload 15116 18152 Watching for file changes with StatReloader
+INFO 2025-08-22 10:40:32,011 views 15116 18152 === STATUS VALIDATION ===
+INFO 2025-08-22 10:40:32,012 views 15116 18152 Expected STATUS_APPROVED: B
+INFO 2025-08-22 10:40:32,012 views 15116 18152 Expected APPROVE_YES: N
+INFO 2025-08-22 10:40:32,013 views 15116 18152 Actual values in database:
+INFO 2025-08-22 10:40:32,013 views 15116 18152   Status: , Approve: N, Review: None
+INFO 2025-08-22 10:40:32,013 views 15116 18152   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 10:40:32,014 views 15116 18152   Status: A, Approve: T, Review: None
+INFO 2025-08-22 10:40:32,014 views 15116 18152   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 10:40:32,014 views 15116 18152   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 10:40:32,015 views 15116 18152   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 10:40:32,015 views 15116 18152 === END VALIDATION ===
+INFO 2025-08-22 10:40:56,723 utils 15116 18072 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:40:57,096 views 15116 18072 History query executed - Found 31461 records
+INFO 2025-08-22 10:40:57,391 basehttp 15116 18072 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 107322
+INFO 2025-08-22 10:41:12,135 utils 15116 13780 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:41:12,462 views 15116 13780 History query executed - Found 31461 records
+INFO 2025-08-22 10:41:12,656 basehttp 15116 13780 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 106501
+INFO 2025-08-22 10:41:14,813 utils 15116 13780 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 10:41:16,598 views 15116 13780 Monitoring accessed by SITI FATIMAH - 114210 records loaded
+ERROR 2025-08-22 10:41:16,603 views 15116 13780 Error in monitoring_informasi_system: base.html
+ERROR 2025-08-22 10:41:16,610 views 15116 13780 Traceback: Traceback (most recent call last):
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 62, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 1005, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 132, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 129, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader_tags.py", line 107, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\engine.py", line 161, in find_template
+    raise TemplateDoesNotExist(name, tried=tried)
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py", line 8387, in monitoring_informasi_system
+    return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 64, in render
+    reraise(exc, self.backend)
+  File "C:\Users\administrator.SEIWA\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\template\backends\django.py", line 85, in reraise
+    raise new from exc
+django.template.exceptions.TemplateDoesNotExist: base.html
+
+INFO 2025-08-22 10:41:16,612 basehttp 15116 13780 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 10:41:16,820 basehttp 15116 13780 "GET /wo-maintenance/ HTTP/1.1" 200 34063
+INFO 2025-08-22 10:43:40,757 autoreload 15116 18152 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 10:43:42,649 autoreload 6856 6848 Watching for file changes with StatReloader
+INFO 2025-08-22 10:43:44,662 views 6856 6848 === STATUS VALIDATION ===
+INFO 2025-08-22 10:43:44,663 views 6856 6848 Expected STATUS_APPROVED: B
+INFO 2025-08-22 10:43:44,664 views 6856 6848 Expected APPROVE_YES: N
+INFO 2025-08-22 10:43:44,665 views 6856 6848 Actual values in database:
+INFO 2025-08-22 10:43:44,666 views 6856 6848   Status: , Approve: N, Review: None
+INFO 2025-08-22 10:43:44,667 views 6856 6848   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 10:43:44,668 views 6856 6848   Status: A, Approve: T, Review: None
+INFO 2025-08-22 10:43:44,668 views 6856 6848   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 10:43:44,669 views 6856 6848   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 10:43:44,670 views 6856 6848   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 10:43:44,671 views 6856 6848 === END VALIDATION ===
+INFO 2025-08-22 10:47:03,835 autoreload 6856 6848 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\urls.py changed, reloading.
+INFO 2025-08-22 10:47:05,703 autoreload 16816 16624 Watching for file changes with StatReloader
+INFO 2025-08-22 10:47:15,338 autoreload 15832 11676 Watching for file changes with StatReloader
+INFO 2025-08-22 10:47:17,264 views 15832 11676 === STATUS VALIDATION ===
+INFO 2025-08-22 10:47:17,264 views 15832 11676 Expected STATUS_APPROVED: B
+INFO 2025-08-22 10:47:17,264 views 15832 11676 Expected APPROVE_YES: N
+INFO 2025-08-22 10:47:17,265 views 15832 11676 Actual values in database:
+INFO 2025-08-22 10:47:17,265 views 15832 11676   Status: , Approve: N, Review: None
+INFO 2025-08-22 10:47:17,265 views 15832 11676   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 10:47:17,265 views 15832 11676   Status: A, Approve: T, Review: None
+INFO 2025-08-22 10:47:17,265 views 15832 11676   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 10:47:17,265 views 15832 11676   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 10:47:17,266 views 15832 11676   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 10:47:17,266 views 15832 11676 === END VALIDATION ===
+INFO 2025-08-22 10:47:30,841 basehttp 15832 12256 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 302 0
+INFO 2025-08-22 10:47:31,023 basehttp 15832 12256 "GET /login/?next=/wo-maintenance/history/%3Ftanggal_dari%3D%26tanggal_sampai%3D%26status_pekerjaan%3DC%26section_filter%3D%26history_id%3D%26pengaju%3D%26pic_produksi%3D%26search%3D HTTP/1.1" 200 10618
+INFO 2025-08-22 10:47:41,180 views 15832 9796 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 10:47:41,218 authentication 15832 9796 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 10:47:41,225 views 15832 9796 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 10:47:41,226 views 15832 9796 LOGIN REDIRECT: 002186 -> /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search=
+INFO 2025-08-22 10:47:41,230 basehttp 15832 9796 "POST /login/?next=/wo-maintenance/history/%3Ftanggal_dari%3D%26tanggal_sampai%3D%26status_pekerjaan%3DC%26section_filter%3D%26history_id%3D%26pengaju%3D%26pic_produksi%3D%26search%3D HTTP/1.1" 302 0
+INFO 2025-08-22 10:47:41,636 views 15832 9796 History query executed - Found 31461 records
+INFO 2025-08-22 10:47:41,864 basehttp 15832 9796 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 105957
+ERROR 2025-08-22 10:47:45,293 views 15832 10208 Error loading monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-08-0891' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:47:45,301 basehttp 15832 10208 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 16687
+ERROR 2025-08-22 10:47:49,006 views 15832 10208 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '24-01-2904' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:47:49,008 basehttp 15832 10208 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:48:15,492 views 15832 11052 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-11-1947' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:48:15,494 basehttp 15832 11052 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:48:46,205 views 15832 14976 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '24-01-2904' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:48:46,207 basehttp 15832 14976 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:49:16,041 views 15832 17032 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-11-1947' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:49:16,042 basehttp 15832 17032 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:49:46,042 views 15832 11376 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '24-01-2904' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:49:46,043 basehttp 15832 11376 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:50:16,155 views 15832 6820 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '24-08-6017' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:50:16,157 basehttp 15832 6820 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:50:46,043 views 15832 16968 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '25-04-9441' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:50:46,044 basehttp 15832 16968 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:51:16,048 views 15832 10884 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '24-01-2904' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:51:16,049 basehttp 15832 10884 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:52:02,061 views 15832 3688 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-08-0891' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:52:02,062 basehttp 15832 3688 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:53:02,039 views 15832 17472 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-11-1947' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:53:02,040 basehttp 15832 17472 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:53:21,405 views 15832 15240 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-11-1947' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:53:21,407 basehttp 15832 15240 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:53:31,064 views 15832 16400 Error loading monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '24-06-4918' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:53:31,069 basehttp 15832 16400 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 16687
+ERROR 2025-08-22 10:53:37,821 views 15832 16400 Error loading monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-11-1947' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:53:37,824 basehttp 15832 16400 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 16687
+ERROR 2025-08-22 10:54:07,956 views 15832 16152 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-08-0891' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:54:07,957 basehttp 15832 16152 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:54:30,344 views 15832 11012 Error loading monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '24-01-2904' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:54:30,347 basehttp 15832 11012 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 16687
+ERROR 2025-08-22 10:55:00,474 views 15832 10776 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '24-01-2904' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:55:00,476 basehttp 15832 10776 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+ERROR 2025-08-22 10:55:31,042 views 15832 13648 Error refreshing monitoring data: ('22018', "[22018] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value '23-08-0891' to data type int. (245) (SQLExecDirectW)")
+INFO 2025-08-22 10:55:31,044 basehttp 15832 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 213
+INFO 2025-08-22 10:57:37,618 autoreload 15832 11676 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 10:57:39,545 autoreload 11588 18284 Watching for file changes with StatReloader
+INFO 2025-08-22 10:57:41,520 views 11588 18284 === STATUS VALIDATION ===
+INFO 2025-08-22 10:57:41,521 views 11588 18284 Expected STATUS_APPROVED: B
+INFO 2025-08-22 10:57:41,523 views 11588 18284 Expected APPROVE_YES: N
+INFO 2025-08-22 10:57:41,523 views 11588 18284 Actual values in database:
+INFO 2025-08-22 10:57:41,524 views 11588 18284   Status: , Approve: N, Review: None
+INFO 2025-08-22 10:57:41,525 views 11588 18284   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 10:57:41,525 views 11588 18284   Status: A, Approve: T, Review: None
+INFO 2025-08-22 10:57:41,526 views 11588 18284   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 10:57:41,526 views 11588 18284   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 10:57:41,527 views 11588 18284   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 10:57:41,527 views 11588 18284 === END VALIDATION ===
+INFO 2025-08-22 10:58:05,258 basehttp 11588 12540 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 36664085
+INFO 2025-08-22 10:58:31,005 basehttp 11588 12540 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 116719588
+INFO 2025-08-22 10:59:17,127 views 11588 17504 History query executed - Found 31461 records
+INFO 2025-08-22 10:59:17,399 basehttp 11588 17504 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 107562
+INFO 2025-08-22 10:59:23,257 views 11588 5756 History query executed - Found 31461 records
+INFO 2025-08-22 10:59:23,430 basehttp 11588 5756 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 105700
+INFO 2025-08-22 10:59:28,273 basehttp 11588 5040 "GET /wo-maintenance/ HTTP/1.1" 200 33254
+INFO 2025-08-22 10:59:53,515 basehttp 11588 5040 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 116719588
+INFO 2025-08-22 11:05:46,687 autoreload 11588 18284 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 11:05:48,808 autoreload 18280 14976 Watching for file changes with StatReloader
+INFO 2025-08-22 11:06:35,149 autoreload 18248 17620 Watching for file changes with StatReloader
+INFO 2025-08-22 11:06:44,196 autoreload 11576 16272 Watching for file changes with StatReloader
+INFO 2025-08-22 11:06:51,599 autoreload 12248 17236 Watching for file changes with StatReloader
+INFO 2025-08-22 11:06:59,120 autoreload 10616 9660 Watching for file changes with StatReloader
+INFO 2025-08-22 11:07:07,097 autoreload 17840 12920 Watching for file changes with StatReloader
+INFO 2025-08-22 11:07:09,051 views 17840 12920 === STATUS VALIDATION ===
+INFO 2025-08-22 11:07:09,051 views 17840 12920 Expected STATUS_APPROVED: B
+INFO 2025-08-22 11:07:09,052 views 17840 12920 Expected APPROVE_YES: N
+INFO 2025-08-22 11:07:09,052 views 17840 12920 Actual values in database:
+INFO 2025-08-22 11:07:09,053 views 17840 12920   Status: , Approve: N, Review: None
+INFO 2025-08-22 11:07:09,053 views 17840 12920   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 11:07:09,053 views 17840 12920   Status: A, Approve: T, Review: None
+INFO 2025-08-22 11:07:09,054 views 17840 12920   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 11:07:09,054 views 17840 12920   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 11:07:09,054 views 17840 12920   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 11:07:09,055 views 17840 12920 === END VALIDATION ===
+INFO 2025-08-22 11:07:13,211 basehttp 17840 12428 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 30546
+INFO 2025-08-22 11:07:43,413 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:08:13,373 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:08:44,037 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:09:13,387 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:09:43,385 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:10:14,037 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:10:43,369 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:11:14,078 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:11:44,019 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:12:45,021 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:13:46,017 basehttp 17840 12428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:14:47,028 basehttp 17840 1824 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:15:48,027 basehttp 17840 11556 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:16:49,028 basehttp 17840 11768 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:17:14,020 basehttp 17840 17100 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:17:44,021 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:18:45,025 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:19:32,288 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:19:43,365 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:20:13,368 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:20:43,367 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:21:13,352 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:21:43,360 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:22:13,367 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:22:43,360 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:23:13,371 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:23:44,010 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:24:14,035 basehttp 17840 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 4051
+INFO 2025-08-22 11:24:22,146 autoreload 17840 12920 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 11:24:24,050 autoreload 16136 14636 Watching for file changes with StatReloader
+INFO 2025-08-22 11:24:26,049 views 16136 14636 === STATUS VALIDATION ===
+INFO 2025-08-22 11:24:26,050 views 16136 14636 Expected STATUS_APPROVED: B
+INFO 2025-08-22 11:24:26,052 views 16136 14636 Expected APPROVE_YES: N
+INFO 2025-08-22 11:24:26,052 views 16136 14636 Actual values in database:
+INFO 2025-08-22 11:24:26,053 views 16136 14636   Status: , Approve: N, Review: None
+INFO 2025-08-22 11:24:26,054 views 16136 14636   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 11:24:26,055 views 16136 14636   Status: A, Approve: T, Review: None
+INFO 2025-08-22 11:24:26,055 views 16136 14636   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 11:24:26,056 views 16136 14636   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 11:24:26,057 views 16136 14636   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 11:24:26,058 views 16136 14636 === END VALIDATION ===
+ERROR 2025-08-22 11:25:02,024 views 16136 16596 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:25:02,026 basehttp 16136 16596 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:25:51,512 views 16136 17912 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:25:51,514 basehttp 16136 17912 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:25:54,604 views 16136 17912 Error loading monitoring data: name 'raw_data' is not defined
+INFO 2025-08-22 11:25:54,626 basehttp 16136 17912 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 17732
+ERROR 2025-08-22 11:25:59,110 views 16136 14076 Error loading monitoring data: name 'raw_data' is not defined
+INFO 2025-08-22 11:25:59,113 basehttp 16136 14076 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 17732
+INFO 2025-08-22 11:26:01,571 views 16136 14076 History query executed - Found 31464 records
+INFO 2025-08-22 11:26:01,856 basehttp 16136 14076 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 106271
+ERROR 2025-08-22 11:26:07,162 views 16136 15524 Error loading monitoring data: name 'raw_data' is not defined
+INFO 2025-08-22 11:26:07,163 basehttp 16136 15524 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 17732
+ERROR 2025-08-22 11:26:38,030 views 16136 11164 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:26:38,032 basehttp 16136 11164 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:27:08,010 views 16136 17160 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:27:08,012 basehttp 16136 17160 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:27:25,739 views 16136 13140 Error loading monitoring data: name 'raw_data' is not defined
+INFO 2025-08-22 11:27:25,744 basehttp 16136 13140 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 17067
+ERROR 2025-08-22 11:27:26,947 views 16136 13140 Error loading monitoring data: name 'raw_data' is not defined
+INFO 2025-08-22 11:27:26,948 basehttp 16136 13140 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 17067
+ERROR 2025-08-22 11:27:28,699 views 16136 13140 Error loading monitoring data: name 'raw_data' is not defined
+INFO 2025-08-22 11:27:28,702 basehttp 16136 13140 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 17067
+ERROR 2025-08-22 11:27:59,007 views 16136 13140 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:27:59,008 basehttp 16136 13140 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:28:29,005 views 16136 13140 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:28:29,007 basehttp 16136 13140 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:28:59,006 views 16136 13140 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:28:59,007 basehttp 16136 13140 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:29:29,015 views 16136 18040 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:29:29,016 basehttp 16136 18040 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:29:59,014 views 16136 18040 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:29:59,015 basehttp 16136 18040 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:30:29,003 views 16136 18128 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:30:29,004 basehttp 16136 18128 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+ERROR 2025-08-22 11:30:59,003 views 16136 18128 Error refreshing monitoring data: tuple index out of range
+INFO 2025-08-22 11:30:59,004 basehttp 16136 18128 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 55
+INFO 2025-08-22 11:31:26,374 autoreload 16136 14636 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 11:31:28,305 autoreload 18384 17800 Watching for file changes with StatReloader
+INFO 2025-08-22 11:31:30,329 views 18384 17800 === STATUS VALIDATION ===
+INFO 2025-08-22 11:31:30,330 views 18384 17800 Expected STATUS_APPROVED: B
+INFO 2025-08-22 11:31:30,333 views 18384 17800 Expected APPROVE_YES: N
+INFO 2025-08-22 11:31:30,334 views 18384 17800 Actual values in database:
+INFO 2025-08-22 11:31:30,335 views 18384 17800   Status: , Approve: N, Review: None
+INFO 2025-08-22 11:31:30,336 views 18384 17800   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 11:31:30,338 views 18384 17800   Status: A, Approve: T, Review: None
+INFO 2025-08-22 11:31:30,339 views 18384 17800   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 11:31:30,340 views 18384 17800   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 11:31:30,344 views 18384 17800   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 11:31:30,344 views 18384 17800 === END VALIDATION ===
+INFO 2025-08-22 11:31:35,956 basehttp 18384 13260 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:31:39,424 basehttp 18384 12928 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 26048
+INFO 2025-08-22 11:31:57,997 basehttp 18384 13632 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:31:59,061 basehttp 18384 13632 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:32:09,515 basehttp 18384 12672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:32:39,524 basehttp 18384 1672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:33:09,531 basehttp 18384 1672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:33:39,524 basehttp 18384 1672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:34:09,524 basehttp 18384 1672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:34:39,510 basehttp 18384 1672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:35:09,521 basehttp 18384 1672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:35:39,519 basehttp 18384 1672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:36:09,520 basehttp 18384 1672 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:36:39,971 basehttp 18384 11156 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:37:09,515 basehttp 18384 14604 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:37:39,520 basehttp 18384 14276 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:38:09,506 basehttp 18384 14276 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:38:39,511 basehttp 18384 14276 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:39:09,513 basehttp 18384 14276 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:39:39,960 basehttp 18384 14276 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:40:09,975 basehttp 18384 16916 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:40:39,956 basehttp 18384 16896 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:41:17,234 basehttp 18384 15196 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:41:39,502 basehttp 18384 2872 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:42:09,501 basehttp 18384 16572 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:42:37,494 basehttp 18384 16008 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:42:37,642 basehttp 18384 16008 "GET /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:42:37,693 basehttp 18384 16008 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/font-awesome.css HTTP/1.1" 200 36861
+INFO 2025-08-22 11:42:37,697 basehttp 18384 18076 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/icofont.css HTTP/1.1" 200 112804
+INFO 2025-08-22 11:42:37,699 basehttp 18384 18076 "GET /web_seiwa/wingoapp/static/assets/scss/color-1.css HTTP/1.1" 200 0
+INFO 2025-08-22 11:42:37,699 basehttp 18384 12932 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/themify.css HTTP/1.1" 200 23038
+INFO 2025-08-22 11:42:37,706 basehttp 18384 12420 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/flag-icon.css HTTP/1.1" 200 43666
+INFO 2025-08-22 11:42:37,709 basehttp 18384 18264 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/feather-icon.css HTTP/1.1" 200 2626
+INFO 2025-08-22 11:42:37,711 basehttp 18384 17052 "GET /web_seiwa/wingoapp/static/assets/scss/vendors/bootstrap.css HTTP/1.1" 200 190013
+INFO 2025-08-22 11:42:37,714 basehttp 18384 12932 "GET /web_seiwa/wingoapp/static/assets/scss/responsive.css HTTP/1.1" 200 93254
+INFO 2025-08-22 11:42:37,718 basehttp 18384 16008 "GET /web_seiwa/wingoapp/static/assets/scss/style.css HTTP/1.1" 200 1391223
+INFO 2025-08-22 11:42:37,725 basehttp 18384 17052 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather-icon.js HTTP/1.1" 200 17
+INFO 2025-08-22 11:42:37,741 basehttp 18384 16008 "GET /web_seiwa/wingoapp/static/assets/js/config.js HTTP/1.1" 200 904
+INFO 2025-08-22 11:42:37,743 basehttp 18384 12932 "GET /web_seiwa/wingoapp/static/assets/js/sidebar-menu.js HTTP/1.1" 200 8413
+INFO 2025-08-22 11:42:37,773 basehttp 18384 18264 "GET /web_seiwa/wingoapp/static/assets/js/icons/feather-icon/feather.min.js HTTP/1.1" 200 65285
+INFO 2025-08-22 11:42:37,786 basehttp 18384 18076 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/popper.min.js HTTP/1.1" 200 18515
+INFO 2025-08-22 11:42:37,790 basehttp 18384 12420 "GET /web_seiwa/wingoapp/static/assets/js/jquery-3.5.1.min.js HTTP/1.1" 200 89476
+INFO 2025-08-22 11:42:37,794 basehttp 18384 18264 "GET /web_seiwa/wingoapp/static/assets/images/login/login_bg.jpg HTTP/1.1" 200 1193787
+INFO 2025-08-22 11:42:37,803 basehttp 18384 12932 "GET /web_seiwa/wingoapp/static/assets/js/bootstrap/bootstrap.min.js HTTP/1.1" 200 61768
+INFO 2025-08-22 11:42:37,822 basehttp 18384 17052 "GET /web_seiwa/wingoapp/static/assets/js/script.js HTTP/1.1" 200 4341
+INFO 2025-08-22 11:42:37,825 basehttp 18384 16008 "GET /web_seiwa/wingoapp/static/assets/fonts/theme-font/SFProText-Semibold.woff2 HTTP/1.1" 200 104140
+INFO 2025-08-22 11:42:37,827 basehttp 18384 18264 "GET /web_seiwa/wingoapp/static/assets/fonts/theme-font/SFProText-Medium.woff2 HTTP/1.1" 200 104172
+INFO 2025-08-22 11:42:37,830 basehttp 18384 12420 "GET /web_seiwa/wingoapp/static/assets/fonts/theme-font/SFProText-Bold.woff2 HTTP/1.1" 200 102320
+INFO 2025-08-22 11:42:37,832 basehttp 18384 12932 "GET /web_seiwa/wingoapp/static/assets/fonts/themify/themify.woff?-fvbane HTTP/1.1" 200 56108
+INFO 2025-08-22 11:42:37,833 basehttp 18384 18076 "GET /web_seiwa/wingoapp/static/assets/fonts/theme-font/SFProText-Regular.woff2 HTTP/1.1" 200 94424
+INFO 2025-08-22 11:42:38,059 basehttp 18384 16008 "GET /web_seiwa/wingoapp/static/assets/images/favicon.png HTTP/1.1" 200 15588
+INFO 2025-08-22 11:42:39,965 basehttp 18384 5320 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:42:47,907 views 18384 16008 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 11:42:47,929 basehttp 18384 18264 "GET /web_seiwa/wingoapp/static/assets/fonts/font-awesome/fontawesome-webfont.woff2?v=4.7.0 HTTP/1.1" 200 77160
+INFO 2025-08-22 11:42:47,950 authentication 18384 16008 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 11:42:47,958 views 18384 16008 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 11:42:47,958 views 18384 16008 LOGIN REDIRECT: 002186 -> /wo-maintenance/monitoring/
+INFO 2025-08-22 11:42:47,963 basehttp 18384 16008 "POST /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:42:48,086 basehttp 18384 16008 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 26048
+WARNING 2025-08-22 11:42:48,271 log 18384 16008 Not Found: /favicon.ico
+WARNING 2025-08-22 11:42:48,271 basehttp 18384 16008 "GET /favicon.ico HTTP/1.1" 404 12492
+INFO 2025-08-22 11:43:09,964 basehttp 18384 2892 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:43:18,379 basehttp 18384 16008 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:43:48,836 basehttp 18384 16008 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:44:01,966 basehttp 18384 17596 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2399
+INFO 2025-08-22 11:44:16,760 autoreload 18384 17800 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 11:44:18,777 autoreload 16392 18112 Watching for file changes with StatReloader
+INFO 2025-08-22 11:45:39,055 autoreload 14916 16344 Watching for file changes with StatReloader
+INFO 2025-08-22 11:45:46,397 autoreload 14368 15472 Watching for file changes with StatReloader
+INFO 2025-08-22 11:45:53,635 autoreload 12280 17004 Watching for file changes with StatReloader
+INFO 2025-08-22 11:45:55,598 views 12280 17004 === STATUS VALIDATION ===
+INFO 2025-08-22 11:45:55,599 views 12280 17004 Expected STATUS_APPROVED: B
+INFO 2025-08-22 11:45:55,599 views 12280 17004 Expected APPROVE_YES: N
+INFO 2025-08-22 11:45:55,599 views 12280 17004 Actual values in database:
+INFO 2025-08-22 11:45:55,600 views 12280 17004   Status: , Approve: N, Review: None
+INFO 2025-08-22 11:45:55,600 views 12280 17004   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 11:45:55,600 views 12280 17004   Status: A, Approve: T, Review: None
+INFO 2025-08-22 11:45:55,600 views 12280 17004   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 11:45:55,601 views 12280 17004   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 11:45:55,601 views 12280 17004   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 11:45:55,601 views 12280 17004 === END VALIDATION ===
+INFO 2025-08-22 11:45:59,924 basehttp 12280 13140 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:46:09,972 basehttp 12280 11540 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:46:32,494 basehttp 12280 12560 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 23849
+INFO 2025-08-22 11:46:39,962 basehttp 12280 14516 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:47:02,653 basehttp 12280 17804 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:47:32,662 basehttp 12280 9752 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:47:39,855 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:47:40,949 basehttp 12280 9752 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:47:41,570 basehttp 12280 13224 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 23849
+INFO 2025-08-22 11:48:02,970 basehttp 12280 9752 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:48:03,097 basehttp 12280 9752 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 11628
+INFO 2025-08-22 11:48:11,683 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:48:41,714 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:48:41,907 basehttp 12280 9752 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:48:42,034 basehttp 12280 9752 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:49:11,699 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:49:41,704 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:49:42,910 basehttp 12280 9752 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:49:43,019 basehttp 12280 9752 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:50:11,711 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:50:41,709 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:50:43,907 basehttp 12280 16340 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:50:44,034 basehttp 12280 16340 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:51:11,711 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:51:41,719 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:51:44,920 basehttp 12280 14012 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:51:45,034 basehttp 12280 14012 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:52:11,733 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:52:41,737 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:52:45,899 basehttp 12280 15312 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:52:46,017 basehttp 12280 15312 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:53:11,743 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:53:41,754 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:53:46,907 basehttp 12280 15312 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:53:47,007 basehttp 12280 15312 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:54:11,766 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:54:41,786 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:54:47,904 basehttp 12280 15312 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:54:48,008 basehttp 12280 15312 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:55:11,774 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:55:41,783 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:55:48,898 basehttp 12280 15312 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:55:49,004 basehttp 12280 15312 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:56:11,799 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:56:41,802 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:56:49,909 basehttp 12280 15312 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:56:50,021 basehttp 12280 15312 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:57:11,815 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:57:41,823 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:57:50,905 basehttp 12280 15312 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:57:51,015 basehttp 12280 15312 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:58:11,823 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:58:41,840 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:58:51,901 basehttp 12280 15312 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:58:52,010 basehttp 12280 15312 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 11:59:11,842 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:59:41,848 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 11:59:52,902 basehttp 12280 12284 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 11:59:53,013 basehttp 12280 12284 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:00:11,849 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:00:41,859 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:00:53,901 basehttp 12280 10556 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:00:54,018 basehttp 12280 10556 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:01:11,911 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:01:41,878 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:01:54,901 basehttp 12280 10556 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:01:55,023 basehttp 12280 10556 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:02:11,894 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:02:41,897 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:02:55,896 basehttp 12280 10556 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:02:56,023 basehttp 12280 10556 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:03:11,907 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:03:41,908 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:03:56,899 basehttp 12280 16400 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:03:57,029 basehttp 12280 16400 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:04:11,910 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:04:41,917 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:04:57,898 basehttp 12280 16400 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:04:58,030 basehttp 12280 16400 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:05:11,942 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:05:41,955 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:05:58,892 basehttp 12280 16400 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:05:59,016 basehttp 12280 16400 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:06:11,947 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:06:41,971 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:06:59,901 basehttp 12280 16196 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:07:00,007 basehttp 12280 16196 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:07:11,940 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:07:41,957 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:08:00,893 basehttp 12280 17016 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:08:01,011 basehttp 12280 17016 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:08:11,968 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:08:41,973 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:09:01,886 basehttp 12280 17804 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:09:01,989 basehttp 12280 17804 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:09:11,989 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:09:42,016 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:10:01,891 basehttp 12280 15704 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:10:01,999 basehttp 12280 15704 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:10:12,013 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:10:42,024 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:11:01,895 basehttp 12280 11540 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:11:02,011 basehttp 12280 11540 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:11:12,036 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:11:42,027 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:12:01,890 basehttp 12280 11996 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:12:02,015 basehttp 12280 11996 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:12:12,037 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:12:42,041 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:13:01,893 basehttp 12280 15844 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:13:02,003 basehttp 12280 15844 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:13:12,034 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:13:42,050 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:14:01,890 basehttp 12280 15732 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:14:02,011 basehttp 12280 15732 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:14:12,081 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:14:42,062 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:15:01,888 basehttp 12280 12264 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:15:01,998 basehttp 12280 12264 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:15:12,112 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:15:42,078 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:16:01,887 basehttp 12280 10472 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:16:02,004 basehttp 12280 10472 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:16:12,079 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:16:42,090 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:17:01,892 basehttp 12280 2564 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:17:02,019 basehttp 12280 2564 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:17:12,097 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:17:42,111 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:18:01,886 basehttp 12280 14444 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:18:02,005 basehttp 12280 14444 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:18:12,115 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:18:42,125 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:19:01,892 basehttp 12280 9848 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:19:02,003 basehttp 12280 9848 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:19:12,129 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:19:42,140 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:20:01,879 basehttp 12280 10856 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:20:01,998 basehttp 12280 10856 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:20:12,159 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:20:42,174 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:21:01,883 basehttp 12280 14236 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:21:01,989 basehttp 12280 14236 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:21:12,173 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:21:42,186 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:22:01,872 basehttp 12280 18116 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:22:01,980 basehttp 12280 18116 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:22:12,219 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:22:42,210 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:23:01,883 basehttp 12280 14920 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:23:01,996 basehttp 12280 14920 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 12:23:12,224 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:23:42,237 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:24:12,239 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:24:42,243 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:25:12,248 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:25:42,253 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:26:12,268 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:26:42,267 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:27:12,265 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:27:42,275 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:28:12,953 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:28:46,547 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:29:16,554 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:29:46,557 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:30:16,561 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:30:46,568 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:31:16,576 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:31:46,590 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:32:16,599 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:32:46,593 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:33:16,610 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:33:46,615 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:34:16,612 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:34:46,614 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:35:16,622 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:35:46,615 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:36:16,671 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:36:46,627 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:37:16,637 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:37:46,640 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:38:16,641 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:38:46,650 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:39:16,658 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:39:46,658 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:40:16,671 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:40:46,686 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:41:16,702 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:41:46,733 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:42:16,722 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:42:46,736 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 12:43:16,706 basehttp 12280 13224 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 12:43:16,928 basehttp 12280 13224 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10592
+INFO 2025-08-22 13:01:30,547 basehttp 12280 16572 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:01:30,663 basehttp 12280 16572 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 13:01:44,392 basehttp 12280 18424 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:01:44,516 basehttp 12280 18424 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 13:02:01,448 basehttp 12280 16572 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:02:01,567 basehttp 12280 16572 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 13:02:02,842 basehttp 12280 18156 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:02:02,959 basehttp 12280 18156 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 13:02:32,526 basehttp 12280 17596 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:02:32,646 basehttp 12280 17596 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 13:02:32,806 basehttp 12280 17596 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:02:32,926 basehttp 12280 17596 "GET /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 200 10284
+INFO 2025-08-22 13:04:53,376 views 12280 16068 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 13:04:53,426 authentication 12280 16068 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 13:04:53,434 views 12280 16068 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 13:04:53,435 views 12280 16068 LOGIN REDIRECT: 002186 -> /wo-maintenance/monitoring/
+INFO 2025-08-22 13:04:53,439 basehttp 12280 16068 "POST /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:04:53,574 basehttp 12280 16068 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 23849
+INFO 2025-08-22 13:05:23,904 basehttp 12280 16068 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:05:53,888 basehttp 12280 16904 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:06:23,894 basehttp 12280 11044 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:06:37,914 basehttp 12280 12396 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:06:38,027 basehttp 12280 12396 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10284
+INFO 2025-08-22 13:06:40,679 basehttp 12280 12396 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:06:40,814 basehttp 12280 12396 "GET /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 200 10284
+INFO 2025-08-22 13:06:47,222 views 12280 12396 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 13:06:47,246 authentication 12280 12396 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 13:06:47,252 views 12280 12396 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 13:06:47,253 views 12280 12396 LOGIN REDIRECT: 002186 -> /wo-maintenance/monitoring/
+INFO 2025-08-22 13:06:47,257 basehttp 12280 12396 "POST /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:06:47,388 basehttp 12280 12396 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 23849
+INFO 2025-08-22 13:06:53,891 basehttp 12280 10500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:07:17,521 basehttp 12280 12396 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:07:23,880 basehttp 12280 18276 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:07:47,880 basehttp 12280 12396 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:07:53,879 basehttp 12280 14128 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:08:17,877 basehttp 12280 12396 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:08:23,880 basehttp 12280 14128 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:08:47,868 basehttp 12280 12396 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:09:01,889 basehttp 12280 14128 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:09:17,877 basehttp 12280 12396 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1906
+INFO 2025-08-22 13:09:41,889 autoreload 12280 17004 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 13:09:44,040 autoreload 9888 17960 Watching for file changes with StatReloader
+INFO 2025-08-22 13:13:45,036 autoreload 12476 2008 Watching for file changes with StatReloader
+INFO 2025-08-22 13:13:47,087 views 12476 2008 === STATUS VALIDATION ===
+INFO 2025-08-22 13:13:47,088 views 12476 2008 Expected STATUS_APPROVED: B
+INFO 2025-08-22 13:13:47,088 views 12476 2008 Expected APPROVE_YES: N
+INFO 2025-08-22 13:13:47,089 views 12476 2008 Actual values in database:
+INFO 2025-08-22 13:13:47,089 views 12476 2008   Status: , Approve: N, Review: None
+INFO 2025-08-22 13:13:47,090 views 12476 2008   Status: A, Approve: N, Review: 0
+INFO 2025-08-22 13:13:47,090 views 12476 2008   Status: A, Approve: T, Review: None
+INFO 2025-08-22 13:13:47,090 views 12476 2008   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 13:13:47,091 views 12476 2008   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 13:13:47,091 views 12476 2008   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 13:13:47,091 views 12476 2008 === END VALIDATION ===

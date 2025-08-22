@@ -189,10 +189,10 @@ AUTH_PASSWORD_VALIDATORS = [
     # {
     #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     # },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {'min_length': 6}
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    #     'OPTIONS': {'min_length': 6}
+    # },
     # {
     #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     # },
@@ -208,11 +208,13 @@ LOGIN_REDIRECT_URL = '/'    # Redirect setelah login sukses
 LOGOUT_REDIRECT_URL = '/login/'  # Redirect setelah logout
 
 # SESSION SETTINGS yang dioptimalkan untuk SDBM
-SESSION_COOKIE_AGE = 28800  # 8 jam dalam detik
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 28800  # 8 jam dalam detik
+SESSION_COOKIE_AGE = 86400  # 24 hours (86400 seconds)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_NAME = 'seiwa_sessionid'
 SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 # Security settings untuk production
 if not DEBUG:

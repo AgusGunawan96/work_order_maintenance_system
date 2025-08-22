@@ -195,6 +195,14 @@
       </a>     
     </li>
 
+   <!-- NEW: Lihat Monitor - Opens in new tab -->
+        <li>
+            <a href="{% url 'wo_maintenance_app:monitoring_informasi_system' %}" target="_blank" rel="noopener noreferrer">
+                <i data-feather="monitor"></i><span>Lihat Monitor</span>
+                <i data-feather="external-link" style="font-size: 12px; margin-left: 5px; opacity: 0.7;"></i>
+            </a>
+        </li>
+
     <!-- Divider untuk Review Section (khusus SITI FATIMAH) -->
     {% if user.username == '007522' or employee_data.employee_number == '007522' %}
     <li class="nav-divider">Review System</li>
@@ -308,4 +316,18 @@ $(document).ready(function() {
     });
     {% endif %}
 });
+</script>
+
+<!-- Optional: JavaScript untuk konfirmasi buka tab baru -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const monitorLink = document.querySelector('a[href*="monitoring_informasi_system"]');
+        
+        if (monitorLink) {
+            monitorLink.addEventListener('click', function(e) {
+                // Optional: Add loading indicator atau notification
+                console.log('Opening Monitoring System in new tab...');
+            });
+        }
+    });
 </script>

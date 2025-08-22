@@ -8256,3 +8256,426 @@ __all__ = [
     'get_status_display_text',
     'get_opposite_status'
 ]
+
+@login_required  
+def monitoring_informasi_system(request):
+    """
+    View untuk MONITORING INFORMASI SYSTEM
+    Logic sesuai dengan kode PHP - fallback jika View_Monitor tidak ada
+    """
+    
+    # Ambil data employee dari session
+    employee_data = request.session.get('employee_data', {})
+    
+    monitoring_data = []
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Logic waktu sesuai PHP
+            today = timezone.now().date()
+            
+            # Try using View_Monitor first, fallback to manual UNION if not exists
+            try:
+                # Test if View_Monitor exists
+                cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
+                use_view_monitor = True
+            except:
+                use_view_monitor = False
+                logger.warning("View_Monitor not found, using manual UNION query")
+            
+            if use_view_monitor:
+                # Query menggunakan View_Monitor (jika ada)
+                cursor.execute(f"""
+                    SELECT 
+                        a.history_id,
+                        MAX(a.tgl_his) as tgl_his,
+                        MAX(a.jam_his) as jam_his,
+                        a.id_line,
+                        a.id_mesin,
+                        MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+                        MAX(a.number_wo) as number_wo,
+                        MAX(b.line) as line,
+                        MAX(c.mesin) as mesin,
+                        MAX(a.status_pekerjaan) as status_pekerjaan,
+                        MAX(a.status) as status,
+                        MAX(a.user_insert) as user_insert,
+                        MAX(a.tgl_insert) as tgl_insert,
+                        MAX(a.oleh) as oleh,
+                        MAX(c.nomer) as nomer,
+                        MAX(d.seksi) as seksi,
+                        MAX(a.prima) as prima
+                    FROM View_Monitor a 
+                    JOIN tabel_line b ON b.id_line = a.id_line
+                    JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+                    JOIN tabel_msection d ON d.id_section = a.id_section
+                    WHERE a.status_pekerjaan != 'C' 
+                      AND a.history_id IS NOT NULL 
+                      AND a.history_id != ''
+                      AND convert(datetime,a.tgl_his,120) BETWEEN 
+                          dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+                          dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+                    GROUP BY a.history_id, a.id_line, a.id_mesin
+                    ORDER BY
+                        CASE
+                            WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+                            ELSE 1
+                        END, 
+                        MAX(a.tgl_his) DESC
+                """)
+            else:
+                # Manual UNION query sebagai fallback
+                cursor.execute(f"""
+                    SELECT 
+                        a.history_id,
+                        MAX(a.tgl_his) as tgl_his,
+                        MAX(a.jam_his) as jam_his,
+                        a.id_line,
+                        a.id_mesin,
+                        MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+                        MAX(a.number_wo) as number_wo,
+                        MAX(b.line) as line,
+                        MAX(c.mesin) as mesin,
+                        MAX(a.status_pekerjaan) as status_pekerjaan,
+                        MAX(a.status) as status,
+                        NULL as user_insert,
+                        MAX(a.tgl_insert) as tgl_insert,
+                        NULL as oleh,
+                        MAX(c.nomer) as nomer,
+                        MAX(d.seksi) as seksi,
+                        MAX(a.prima) as prima
+                    FROM (
+                        SELECT 
+                            tp.history_id,
+                            tp.tgl_his,
+                            tp.jam_his,
+                            tp.id_line,
+                            tp.id_mesin,
+                            tp.deskripsi_perbaikan,
+                            tp.number_wo,
+                            tp.status_pekerjaan,
+                            tp.status,
+                            tp.id_section,
+                            NULL as prima,
+                            tp.tgl_insert
+                        FROM tabel_pengajuan tp
+                        WHERE tp.status_pekerjaan != 'C'
+                          AND tp.history_id IS NOT NULL 
+                          AND tp.history_id != ''
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            tm.history_id,
+                            tm.tgl_his,
+                            tm.jam_his,
+                            tm.id_line,
+                            tm.id_mesin,
+                            tm.deskripsi_perbaikan,
+                            tm.number_wo,
+                            tm.status_pekerjaan,
+                            tm.status,
+                            tm.id_section,
+                            tm.PriMa as prima,
+                            tm.tgl_insert
+                        FROM tabel_main tm
+                        WHERE tm.status_pekerjaan != 'C'
+                          AND tm.history_id IS NOT NULL 
+                          AND tm.history_id != ''
+                    ) a
+                    LEFT JOIN tabel_line b ON b.id_line = a.id_line
+                    LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+                    LEFT JOIN tabel_msection d ON d.id_section = a.id_section
+                    WHERE convert(datetime,a.tgl_his,120) BETWEEN 
+                        dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+                        dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+                    GROUP BY a.history_id, a.id_line, a.id_mesin
+                    ORDER BY
+                        CASE
+                            WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+                            ELSE 1
+                        END, 
+                        MAX(a.tgl_his) DESC
+                """)
+            
+            results = cursor.fetchall()
+            
+            # Processing data sesuai logika PHP
+            for row in results:
+                # Tentukan status berdasarkan logika PHP
+                number_wo = row[6] if row[6] else ''
+                status_pekerjaan = row[9] if row[9] else ''
+                
+                if not number_wo or number_wo.strip() == '':
+                    status_display = 'pengajuan'
+                    status_color = '#DC143C'  # Merah
+                elif status_pekerjaan == 'O':
+                    status_display = 'diproses'
+                    status_color = '#7FFF00'  # Hijau
+                else:
+                    status_display = 'selesai'
+                    status_color = '#7FFF00'  # Hijau
+                
+                # Format waktu sesuai PHP (d/m/Y - H:i:s WIB)
+                waktu_display = ''
+                if row[1]:  # tgl_his
+                    waktu_display = row[1].strftime('%d/%m/%Y') + ' - ' + row[1].strftime('%H:%M:%S') + ' WIB'
+                
+                # Gabung mesin + nomer seperti di PHP
+                mesin_display = f"{row[8] or ''} {row[14] or ''}".strip() or '-'
+                
+                monitoring_data.append({
+                    'history_id': row[0] or '-',
+                    'prioritas': row[15] or '-',  # prima
+                    'waktu_pengajuan': waktu_display,
+                    'no_pengajuan': row[0] or '-',  # history_id
+                    'nomor_wo': number_wo or '-',
+                    'line_name': row[7] or '-',  # line
+                    'mesin_name': mesin_display,  # mesin + nomer
+                    'deskripsi': row[5] or '-',  # deskripsi_perbaikan
+                    'section_name': row[15] or '-',  # seksi
+                    'status': status_display,
+                    'status_color': status_color,
+                    'tgl_insert': row[12],
+                })
+                
+    except Exception as e:
+        logger.error(f"Error loading monitoring data: {e}")
+        monitoring_data = []
+        # Don't show error to user, just log it
+    
+    # Statistik untuk dashboard monitoring
+    stats = {
+        'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
+        'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
+        'total_all': len(monitoring_data),
+        'use_marquee': len(monitoring_data) > 30
+    }
+    
+    context = {
+        'monitoring_data': monitoring_data,
+        'stats': stats,
+        'employee_data': employee_data,
+        'page_title': 'MONITORING INFORMASI SYSTEM',
+        'current_time': timezone.now(),
+    }
+    
+    return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
+
+
+@login_required  
+def ajax_monitoring_refresh(request):
+    """
+    AJAX endpoint untuk refresh data monitoring - fixed dengan fallback
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'})
+    
+    monitoring_data = []
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            today = timezone.now().date()
+            
+            # Try using View_Monitor first, fallback to manual UNION if not exists
+            try:
+                cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
+                use_view_monitor = True
+            except:
+                use_view_monitor = False
+            
+            if use_view_monitor:
+                # Query menggunakan View_Monitor
+                cursor.execute(f"""
+                    SELECT 
+                        a.history_id,
+                        MAX(a.tgl_his) as tgl_his,
+                        MAX(a.jam_his) as jam_his,
+                        a.id_line,
+                        a.id_mesin,
+                        MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+                        MAX(a.number_wo) as number_wo,
+                        MAX(b.line) as line,
+                        MAX(c.mesin) as mesin,
+                        MAX(a.status_pekerjaan) as status_pekerjaan,
+                        MAX(a.status) as status,
+                        MAX(a.user_insert) as user_insert,
+                        MAX(a.tgl_insert) as tgl_insert,
+                        MAX(a.oleh) as oleh,
+                        MAX(c.nomer) as nomer,
+                        MAX(d.seksi) as seksi,
+                        MAX(a.prima) as prima
+                    FROM View_Monitor a 
+                    JOIN tabel_line b ON b.id_line = a.id_line
+                    JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+                    JOIN tabel_msection d ON d.id_section = a.id_section
+                    WHERE a.status_pekerjaan != 'C' 
+                      AND a.history_id IS NOT NULL 
+                      AND a.history_id != ''
+                      AND convert(datetime,a.tgl_his,120) BETWEEN 
+                          dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+                          dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+                    GROUP BY a.history_id, a.id_line, a.id_mesin
+                    ORDER BY
+                        CASE
+                            WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+                            ELSE 1
+                        END, 
+                        MAX(a.tgl_his) DESC
+                """)
+            else:
+                # Manual UNION query sebagai fallback
+                cursor.execute(f"""
+                    SELECT 
+                        a.history_id,
+                        MAX(a.tgl_his) as tgl_his,
+                        MAX(a.jam_his) as jam_his,
+                        a.id_line,
+                        a.id_mesin,
+                        MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+                        MAX(a.number_wo) as number_wo,
+                        MAX(b.line) as line,
+                        MAX(c.mesin) as mesin,
+                        MAX(a.status_pekerjaan) as status_pekerjaan,
+                        MAX(a.status) as status,
+                        NULL as user_insert,
+                        MAX(a.tgl_insert) as tgl_insert,
+                        NULL as oleh,
+                        MAX(c.nomer) as nomer,
+                        MAX(d.seksi) as seksi,
+                        MAX(a.prima) as prima
+                    FROM (
+                        SELECT 
+                            tp.history_id,
+                            tp.tgl_his,
+                            tp.jam_his,
+                            tp.id_line,
+                            tp.id_mesin,
+                            tp.deskripsi_perbaikan,
+                            tp.number_wo,
+                            tp.status_pekerjaan,
+                            tp.status,
+                            tp.id_section,
+                            NULL as prima,
+                            tp.tgl_insert
+                        FROM tabel_pengajuan tp
+                        WHERE tp.status_pekerjaan != 'C'
+                          AND tp.history_id IS NOT NULL 
+                          AND tp.history_id != ''
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            tm.history_id,
+                            tm.tgl_his,
+                            tm.jam_his,
+                            tm.id_line,
+                            tm.id_mesin,
+                            tm.deskripsi_perbaikan,
+                            tm.number_wo,
+                            tm.status_pekerjaan,
+                            tm.status,
+                            tm.id_section,
+                            tm.PriMa as prima,
+                            tm.tgl_insert
+                        FROM tabel_main tm
+                        WHERE tm.status_pekerjaan != 'C'
+                          AND tm.history_id IS NOT NULL 
+                          AND tm.history_id != ''
+                    ) a
+                    LEFT JOIN tabel_line b ON b.id_line = a.id_line
+                    LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+                    LEFT JOIN tabel_msection d ON d.id_section = a.id_section
+                    WHERE convert(datetime,a.tgl_his,120) BETWEEN 
+                        dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+                        dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+                    GROUP BY a.history_id, a.id_line, a.id_mesin
+                    ORDER BY
+                        CASE
+                            WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+                            ELSE 1
+                        END, 
+                        MAX(a.tgl_his) DESC
+                """)
+            
+            results = cursor.fetchall()
+            
+            for row in results:
+                # Tentukan status berdasarkan logika PHP
+                number_wo = row[6] if row[6] else ''
+                status_pekerjaan = row[9] if row[9] else ''
+                
+                if not number_wo or number_wo.strip() == '':
+                    status_display = 'pengajuan'
+                elif status_pekerjaan == 'O':
+                    status_display = 'diproses'
+                else:
+                    status_display = 'selesai'
+                
+                # Format waktu sesuai PHP
+                waktu_display = ''
+                if row[1]:  # tgl_his
+                    waktu_display = row[1].strftime('%d/%m/%Y') + ' - ' + row[1].strftime('%H:%M:%S') + ' WIB'
+                
+                # Gabung mesin + nomer
+                mesin_display = f"{row[8] or ''} {row[14] or ''}".strip() or '-'
+                
+                monitoring_data.append({
+                    'prioritas': row[15] or '-',  # prima
+                    'waktu_pengajuan': waktu_display,
+                    'no_pengajuan': row[0] or '-',  # history_id
+                    'nomor_wo': number_wo or '-',
+                    'line_name': row[7] or '-',  # line
+                    'mesin_name': mesin_display,  # mesin + nomer
+                    'deskripsi': (row[5][:50] + '...') if row[5] and len(row[5]) > 50 else (row[5] or '-'),
+                    'section_name': row[15] or '-',  # seksi
+                    'status': status_display,
+                })
+        
+        stats = {
+            'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
+            'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
+            'total_all': len(monitoring_data),
+            'use_marquee': len(monitoring_data) > 30,
+            'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+        }
+        
+        return JsonResponse({
+            'success': True,
+            'data': monitoring_data,
+            'stats': stats
+        })
+        
+    except Exception as e:
+        logger.error(f"Error refreshing monitoring data: {e}")
+        # Return success with empty data instead of error to prevent logout
+        return JsonResponse({
+            'success': True,
+            'data': [],
+            'stats': {
+                'total_pengajuan': 0,
+                'total_diproses': 0,
+                'total_all': 0,
+                'use_marquee': False,
+                'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+            },
+            'message': 'No data available'
+        })
+
+
+# Tambahkan view untuk keep session alive
+@login_required
+def keep_session_alive(request):
+    """
+    Endpoint untuk menjaga session tetap aktif
+    """
+    return JsonResponse({
+        'success': True,
+        'message': 'Session refreshed',
+        'time': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+    })
+
+# Export functions
+__all__ = [
+    'monitoring_informasi_system',
+    'ajax_monitoring_refresh'
+]
