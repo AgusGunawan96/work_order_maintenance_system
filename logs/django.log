@@ -18899,3 +18899,413 @@ INFO 2025-08-21 11:28:10,305 views 12296 14040   Status: A, Approve: T, Review: 
 INFO 2025-08-21 11:28:10,306 views 12296 14040   Status: A, Approve: Y, Review: 0
 INFO 2025-08-21 11:28:10,306 views 12296 14040   Status: A, Approve: Y, Review: 1
 INFO 2025-08-21 11:28:10,307 views 12296 14040 === END VALIDATION ===
+INFO 2025-08-21 11:41:35,484 autoreload 12296 14040 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\forms.py changed, reloading.
+INFO 2025-08-21 11:41:37,650 autoreload 11468 12140 Watching for file changes with StatReloader
+INFO 2025-08-21 13:28:21,778 autoreload 17420 16852 Watching for file changes with StatReloader
+INFO 2025-08-21 13:28:24,158 views 17420 16852 === STATUS VALIDATION ===
+INFO 2025-08-21 13:28:24,159 views 17420 16852 Expected STATUS_APPROVED: B
+INFO 2025-08-21 13:28:24,159 views 17420 16852 Expected APPROVE_YES: N
+INFO 2025-08-21 13:28:24,159 views 17420 16852 Actual values in database:
+INFO 2025-08-21 13:28:24,160 views 17420 16852   Status: , Approve: N, Review: None
+INFO 2025-08-21 13:28:24,160 views 17420 16852   Status: A, Approve: T, Review: None
+INFO 2025-08-21 13:28:24,160 views 17420 16852   Status: A, Approve: T, Review: 0
+INFO 2025-08-21 13:28:24,161 views 17420 16852   Status: A, Approve: Y, Review: 0
+INFO 2025-08-21 13:28:24,161 views 17420 16852   Status: A, Approve: Y, Review: 1
+INFO 2025-08-21 13:28:24,161 views 17420 16852 === END VALIDATION ===
+INFO 2025-08-21 13:28:37,538 basehttp 17420 17816 "GET /wo-maintenance/history/ HTTP/1.1" 302 0
+INFO 2025-08-21 13:28:37,924 basehttp 17420 17816 "GET /login/?next=/wo-maintenance/history/ HTTP/1.1" 200 10284
+INFO 2025-08-21 13:28:44,231 views 17420 14044 LOGIN ATTEMPT: 002186
+INFO 2025-08-21 13:28:44,266 authentication 17420 14044 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-21 13:28:44,271 views 17420 14044 LOGIN: Using existing session data for 002186
+INFO 2025-08-21 13:28:44,273 views 17420 14044 LOGIN REDIRECT: 002186 -> /wo-maintenance/history/
+INFO 2025-08-21 13:28:44,276 basehttp 17420 14044 "POST /login/?next=/wo-maintenance/history/ HTTP/1.1" 302 0
+INFO 2025-08-21 13:28:44,662 views 17420 14044 History query executed - Found 32538 records
+INFO 2025-08-21 13:28:45,050 basehttp 17420 14044 "GET /wo-maintenance/history/ HTTP/1.1" 200 118937
+INFO 2025-08-21 13:28:59,756 basehttp 17420 11920 "GET /wo-maintenance/history/25-08-0371/ HTTP/1.1" 200 48908
+INFO 2025-08-21 13:29:40,408 views 17420 12788 History query executed - Found 32538 records
+INFO 2025-08-21 13:29:40,582 basehttp 17420 12788 "GET /wo-maintenance/history/ HTTP/1.1" 200 121991
+INFO 2025-08-21 13:30:19,973 basehttp 17420 5064 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 48752
+INFO 2025-08-21 13:30:29,219 basehttp 17420 5064 "GET /wo-maintenance/history/25-08-0367/ HTTP/1.1" 200 49031
+INFO 2025-08-21 13:34:13,836 views 17420 13516 History query executed - Found 32538 records
+ERROR 2025-08-21 13:34:13,912 views 17420 13516 Critical error in history_pengajuan_list: <ExtendsNode: extends 'starter_kit/base.html'> must be the first tag in the template.
+INFO 2025-08-21 13:34:13,915 basehttp 17420 13516 "GET /wo-maintenance/history/ HTTP/1.1" 302 0
+INFO 2025-08-21 13:34:14,182 basehttp 17420 13516 "GET /wo-maintenance/ HTTP/1.1" 200 32339
+INFO 2025-08-21 13:34:17,063 views 17420 13516 History query executed - Found 32538 records
+ERROR 2025-08-21 13:34:17,144 views 17420 13516 Critical error in history_pengajuan_list: <ExtendsNode: extends 'starter_kit/base.html'> must be the first tag in the template.
+INFO 2025-08-21 13:34:17,147 basehttp 17420 13516 "GET /wo-maintenance/history/ HTTP/1.1" 302 0
+INFO 2025-08-21 13:34:17,324 basehttp 17420 13516 "GET /wo-maintenance/ HTTP/1.1" 200 32339
+INFO 2025-08-21 13:34:20,454 views 17420 12484 Applied conditional exclude logic for user 002186
+INFO 2025-08-21 13:34:20,481 views 17420 12484 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-21 13:34:20,598 basehttp 17420 12484 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 29164
+INFO 2025-08-21 13:34:22,905 views 17420 12484 History query executed - Found 32538 records
+ERROR 2025-08-21 13:34:22,982 views 17420 12484 Critical error in history_pengajuan_list: <ExtendsNode: extends 'starter_kit/base.html'> must be the first tag in the template.
+INFO 2025-08-21 13:34:22,983 basehttp 17420 12484 "GET /wo-maintenance/history/ HTTP/1.1" 302 0
+INFO 2025-08-21 13:34:23,150 basehttp 17420 12484 "GET /wo-maintenance/ HTTP/1.1" 200 32339
+INFO 2025-08-21 13:47:00,475 basehttp 17420 10940 "GET /wo-maintenance/ HTTP/1.1" 200 32363
+INFO 2025-08-21 13:47:02,530 views 17420 10940 History query executed - Found 32539 records
+INFO 2025-08-21 13:47:02,819 basehttp 17420 10940 "GET /wo-maintenance/history/ HTTP/1.1" 200 121638
+INFO 2025-08-21 13:47:10,671 views 17420 17628 History query executed - Found 32539 records
+INFO 2025-08-21 13:47:10,824 basehttp 17420 17628 "GET /wo-maintenance/history/ HTTP/1.1" 200 121333
+INFO 2025-08-21 13:48:38,288 views 17420 17676 History query executed - Found 32539 records
+INFO 2025-08-21 13:48:38,451 basehttp 17420 17676 "GET /wo-maintenance/history/ HTTP/1.1" 200 123492
+INFO 2025-08-21 13:49:16,127 basehttp 17420 15040 "GET /wo-maintenance/history/25-08-0372/ HTTP/1.1" 200 48782
+INFO 2025-08-21 14:07:11,416 basehttp 17420 13804 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 53530
+INFO 2025-08-21 14:07:14,520 basehttp 17420 2392 "GET /dailyactivity/laporanmechanical/tanggal/ HTTP/1.1" 200 44418
+INFO 2025-08-21 14:07:16,860 basehttp 17420 2392 "GET /dailyactivity/laporanmechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 36959
+WARNING 2025-08-21 14:07:17,185 basehttp 17420 2392 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-21 14:07:17,264 log 17420 10580 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-21 14:07:17,275 log 17420 3224 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-21 14:07:17,275 basehttp 17420 10580 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+WARNING 2025-08-21 14:07:17,276 basehttp 17420 3224 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+INFO 2025-08-21 14:07:18,792 basehttp 17420 3224 "GET /dailyactivity/laporanmechanical/data/2025-08-16/ HTTP/1.1" 200 33131
+INFO 2025-08-21 14:07:30,184 basehttp 17420 16596 "GET /dailyactivity/laporanmechanical/ HTTP/1.1" 200 21769
+WARNING 2025-08-21 14:07:30,226 basehttp 17420 16596 "GET /web_seiwa/wingoapp/static/assets/js/custom/script.js HTTP/1.1" 404 1981
+INFO 2025-08-21 14:09:31,067 basehttp 17420 14608 "GET /dailyactivity/laporanmechanical/tanggal/ HTTP/1.1" 200 44418
+INFO 2025-08-21 14:09:33,274 basehttp 17420 14608 "GET /dailyactivity/laporanmechanical/tanggal/?month=7&year=2025 HTTP/1.1" 200 46316
+WARNING 2025-08-21 14:09:33,388 basehttp 17420 14608 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-21 14:09:35,103 basehttp 17420 14488 "GET /dailyactivity/laporanmechanical/data/2025-07-30/ HTTP/1.1" 200 36176
+INFO 2025-08-21 14:09:53,623 basehttp 17420 6556 "GET /dailyactivity/laporanmechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 36959
+WARNING 2025-08-21 14:09:53,706 basehttp 17420 6556 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+INFO 2025-08-21 14:09:55,685 basehttp 17420 6648 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 53530
+INFO 2025-08-21 14:09:57,599 basehttp 17420 6648 "GET /dailyactivity/mechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 57156
+INFO 2025-08-21 14:09:59,395 basehttp 17420 11052 "GET /dailyactivity/mechanical/data/2025-08-20/ HTTP/1.1" 200 139962
+INFO 2025-08-21 14:13:15,655 basehttp 17420 11012 "GET /dailyactivity/laporanmechanical/tanggal/ HTTP/1.1" 200 44418
+INFO 2025-08-21 14:13:16,758 basehttp 17420 11012 "GET /dailyactivity/schedule/ HTTP/1.1" 200 18933
+WARNING 2025-08-21 14:13:16,793 basehttp 17420 11012 "GET /web_seiwa/wingoapp/static/assets/js/custom/script.js HTTP/1.1" 404 1981
+INFO 2025-08-21 14:13:18,436 basehttp 17420 11620 "GET /dailyactivity/laporanmechanical/tanggal/ HTTP/1.1" 200 44418
+INFO 2025-08-21 14:13:19,666 basehttp 17420 11620 "GET /dailyactivity/laporanmechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 36959
+WARNING 2025-08-21 14:13:19,745 basehttp 17420 11620 "GET /web_seiwa/wingoapp/static/assets/js/datatable/datatables/lang/Indonesian.json HTTP/1.1" 404 2056
+WARNING 2025-08-21 14:13:19,790 log 17420 2192 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-21 14:13:19,791 basehttp 17420 2192 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+WARNING 2025-08-21 14:13:19,800 log 17420 16104 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-21 14:13:19,801 basehttp 17420 16104 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+INFO 2025-08-21 14:13:21,065 basehttp 17420 16104 "GET /dailyactivity/laporanmechanical/data/2025-08-16/ HTTP/1.1" 200 33131
+INFO 2025-08-21 14:51:28,701 autoreload 17420 16852 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-21 14:51:30,855 autoreload 14600 11612 Watching for file changes with StatReloader
+INFO 2025-08-21 15:12:32,722 autoreload 16432 13976 Watching for file changes with StatReloader
+INFO 2025-08-21 15:12:45,231 autoreload 6664 16896 Watching for file changes with StatReloader
+INFO 2025-08-21 15:12:47,472 views 6664 16896 === STATUS VALIDATION ===
+INFO 2025-08-21 15:12:47,472 views 6664 16896 Expected STATUS_APPROVED: B
+INFO 2025-08-21 15:12:47,473 views 6664 16896 Expected APPROVE_YES: N
+INFO 2025-08-21 15:12:47,473 views 6664 16896 Actual values in database:
+INFO 2025-08-21 15:12:47,473 views 6664 16896   Status: , Approve: N, Review: None
+INFO 2025-08-21 15:12:47,474 views 6664 16896   Status: A, Approve: T, Review: None
+INFO 2025-08-21 15:12:47,474 views 6664 16896   Status: A, Approve: T, Review: 0
+INFO 2025-08-21 15:12:47,474 views 6664 16896   Status: A, Approve: Y, Review: 0
+INFO 2025-08-21 15:12:47,475 views 6664 16896   Status: A, Approve: Y, Review: 1
+INFO 2025-08-21 15:12:47,475 views 6664 16896 === END VALIDATION ===
+INFO 2025-08-21 15:12:55,895 basehttp 6664 16376 "GET /dailyactivity/laporanmechanical/data/2025-08-16/ HTTP/1.1" 302 0
+INFO 2025-08-21 15:12:56,026 basehttp 6664 16376 "GET /login/?next=/dailyactivity/laporanmechanical/data/2025-08-16/ HTTP/1.1" 200 12255
+INFO 2025-08-21 15:13:08,244 views 6664 11300 LOGIN ATTEMPT: 002186
+INFO 2025-08-21 15:13:08,287 authentication 6664 11300 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-21 15:13:08,296 views 6664 11300 LOGIN: Using existing session data for 002186
+INFO 2025-08-21 15:13:08,297 views 6664 11300 LOGIN REDIRECT: 002186 -> /dailyactivity/laporanmechanical/data/2025-08-16/
+INFO 2025-08-21 15:13:08,303 basehttp 6664 11300 "POST /login/?next=/dailyactivity/laporanmechanical/data/2025-08-16/ HTTP/1.1" 302 0
+INFO 2025-08-21 15:13:08,489 basehttp 6664 11300 "GET /dailyactivity/laporanmechanical/data/2025-08-16/ HTTP/1.1" 200 33131
+INFO 2025-08-21 15:13:13,546 views 6664 11300 History query executed - Found 32539 records
+INFO 2025-08-21 15:13:13,738 basehttp 6664 11300 "GET /wo-maintenance/history/ HTTP/1.1" 200 124581
+INFO 2025-08-21 15:13:45,111 basehttp 6664 14488 "GET /wo-maintenance/history/25-08-0372/ HTTP/1.1" 200 48830
+INFO 2025-08-21 15:14:09,630 views 6664 15268 History query executed - Found 1100 records
+INFO 2025-08-21 15:14:09,803 basehttp 6664 15268 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status=&status_pekerjaan=O&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 124304
+INFO 2025-08-21 15:14:25,734 basehttp 6664 340 "GET /wo-maintenance/history/25-08-0353/ HTTP/1.1" 200 48866
+INFO 2025-08-21 15:14:40,747 basehttp 6664 14948 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 48752
+INFO 2025-08-21 15:15:17,895 views 6664 11740 Successfully updated history 25-08-0368 by 002186
+INFO 2025-08-21 15:15:17,898 basehttp 6664 11740 "POST /wo-maintenance/history/25-08-0368/ HTTP/1.1" 302 0
+INFO 2025-08-21 15:15:18,077 basehttp 6664 11740 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 49209
+INFO 2025-08-21 15:15:26,110 views 6664 11740 History query executed - Found 32539 records
+INFO 2025-08-21 15:15:26,299 basehttp 6664 11740 "GET /wo-maintenance/history/ HTTP/1.1" 200 124554
+INFO 2025-08-21 15:15:32,288 views 6664 11740 History query executed - Found 0 records
+INFO 2025-08-21 15:15:32,440 basehttp 6664 11740 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status=C&status_pekerjaan=&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 28392
+INFO 2025-08-21 15:15:36,868 views 6664 11740 History query executed - Found 1 records
+INFO 2025-08-21 15:15:37,012 basehttp 6664 11740 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status=O&status_pekerjaan=&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 33397
+INFO 2025-08-21 15:15:48,186 views 6664 1168 History query executed - Found 32539 records
+INFO 2025-08-21 15:15:48,372 basehttp 6664 1168 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status=&status_pekerjaan=&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 124572
+INFO 2025-08-21 15:16:20,641 basehttp 6664 1168 "POST /wo-maintenance/ajax/history/quick-status/ HTTP/1.1" 200 176
+INFO 2025-08-21 15:16:34,192 basehttp 6664 15436 "POST /wo-maintenance/ajax/history/quick-status/ HTTP/1.1" 200 174
+INFO 2025-08-21 15:16:37,587 basehttp 6664 15436 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 48903
+INFO 2025-08-21 15:16:47,268 views 6664 6456 Successfully updated history 25-08-0368 by 002186
+INFO 2025-08-21 15:16:47,271 basehttp 6664 6456 "POST /wo-maintenance/history/25-08-0368/ HTTP/1.1" 302 0
+INFO 2025-08-21 15:16:47,443 basehttp 6664 6456 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 49209
+INFO 2025-08-21 15:16:53,188 views 6664 6456 History query executed - Found 32539 records
+INFO 2025-08-21 15:16:53,358 basehttp 6664 6456 "GET /wo-maintenance/history/ HTTP/1.1" 200 124555
+INFO 2025-08-21 15:16:59,232 views 6664 6456 History query executed - Found 1 records
+INFO 2025-08-21 15:16:59,378 basehttp 6664 6456 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status=C&status_pekerjaan=&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 33398
+INFO 2025-08-21 15:17:21,401 basehttp 6664 6456 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 48903
+INFO 2025-08-21 15:18:26,991 basehttp 6664 2068 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 48903
+INFO 2025-08-21 15:18:29,301 views 6664 2068 History query executed - Found 32539 records
+INFO 2025-08-21 15:18:29,479 basehttp 6664 2068 "GET /wo-maintenance/history/ HTTP/1.1" 200 124555
+INFO 2025-08-21 15:18:39,088 basehttp 6664 17032 "GET /wo-maintenance/history/25-08-0369/ HTTP/1.1" 200 48996
+INFO 2025-08-21 15:33:27,210 views 6664 17044 History query executed - Found 32542 records
+INFO 2025-08-21 15:33:27,390 basehttp 6664 17044 "GET /wo-maintenance/history/ HTTP/1.1" 200 124487
+INFO 2025-08-21 15:45:05,234 basehttp 6664 10912 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 48903
+INFO 2025-08-21 15:45:11,806 views 6664 14716 Successfully updated history 25-08-0368 by 002186
+INFO 2025-08-21 15:45:11,808 basehttp 6664 14716 "POST /wo-maintenance/history/25-08-0368/ HTTP/1.1" 302 0
+INFO 2025-08-21 15:45:11,969 basehttp 6664 14716 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 49209
+INFO 2025-08-21 15:45:17,783 views 6664 17524 History query executed - Found 32542 records
+INFO 2025-08-21 15:45:17,958 basehttp 6664 17524 "GET /wo-maintenance/history/ HTTP/1.1" 200 124486
+INFO 2025-08-21 15:49:58,834 autoreload 6664 16896 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\forms.py changed, reloading.
+INFO 2025-08-21 15:50:01,044 autoreload 3688 12976 Watching for file changes with StatReloader
+INFO 2025-08-21 15:53:17,695 autoreload 15456 13780 Watching for file changes with StatReloader
+INFO 2025-08-21 15:53:26,856 autoreload 9772 17948 Watching for file changes with StatReloader
+INFO 2025-08-21 15:53:42,601 autoreload 2008 11128 Watching for file changes with StatReloader
+INFO 2025-08-21 15:53:44,873 views 2008 11128 === STATUS VALIDATION ===
+INFO 2025-08-21 15:53:44,873 views 2008 11128 Expected STATUS_APPROVED: B
+INFO 2025-08-21 15:53:44,873 views 2008 11128 Expected APPROVE_YES: N
+INFO 2025-08-21 15:53:44,874 views 2008 11128 Actual values in database:
+INFO 2025-08-21 15:53:44,874 views 2008 11128   Status: , Approve: N, Review: None
+INFO 2025-08-21 15:53:44,874 views 2008 11128   Status: A, Approve: T, Review: None
+INFO 2025-08-21 15:53:44,874 views 2008 11128   Status: A, Approve: T, Review: 0
+INFO 2025-08-21 15:53:44,874 views 2008 11128   Status: A, Approve: Y, Review: 0
+INFO 2025-08-21 15:53:44,875 views 2008 11128   Status: A, Approve: Y, Review: 1
+INFO 2025-08-21 15:53:44,875 views 2008 11128 === END VALIDATION ===
+INFO 2025-08-21 15:53:48,373 views 2008 9688 History query executed - Found 32542 records
+INFO 2025-08-21 15:53:48,691 basehttp 2008 9688 "GET /wo-maintenance/history/ HTTP/1.1" 200 122046
+INFO 2025-08-21 15:53:59,429 basehttp 2008 5308 "GET /wo-maintenance/history/25-08-0375/ HTTP/1.1" 200 48800
+INFO 2025-08-22 06:49:32,171 basehttp 2008 5096 "GET /wo-maintenance/history/25-08-0375/ HTTP/1.1" 302 0
+INFO 2025-08-22 06:49:32,304 basehttp 2008 5096 "GET /login/?next=/wo-maintenance/history/25-08-0375/ HTTP/1.1" 200 10284
+INFO 2025-08-22 06:49:40,676 views 2008 11276 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 06:49:40,709 authentication 2008 11276 Updated Django user data for 002186
+INFO 2025-08-22 06:49:40,710 authentication 2008 11276 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 06:49:40,719 views 2008 11276 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 06:49:40,720 views 2008 11276 LOGIN REDIRECT: 002186 -> /wo-maintenance/history/25-08-0375/
+INFO 2025-08-22 06:49:40,725 basehttp 2008 11276 "POST /login/?next=/wo-maintenance/history/25-08-0375/ HTTP/1.1" 302 0
+INFO 2025-08-22 06:49:40,918 basehttp 2008 11276 "GET /wo-maintenance/history/25-08-0375/ HTTP/1.1" 200 49100
+INFO 2025-08-22 06:49:45,495 views 2008 11276 History query executed - Found 32542 records
+INFO 2025-08-22 06:49:45,684 basehttp 2008 11276 "GET /wo-maintenance/history/ HTTP/1.1" 200 104726
+INFO 2025-08-22 06:50:22,423 basehttp 2008 16416 "POST /wo-maintenance/ajax/history/quick-status/ HTTP/1.1" 200 194
+INFO 2025-08-22 06:50:24,962 basehttp 2008 16416 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 48913
+INFO 2025-08-22 06:50:35,500 views 2008 10336 Successfully updated history 25-08-0368 by 002186
+INFO 2025-08-22 06:50:35,502 basehttp 2008 10336 "POST /wo-maintenance/history/25-08-0368/ HTTP/1.1" 302 0
+INFO 2025-08-22 06:50:35,678 basehttp 2008 10336 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 49219
+INFO 2025-08-22 06:50:43,405 basehttp 2008 10336 "GET /wo-maintenance/history/25-08-0368/ HTTP/1.1" 200 48913
+INFO 2025-08-22 06:50:45,499 views 2008 10336 Applied conditional exclude logic for user 002186
+INFO 2025-08-22 06:50:45,527 views 2008 10336 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 06:50:45,601 basehttp 2008 10336 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28514
+INFO 2025-08-22 06:51:02,277 basehttp 2008 5652 "GET /dailyactivity/mechanical/tanggal/ HTTP/1.1" 200 53530
+INFO 2025-08-22 06:51:04,523 basehttp 2008 5652 "GET /dailyactivity/mechanical/tanggal/?month=8&year=2025 HTTP/1.1" 200 58526
+WARNING 2025-08-22 06:51:04,665 log 2008 4868 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-22 06:51:04,670 log 2008 5652 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-22 06:51:04,670 basehttp 2008 4868 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+WARNING 2025-08-22 06:51:04,672 basehttp 2008 5652 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+INFO 2025-08-22 06:51:06,489 basehttp 2008 14828 "GET /dailyactivity/mechanical/data/2025-08-21/ HTTP/1.1" 200 134216
+WARNING 2025-08-22 07:42:34,717 log 2008 12956 Not Found: /wingoapp/static/assets/images/sort_asc.png
+WARNING 2025-08-22 07:42:34,718 basehttp 2008 12956 "GET /wingoapp/static/assets/images/sort_asc.png HTTP/1.1" 404 12585
+INFO 2025-08-22 07:49:47,115 basehttp 2008 11276 "GET /dailyactivity/mechanical/data/2025-08-21/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:49:47,228 basehttp 2008 11276 "GET /login/?next=/dailyactivity/mechanical/data/2025-08-21/ HTTP/1.1" 200 10284
+INFO 2025-08-22 07:51:53,878 views 2008 11920 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 07:51:53,908 authentication 2008 11920 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 07:51:53,915 views 2008 11920 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 07:51:53,915 views 2008 11920 LOGIN REDIRECT: 002186 -> /dailyactivity/mechanical/data/2025-08-21/
+INFO 2025-08-22 07:51:53,920 basehttp 2008 11920 "POST /login/?next=/dailyactivity/mechanical/data/2025-08-21/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:51:54,094 basehttp 2008 11920 "GET /dailyactivity/mechanical/data/2025-08-21/ HTTP/1.1" 200 134216
+WARNING 2025-08-22 07:51:54,277 log 2008 11920 Not Found: /wingoapp/static/assets/images/sort_desc.png
+WARNING 2025-08-22 07:51:54,278 basehttp 2008 11920 "GET /wingoapp/static/assets/images/sort_desc.png HTTP/1.1" 404 12588
+WARNING 2025-08-22 07:51:54,284 log 2008 1072 Not Found: /wingoapp/static/assets/images/sort_both.png
+WARNING 2025-08-22 07:51:54,285 basehttp 2008 1072 "GET /wingoapp/static/assets/images/sort_both.png HTTP/1.1" 404 12588
+INFO 2025-08-22 07:54:24,133 basehttp 2008 15660 "GET /wo-maintenance/input/ HTTP/1.1" 200 51458
+INFO 2025-08-22 07:54:37,645 basehttp 2008 15176 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755824064304 HTTP/1.1" 200 208
+INFO 2025-08-22 07:54:56,483 forms 2008 15076 Validation SUCCESS: Komputer (ID: 790.0) di Engineering
+INFO 2025-08-22 07:54:56,505 views 2008 15076 SUCCESS: Pengajuan 25-08-0376 berhasil disimpan dengan format baru
+INFO 2025-08-22 07:54:56,507 basehttp 2008 15076 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:54:56,583 views 2008 15076 Applied conditional exclude logic for user 002186
+INFO 2025-08-22 07:54:56,607 views 2008 15076 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 07:54:56,676 basehttp 2008 15076 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 28674
+INFO 2025-08-22 07:55:01,514 basehttp 2008 14600 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:55:01,573 basehttp 2008 14600 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:55:01,694 basehttp 2008 14600 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-22 07:55:07,923 views 2008 13420 LOGIN ATTEMPT: 002104
+INFO 2025-08-22 07:55:07,945 authentication 2008 13420 Updated Django user data for 002104
+INFO 2025-08-22 07:55:07,945 authentication 2008 13420 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-22 07:55:07,957 views 2008 13420 LOGIN: Using existing session data for 002104
+INFO 2025-08-22 07:55:07,958 views 2008 13420 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-22 07:55:07,966 basehttp 2008 13420 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:55:08,043 views 2008 13420 Applied conditional exclude logic for user 002104
+INFO 2025-08-22 07:55:08,096 views 2008 13420 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 07:55:08,169 basehttp 2008 13420 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31116
+ERROR 2025-08-22 07:55:10,957 utils 2008 13420 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 07:55:11,067 basehttp 2008 13420 "GET /wo-maintenance/detail/25-08-0376/ HTTP/1.1" 200 35299
+ERROR 2025-08-22 07:55:17,352 utils 2008 16592 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 07:55:17,374 views 2008 16592 Pengajuan 25-08-0376 approved by BADRI KIMAN - sent to review queue (status=B, approve=N)
+INFO 2025-08-22 07:55:17,383 utils 2008 16592 Assignment, approval log, and review tables created/verified successfully
+ERROR 2025-08-22 07:55:17,385 utils 2008 16592 Error logging approval action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 07:55:17,388 views 2008 16592 Pengajuan 25-08-0376 disetujui by BADRI KIMAN
+INFO 2025-08-22 07:55:17,391 basehttp 2008 16592 "POST /wo-maintenance/detail/25-08-0376/ HTTP/1.1" 302 0
+ERROR 2025-08-22 07:55:17,491 utils 2008 16592 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 07:55:17,558 basehttp 2008 16592 "GET /wo-maintenance/detail/25-08-0376/ HTTP/1.1" 200 33419
+INFO 2025-08-22 07:55:20,156 basehttp 2008 16592 "GET /logout/?next=/wo-maintenance/detail/25-08-0376/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:55:20,217 basehttp 2008 16592 "GET /wo-maintenance/detail/25-08-0376/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:55:20,311 basehttp 2008 16592 "GET /login/?next=/wo-maintenance/detail/25-08-0376/ HTTP/1.1" 200 10284
+INFO 2025-08-22 07:55:29,305 views 2008 11524 LOGIN ATTEMPT: 007522
+INFO 2025-08-22 07:55:29,321 authentication 2008 11524 Updated Django user data for 007522
+INFO 2025-08-22 07:55:29,322 authentication 2008 11524 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-22 07:55:29,323 authentication 2008 11524 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-22 07:55:29,331 views 2008 11524 LOGIN: Using existing session data for 007522
+INFO 2025-08-22 07:55:29,331 views 2008 11524 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/25-08-0376/
+INFO 2025-08-22 07:55:29,336 basehttp 2008 11524 "POST /login/?next=/wo-maintenance/detail/25-08-0376/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:55:29,412 utils 2008 11524 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-22 07:55:29,438 utils 2008 11524 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 07:55:29,503 basehttp 2008 11524 "GET /wo-maintenance/detail/25-08-0376/ HTTP/1.1" 200 32089
+INFO 2025-08-22 07:55:36,312 utils 2008 11524 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 07:55:36,337 views 2008 11524 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-22 07:55:36,338 views 2008 11524 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-22 07:55:36,360 views 2008 11524 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 07:55:36,369 views 2008 11524 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11768}
+INFO 2025-08-22 07:55:36,433 basehttp 2008 11524 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 29449
+INFO 2025-08-22 07:55:40,280 views 2008 748 FIXED REVIEW: Starting review for 25-08-0376 by 007522
+INFO 2025-08-22 07:55:40,304 views 2008 748 FIXED REVIEW: Rendering template dengan section mapping 4=M, 5=E, 6=U, 8=I untuk 25-08-0376
+INFO 2025-08-22 07:55:40,419 basehttp 2008 748 "GET /wo-maintenance/review/pengajuan/25-08-0376/ HTTP/1.1" 200 36428
+INFO 2025-08-22 07:56:05,162 views 2008 11652 FIXED REVIEW: Starting review for 25-08-0376 by 007522
+INFO 2025-08-22 07:56:05,184 views 2008 11652 FIXED REVIEW: Processing POST with conditional number WO for 25-08-0376
+INFO 2025-08-22 07:56:05,185 views 2008 11652 FIXED REVIEW: Form valid - Action: process, Target: 
+INFO 2025-08-22 07:56:05,188 views 2008 11652 FIXED REVIEW: Original section from database - ID: 8.0
+INFO 2025-08-22 07:56:05,189 views 2008 11652 FIXED REVIEW: No target section specified, keeping original section 8.0
+INFO 2025-08-22 07:56:05,190 models 2008 11652 FIXED CREATE WO: Processing section_id = 8
+INFO 2025-08-22 07:56:05,191 models 2008 11652 FIXED CREATE WO: Using correct mapping - section 8 = code I
+INFO 2025-08-22 07:56:05,193 models 2008 11652 FIXED CREATE WO: Searching pattern: 25-I-08-%
+INFO 2025-08-22 07:56:05,218 models 2008 11652 FIXED CREATE WO: Found last number 3, using 4
+INFO 2025-08-22 07:56:05,218 models 2008 11652 FIXED CREATE WO: Generated number_wo = 25-I-08-0004 for section 8
+INFO 2025-08-22 07:56:05,222 views 2008 11652 FIXED REVIEW: Generated Number WO: 25-I-08-0004 for mapped section 8.0
+INFO 2025-08-22 07:56:05,223 views 2008 11652 FIXED REVIEW: Section Summary:
+INFO 2025-08-22 07:56:05,224 views 2008 11652   - Original Section ID: 8.0
+INFO 2025-08-22 07:56:05,226 views 2008 11652   - Final Section ID: 8.0
+INFO 2025-08-22 07:56:05,227 views 2008 11652   - Section Changed: False
+INFO 2025-08-22 07:56:05,228 views 2008 11652   - Generated Number WO: 25-I-08-0004
+INFO 2025-08-22 07:56:05,247 views 2008 11652 FIXED REVIEW: Updated number WO only, section unchanged
+INFO 2025-08-22 07:56:05,247 views 2008 11652 FIXED REVIEW: Updated 1 row(s) in tabel_pengajuan
+INFO 2025-08-22 07:56:05,249 views 2008 11652 FIXED REVIEW: Starting auto transfer to tabel_main for 25-08-0376
+INFO 2025-08-22 07:56:05,273 views 2008 11652 FIXED REVIEW: Transfer with ORIGINAL section 8.0
+INFO 2025-08-22 07:56:05,274 views 2008 11652 FIXED REVIEW: Inserting to tabel_main - Section: 8.0, Number WO: 25-I-08-0004
+INFO 2025-08-22 07:56:05,277 views 2008 11652 FIXED REVIEW: Inserted 1 row(s) to tabel_main with section 8.0
+INFO 2025-08-22 07:56:05,278 views 2008 11652 FIXED REVIEW SUCCESS SUMMARY:
+INFO 2025-08-22 07:56:05,279 views 2008 11652   - Pengajuan: 25-08-0376
+INFO 2025-08-22 07:56:05,280 views 2008 11652   - Section Changed: False
+INFO 2025-08-22 07:56:05,282 views 2008 11652   - Final Section ID: 8.0
+INFO 2025-08-22 07:56:05,283 views 2008 11652   - Number WO (NEW FORMAT): 25-I-08-0004
+INFO 2025-08-22 07:56:05,284 views 2008 11652   - Transfer Success: True
+INFO 2025-08-22 07:56:05,291 views 2008 11652 FIXED REVIEW: Transaction completed successfully for 25-08-0376
+INFO 2025-08-22 07:56:05,300 basehttp 2008 11652 "POST /wo-maintenance/review/pengajuan/25-08-0376/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:56:05,364 views 2008 11652 FIXED REVIEW: Starting review for 25-08-0376 by 007522
+WARNING 2025-08-22 07:56:05,386 views 2008 11652 FIXED REVIEW: Pengajuan 25-08-0376 not approved
+INFO 2025-08-22 07:56:05,388 basehttp 2008 11652 "GET /wo-maintenance/review/pengajuan/25-08-0376/ HTTP/1.1" 302 0
+INFO 2025-08-22 07:56:05,505 views 2008 11652 Found 0 pengajuan for review by SITI FATIMAH (status=B, approve=N)
+INFO 2025-08-22 07:56:05,595 basehttp 2008 11652 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 200 33870
+INFO 2025-08-22 07:56:16,891 utils 2008 14364 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 07:56:17,245 views 2008 14364 History query executed - Found 32542 records
+INFO 2025-08-22 07:56:17,424 basehttp 2008 14364 "GET /wo-maintenance/history/ HTTP/1.1" 200 104880
+INFO 2025-08-22 07:57:23,403 utils 2008 14864 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 07:57:23,484 views 2008 14864 History query executed - Found 17 records
+INFO 2025-08-22 07:57:23,644 basehttp 2008 14864 "GET /wo-maintenance/history/?tanggal_dari=2025-08-21&tanggal_sampai=2025-08-22&status_pekerjaan=&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 91053
+INFO 2025-08-22 07:57:33,676 utils 2008 14864 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 07:57:33,751 views 2008 14864 History query executed - Found 5 records
+INFO 2025-08-22 07:57:33,896 basehttp 2008 14864 "GET /wo-maintenance/history/?tanggal_dari=2025-08-21&tanggal_sampai=2025-08-22&status_pekerjaan=O&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 47103
+INFO 2025-08-22 07:57:57,822 utils 2008 14864 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 07:57:57,929 basehttp 2008 14864 "GET /wo-maintenance/history/25-08-0376/ HTTP/1.1" 200 49238
+INFO 2025-08-22 08:05:30,107 utils 2008 14748 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 08:05:30,184 views 2008 14748 Successfully updated history 25-08-0376 by 007522
+INFO 2025-08-22 08:05:30,188 basehttp 2008 14748 "POST /wo-maintenance/history/25-08-0376/ HTTP/1.1" 302 0
+INFO 2025-08-22 08:05:30,270 utils 2008 14748 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 08:05:30,375 basehttp 2008 14748 "GET /wo-maintenance/history/25-08-0376/ HTTP/1.1" 200 49621
+INFO 2025-08-22 08:05:34,390 utils 2008 16080 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 08:05:34,749 views 2008 16080 History query executed - Found 32542 records
+INFO 2025-08-22 08:05:34,950 basehttp 2008 16080 "GET /wo-maintenance/history/ HTTP/1.1" 200 105227
+INFO 2025-08-22 08:05:47,383 utils 2008 3496 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 08:05:47,767 views 2008 3496 History query executed - Found 31454 records
+INFO 2025-08-22 08:05:47,959 basehttp 2008 3496 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 105382
+INFO 2025-08-22 08:05:52,066 utils 2008 3496 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 08:05:52,180 views 2008 3496 History query executed - Found 1088 records
+INFO 2025-08-22 08:05:52,359 basehttp 2008 3496 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=O&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 105089
+INFO 2025-08-22 09:07:10,251 basehttp 2008 15408 "GET /wo-maintenance/history/25-08-0375/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:07:10,377 basehttp 2008 15408 "GET /login/?next=/wo-maintenance/history/25-08-0375/ HTTP/1.1" 200 10284
+INFO 2025-08-22 09:07:22,366 views 2008 15408 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 09:07:22,394 authentication 2008 15408 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 09:07:22,401 views 2008 15408 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 09:07:22,401 views 2008 15408 LOGIN REDIRECT: 002186 -> /wo-maintenance/history/25-08-0375/
+INFO 2025-08-22 09:07:22,407 basehttp 2008 15408 "POST /login/?next=/wo-maintenance/history/25-08-0375/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:07:22,581 basehttp 2008 15408 "GET /wo-maintenance/history/25-08-0375/ HTTP/1.1" 200 49100
+INFO 2025-08-22 09:07:32,232 views 2008 15408 History query executed - Found 32555 records
+INFO 2025-08-22 09:07:32,409 basehttp 2008 15408 "GET /wo-maintenance/history/ HTTP/1.1" 200 102315
+INFO 2025-08-22 09:07:41,395 basehttp 2008 15408 "GET /wo-maintenance/history/25-08-0376/ HTTP/1.1" 200 48839
+INFO 2025-08-22 09:17:22,547 views 2008 11444 Applied conditional exclude logic for user 002186
+INFO 2025-08-22 09:17:22,573 views 2008 11444 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 09:17:22,647 basehttp 2008 11444 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 28514
+ERROR 2025-08-22 09:17:31,018 utils 2008 11444 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 09:17:31,104 basehttp 2008 11444 "GET /wo-maintenance/detail/25-08-0376/ HTTP/1.1" 200 31020
+INFO 2025-08-22 09:18:21,121 basehttp 2008 11444 "GET /wo-maintenance/input/ HTTP/1.1" 200 51458
+INFO 2025-08-22 09:18:26,654 basehttp 2008 11444 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755829101344 HTTP/1.1" 200 208
+INFO 2025-08-22 09:18:43,455 forms 2008 11444 Validation SUCCESS: Komputer (ID: 790.0) di Engineering
+INFO 2025-08-22 09:18:43,475 views 2008 11444 SUCCESS: Pengajuan 25-08-0390 berhasil disimpan dengan format baru
+INFO 2025-08-22 09:18:43,476 basehttp 2008 11444 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:18:43,561 views 2008 11444 Applied conditional exclude logic for user 002186
+INFO 2025-08-22 09:18:43,588 views 2008 11444 FIXED query executed successfully - Found 2 records for view_mode: normal
+INFO 2025-08-22 09:18:43,662 basehttp 2008 11444 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 32546
+INFO 2025-08-22 09:18:47,536 basehttp 2008 11444 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:18:47,585 basehttp 2008 11444 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:18:47,708 basehttp 2008 11444 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-22 09:19:02,743 views 2008 11444 LOGIN ATTEMPT: 002104
+INFO 2025-08-22 09:19:02,780 authentication 2008 11444 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-22 09:19:02,787 views 2008 11444 LOGIN: Using existing session data for 002104
+INFO 2025-08-22 09:19:02,787 views 2008 11444 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-22 09:19:02,793 basehttp 2008 11444 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:19:02,917 views 2008 11444 Applied conditional exclude logic for user 002104
+INFO 2025-08-22 09:19:03,058 views 2008 11444 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 09:19:03,133 basehttp 2008 11444 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31118
+ERROR 2025-08-22 09:19:05,649 utils 2008 11444 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 09:19:05,710 basehttp 2008 11444 "GET /wo-maintenance/detail/25-08-0390/ HTTP/1.1" 200 35301
+ERROR 2025-08-22 09:19:09,341 utils 2008 11444 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 09:19:09,428 views 2008 11444 Pengajuan 25-08-0390 approved by BADRI KIMAN - sent to review queue (status=B, approve=N)
+INFO 2025-08-22 09:19:09,557 utils 2008 11444 Assignment, approval log, and review tables created/verified successfully
+ERROR 2025-08-22 09:19:09,571 utils 2008 11444 Error logging approval action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 09:19:09,578 views 2008 11444 Pengajuan 25-08-0390 disetujui by BADRI KIMAN
+INFO 2025-08-22 09:19:09,579 basehttp 2008 11444 "POST /wo-maintenance/detail/25-08-0390/ HTTP/1.1" 302 0
+ERROR 2025-08-22 09:19:09,815 utils 2008 11444 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 09:19:09,887 basehttp 2008 11444 "GET /wo-maintenance/detail/25-08-0390/ HTTP/1.1" 200 33421
+INFO 2025-08-22 09:19:12,794 basehttp 2008 11444 "GET /logout/?next=/wo-maintenance/detail/25-08-0390/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:19:12,853 basehttp 2008 11444 "GET /wo-maintenance/detail/25-08-0390/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:19:12,958 basehttp 2008 11444 "GET /login/?next=/wo-maintenance/detail/25-08-0390/ HTTP/1.1" 200 10284
+INFO 2025-08-22 09:19:31,556 views 2008 11444 LOGIN ATTEMPT: 007522
+INFO 2025-08-22 09:19:31,568 authentication 2008 11444 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-22 09:19:31,568 authentication 2008 11444 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-22 09:19:31,577 views 2008 11444 LOGIN: Using existing session data for 007522
+INFO 2025-08-22 09:19:31,577 views 2008 11444 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/25-08-0390/
+INFO 2025-08-22 09:19:31,583 basehttp 2008 11444 "POST /login/?next=/wo-maintenance/detail/25-08-0390/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:19:31,666 utils 2008 11444 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-22 09:19:31,688 utils 2008 11444 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 09:19:31,752 basehttp 2008 11444 "GET /wo-maintenance/detail/25-08-0390/ HTTP/1.1" 200 32091
+INFO 2025-08-22 09:19:35,797 utils 2008 17012 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:19:35,805 views 2008 17012 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-22 09:19:35,806 views 2008 17012 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-22 09:19:35,832 views 2008 17012 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 09:19:35,844 views 2008 17012 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11782}
+INFO 2025-08-22 09:19:35,916 basehttp 2008 17012 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 29451
+INFO 2025-08-22 09:19:38,396 views 2008 17012 FIXED REVIEW: Starting review for 25-08-0390 by 007522
+INFO 2025-08-22 09:19:38,419 views 2008 17012 FIXED REVIEW: Rendering template dengan section mapping 4=M, 5=E, 6=U, 8=I untuk 25-08-0390
+INFO 2025-08-22 09:19:38,491 basehttp 2008 17012 "GET /wo-maintenance/review/pengajuan/25-08-0390/ HTTP/1.1" 200 36430
+INFO 2025-08-22 09:25:14,719 utils 2008 17116 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:25:15,154 views 2008 17116 History query executed - Found 32556 records
+INFO 2025-08-22 09:25:15,331 basehttp 2008 17116 "GET /wo-maintenance/history/ HTTP/1.1" 200 104807
+INFO 2025-08-22 09:41:14,620 autoreload 2008 11128 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\forms.py changed, reloading.
+INFO 2025-08-22 09:41:17,075 autoreload 16136 16616 Watching for file changes with StatReloader
+INFO 2025-08-22 09:41:19,519 views 16136 16616 === STATUS VALIDATION ===
+INFO 2025-08-22 09:41:19,520 views 16136 16616 Expected STATUS_APPROVED: B
+INFO 2025-08-22 09:41:19,523 views 16136 16616 Expected APPROVE_YES: N
+INFO 2025-08-22 09:41:19,524 views 16136 16616 Actual values in database:
+INFO 2025-08-22 09:41:19,525 views 16136 16616   Status: , Approve: N, Review: None
+INFO 2025-08-22 09:41:19,526 views 16136 16616   Status: A, Approve: T, Review: None
+INFO 2025-08-22 09:41:19,527 views 16136 16616   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 09:41:19,529 views 16136 16616   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 09:41:19,529 views 16136 16616   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 09:41:19,530 views 16136 16616   Status: B, Approve: N, Review: 0
+INFO 2025-08-22 09:41:19,532 views 16136 16616 === END VALIDATION ===
+INFO 2025-08-22 09:42:13,870 autoreload 16136 16616 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 09:42:15,818 autoreload 276 11500 Watching for file changes with StatReloader
+INFO 2025-08-22 09:42:17,858 views 276 11500 === STATUS VALIDATION ===
+INFO 2025-08-22 09:42:17,859 views 276 11500 Expected STATUS_APPROVED: B
+INFO 2025-08-22 09:42:17,862 views 276 11500 Expected APPROVE_YES: N
+INFO 2025-08-22 09:42:17,863 views 276 11500 Actual values in database:
+INFO 2025-08-22 09:42:17,865 views 276 11500   Status: , Approve: N, Review: None
+INFO 2025-08-22 09:42:17,866 views 276 11500   Status: A, Approve: T, Review: None
+INFO 2025-08-22 09:42:17,867 views 276 11500   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 09:42:17,869 views 276 11500   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 09:42:17,872 views 276 11500   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 09:42:17,874 views 276 11500   Status: B, Approve: N, Review: 0
+INFO 2025-08-22 09:42:17,874 views 276 11500 === END VALIDATION ===

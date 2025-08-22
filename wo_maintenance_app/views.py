@@ -672,22 +672,404 @@ __all__ = [
     'debug_reviewer_status'
 ]
 
+# @login_required
+# @reviewer_required_fixed
+# def review_pengajuan_detail(request, nomor_pengajuan):
+#     """
+#     ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH dengan conditional number WO update
+#     FIXED: Section mapping untuk 4=M, 5=E, 6=U, 8=I sesuai database
+#     - Jika target section TIDAK berubah: number WO tetap sama
+#     - Jika target section BERUBAH: number WO otomatis update dengan format section baru
+#     """
+#     try:
+#         logger.info(f"FIXED REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
+        
+#         employee_data = get_employee_data_for_request_fixed(request)
+        
+#         if not employee_data:
+#             logger.error(f"FIXED REVIEW: No employee data for {request.user.username}")
+#             messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
+#             return redirect('login')
+        
+#         initialize_review_data()
+        
+#         # Ambil data pengajuan
+#         pengajuan = None
+        
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             cursor.execute("""
+#                 SELECT 
+#                     tp.history_id, tp.number_wo, tp.tgl_insert, tp.oleh, tp.user_insert,
+#                     tm.mesin, tms.seksi as section_tujuan, tpek.pekerjaan,
+#                     tp.deskripsi_perbaikan, tp.status, tp.approve, tl.line as line_name,
+#                     tp.tgl_his, tp.jam_his, tp.review_status, tp.reviewed_by,
+#                     tp.review_date, tp.review_notes, tp.final_section_id,
+#                     final_section.seksi as final_section_name, tp.status_pekerjaan,
+#                     tp.id_section as current_section_id, tp.id_line, tp.id_mesin,
+#                     tp.id_pekerjaan
+#                 FROM tabel_pengajuan tp
+#                 LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+#                 LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
+#                 LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+#                 LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+#                 LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
+#                 WHERE tp.history_id = %s
+#             """, [nomor_pengajuan])
+            
+#             row = cursor.fetchone()
+            
+#             if not row:
+#                 logger.error(f"FIXED REVIEW: Pengajuan {nomor_pengajuan} not found")
+#                 messages.error(request, 'Pengajuan tidak ditemukan.')
+#                 return redirect('wo_maintenance_app:review_pengajuan_list')
+            
+#             pengajuan = {
+#                 'history_id': row[0], 'number_wo': row[1], 'tgl_insert': row[2],
+#                 'oleh': row[3], 'user_insert': row[4], 'mesin': row[5],
+#                 'section_tujuan': row[6], 'pekerjaan': row[7], 'deskripsi_perbaikan': row[8],
+#                 'status': row[9], 'approve': row[10], 'line_name': row[11],
+#                 'tgl_his': row[12], 'jam_his': row[13], 'review_status': row[14],
+#                 'reviewed_by': row[15], 'review_date': row[16], 'review_notes': row[17],
+#                 'final_section_id': row[18], 'final_section_name': row[19],
+#                 'status_pekerjaan': row[20], 'current_section_id': row[21],
+#                 'id_line': row[22], 'id_mesin': row[23], 'id_pekerjaan': row[24]
+#             }
+        
+#         # Cek apakah pengajuan siap di-review
+#         if pengajuan['status'] != STATUS_APPROVED or pengajuan['approve'] != APPROVE_YES:
+#             logger.warning(f"FIXED REVIEW: Pengajuan {nomor_pengajuan} not approved")
+#             messages.warning(request, 'Pengajuan ini belum di-approve oleh atasan.')
+#             return redirect('wo_maintenance_app:review_pengajuan_list')
+        
+#         already_reviewed = pengajuan['review_status'] in ['1', '2']
+        
+#         # Handle review form submission dengan ENHANCED NUMBER WO LOGIC
+#         if request.method == 'POST' and not already_reviewed:
+#             logger.info(f"FIXED REVIEW: Processing POST with conditional number WO for {nomor_pengajuan}")
+            
+#             request.session.modified = True
+            
+#             review_form = ReviewForm(request.POST)
+            
+#             if review_form.is_valid():
+#                 action = review_form.cleaned_data['action']
+#                 target_section = review_form.cleaned_data.get('target_section', '').strip()
+#                 review_notes = review_form.cleaned_data['review_notes']
+                
+#                 logger.info(f"FIXED REVIEW: Form valid - Action: {action}, Target: {target_section}")
+                
+#                 try:
+#                     with transaction.atomic(using='DB_Maintenance'):
+#                         with connections['DB_Maintenance'].cursor() as cursor:
+                            
+#                             if action == 'process':
+#                                 # FIXED: Preserve original section, hanya validate target section
+#                                 # JANGAN ubah current_section_id - terima apa adanya dari database
+#                                 original_section_id = pengajuan['current_section_id']
+#                                 final_section_id = original_section_id  # Default ke original section
+#                                 section_changed = False
+#                                 section_change_info = ""
+                                
+#                                 logger.info(f"FIXED REVIEW: Original section from database - ID: {original_section_id}")
+                                
+#                                 if target_section:
+#                                     # FIXED: Mapping section sesuai database aktual (4=M, 5=E, 6=U, 8=I)
+#                                     section_mapping = {
+#                                         'mekanik': 4,    # Mekanik = 4 
+#                                         'elektrik': 5,   # Elektrik = 5
+#                                         'utility': 6,    # Utility = 6
+#                                         'it': 8          # IT = 8
+#                                     }
+                                    
+#                                     if target_section in section_mapping:
+#                                         target_section_id = section_mapping[target_section]
+                                        
+#                                         # Check if section actually changes
+#                                         if target_section_id != original_section_id:
+#                                             section_changed = True
+#                                             final_section_id = target_section_id
+#                                             section_change_info = f"Section berubah dari {pengajuan['section_tujuan']} (ID: {original_section_id}) ke {target_section.title()} (ID: {target_section_id})"
+#                                             logger.info(f"FIXED REVIEW: Section changed from {original_section_id} to {target_section_id}")
+#                                         else:
+#                                             # Target sama dengan current
+#                                             final_section_id = target_section_id
+#                                             section_change_info = f"Section dikonfirmasi tetap di {target_section.title()} (ID: {target_section_id})"
+#                                             logger.info(f"FIXED REVIEW: Section confirmed at {target_section_id}")
+#                                     else:
+#                                         logger.warning(f"FIXED REVIEW: Unknown target_section {target_section}")
+#                                         # Tetap gunakan original section
+#                                         final_section_id = original_section_id
+#                                         section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id}) - target tidak valid"
+#                                 else:
+#                                     # TIDAK ADA target section dipilih - GUNAKAN ORIGINAL SECTION
+#                                     final_section_id = original_section_id
+#                                     section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id})"
+#                                     logger.info(f"FIXED REVIEW: No target section specified, keeping original section {original_section_id}")
+                                
+#                                 # FIXED: Generate number WO berdasarkan final section dengan mapping yang benar
+#                                 from wo_maintenance_app.models import create_number_wo_with_section_fixed
+                                
+#                                 # FIXED: Support untuk section 4, 5, 6, 8 sesuai database
+#                                 if final_section_id in [4, 5, 6, 8]:
+#                                     new_number_wo = create_number_wo_with_section_fixed(final_section_id)
+#                                     logger.info(f"FIXED REVIEW: Generated Number WO: {new_number_wo} for mapped section {final_section_id}")
+#                                 else:
+#                                     # Section lain, gunakan fallback ke IT (section 8)
+#                                     fallback_section = 8  # IT sebagai default
+#                                     new_number_wo = create_number_wo_with_section_fixed(fallback_section)
+#                                     logger.info(f"FIXED REVIEW: Generated Number WO: {new_number_wo} for unmapped section {final_section_id} (using IT fallback)")
+                                
+#                                 # VALIDATION: Log section info
+#                                 logger.info(f"FIXED REVIEW: Section Summary:")
+#                                 logger.info(f"  - Original Section ID: {original_section_id}")
+#                                 logger.info(f"  - Final Section ID: {final_section_id}")
+#                                 logger.info(f"  - Section Changed: {section_changed}")
+#                                 logger.info(f"  - Generated Number WO: {new_number_wo}")
+                                
+#                                 # FIXED: Update review status dengan conditional section update
+#                                 if section_changed:
+#                                     # Jika section berubah, update final_section_id
+#                                     cursor.execute("""
+#                                         UPDATE tabel_pengajuan
+#                                         SET review_status = %s,
+#                                             reviewed_by = %s,
+#                                             review_date = GETDATE(),
+#                                             review_notes = %s,
+#                                             status = %s,
+#                                             approve = %s,
+#                                             final_section_id = %s,
+#                                             number_wo = %s
+#                                         WHERE history_id = %s
+#                                     """, [
+#                                         '1',                        # review_status = processed
+#                                         REVIEWER_EMPLOYEE_NUMBER, 
+#                                         review_notes,
+#                                         STATUS_REVIEWED,            # A - final processed
+#                                         APPROVE_REVIEWED,           # Y - final processed
+#                                         float(final_section_id),   # Update section karena berubah
+#                                         new_number_wo,
+#                                         nomor_pengajuan
+#                                     ])
+#                                     logger.info(f"FIXED REVIEW: Updated with section change to {final_section_id}")
+#                                 else:
+#                                     # Jika section TIDAK berubah, TIDAK update final_section_id
+#                                     cursor.execute("""
+#                                         UPDATE tabel_pengajuan
+#                                         SET review_status = %s,
+#                                             reviewed_by = %s,
+#                                             review_date = GETDATE(),
+#                                             review_notes = %s,
+#                                             status = %s,
+#                                             approve = %s,
+#                                             number_wo = %s
+#                                         WHERE history_id = %s
+#                                     """, [
+#                                         '1',                        # review_status = processed
+#                                         REVIEWER_EMPLOYEE_NUMBER, 
+#                                         review_notes,
+#                                         STATUS_REVIEWED,            # A - final processed
+#                                         APPROVE_REVIEWED,           # Y - final processed
+#                                         new_number_wo,              # Update number WO aja
+#                                         nomor_pengajuan
+#                                     ])
+#                                     logger.info(f"FIXED REVIEW: Updated number WO only, section unchanged")
+                                
+#                                 update_count = cursor.rowcount
+#                                 logger.info(f"FIXED REVIEW: Updated {update_count} row(s) in tabel_pengajuan")
+                                
+#                                 # FIXED: Transfer ke tabel_main dengan section ASLI yang benar
+#                                 logger.info(f"FIXED REVIEW: Starting auto transfer to tabel_main for {nomor_pengajuan}")
+                                
+#                                 # Check apakah data sudah ada di tabel_main
+#                                 truncated_history_id = nomor_pengajuan[:11]
+#                                 cursor.execute("""
+#                                     SELECT COUNT(*) FROM tabel_main WHERE history_id = %s
+#                                 """, [truncated_history_id])
+#                                 exists_in_main = cursor.fetchone()[0] > 0
+                                
+#                                 transfer_success = False
+                                
+#                                 if not exists_in_main:
+#                                     # FIXED: Gunakan section yang BENAR untuk transfer
+#                                     if section_changed:
+#                                         # Section berubah, gunakan final_section_id yang baru
+#                                         transfer_section_id = final_section_id
+#                                         logger.info(f"FIXED REVIEW: Transfer with CHANGED section {transfer_section_id}")
+#                                     else:
+#                                         # Section TIDAK berubah, gunakan ORIGINAL section dari database
+#                                         transfer_section_id = original_section_id
+#                                         logger.info(f"FIXED REVIEW: Transfer with ORIGINAL section {transfer_section_id}")
+                                    
+#                                     # Insert data ke tabel_main dengan section ASLI
+#                                     truncated_number_wo = new_number_wo[:15]
+#                                     user_insert_truncated = pengajuan['user_insert'][:50] if pengajuan['user_insert'] else None
+#                                     oleh_truncated = pengajuan['oleh'][:500] if pengajuan['oleh'] else '-'
+                                    
+#                                     logger.info(f"FIXED REVIEW: Inserting to tabel_main - Section: {transfer_section_id}, Number WO: {truncated_number_wo}")
+                                    
+#                                     insert_sql = """
+#                                         INSERT INTO tabel_main (
+#                                             history_id, tgl_his, jam_his, id_line, id_mesin, 
+#                                             id_section, id_pekerjaan, number_wo, deskripsi_perbaikan,
+#                                             pic_produksi, pic_maintenance, status, user_insert, 
+#                                             tgl_insert, oleh, status_pekerjaan
+#                                         ) VALUES (
+#                                             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+#                                         )
+#                                     """
+                                    
+#                                     insert_params = [
+#                                         truncated_history_id,
+#                                         pengajuan['tgl_his'],
+#                                         pengajuan['jam_his'],
+#                                         float(pengajuan['id_line']) if pengajuan['id_line'] else None,
+#                                         float(pengajuan['id_mesin']) if pengajuan['id_mesin'] else None,
+#                                         float(transfer_section_id),             # CORRECT: Section asli atau yang berubah
+#                                         float(pengajuan['id_pekerjaan']) if pengajuan['id_pekerjaan'] else None,
+#                                         truncated_number_wo,                    # Number WO format baru
+#                                         pengajuan['deskripsi_perbaikan'],
+#                                         oleh_truncated,
+#                                         '-',
+#                                         '0',
+#                                         user_insert_truncated,
+#                                         pengajuan['tgl_insert'],
+#                                         oleh_truncated,
+#                                         '0'
+#                                     ]
+                                    
+#                                     cursor.execute(insert_sql, insert_params)
+#                                     insert_count = cursor.rowcount
+                                    
+#                                     logger.info(f"FIXED REVIEW: Inserted {insert_count} row(s) to tabel_main with section {transfer_section_id}")
+#                                     transfer_success = True
+                                    
+#                                 else:
+#                                     logger.warning(f"FIXED REVIEW: Data {nomor_pengajuan} already exists in tabel_main")
+#                                     transfer_success = True
+                                
+#                                 # ENHANCED success message dengan number WO format baru
+#                                 success_parts = []
+#                                 success_parts.append(f'Pengajuan {nomor_pengajuan} berhasil diproses dan diselesaikan!')
+                                
+#                                 # Number WO info - SELALU format baru dengan section code yang benar
+#                                 section_code_map = {4: 'M', 5: 'E', 6: 'U', 8: 'I'}
+#                                 current_section_code = section_code_map.get(final_section_id, 'X')
+#                                 success_parts.append(f'Number WO: {new_number_wo} (format section {current_section_code})')
+                                
+#                                 success_parts.append(f'Status: Final Processed (A/Y)')
+                                
+#                                 if transfer_success:
+#                                     success_parts.append(f'Data berhasil masuk ke History Maintenance')
+                                
+#                                 # Section info
+#                                 success_parts.append(section_change_info)
+                                
+#                                 messages.success(request, '\n'.join(success_parts))
+                                
+#                                 logger.info(f"FIXED REVIEW SUCCESS SUMMARY:")
+#                                 logger.info(f"  - Pengajuan: {nomor_pengajuan}")
+#                                 logger.info(f"  - Section Changed: {section_changed}")
+#                                 logger.info(f"  - Final Section ID: {final_section_id}")
+#                                 logger.info(f"  - Number WO (NEW FORMAT): {new_number_wo}")
+#                                 logger.info(f"  - Transfer Success: {transfer_success}")
+                                
+#                             elif action == 'reject':
+#                                 # Update pengajuan dengan review rejection
+#                                 cursor.execute("""
+#                                     UPDATE tabel_pengajuan
+#                                     SET review_status = %s,
+#                                         reviewed_by = %s,
+#                                         review_date = GETDATE(),
+#                                         review_notes = %s,
+#                                         status = %s
+#                                     WHERE history_id = %s
+#                                 """, ['2', REVIEWER_EMPLOYEE_NUMBER, review_notes, STATUS_REJECTED, nomor_pengajuan])
+                                
+#                                 logger.info(f"FIXED REVIEW: Rejected pengajuan {nomor_pengajuan}")
+#                                 messages.success(request, f'Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
+                    
+#                     logger.info(f"FIXED REVIEW: Transaction completed successfully for {nomor_pengajuan}")
+                    
+#                     request.session.modified = True
+#                     request.session.save()
+                    
+#                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
+                    
+#                 except Exception as update_error:
+#                     logger.error(f"FIXED REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
+#                     import traceback
+#                     logger.error(f"FIXED REVIEW: Traceback: {traceback.format_exc()}")
+#                     messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
+#             else:
+#                 logger.warning(f"FIXED REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
+#                 messages.error(request, 'Form review tidak valid. Periksa kembali input Anda.')
+#         else:
+#             review_form = ReviewForm()
+        
+#         # FIXED: Available sections dengan mapping yang benar sesuai database
+#         available_sections = [
+#             {'key': 'mekanik', 'name': '🔧 Mekanik', 'section_id': 4, 'format_code': 'M', 'example': '25-M-08-0001'},
+#             {'key': 'elektrik', 'name': '⚡ Elektrik', 'section_id': 5, 'format_code': 'E', 'example': '25-E-08-0001'},
+#             {'key': 'utility', 'name': '🏭 Utility', 'section_id': 6, 'format_code': 'U', 'example': '25-U-08-0001'},
+#             {'key': 'it', 'name': '💻 IT', 'section_id': 8, 'format_code': 'I', 'example': '25-I-08-0001'}
+#         ]
+        
+#         context = {
+#             'pengajuan': pengajuan,
+#             'review_form': review_form,
+#             'already_reviewed': already_reviewed,
+#             'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
+#             'available_sections': available_sections,
+#             'employee_data': employee_data,
+#             'page_title': f'FIXED Review dengan Format Number WO Sesuai Database {nomor_pengajuan}',
+            
+#             # Enhanced context dengan number WO info yang benar
+#             'enhanced_mode': True,
+#             'always_new_format': True,  # SELALU format baru
+#             'current_number_wo': pengajuan['number_wo'],
+#             'current_section_info': {
+#                 'id': pengajuan['current_section_id'],
+#                 'name': pengajuan['section_tujuan']
+#             },
+#             'format_info': {
+#                 'description': 'Number WO akan selalu menggunakan format baru: YY-S-MM-NNNN',
+#                 'based_on_section': 'Berdasarkan section tujuan (4=M, 5=E, 6=U, 8=I)',
+#                 'section_mapping': '4=Mekanik(M), 5=Elektrik(E), 6=Utility(U), 8=IT(I)'
+#             },
+            
+#             # Status constants untuk template
+#             'STATUS_APPROVED': STATUS_APPROVED,
+#             'STATUS_REVIEWED': STATUS_REVIEWED,
+#             'APPROVE_YES': APPROVE_YES,
+#             'APPROVE_REVIEWED': APPROVE_REVIEWED
+#         }
+        
+#         logger.info(f"FIXED REVIEW: Rendering template dengan section mapping 4=M, 5=E, 6=U, 8=I untuk {nomor_pengajuan}")
+#         return render(request, 'wo_maintenance_app/review_pengajuan_detail.html', context)
+        
+#     except Exception as e:
+#         logger.error(f"FIXED REVIEW: Critical error for {nomor_pengajuan}: {e}")
+#         import traceback
+#         logger.error(f"FIXED REVIEW: Traceback: {traceback.format_exc()}")
+#         messages.error(request, 'Terjadi kesalahan saat memuat detail review.')
+#         return redirect('wo_maintenance_app:review_pengajuan_list')
+
+# wo_maintenance_app/views.py - UPDATE review_pengajuan_detail dengan Priority Level
+
 @login_required
 @reviewer_required_fixed
 def review_pengajuan_detail(request, nomor_pengajuan):
     """
-    ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH dengan conditional number WO update
-    FIXED: Section mapping untuk 4=M, 5=E, 6=U, 8=I sesuai database
-    - Jika target section TIDAK berubah: number WO tetap sama
-    - Jika target section BERUBAH: number WO otomatis update dengan format section baru
+    ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH dengan priority level support
+    FIXED: Section mapping untuk 4=M, 5=E, 6=U, 8=I sesuai database + Priority Level
     """
     try:
-        logger.info(f"FIXED REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
+        logger.info(f"ENHANCED REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
         
         employee_data = get_employee_data_for_request_fixed(request)
         
         if not employee_data:
-            logger.error(f"FIXED REVIEW: No employee data for {request.user.username}")
+            logger.error(f"ENHANCED REVIEW: No employee data for {request.user.username}")
             messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
             return redirect('login')
         
@@ -719,7 +1101,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             row = cursor.fetchone()
             
             if not row:
-                logger.error(f"FIXED REVIEW: Pengajuan {nomor_pengajuan} not found")
+                logger.error(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not found")
                 messages.error(request, 'Pengajuan tidak ditemukan.')
                 return redirect('wo_maintenance_app:review_pengajuan_list')
             
@@ -737,15 +1119,15 @@ def review_pengajuan_detail(request, nomor_pengajuan):
         
         # Cek apakah pengajuan siap di-review
         if pengajuan['status'] != STATUS_APPROVED or pengajuan['approve'] != APPROVE_YES:
-            logger.warning(f"FIXED REVIEW: Pengajuan {nomor_pengajuan} not approved")
+            logger.warning(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not approved")
             messages.warning(request, 'Pengajuan ini belum di-approve oleh atasan.')
             return redirect('wo_maintenance_app:review_pengajuan_list')
         
         already_reviewed = pengajuan['review_status'] in ['1', '2']
         
-        # Handle review form submission dengan ENHANCED NUMBER WO LOGIC
+        # Handle review form submission dengan ENHANCED NUMBER WO LOGIC + PRIORITY LEVEL
         if request.method == 'POST' and not already_reviewed:
-            logger.info(f"FIXED REVIEW: Processing POST with conditional number WO for {nomor_pengajuan}")
+            logger.info(f"ENHANCED REVIEW: Processing POST with priority level for {nomor_pengajuan}")
             
             request.session.modified = True
             
@@ -754,9 +1136,10 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             if review_form.is_valid():
                 action = review_form.cleaned_data['action']
                 target_section = review_form.cleaned_data.get('target_section', '').strip()
+                priority_level = review_form.cleaned_data.get('priority_level', '').strip()  # NEW: Priority level
                 review_notes = review_form.cleaned_data['review_notes']
                 
-                logger.info(f"FIXED REVIEW: Form valid - Action: {action}, Target: {target_section}")
+                logger.info(f"ENHANCED REVIEW: Form valid - Action: {action}, Target: {target_section}, Priority: {priority_level}")
                 
                 try:
                     with transaction.atomic(using='DB_Maintenance'):
@@ -764,13 +1147,12 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                             
                             if action == 'process':
                                 # FIXED: Preserve original section, hanya validate target section
-                                # JANGAN ubah current_section_id - terima apa adanya dari database
                                 original_section_id = pengajuan['current_section_id']
                                 final_section_id = original_section_id  # Default ke original section
                                 section_changed = False
                                 section_change_info = ""
                                 
-                                logger.info(f"FIXED REVIEW: Original section from database - ID: {original_section_id}")
+                                logger.info(f"ENHANCED REVIEW: Original section from database - ID: {original_section_id}")
                                 
                                 if target_section:
                                     # FIXED: Mapping section sesuai database aktual (4=M, 5=E, 6=U, 8=I)
@@ -789,22 +1171,20 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                             section_changed = True
                                             final_section_id = target_section_id
                                             section_change_info = f"Section berubah dari {pengajuan['section_tujuan']} (ID: {original_section_id}) ke {target_section.title()} (ID: {target_section_id})"
-                                            logger.info(f"FIXED REVIEW: Section changed from {original_section_id} to {target_section_id}")
+                                            logger.info(f"ENHANCED REVIEW: Section changed from {original_section_id} to {target_section_id}")
                                         else:
                                             # Target sama dengan current
                                             final_section_id = target_section_id
                                             section_change_info = f"Section dikonfirmasi tetap di {target_section.title()} (ID: {target_section_id})"
-                                            logger.info(f"FIXED REVIEW: Section confirmed at {target_section_id}")
+                                            logger.info(f"ENHANCED REVIEW: Section confirmed at {target_section_id}")
                                     else:
-                                        logger.warning(f"FIXED REVIEW: Unknown target_section {target_section}")
-                                        # Tetap gunakan original section
+                                        logger.warning(f"ENHANCED REVIEW: Unknown target_section {target_section}")
                                         final_section_id = original_section_id
                                         section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id}) - target tidak valid"
                                 else:
-                                    # TIDAK ADA target section dipilih - GUNAKAN ORIGINAL SECTION
                                     final_section_id = original_section_id
                                     section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id})"
-                                    logger.info(f"FIXED REVIEW: No target section specified, keeping original section {original_section_id}")
+                                    logger.info(f"ENHANCED REVIEW: No target section specified, keeping original section {original_section_id}")
                                 
                                 # FIXED: Generate number WO berdasarkan final section dengan mapping yang benar
                                 from wo_maintenance_app.models import create_number_wo_with_section_fixed
@@ -812,21 +1192,22 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                 # FIXED: Support untuk section 4, 5, 6, 8 sesuai database
                                 if final_section_id in [4, 5, 6, 8]:
                                     new_number_wo = create_number_wo_with_section_fixed(final_section_id)
-                                    logger.info(f"FIXED REVIEW: Generated Number WO: {new_number_wo} for mapped section {final_section_id}")
+                                    logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo} for mapped section {final_section_id}")
                                 else:
                                     # Section lain, gunakan fallback ke IT (section 8)
                                     fallback_section = 8  # IT sebagai default
                                     new_number_wo = create_number_wo_with_section_fixed(fallback_section)
-                                    logger.info(f"FIXED REVIEW: Generated Number WO: {new_number_wo} for unmapped section {final_section_id} (using IT fallback)")
+                                    logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo} for unmapped section {final_section_id} (using IT fallback)")
                                 
                                 # VALIDATION: Log section info
-                                logger.info(f"FIXED REVIEW: Section Summary:")
+                                logger.info(f"ENHANCED REVIEW: Section Summary:")
                                 logger.info(f"  - Original Section ID: {original_section_id}")
                                 logger.info(f"  - Final Section ID: {final_section_id}")
                                 logger.info(f"  - Section Changed: {section_changed}")
                                 logger.info(f"  - Generated Number WO: {new_number_wo}")
+                                logger.info(f"  - Priority Level: {priority_level}")
                                 
-                                # FIXED: Update review status dengan conditional section update
+                                # ENHANCED: Update review status dengan conditional section update + priority
                                 if section_changed:
                                     # Jika section berubah, update final_section_id
                                     cursor.execute("""
@@ -850,7 +1231,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                         new_number_wo,
                                         nomor_pengajuan
                                     ])
-                                    logger.info(f"FIXED REVIEW: Updated with section change to {final_section_id}")
+                                    logger.info(f"ENHANCED REVIEW: Updated with section change to {final_section_id}")
                                 else:
                                     # Jika section TIDAK berubah, TIDAK update final_section_id
                                     cursor.execute("""
@@ -872,13 +1253,13 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                         new_number_wo,              # Update number WO aja
                                         nomor_pengajuan
                                     ])
-                                    logger.info(f"FIXED REVIEW: Updated number WO only, section unchanged")
+                                    logger.info(f"ENHANCED REVIEW: Updated number WO only, section unchanged")
                                 
                                 update_count = cursor.rowcount
-                                logger.info(f"FIXED REVIEW: Updated {update_count} row(s) in tabel_pengajuan")
+                                logger.info(f"ENHANCED REVIEW: Updated {update_count} row(s) in tabel_pengajuan")
                                 
-                                # FIXED: Transfer ke tabel_main dengan section ASLI yang benar
-                                logger.info(f"FIXED REVIEW: Starting auto transfer to tabel_main for {nomor_pengajuan}")
+                                # ENHANCED: Transfer ke tabel_main dengan priority level
+                                logger.info(f"ENHANCED REVIEW: Starting auto transfer to tabel_main for {nomor_pengajuan} with priority {priority_level}")
                                 
                                 # Check apakah data sudah ada di tabel_main
                                 truncated_history_id = nomor_pengajuan[:11]
@@ -890,31 +1271,32 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                 transfer_success = False
                                 
                                 if not exists_in_main:
-                                    # FIXED: Gunakan section yang BENAR untuk transfer
+                                    # ENHANCED: Gunakan section yang BENAR untuk transfer + priority level
                                     if section_changed:
-                                        # Section berubah, gunakan final_section_id yang baru
                                         transfer_section_id = final_section_id
-                                        logger.info(f"FIXED REVIEW: Transfer with CHANGED section {transfer_section_id}")
+                                        logger.info(f"ENHANCED REVIEW: Transfer with CHANGED section {transfer_section_id}")
                                     else:
-                                        # Section TIDAK berubah, gunakan ORIGINAL section dari database
                                         transfer_section_id = original_section_id
-                                        logger.info(f"FIXED REVIEW: Transfer with ORIGINAL section {transfer_section_id}")
+                                        logger.info(f"ENHANCED REVIEW: Transfer with ORIGINAL section {transfer_section_id}")
                                     
-                                    # Insert data ke tabel_main dengan section ASLI
+                                    # Insert data ke tabel_main dengan section ASLI + PriMa field
                                     truncated_number_wo = new_number_wo[:15]
                                     user_insert_truncated = pengajuan['user_insert'][:50] if pengajuan['user_insert'] else None
                                     oleh_truncated = pengajuan['oleh'][:500] if pengajuan['oleh'] else '-'
                                     
-                                    logger.info(f"FIXED REVIEW: Inserting to tabel_main - Section: {transfer_section_id}, Number WO: {truncated_number_wo}")
+                                    # ENHANCED: Prepare PriMa value dengan validation
+                                    prima_value = priority_level if priority_level in ['BI', 'AI', 'AOL', 'AOI', 'BOL', 'BOI'] else None
+                                    
+                                    logger.info(f"ENHANCED REVIEW: Inserting to tabel_main - Section: {transfer_section_id}, Number WO: {truncated_number_wo}, PriMa: {prima_value}")
                                     
                                     insert_sql = """
                                         INSERT INTO tabel_main (
                                             history_id, tgl_his, jam_his, id_line, id_mesin, 
                                             id_section, id_pekerjaan, number_wo, deskripsi_perbaikan,
                                             pic_produksi, pic_maintenance, status, user_insert, 
-                                            tgl_insert, oleh, status_pekerjaan
+                                            tgl_insert, oleh, status_pekerjaan, PriMa
                                         ) VALUES (
-                                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                                         )
                                     """
                                     
@@ -930,31 +1312,36 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                         pengajuan['deskripsi_perbaikan'],
                                         oleh_truncated,
                                         '-',
-                                        '0',
+                                        'A',                                    # Status umum 'A'
                                         user_insert_truncated,
                                         pengajuan['tgl_insert'],
                                         oleh_truncated,
-                                        '0'
+                                        'O',                                    # Status pekerjaan 'O'
+                                        prima_value                             # NEW: PriMa priority level
                                     ]
                                     
                                     cursor.execute(insert_sql, insert_params)
                                     insert_count = cursor.rowcount
                                     
-                                    logger.info(f"FIXED REVIEW: Inserted {insert_count} row(s) to tabel_main with section {transfer_section_id}")
+                                    logger.info(f"ENHANCED REVIEW: Inserted {insert_count} row(s) to tabel_main with section {transfer_section_id} and priority {prima_value}")
                                     transfer_success = True
                                     
                                 else:
-                                    logger.warning(f"FIXED REVIEW: Data {nomor_pengajuan} already exists in tabel_main")
+                                    logger.warning(f"ENHANCED REVIEW: Data {nomor_pengajuan} already exists in tabel_main")
                                     transfer_success = True
                                 
-                                # ENHANCED success message dengan number WO format baru
+                                # ENHANCED success message dengan number WO format baru + priority info
                                 success_parts = []
                                 success_parts.append(f'Pengajuan {nomor_pengajuan} berhasil diproses dan diselesaikan!')
                                 
-                                # Number WO info - SELALU format baru dengan section code yang benar
+                                # Number WO info
                                 section_code_map = {4: 'M', 5: 'E', 6: 'U', 8: 'I'}
                                 current_section_code = section_code_map.get(final_section_id, 'X')
                                 success_parts.append(f'Number WO: {new_number_wo} (format section {current_section_code})')
+                                
+                                # Priority info
+                                if priority_level:
+                                    success_parts.append(f'Prioritas Pekerjaan: {priority_level}')
                                 
                                 success_parts.append(f'Status: Final Processed (A/Y)')
                                 
@@ -966,11 +1353,12 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                 
                                 messages.success(request, '\n'.join(success_parts))
                                 
-                                logger.info(f"FIXED REVIEW SUCCESS SUMMARY:")
+                                logger.info(f"ENHANCED REVIEW SUCCESS SUMMARY:")
                                 logger.info(f"  - Pengajuan: {nomor_pengajuan}")
                                 logger.info(f"  - Section Changed: {section_changed}")
                                 logger.info(f"  - Final Section ID: {final_section_id}")
                                 logger.info(f"  - Number WO (NEW FORMAT): {new_number_wo}")
+                                logger.info(f"  - Priority Level: {priority_level}")
                                 logger.info(f"  - Transfer Success: {transfer_success}")
                                 
                             elif action == 'reject':
@@ -985,10 +1373,10 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                     WHERE history_id = %s
                                 """, ['2', REVIEWER_EMPLOYEE_NUMBER, review_notes, STATUS_REJECTED, nomor_pengajuan])
                                 
-                                logger.info(f"FIXED REVIEW: Rejected pengajuan {nomor_pengajuan}")
+                                logger.info(f"ENHANCED REVIEW: Rejected pengajuan {nomor_pengajuan}")
                                 messages.success(request, f'Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
                     
-                    logger.info(f"FIXED REVIEW: Transaction completed successfully for {nomor_pengajuan}")
+                    logger.info(f"ENHANCED REVIEW: Transaction completed successfully for {nomor_pengajuan}")
                     
                     request.session.modified = True
                     request.session.save()
@@ -996,12 +1384,12 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
                     
                 except Exception as update_error:
-                    logger.error(f"FIXED REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
+                    logger.error(f"ENHANCED REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
                     import traceback
-                    logger.error(f"FIXED REVIEW: Traceback: {traceback.format_exc()}")
+                    logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
                     messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
             else:
-                logger.warning(f"FIXED REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
+                logger.warning(f"ENHANCED REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
                 messages.error(request, 'Form review tidak valid. Periksa kembali input Anda.')
         else:
             review_form = ReviewForm()
@@ -1014,18 +1402,30 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             {'key': 'it', 'name': '💻 IT', 'section_id': 8, 'format_code': 'I', 'example': '25-I-08-0001'}
         ]
         
+        # ENHANCED: Priority choices info
+        priority_choices = [
+            {'value': 'BI', 'label': 'BI - Basic Important', 'description': 'Prioritas basic yang penting'},
+            {'value': 'AI', 'label': 'AI - Advanced Important', 'description': 'Prioritas advanced yang penting'},
+            {'value': 'AOL', 'label': 'AOL - Advanced Online', 'description': 'Prioritas advanced online'},
+            {'value': 'AOI', 'label': 'AOI - Advanced Offline Important', 'description': 'Prioritas advanced offline penting'},
+            {'value': 'BOL', 'label': 'BOL - Basic Online', 'description': 'Prioritas basic online'},
+            {'value': 'BOI', 'label': 'BOI - Basic Offline Important', 'description': 'Prioritas basic offline penting'}
+        ]
+        
         context = {
             'pengajuan': pengajuan,
             'review_form': review_form,
             'already_reviewed': already_reviewed,
             'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
             'available_sections': available_sections,
+            'priority_choices': priority_choices,  # NEW: Priority choices for template
             'employee_data': employee_data,
-            'page_title': f'FIXED Review dengan Format Number WO Sesuai Database {nomor_pengajuan}',
+            'page_title': f'ENHANCED Review dengan Priority Level {nomor_pengajuan}',
             
-            # Enhanced context dengan number WO info yang benar
+            # Enhanced context dengan number WO info yang benar + priority
             'enhanced_mode': True,
-            'always_new_format': True,  # SELALU format baru
+            'priority_level_enabled': True,  # NEW: Flag for priority level feature
+            'always_new_format': True,
             'current_number_wo': pengajuan['number_wo'],
             'current_section_info': {
                 'id': pengajuan['current_section_id'],
@@ -1034,7 +1434,8 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             'format_info': {
                 'description': 'Number WO akan selalu menggunakan format baru: YY-S-MM-NNNN',
                 'based_on_section': 'Berdasarkan section tujuan (4=M, 5=E, 6=U, 8=I)',
-                'section_mapping': '4=Mekanik(M), 5=Elektrik(E), 6=Utility(U), 8=IT(I)'
+                'section_mapping': '4=Mekanik(M), 5=Elektrik(E), 6=Utility(U), 8=IT(I)',
+                'priority_info': 'Priority Level akan disimpan ke field PriMa di tabel_main'  # NEW
             },
             
             # Status constants untuk template
@@ -1044,13 +1445,13 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             'APPROVE_REVIEWED': APPROVE_REVIEWED
         }
         
-        logger.info(f"FIXED REVIEW: Rendering template dengan section mapping 4=M, 5=E, 6=U, 8=I untuk {nomor_pengajuan}")
+        logger.info(f"ENHANCED REVIEW: Rendering template dengan priority level support untuk {nomor_pengajuan}")
         return render(request, 'wo_maintenance_app/review_pengajuan_detail.html', context)
         
     except Exception as e:
-        logger.error(f"FIXED REVIEW: Critical error for {nomor_pengajuan}: {e}")
+        logger.error(f"ENHANCED REVIEW: Critical error for {nomor_pengajuan}: {e}")
         import traceback
-        logger.error(f"FIXED REVIEW: Traceback: {traceback.format_exc()}")
+        logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
         messages.error(request, 'Terjadi kesalahan saat memuat detail review.')
         return redirect('wo_maintenance_app:review_pengajuan_list')
 
@@ -5796,11 +6197,257 @@ def ajax_get_section_mapping_info(request):
             'traceback': traceback.format_exc()
         }, status=500)
 
+# @login_required
+# def history_pengajuan_list(request):
+#     """
+#     Halaman history pengajuan maintenance - data dari tabel_main
+#     FIXED: Konsistensi status antara display dan actions
+#     """
+#     try:
+#         # Ambil data hierarchy user
+#         user_hierarchy = get_employee_hierarchy_data(request.user)
+        
+#         if not user_hierarchy:
+#             messages.error(request, 'Data karyawan tidak ditemukan. Hubungi administrator.')
+#             return redirect('wo_maintenance_app:dashboard')
+        
+#         # Filter form
+#         filter_form = HistoryFilterForm(request.GET or None)
+#         search_query = request.GET.get('search', '').strip()
+        
+#         # Query database tabel_main
+#         history_list = []
+#         total_records = 0
+        
+#         try:
+#             with connections['DB_Maintenance'].cursor() as cursor:
+#                 # Base WHERE conditions
+#                 where_conditions = ["tm.history_id IS NOT NULL"]
+#                 query_params = []
+                
+#                 # Apply filters dari form
+#                 if filter_form.is_valid():
+#                     tanggal_dari = filter_form.cleaned_data.get('tanggal_dari')
+#                     if tanggal_dari:
+#                         where_conditions.append("CAST(tm.tgl_insert AS DATE) >= %s")
+#                         query_params.append(tanggal_dari)
+                    
+#                     tanggal_sampai = filter_form.cleaned_data.get('tanggal_sampai')
+#                     if tanggal_sampai:
+#                         where_conditions.append("CAST(tm.tgl_insert AS DATE) <= %s")
+#                         query_params.append(tanggal_sampai)
+                    
+#                     status_filter = filter_form.cleaned_data.get('status')
+#                     if status_filter:
+#                         # Normalize filter status (support both O/C and 0/1)
+#                         if status_filter in ['O', 'o', '0']:
+#                             where_conditions.append("(tm.status = 'O' OR tm.status = '0')")
+#                         elif status_filter in ['C', 'c', '1']:
+#                             where_conditions.append("(tm.status = 'C' OR tm.status = '1')")
+                    
+#                     status_pekerjaan_filter = filter_form.cleaned_data.get('status_pekerjaan')
+#                     if status_pekerjaan_filter:
+#                         # Normalize filter status pekerjaan
+#                         if status_pekerjaan_filter in ['O', 'o', '0']:
+#                             where_conditions.append("(tm.status_pekerjaan = 'O' OR tm.status_pekerjaan = '0')")
+#                         elif status_pekerjaan_filter in ['C', 'c', '1']:
+#                             where_conditions.append("(tm.status_pekerjaan = 'C' OR tm.status_pekerjaan = '1')")
+                    
+#                     history_id_filter = filter_form.cleaned_data.get('history_id')
+#                     if history_id_filter:
+#                         where_conditions.append("tm.history_id LIKE %s")
+#                         query_params.append(f"%{history_id_filter}%")
+                    
+#                     pengaju_filter = filter_form.cleaned_data.get('pengaju')
+#                     if pengaju_filter:
+#                         where_conditions.append("tm.oleh LIKE %s")
+#                         query_params.append(f"%{pengaju_filter}%")
+                    
+#                     pic_produksi_filter = filter_form.cleaned_data.get('pic_produksi')
+#                     if pic_produksi_filter:
+#                         where_conditions.append("tm.pic_produksi LIKE %s")
+#                         query_params.append(f"%{pic_produksi_filter}%")
+                    
+#                     pic_maintenance_filter = filter_form.cleaned_data.get('pic_maintenance')
+#                     if pic_maintenance_filter:
+#                         where_conditions.append("tm.pic_maintenance LIKE %s")
+#                         query_params.append(f"%{pic_maintenance_filter}%")
+                    
+#                     section_filter = filter_form.cleaned_data.get('section_filter')
+#                     if section_filter:
+#                         where_conditions.append("tm.id_section = %s")
+#                         query_params.append(float(section_filter))
+                
+#                 # General search
+#                 if search_query:
+#                     search_conditions = [
+#                         "tm.history_id LIKE %s",
+#                         "tm.oleh LIKE %s",
+#                         "tm.deskripsi_perbaikan LIKE %s",
+#                         "tm.pic_produksi LIKE %s",
+#                         "tm.pic_maintenance LIKE %s"
+#                     ]
+#                     where_conditions.append(f"({' OR '.join(search_conditions)})")
+#                     search_param = f"%{search_query}%"
+#                     query_params.extend([search_param] * len(search_conditions))
+                
+#                 # Build WHERE clause
+#                 where_clause = ""
+#                 if where_conditions:
+#                     where_clause = "WHERE " + " AND ".join(where_conditions)
+                
+#                 # Count total records
+#                 count_query = f"""
+#                     SELECT COUNT(DISTINCT tm.history_id)
+#                     FROM tabel_main tm
+#                     LEFT JOIN tabel_mesin tmes ON tm.id_mesin = tmes.id_mesin
+#                     LEFT JOIN tabel_line tl ON tm.id_line = tl.id_line
+#                     LEFT JOIN tabel_msection tms ON tm.id_section = tms.id_section
+#                     {where_clause}
+#                 """
+                
+#                 cursor.execute(count_query, query_params)
+#                 total_records = cursor.fetchone()[0] or 0
+                
+#                 # Pagination
+#                 page_size = 20
+#                 page_number = int(request.GET.get('page', 1))
+#                 offset = (page_number - 1) * page_size
+                
+#                 total_pages = (total_records + page_size - 1) // page_size if total_records > 0 else 1
+#                 has_previous = page_number > 1
+#                 has_next = page_number < total_pages
+#                 previous_page_number = page_number - 1 if has_previous else None
+#                 next_page_number = page_number + 1 if has_next else None
+                
+#                 # Main query - FIXED dengan normalisasi status
+#                 main_query = f"""
+#                     SELECT DISTINCT
+#                         tm.history_id,                    -- 0
+#                         tm.oleh,                          -- 1 (pengaju)
+#                         ISNULL(tmes.mesin, 'N/A'),        -- 2 (mesin)
+#                         ISNULL(tms.seksi, 'N/A'),         -- 3 (section)
+#                         tm.deskripsi_perbaikan,           -- 4 (deskripsi)
+#                         -- FIXED: Normalize status values
+#                         CASE 
+#                             WHEN tm.status IN ('O', 'o') THEN 'O'
+#                             WHEN tm.status IN ('C', 'c', '1') THEN 'C'
+#                             WHEN tm.status = '0' THEN 'O'
+#                             ELSE 'O'
+#                         END as status_normalized,         -- 5 (status normalized)
+#                         CASE 
+#                             WHEN tm.status_pekerjaan IN ('O', 'o') THEN 'O'
+#                             WHEN tm.status_pekerjaan IN ('C', 'c', '1') THEN 'C'
+#                             WHEN tm.status_pekerjaan = '0' THEN 'O'
+#                             ELSE 'O'
+#                         END as status_pekerjaan_normalized, -- 6 (status pekerjaan normalized)
+#                         tm.pic_produksi,                  -- 7 (pic produksi)
+#                         tm.pic_maintenance,               -- 8 (pic maintenance)
+#                         tm.tgl_insert,                    -- 9 (tanggal insert)
+#                         ISNULL(tl.line, 'N/A'),           -- 10 (line)
+#                         tm.penyebab,                      -- 11 (penyebab)
+#                         tm.akar_masalah,                  -- 12 (akar masalah)
+#                         tm.tindakan_perbaikan,            -- 13 (tindakan perbaikan)
+#                         tm.tindakan_pencegahan,           -- 14 (tindakan pencegahan)
+#                         tm.tgl_selesai,                   -- 15 (tanggal selesai)
+#                         tm.number_wo,                     -- 16 (number WO)
+#                         tm.tgl_edit,                      -- 17 (tanggal edit)
+#                         tm.usert_edit                     -- 18 (user edit)
+#                     FROM tabel_main tm
+#                     LEFT JOIN tabel_mesin tmes ON tm.id_mesin = tmes.id_mesin
+#                     LEFT JOIN tabel_line tl ON tm.id_line = tl.id_line
+#                     LEFT JOIN tabel_msection tms ON tm.id_section = tms.id_section
+#                     {where_clause}
+#                     ORDER BY tm.tgl_insert DESC, tm.history_id DESC
+#                     OFFSET %s ROWS FETCH NEXT %s ROWS ONLY
+#                 """
+                
+#                 final_params = query_params + [offset, page_size]
+#                 cursor.execute(main_query, final_params)
+                
+#                 history_list = cursor.fetchall()
+                
+#                 logger.info(f"History query executed - Found {total_records} records")
+                
+#         except Exception as db_error:
+#             logger.error(f"Database error in history_pengajuan_list: {db_error}")
+#             messages.error(request, f'Terjadi kesalahan database: {str(db_error)}')
+#             history_list = []
+#             total_records = 0
+#             total_pages = 1
+#             has_previous = False
+#             has_next = False
+#             previous_page_number = None
+#             next_page_number = None
+#             page_number = 1
+        
+#         # Statistics dengan normalisasi status
+#         stats = {}
+#         try:
+#             with connections['DB_Maintenance'].cursor() as cursor:
+#                 # Total history
+#                 cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE history_id IS NOT NULL")
+#                 stats['total_history'] = cursor.fetchone()[0] or 0
+                
+#                 # Open vs close dengan normalisasi
+#                 cursor.execute("""
+#                     SELECT COUNT(*) FROM tabel_main 
+#                     WHERE (status IN ('O', 'o', '0')) AND history_id IS NOT NULL
+#                 """)
+#                 stats['open_count'] = cursor.fetchone()[0] or 0
+                
+#                 cursor.execute("""
+#                     SELECT COUNT(*) FROM tabel_main 
+#                     WHERE (status IN ('C', 'c', '1')) AND history_id IS NOT NULL
+#                 """)
+#                 stats['close_count'] = cursor.fetchone()[0] or 0
+                
+#                 # Today's updates
+#                 today = timezone.now().date()
+#                 cursor.execute("""
+#                     SELECT COUNT(*) FROM tabel_main 
+#                     WHERE CAST(tgl_edit AS DATE) = %s AND history_id IS NOT NULL
+#                 """, [today])
+#                 stats['today_updates'] = cursor.fetchone()[0] or 0
+                
+#         except Exception as stats_error:
+#             logger.error(f"Error getting history stats: {stats_error}")
+#             stats = {
+#                 'total_history': 0,
+#                 'open_count': 0,
+#                 'close_count': 0,
+#                 'today_updates': 0
+#             }
+        
+#         context = {
+#             'history_list': history_list,
+#             'filter_form': filter_form,
+#             'search_query': search_query,
+#             'total_records': total_records,
+#             'total_pages': total_pages,
+#             'page_number': page_number,
+#             'has_previous': has_previous,
+#             'has_next': has_next,
+#             'previous_page_number': previous_page_number,
+#             'next_page_number': next_page_number,
+#             'user_hierarchy': user_hierarchy,
+#             'employee_data': user_hierarchy,
+#             'stats': stats,
+#             'page_title': 'History Pengajuan Maintenance'
+#         }
+        
+#         return render(request, 'wo_maintenance_app/history_pengajuan_list.html', context)
+        
+#     except Exception as e:
+#         logger.error(f"Critical error in history_pengajuan_list: {e}")
+#         messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi.')
+#         return redirect('wo_maintenance_app:dashboard')
+
 @login_required
 def history_pengajuan_list(request):
     """
     Halaman history pengajuan maintenance - data dari tabel_main
-    Nampilkan semua data yang udah di-review sama SITI FATIMAH
+    UPDATED: Hapus Status Umum filter, hanya gunakan Status Pekerjaan
     """
     try:
         # Ambil data hierarchy user
@@ -5836,15 +6483,14 @@ def history_pengajuan_list(request):
                         where_conditions.append("CAST(tm.tgl_insert AS DATE) <= %s")
                         query_params.append(tanggal_sampai)
                     
-                    status_filter = filter_form.cleaned_data.get('status')
-                    if status_filter:
-                        where_conditions.append("tm.status = %s")
-                        query_params.append(status_filter)
-                    
+                    # UPDATED: Hanya filter status_pekerjaan, status umum dihapus
                     status_pekerjaan_filter = filter_form.cleaned_data.get('status_pekerjaan')
                     if status_pekerjaan_filter:
-                        where_conditions.append("tm.status_pekerjaan = %s")
-                        query_params.append(status_pekerjaan_filter)
+                        # Normalize filter status pekerjaan
+                        if status_pekerjaan_filter in ['O', 'o', '0']:
+                            where_conditions.append("(tm.status_pekerjaan = 'O' OR tm.status_pekerjaan = '0')")
+                        elif status_pekerjaan_filter in ['C', 'c', '1']:
+                            where_conditions.append("(tm.status_pekerjaan = 'C' OR tm.status_pekerjaan = '1')")
                     
                     history_id_filter = filter_form.cleaned_data.get('history_id')
                     if history_id_filter:
@@ -5913,7 +6559,7 @@ def history_pengajuan_list(request):
                 previous_page_number = page_number - 1 if has_previous else None
                 next_page_number = page_number + 1 if has_next else None
                 
-                # Main query
+                # UPDATED: Main query - hapus status umum, hanya tampilkan status pekerjaan
                 main_query = f"""
                     SELECT DISTINCT
                         tm.history_id,                    -- 0
@@ -5921,18 +6567,25 @@ def history_pengajuan_list(request):
                         ISNULL(tmes.mesin, 'N/A'),        -- 2 (mesin)
                         ISNULL(tms.seksi, 'N/A'),         -- 3 (section)
                         tm.deskripsi_perbaikan,           -- 4 (deskripsi)
-                        tm.status,                        -- 5 (status umum)
-                        tm.status_pekerjaan,              -- 6 (status pekerjaan)
-                        tm.pic_produksi,                  -- 7 (pic produksi)
-                        tm.pic_maintenance,               -- 8 (pic maintenance)
-                        tm.tgl_insert,                    -- 9 (tanggal insert)
-                        ISNULL(tl.line, 'N/A'),           -- 10 (line)
-                        tm.penyebab,                      -- 11 (penyebab)
-                        tm.akar_masalah,                  -- 12 (akar masalah)
-                        tm.tindakan_perbaikan,            -- 13 (tindakan perbaikan)
-                        tm.tindakan_pencegahan,           -- 14 (tindakan pencegahan)
-                        tm.tgl_selesai,                   -- 15 (tanggal selesai)
-                        tm.number_wo                      -- 16 (number WO)
+                        -- UPDATED: Hanya status_pekerjaan yang ditampilkan, status umum dihapus
+                        CASE 
+                            WHEN tm.status_pekerjaan IN ('O', 'o') THEN 'O'
+                            WHEN tm.status_pekerjaan IN ('C', 'c', '1') THEN 'C'
+                            WHEN tm.status_pekerjaan = '0' THEN 'O'
+                            ELSE 'O'
+                        END as status_pekerjaan_normalized, -- 5 (hanya status pekerjaan)
+                        tm.pic_produksi,                  -- 6 (pic produksi)
+                        tm.pic_maintenance,               -- 7 (pic maintenance)
+                        tm.tgl_insert,                    -- 8 (tanggal insert)
+                        ISNULL(tl.line, 'N/A'),           -- 9 (line)
+                        tm.penyebab,                      -- 10 (penyebab)
+                        tm.akar_masalah,                  -- 11 (akar masalah)
+                        tm.tindakan_perbaikan,            -- 12 (tindakan perbaikan)
+                        tm.tindakan_pencegahan,           -- 13 (tindakan pencegahan)
+                        tm.tgl_selesai,                   -- 14 (tanggal selesai)
+                        tm.number_wo,                     -- 15 (number WO)
+                        tm.tgl_edit,                      -- 16 (tanggal edit)
+                        tm.usert_edit                     -- 17 (user edit)
                     FROM tabel_main tm
                     LEFT JOIN tabel_mesin tmes ON tm.id_mesin = tmes.id_mesin
                     LEFT JOIN tabel_line tl ON tm.id_line = tl.id_line
@@ -5961,7 +6614,7 @@ def history_pengajuan_list(request):
             next_page_number = None
             page_number = 1
         
-        # Statistics
+        # UPDATED: Statistics hanya berdasarkan status_pekerjaan
         stats = {}
         try:
             with connections['DB_Maintenance'].cursor() as cursor:
@@ -5969,24 +6622,33 @@ def history_pengajuan_list(request):
                 cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE history_id IS NOT NULL")
                 stats['total_history'] = cursor.fetchone()[0] or 0
                 
-                # Open vs close
-                cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE status = '0'")
-                stats['open_count'] = cursor.fetchone()[0] or 0
+                # UPDATED: Open vs close berdasarkan status_pekerjaan saja
+                cursor.execute("""
+                    SELECT COUNT(*) FROM tabel_main 
+                    WHERE (status_pekerjaan IN ('O', 'o', '0')) AND history_id IS NOT NULL
+                """)
+                stats['pekerjaan_open_count'] = cursor.fetchone()[0] or 0
                 
-                cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE status = '1'")
-                stats['close_count'] = cursor.fetchone()[0] or 0
+                cursor.execute("""
+                    SELECT COUNT(*) FROM tabel_main 
+                    WHERE (status_pekerjaan IN ('C', 'c', '1')) AND history_id IS NOT NULL
+                """)
+                stats['pekerjaan_close_count'] = cursor.fetchone()[0] or 0
                 
                 # Today's updates
                 today = timezone.now().date()
-                cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE CAST(tgl_edit AS DATE) = %s", [today])
+                cursor.execute("""
+                    SELECT COUNT(*) FROM tabel_main 
+                    WHERE CAST(tgl_edit AS DATE) = %s AND history_id IS NOT NULL
+                """, [today])
                 stats['today_updates'] = cursor.fetchone()[0] or 0
                 
         except Exception as stats_error:
             logger.error(f"Error getting history stats: {stats_error}")
             stats = {
                 'total_history': 0,
-                'open_count': 0,
-                'close_count': 0,
+                'pekerjaan_open_count': 0,
+                'pekerjaan_close_count': 0,
                 'today_updates': 0
             }
         
@@ -6015,11 +6677,112 @@ def history_pengajuan_list(request):
         return redirect('wo_maintenance_app:dashboard')
 
 
+# @login_required
+# def history_pengajuan_detail(request, nomor_pengajuan):
+#     """
+#     Detail dan edit history pengajuan maintenance
+#     User bisa edit data analisis masalah, tindakan, PIC, status, dll
+#     """
+#     try:
+#         # Ambil data hierarchy user
+#         user_hierarchy = get_employee_hierarchy_data(request.user)
+        
+#         if not user_hierarchy:
+#             messages.error(request, 'Data karyawan tidak ditemukan. Hubungi administrator.')
+#             return redirect('wo_maintenance_app:history_pengajuan_list')
+        
+#         # Ambil data history dari tabel_main
+#         history_data = None
+        
+#         try:
+#             with connections['DB_Maintenance'].cursor() as cursor:
+#                 cursor.execute("""
+#                     SELECT 
+#                         tm.history_id, tm.oleh, tm.number_wo, tm.tgl_insert,
+#                         tm.deskripsi_perbaikan, tm.penyebab, tm.akar_masalah,
+#                         tm.tindakan_perbaikan, tm.tindakan_pencegahan,
+#                         tm.status, tm.status_pekerjaan, tm.pic_produksi, tm.pic_maintenance,
+#                         tm.tgl_wp_dari, tm.tgl_wp_sampai, tm.tgl_lt_dari, tm.tgl_lt_sampai,
+#                         tm.tgl_dt_dari, tm.tgl_dt_sampai, tm.alasan_dt,
+#                         tm.tgl_estimasidt, tm.tgl_selesai, tm.alasan_delay, tm.masalah,
+#                         tmes.mesin, tl.line, tms.seksi, tpek.pekerjaan,
+#                         tm.user_insert, tm.usert_edit, tm.tgl_edit
+#                     FROM tabel_main tm
+#                     LEFT JOIN tabel_mesin tmes ON tm.id_mesin = tmes.id_mesin
+#                     LEFT JOIN tabel_line tl ON tm.id_line = tl.id_line
+#                     LEFT JOIN tabel_msection tms ON tm.id_section = tms.id_section
+#                     LEFT JOIN tabel_pekerjaan tpek ON tm.id_pekerjaan = tpek.id_pekerjaan
+#                     WHERE tm.history_id = %s
+#                 """, [nomor_pengajuan])
+                
+#                 row = cursor.fetchone()
+                
+#                 if not row:
+#                     messages.error(request, 'Data history tidak ditemukan.')
+#                     return redirect('wo_maintenance_app:history_pengajuan_list')
+                
+#                 # Map data ke dictionary
+#                 history_data = {
+#                     'history_id': row[0], 'oleh': row[1], 'number_wo': row[2], 'tgl_insert': row[3],
+#                     'deskripsi_perbaikan': row[4], 'penyebab': row[5], 'akar_masalah': row[6],
+#                     'tindakan_perbaikan': row[7], 'tindakan_pencegahan': row[8],
+#                     'status': row[9], 'status_pekerjaan': row[10], 'pic_produksi': row[11], 
+#                     'pic_maintenance': row[12], 'tgl_wp_dari': row[13], 'tgl_wp_sampai': row[14],
+#                     'tgl_lt_dari': row[15], 'tgl_lt_sampai': row[16], 'tgl_dt_dari': row[17], 
+#                     'tgl_dt_sampai': row[18], 'alasan_dt': row[19], 'tgl_estimasidt': row[20],
+#                     'tgl_selesai': row[21], 'alasan_delay': row[22], 'masalah': row[23],
+#                     'mesin': row[24], 'line': row[25], 'section': row[26], 'pekerjaan': row[27],
+#                     'user_insert': row[28], 'usert_edit': row[29], 'tgl_edit': row[30]
+#                 }
+                
+#         except Exception as db_error:
+#             logger.error(f"Database error in history_pengajuan_detail: {db_error}")
+#             messages.error(request, 'Terjadi kesalahan saat mengambil data history.')
+#             return redirect('wo_maintenance_app:history_pengajuan_list')
+        
+#         # Handle form submission
+#         if request.method == 'POST':
+#             form = HistoryMaintenanceForm(request.POST, history_data=history_data)
+            
+#             if form.is_valid():
+#                 # Update data history
+#                 result = update_history_maintenance(
+#                     nomor_pengajuan, 
+#                     form.cleaned_data, 
+#                     request.user
+#                 )
+                
+#                 if result['success']:
+#                     messages.success(request, result['message'])
+#                     return redirect('wo_maintenance_app:history_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
+#                 else:
+#                     messages.error(request, result['message'])
+#             else:
+#                 messages.error(request, 'Form tidak valid. Periksa kembali input Anda.')
+#         else:
+#             form = HistoryMaintenanceForm(history_data=history_data)
+        
+#         context = {
+#             'history_data': history_data,
+#             'form': form,
+#             'user_hierarchy': user_hierarchy,
+#             'employee_data': user_hierarchy,
+#             'page_title': f'Detail History {nomor_pengajuan}',
+#             'can_edit': True  # Semua user bisa edit history
+#         }
+        
+#         return render(request, 'wo_maintenance_app/history_pengajuan_detail.html', context)
+        
+#     except Exception as e:
+#         logger.error(f"Critical error in history_pengajuan_detail: {e}")
+#         messages.error(request, 'Terjadi kesalahan sistem. Silakan coba lagi.')
+#         return redirect('wo_maintenance_app:history_pengajuan_list')
+
 @login_required
 def history_pengajuan_detail(request, nomor_pengajuan):
     """
     Detail dan edit history pengajuan maintenance
-    User bisa edit data analisis masalah, tindakan, PIC, status, dll
+    UPDATED: Hapus Status Umum, hanya tampilkan dan edit Status Pekerjaan
     """
     try:
         # Ambil data hierarchy user
@@ -6039,7 +6802,7 @@ def history_pengajuan_detail(request, nomor_pengajuan):
                         tm.history_id, tm.oleh, tm.number_wo, tm.tgl_insert,
                         tm.deskripsi_perbaikan, tm.penyebab, tm.akar_masalah,
                         tm.tindakan_perbaikan, tm.tindakan_pencegahan,
-                        tm.status, tm.status_pekerjaan, tm.pic_produksi, tm.pic_maintenance,
+                        tm.status_pekerjaan, tm.pic_produksi, tm.pic_maintenance,
                         tm.tgl_wp_dari, tm.tgl_wp_sampai, tm.tgl_lt_dari, tm.tgl_lt_sampai,
                         tm.tgl_dt_dari, tm.tgl_dt_sampai, tm.alasan_dt,
                         tm.tgl_estimasidt, tm.tgl_selesai, tm.alasan_delay, tm.masalah,
@@ -6059,18 +6822,18 @@ def history_pengajuan_detail(request, nomor_pengajuan):
                     messages.error(request, 'Data history tidak ditemukan.')
                     return redirect('wo_maintenance_app:history_pengajuan_list')
                 
-                # Map data ke dictionary
+                # UPDATED: Map data ke dictionary - hapus status umum
                 history_data = {
                     'history_id': row[0], 'oleh': row[1], 'number_wo': row[2], 'tgl_insert': row[3],
                     'deskripsi_perbaikan': row[4], 'penyebab': row[5], 'akar_masalah': row[6],
                     'tindakan_perbaikan': row[7], 'tindakan_pencegahan': row[8],
-                    'status': row[9], 'status_pekerjaan': row[10], 'pic_produksi': row[11], 
-                    'pic_maintenance': row[12], 'tgl_wp_dari': row[13], 'tgl_wp_sampai': row[14],
-                    'tgl_lt_dari': row[15], 'tgl_lt_sampai': row[16], 'tgl_dt_dari': row[17], 
-                    'tgl_dt_sampai': row[18], 'alasan_dt': row[19], 'tgl_estimasidt': row[20],
-                    'tgl_selesai': row[21], 'alasan_delay': row[22], 'masalah': row[23],
-                    'mesin': row[24], 'line': row[25], 'section': row[26], 'pekerjaan': row[27],
-                    'user_insert': row[28], 'usert_edit': row[29], 'tgl_edit': row[30]
+                    'status_pekerjaan': row[9], 'pic_produksi': row[10], 'pic_maintenance': row[11], 
+                    'tgl_wp_dari': row[12], 'tgl_wp_sampai': row[13],
+                    'tgl_lt_dari': row[14], 'tgl_lt_sampai': row[15], 'tgl_dt_dari': row[16], 
+                    'tgl_dt_sampai': row[17], 'alasan_dt': row[18], 'tgl_estimasidt': row[19],
+                    'tgl_selesai': row[20], 'alasan_delay': row[21], 'masalah': row[22],
+                    'mesin': row[23], 'line': row[24], 'section': row[25], 'pekerjaan': row[26],
+                    'user_insert': row[27], 'usert_edit': row[28], 'tgl_edit': row[29]
                 }
                 
         except Exception as db_error:
@@ -6083,7 +6846,7 @@ def history_pengajuan_detail(request, nomor_pengajuan):
             form = HistoryMaintenanceForm(request.POST, history_data=history_data)
             
             if form.is_valid():
-                # Update data history
+                # UPDATED: Update data history dengan auto-set status umum
                 result = update_history_maintenance(
                     nomor_pengajuan, 
                     form.cleaned_data, 
@@ -6106,7 +6869,8 @@ def history_pengajuan_detail(request, nomor_pengajuan):
             'user_hierarchy': user_hierarchy,
             'employee_data': user_hierarchy,
             'page_title': f'Detail History {nomor_pengajuan}',
-            'can_edit': True  # Semua user bisa edit history
+            'can_edit': True,
+            'status_umum_hidden': True  # UPDATED: Flag untuk template bahwa status umum disembunyikan
         }
         
         return render(request, 'wo_maintenance_app/history_pengajuan_detail.html', context)
@@ -6304,10 +7068,110 @@ def enhanced_review_pengajuan_detail_with_transfer(request, nomor_pengajuan):
         messages.error(request, 'Terjadi kesalahan saat memuat enhanced review dengan auto transfer.')
         return redirect('wo_maintenance_app:review_pengajuan_list')
     
+# @login_required
+# def ajax_get_history_stats(request):
+#     """
+#     AJAX endpoint untuk mendapatkan statistik history
+#     """
+#     try:
+#         stats = {}
+        
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             # Basic stats
+#             cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE history_id IS NOT NULL")
+#             stats['total'] = cursor.fetchone()[0] or 0
+            
+#             cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE status = '0'")
+#             stats['open'] = cursor.fetchone()[0] or 0
+            
+#             cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE status = '1'")
+#             stats['close'] = cursor.fetchone()[0] or 0
+            
+#             # Monthly stats
+#             cursor.execute("""
+#                 SELECT COUNT(*) FROM tabel_main 
+#                 WHERE MONTH(tgl_insert) = MONTH(GETDATE()) 
+#                 AND YEAR(tgl_insert) = YEAR(GETDATE())
+#             """)
+#             stats['this_month'] = cursor.fetchone()[0] or 0
+            
+#             # Today's edits
+#             cursor.execute("""
+#                 SELECT COUNT(*) FROM tabel_main 
+#                 WHERE CAST(tgl_edit AS DATE) = CAST(GETDATE() AS DATE)
+#             """)
+#             stats['today_edits'] = cursor.fetchone()[0] or 0
+        
+#         return JsonResponse({
+#             'success': True,
+#             'stats': stats
+#         })
+        
+#     except Exception as e:
+#         logger.error(f"Error getting history stats: {e}")
+#         return JsonResponse({
+#             'success': False,
+#             'error': str(e)
+#         })
+
+# Update ajax_get_history_stats function:
+# @login_required
+# def ajax_get_history_stats(request):
+#     """
+#     AJAX endpoint untuk mendapatkan statistik history - UPDATED untuk O/C
+#     """
+#     try:
+#         stats = {}
+        
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             # Basic stats
+#             cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE history_id IS NOT NULL")
+#             stats['total'] = cursor.fetchone()[0] or 0
+            
+#             # UPDATED: Status counts dengan O/C (dan backward compatibility)
+#             cursor.execute("""
+#                 SELECT COUNT(*) FROM tabel_main 
+#                 WHERE status IN ('O', '0')
+#             """)
+#             stats['open'] = cursor.fetchone()[0] or 0
+            
+#             cursor.execute("""
+#                 SELECT COUNT(*) FROM tabel_main 
+#                 WHERE status IN ('C', '1')
+#             """)
+#             stats['close'] = cursor.fetchone()[0] or 0
+            
+#             # Monthly stats
+#             cursor.execute("""
+#                 SELECT COUNT(*) FROM tabel_main 
+#                 WHERE MONTH(tgl_insert) = MONTH(GETDATE()) 
+#                 AND YEAR(tgl_insert) = YEAR(GETDATE())
+#             """)
+#             stats['this_month'] = cursor.fetchone()[0] or 0
+            
+#             # Today's edits
+#             cursor.execute("""
+#                 SELECT COUNT(*) FROM tabel_main 
+#                 WHERE CAST(tgl_edit AS DATE) = CAST(GETDATE() AS DATE)
+#             """)
+#             stats['today_edits'] = cursor.fetchone()[0] or 0
+        
+#         return JsonResponse({
+#             'success': True,
+#             'stats': stats
+#         })
+        
+#     except Exception as e:
+#         logger.error(f"Error getting history stats: {e}")
+#         return JsonResponse({
+#             'success': False,
+#             'error': str(e)
+#         })
+
 @login_required
 def ajax_get_history_stats(request):
     """
-    AJAX endpoint untuk mendapatkan statistik history
+    AJAX endpoint untuk mendapatkan statistik history - UPDATED: Hanya status pekerjaan
     """
     try:
         stats = {}
@@ -6317,11 +7181,18 @@ def ajax_get_history_stats(request):
             cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE history_id IS NOT NULL")
             stats['total'] = cursor.fetchone()[0] or 0
             
-            cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE status = '0'")
-            stats['open'] = cursor.fetchone()[0] or 0
+            # UPDATED: Status counts hanya berdasarkan status_pekerjaan
+            cursor.execute("""
+                SELECT COUNT(*) FROM tabel_main 
+                WHERE status_pekerjaan IN ('O', '0')
+            """)
+            stats['pekerjaan_open'] = cursor.fetchone()[0] or 0
             
-            cursor.execute("SELECT COUNT(*) FROM tabel_main WHERE status = '1'")
-            stats['close'] = cursor.fetchone()[0] or 0
+            cursor.execute("""
+                SELECT COUNT(*) FROM tabel_main 
+                WHERE status_pekerjaan IN ('C', '1')
+            """)
+            stats['pekerjaan_close'] = cursor.fetchone()[0] or 0
             
             # Monthly stats
             cursor.execute("""
@@ -6351,10 +7222,116 @@ def ajax_get_history_stats(request):
         })
 
 
+# @login_required
+# def ajax_quick_update_status(request):
+#     """
+#     AJAX endpoint untuk quick update status history
+#     """
+#     if request.method != 'POST':
+#         return JsonResponse({'success': False, 'error': 'POST required'})
+    
+#     try:
+#         data = json.loads(request.body)
+#         history_id = data.get('history_id', '').strip()
+#         new_status = data.get('status', '').strip()
+        
+#         if not history_id or new_status not in ['0', '1']:
+#             return JsonResponse({
+#                 'success': False,
+#                 'error': 'Invalid parameters'
+#             })
+        
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             cursor.execute("""
+#                 UPDATE tabel_main 
+#                 SET status = %s, usert_edit = %s, tgl_edit = GETDATE()
+#                 WHERE history_id = %s
+#             """, [new_status, request.user.username, history_id])
+            
+#             if cursor.rowcount > 0:
+#                 status_text = 'Close' if new_status == '1' else 'Open'
+#                 return JsonResponse({
+#                     'success': True,
+#                     'message': f'Status history {history_id} berhasil diubah ke {status_text}'
+#                 })
+#             else:
+#                 return JsonResponse({
+#                     'success': False,
+#                     'error': 'History tidak ditemukan'
+#                 })
+        
+#     except Exception as e:
+#         logger.error(f"Error quick update status: {e}")
+#         return JsonResponse({
+#             'success': False,
+#             'error': str(e)
+#         })
+
+# @login_required
+# def ajax_quick_update_status(request):
+#     """
+#     AJAX endpoint untuk quick update status history - FIXED untuk konsistensi
+#     """
+#     if request.method != 'POST':
+#         return JsonResponse({'success': False, 'error': 'POST required'})
+    
+#     try:
+#         data = json.loads(request.body)
+#         history_id = data.get('history_id', '').strip()
+#         new_status = data.get('status', '').strip()
+#         field_type = data.get('field_type', 'status')  # 'status' atau 'status_pekerjaan'
+        
+#         # FIXED: Normalize status value
+#         normalized_status = normalize_status_value(new_status)
+        
+#         if not history_id:
+#             return JsonResponse({
+#                 'success': False,
+#                 'error': 'History ID required'
+#             })
+        
+#         # Determine field to update
+#         if field_type == 'status_pekerjaan':
+#             update_field = 'status_pekerjaan'
+#         else:
+#             update_field = 'status'
+        
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             cursor.execute(f"""
+#                 UPDATE tabel_main 
+#                 SET {update_field} = %s, usert_edit = %s, tgl_edit = GETDATE()
+#                 WHERE history_id = %s
+#             """, [normalized_status, request.user.username, history_id])
+            
+#             if cursor.rowcount > 0:
+#                 status_text = get_status_display_text(normalized_status)
+#                 opposite_status = get_opposite_status(normalized_status)
+                
+#                 return JsonResponse({
+#                     'success': True,
+#                     'message': f'Status history {history_id} berhasil diubah ke {status_text}',
+#                     'new_status': normalized_status,
+#                     'status_display': status_text,
+#                     'opposite_status': opposite_status,
+#                     'field_type': field_type
+#                 })
+#             else:
+#                 return JsonResponse({
+#                     'success': False,
+#                     'error': 'History tidak ditemukan'
+#                 })
+        
+#     except Exception as e:
+#         logger.error(f"Error quick update status: {e}")
+#         return JsonResponse({
+#             'success': False,
+#             'error': str(e)
+#         })
+
 @login_required
 def ajax_quick_update_status(request):
     """
-    AJAX endpoint untuk quick update status history
+    AJAX endpoint untuk quick update status history - UPDATED: Hanya status pekerjaan
     """
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'POST required'})
@@ -6364,24 +7341,40 @@ def ajax_quick_update_status(request):
         history_id = data.get('history_id', '').strip()
         new_status = data.get('status', '').strip()
         
-        if not history_id or new_status not in ['0', '1']:
+        # UPDATED: Hanya handle status_pekerjaan, bukan status umum
+        # Status umum otomatis tetap 'A'
+        
+        # Normalize status value untuk status_pekerjaan
+        normalized_status = normalize_status_value(new_status)
+        
+        if not history_id:
             return JsonResponse({
                 'success': False,
-                'error': 'Invalid parameters'
+                'error': 'History ID required'
             })
         
         with connections['DB_Maintenance'].cursor() as cursor:
+            # UPDATED: Hanya update status_pekerjaan, status umum tetap 'A'
             cursor.execute("""
                 UPDATE tabel_main 
-                SET status = %s, usert_edit = %s, tgl_edit = GETDATE()
+                SET status_pekerjaan = %s, 
+                    status = 'A',
+                    usert_edit = %s, 
+                    tgl_edit = GETDATE()
                 WHERE history_id = %s
-            """, [new_status, request.user.username, history_id])
+            """, [normalized_status, request.user.username, history_id])
             
             if cursor.rowcount > 0:
-                status_text = 'Close' if new_status == '1' else 'Open'
+                status_text = get_status_display_text(normalized_status)
+                opposite_status = get_opposite_status(normalized_status)
+                
                 return JsonResponse({
                     'success': True,
-                    'message': f'Status history {history_id} berhasil diubah ke {status_text}'
+                    'message': f'Status pekerjaan history {history_id} berhasil diubah ke {status_text}',
+                    'new_status': normalized_status,
+                    'status_display': status_text,
+                    'opposite_status': opposite_status,
+                    'field_type': 'status_pekerjaan'
                 })
             else:
                 return JsonResponse({
@@ -6395,7 +7388,6 @@ def ajax_quick_update_status(request):
             'success': False,
             'error': str(e)
         })
-
 
 # Export tambahan untuk history
 __all__ = [
@@ -7116,4 +8108,151 @@ __all__ = [
     'validate_number_wo_format',
     'ajax_preview_number_wo_change',
     'debug_number_wo_generation'
+]
+
+# Update function untuk update history maintenance:
+def update_history_maintenance(history_id, form_data, user):
+    """
+    Update data history maintenance - UPDATED untuk support O/C
+    
+    Args:
+        history_id: ID history yang akan diupdate
+        form_data: Data dari form
+        user: User yang melakukan update
+    
+    Returns:
+        dict: Result dengan success status dan message
+    """
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Validasi status values (O/C dengan backward compatibility)
+            status = form_data.get('status', 'O')
+            status_pekerjaan = form_data.get('status_pekerjaan', 'O')
+            
+            # Ensure valid values
+            if status not in ['O', 'C']:
+                status = 'O'  # Default ke Open
+            if status_pekerjaan not in ['O', 'C']:
+                status_pekerjaan = 'O'  # Default ke Open
+            
+            # Build update query dengan semua fields
+            update_fields = []
+            update_params = []
+            
+            # Text fields
+            text_fields = [
+                'penyebab', 'akar_masalah', 'tindakan_perbaikan', 
+                'tindakan_pencegahan', 'pic_produksi', 'pic_maintenance',
+                'alasan_dt', 'alasan_delay', 'masalah'
+            ]
+            
+            for field in text_fields:
+                if field in form_data:
+                    value = form_data[field]
+                    if value:  # Only update if not empty
+                        update_fields.append(f"{field} = %s")
+                        update_params.append(value)
+            
+            # Datetime fields
+            datetime_fields = [
+                'tgl_wp_dari', 'tgl_wp_sampai', 'tgl_lt_dari', 'tgl_lt_sampai',
+                'tgl_dt_dari', 'tgl_dt_sampai', 'tgl_estimasidt', 'tgl_selesai'
+            ]
+            
+            for field in datetime_fields:
+                if field in form_data and form_data[field]:
+                    update_fields.append(f"{field} = %s")
+                    update_params.append(form_data[field])
+            
+            # Status fields - UPDATED untuk O/C
+            update_fields.extend([
+                "status = %s",
+                "status_pekerjaan = %s",
+                "usert_edit = %s",
+                "tgl_edit = GETDATE()"
+            ])
+            update_params.extend([
+                status,
+                status_pekerjaan,
+                user.username
+            ])
+            
+            # Build final query
+            update_query = f"""
+                UPDATE tabel_main 
+                SET {', '.join(update_fields)}
+                WHERE history_id = %s
+            """
+            update_params.append(history_id)
+            
+            # Execute update
+            cursor.execute(update_query, update_params)
+            
+            if cursor.rowcount > 0:
+                logger.info(f"Successfully updated history {history_id} by {user.username}")
+                return {
+                    'success': True,
+                    'message': f'Data history {history_id} berhasil diperbarui!'
+                }
+            else:
+                return {
+                    'success': False,
+                    'message': f'History {history_id} tidak ditemukan atau tidak ada perubahan.'
+                }
+            
+    except Exception as e:
+        logger.error(f"Error updating history {history_id}: {e}")
+        return {
+            'success': False,
+            'message': f'Terjadi kesalahan saat mengupdate data: {str(e)}'
+        }
+
+def normalize_status_value(status_value):
+    """
+    Normalize status value untuk konsistensi O/C
+    """
+    if status_value in ['O', 'o', '0']:
+        return 'O'  # Open
+    elif status_value in ['C', 'c', '1']:
+        return 'C'  # Close
+    else:
+        return 'O'  # Default ke Open
+
+def get_status_display_text(status_value):
+    """
+    Get display text untuk status
+    """
+    normalized = normalize_status_value(status_value)
+    return 'Open' if normalized == 'O' else 'Close'
+
+def get_opposite_status(status_value):
+    """
+    Get opposite status untuk toggle button
+    """
+    normalized = normalize_status_value(status_value)
+    return 'C' if normalized == 'O' else 'O'
+
+def get_status_button_class(status_value):
+    """
+    Get CSS class untuk status button
+    """
+    normalized = normalize_status_value(status_value)
+    return 'btn-success' if normalized == 'O' else 'btn-secondary'
+
+def get_status_button_text(status_value):
+    """
+    Get text untuk status button (opposite action)
+    """
+    normalized = normalize_status_value(status_value)
+    return 'Set to Close' if normalized == 'O' else 'Set to Open'
+
+# Export functions
+__all__ = [
+    'history_pengajuan_list',
+    'history_pengajuan_detail', 
+    'ajax_get_history_stats',
+    'ajax_quick_update_status',
+    'normalize_status_value',
+    'get_status_display_text',
+    'get_opposite_status'
 ]

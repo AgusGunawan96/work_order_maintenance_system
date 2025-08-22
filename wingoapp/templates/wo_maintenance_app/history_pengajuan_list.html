@@ -1,6 +1,3 @@
-<!-- wo_maintenance_app/templates/wo_maintenance_app/history_pengajuan_list.html -->
-<!-- Template History Pengajuan List - Data dari tabel_main yang udah di-review -->
-
 {% extends 'starter_kit/base.html' %}
 {% load static %}
 {% load widget_tweaks %}
@@ -12,7 +9,7 @@
         padding-top: 20px;
     }
     
-    /* History Header Styling */
+    /* Header Styles */
     .history-header {
         background: linear-gradient(135deg, #6f42c1 0%, #007bff 100%);
         color: white;
@@ -25,121 +22,61 @@
     .history-header h3 {
         margin: 0 0 10px 0;
         font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
     }
     
-    .history-info {
-        opacity: 0.9;
-        font-size: 0.95rem;
+    .history-header .stats-row {
         display: flex;
-        align-items: center;
-        gap: 15px;
+        gap: 20px;
         flex-wrap: wrap;
+        margin-top: 15px;
     }
     
-    .history-badge {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 6px 15px;
+    .stat-item {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 8px 15px;
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 600;
     }
     
-    /* Stats Cards */
-    .stats-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-    
-    .stat-card {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        text-align: center;
-        border-left: 4px solid #6f42c1;
-        transition: transform 0.2s ease;
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-2px);
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #6f42c1;
-        margin-bottom: 5px;
-    }
-    
-    .stat-label {
-        font-size: 0.9rem;
-        color: #6c757d;
-        font-weight: 500;
-    }
-    
     /* Filter Section */
     .filter-section {
         background: white;
-        padding: 20px;
         border-radius: 12px;
-        margin-bottom: 20px;
+        padding: 25px;
+        margin-bottom: 25px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-left: 5px solid #6f42c1;
     }
     
-    .filter-toggle {
-        background: none;
-        border: none;
+    .filter-title {
         color: #6f42c1;
         font-weight: 600;
-        cursor: pointer;
+        margin-bottom: 20px;
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 1rem;
     }
     
-    .filter-content {
-        margin-top: 20px;
-        display: none;
-    }
-    
-    .filter-content.show {
-        display: block;
-    }
-    
-    /* Enhanced Table Styling */
-    .history-table-container {
+    /* Table Styles */
+    .table-section {
         background: white;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-left: 5px solid #6f42c1;
     }
     
     .table-header {
-        background: linear-gradient(135deg, #6f42c1 0%, #007bff 100%);
+        background: linear-gradient(135deg, #6f42c1, #007bff);
         color: white;
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        padding: 20px 25px;
     }
     
     .table-title {
-        font-size: 1.1rem;
         font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .table-actions {
-        display: flex;
-        gap: 10px;
+        font-size: 1.2rem;
+        margin: 0;
     }
     
     .table th {
@@ -150,165 +87,136 @@
         padding: 15px 12px;
         font-size: 0.85rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
     }
     
     .table td {
-        padding: 15px 12px;
+        padding: 12px;
         vertical-align: middle;
         border-bottom: 1px solid #e9ecef;
     }
     
     .table tbody tr:hover {
         background-color: #f8f9fa;
-        transform: translateX(2px);
-        transition: all 0.2s ease;
     }
     
-    /* Status Badges */
+    /* Status Badges - UPDATED: Hanya untuk Status Pekerjaan */
     .status-badge {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-    
-    .status-open {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        color: #856404;
-    }
-    
-    .status-close {
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        color: #155724;
-    }
-    
-    .status-pekerjaan-open {
-        background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
-        color: #721c24;
-    }
-    
-    .status-pekerjaan-close {
-        background: linear-gradient(135deg, #cce7ff 0%, #b3d7ff 100%);
-        color: #004085;
-    }
-    
-    /* Action Buttons */
-    .action-btn {
         padding: 6px 12px;
         border-radius: 15px;
         font-size: 0.75rem;
         font-weight: 600;
-        text-decoration: none;
-        border: none;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
+        text-transform: uppercase;
+    }
+    
+    .status-pekerjaan-open {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        color: #155724;
+    }
+    
+    .status-pekerjaan-close {
+        background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+        color: #0c5460;
+    }
+    
+    /* Action Buttons - UPDATED: Hanya untuk Status Pekerjaan */
+    .action-btn {
         margin: 2px;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        border: none;
         cursor: pointer;
+        width: 100%;
+        margin-bottom: 4px;
     }
     
     .action-btn:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .btn-pekerjaan-toggle-open {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+    
+    .btn-pekerjaan-toggle-close {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
     }
     
     .btn-detail {
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        background: linear-gradient(135deg, #007bff, #0056b3);
         color: white;
     }
     
-    .btn-edit {
-        background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-        color: white;
+    /* Loading States */
+    .btn-loading {
+        opacity: 0.6;
+        pointer-events: none;
     }
     
-    .btn-quick-status {
-        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-        color: #212529;
-    }
-    
-    /* Progress Indicators */
-    .progress-indicator {
+    /* Auto Status Notice */
+    .auto-status-notice {
+        background: linear-gradient(135deg, #e7f3ff 0%, #cce7ff 100%);
+        border: 1px solid #b3d7ff;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        color: #0066cc;
+        font-size: 0.85rem;
         display: flex;
         align-items: center;
-        gap: 5px;
-        font-size: 0.8rem;
-    }
-    
-    .progress-bar {
-        width: 60px;
-        height: 4px;
-        background: #e9ecef;
-        border-radius: 2px;
-        overflow: hidden;
-    }
-    
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #28a745, #20c997);
-        transition: width 0.3s ease;
-    }
-    
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-    }
-    
-    .empty-state i {
-        font-size: 3rem;
-        margin-bottom: 20px;
-        opacity: 0.5;
+        gap: 8px;
     }
     
     /* Pagination */
-    .pagination-container {
-        display: flex;
-        justify-content: between;
-        align-items: center;
-        padding: 20px;
+    .pagination-section {
         background: #f8f9fa;
+        padding: 20px 25px;
         border-top: 1px solid #e9ecef;
     }
     
-    .pagination-info {
-        color: #6c757d;
-        font-size: 0.9rem;
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 2px;
+        font-weight: 600;
+        color: #6f42c1;
     }
     
-    /* Responsive Design */
+    .pagination .page-link:hover {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+        color: white;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+    }
+    
+    /* Alert Styles */
+    .alert {
+        border-radius: 8px;
+        border: none;
+        font-weight: 500;
+    }
+    
+    /* Responsive */
     @media (max-width: 768px) {
         .history-header {
             padding: 20px;
         }
         
-        .history-info {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .stats-container {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .table-header {
-            flex-direction: column;
-            gap: 15px;
-            text-align: center;
+        .table-responsive {
+            font-size: 0.85rem;
         }
         
         .action-btn {
-            font-size: 0.7rem;
             padding: 4px 8px;
+            font-size: 0.7rem;
         }
     }
 </style>
@@ -318,120 +226,118 @@
 <div class="page-body">
     {% include 'starter_kit/layout/breadcrumb.html' %}
 
+    <!-- Header -->
+    <div class="history-header">
+        <h3>History Pengajuan Maintenance</h3>
+        <p style="margin: 0; opacity: 0.9;">Kelola dan pantau status pengajuan maintenance yang telah diproses</p>
+        
+        <div class="stats-row">
+            <div class="stat-item">
+                <i class="fas fa-database"></i> Total: {{ stats.total_history }}
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-folder-open"></i> Work Open: {{ stats.pekerjaan_open_count }}
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-folder"></i> Work Close: {{ stats.pekerjaan_close_count }}
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-edit"></i> Edited Today: {{ stats.today_updates }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto Status Notice -->
+    <div class="auto-status-notice">
+        <i class="fas fa-info-circle"></i>
+        <div>
+            <strong>Info:</strong> Status umum otomatis di-set ke "A" (Active). 
+            Yang ditampilkan hanya status pekerjaan maintenance (Open/Close).
+        </div>
+    </div>
+
     <!-- Messages -->
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message|linebreaks }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         {% endfor %}
     {% endif %}
 
-    <!-- History Header -->
-    <div class="history-header">
-        <h3>
-            <i data-feather="archive"></i>
-            History Pengajuan Maintenance
-        </h3>
-        <div class="history-info">
-            <span>Data pengajuan yang sudah di-review dan masuk ke sistem history</span>
-            <div class="history-badge">
-                <i data-feather="database"></i>
-                Tabel Main
-            </div>
-            <div class="history-badge">
-                <i data-feather="user"></i>
-                {{ employee_data.fullname|default:employee_data.nickname }}
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistics Cards -->
-    {% if stats %}
-    <div class="stats-container">
-        <div class="stat-card">
-            <div class="stat-number">{{ stats.total_history }}</div>
-            <div class="stat-label">Total History</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">{{ stats.open_count }}</div>
-            <div class="stat-label">Status Open</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">{{ stats.close_count }}</div>
-            <div class="stat-label">Status Close</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">{{ stats.today_updates }}</div>
-            <div class="stat-label">Update Hari Ini</div>
-        </div>
-    </div>
-    {% endif %}
-
     <!-- Filter Section -->
     <div class="filter-section">
-        <button type="button" class="filter-toggle" onclick="toggleFilter()">
-            <i data-feather="filter"></i>
-            Filter & Search
-            <i data-feather="chevron-down" id="filter-chevron"></i>
-        </button>
+        <h6 class="filter-title">
+            <i class="fas fa-filter"></i>
+            Filter History
+        </h6>
         
-        <div class="filter-content" id="filter-content">
-            <form method="get" class="row g-3">
+        <form method="get" id="filterForm">
+            {% if search_query %}
+                <input type="hidden" name="search" value="{{ search_query }}">
+            {% endif %}
+            
+            <div class="row g-3">
                 <div class="col-md-3">
+                    <label class="form-label">Tanggal Dari</label>
                     {{ filter_form.tanggal_dari|add_class:"form-control" }}
                 </div>
                 <div class="col-md-3">
+                    <label class="form-label">Tanggal Sampai</label>
                     {{ filter_form.tanggal_sampai|add_class:"form-control" }}
                 </div>
-                <div class="col-md-2">
-                    {{ filter_form.status|add_class:"form-control" }}
-                </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
+                    <label class="form-label">Status Pekerjaan</label>
                     {{ filter_form.status_pekerjaan|add_class:"form-control" }}
                 </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i data-feather="search"></i> Filter
-                    </button>
-                </div>
-                
                 <div class="col-md-3">
+                    <label class="form-label">Section</label>
+                    {{ filter_form.section_filter|add_class:"form-control" }}
+                </div>
+            </div>
+            
+            <div class="row g-3 mt-2">
+                <div class="col-md-2">
+                    <label class="form-label">History ID</label>
                     {{ filter_form.history_id|add_class:"form-control" }}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <label class="form-label">Pengaju</label>
                     {{ filter_form.pengaju|add_class:"form-control" }}
                 </div>
-                <div class="col-md-3">
-                    {{ filter_form.pic_maintenance|add_class:"form-control" }}
+                <div class="col-md-2">
+                    <label class="form-label">PIC Produksi</label>
+                    {{ filter_form.pic_produksi|add_class:"form-control" }}
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="search" class="form-control" 
-                           placeholder="Search general..." value="{{ search_query }}">
+                    <label class="form-label">Search</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" 
+                               value="{{ search_query }}" 
+                               placeholder="Cari history ID, deskripsi...">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-            </form>
-        </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <a href="{% url 'wo_maintenance_app:history_pengajuan_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-refresh"></i> Reset
+                    </a>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <!-- History Table -->
-    <div class="history-table-container">
+    <!-- Table Section -->
+    <div class="table-section">
         <div class="table-header">
-            <div class="table-title">
-                <i data-feather="list"></i>
-                Daftar History Pengajuan
-                <small style="opacity: 0.8; display: block; font-size: 0.8rem; margin-top: 5px;">
-                    Total: {{ total_records|default:0 }} history pengajuan
-                </small>
-            </div>
-            <div class="table-actions">
-                <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}" class="btn btn-light btn-sm">
-                    <i data-feather="arrow-left"></i> Kembali
-                </a>
-                <button type="button" class="btn btn-light btn-sm" onclick="refreshStats()">
-                    <i data-feather="refresh-cw"></i> Refresh
-                </button>
-            </div>
+            <h5 class="table-title">History Pengajuan</h5>
+            <small>Total {{ total_records }} records ditemukan (Status umum auto-set ke A)</small>
         </div>
         
         {% if history_list %}
@@ -441,42 +347,38 @@
                     <tr>
                         <th style="width: 120px;">History ID</th>
                         <th style="width: 150px;">Pengaju</th>
-                        <th style="width: 120px;">Line</th>
-                        <th style="width: 150px;">Mesin</th>
+                        <th style="width: 180px;">Mesin</th>
                         <th style="width: 120px;">Section</th>
                         <th>Deskripsi</th>
-                        <th style="width: 130px;">PIC Produksi</th>
-                        <th style="width: 130px;">PIC Maintenance</th>
-                        <th style="width: 100px;">Status</th>
+                        <th style="width: 120px;">Status Pekerjaan</th>
+                        <th style="width: 150px;">PIC</th>
                         <th style="width: 120px;">Tanggal</th>
-                        <th style="width: 120px;">Actions</th>
+                        <th style="width: 140px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for history in history_list %}
                     <tr>
                         <td>
-                            <div>
-                                <strong class="text-primary">{{ history.0|default:"-" }}</strong>
-                                {% if history.16 %}<br><small class="text-muted">{{ history.16 }}</small>{% endif %}
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <strong>{{ history.1|default:"-" }}</strong>
-                                {% if history.9 %}
-                                    <br><small class="text-muted">{{ history.9|date:"d/m/Y" }}</small>
-                                {% endif %}
-                            </div>
-                        </td>
-                        <td>
-                            {% if history.10 and history.10 != 'N/A' %}
-                                <span class="badge bg-info">{{ history.10 }}</span>
-                            {% else %}
-                                -
+                            <strong class="text-primary">{{ history.0|default:"-" }}</strong>
+                            {% if history.16 %}
+                                <br><small class="text-muted">{{ history.16 }}</small>
                             {% endif %}
                         </td>
-                        <td>{{ history.2|default:"-" }}</td>
+                        <td>
+                            <div style="font-weight: 600;">{{ history.1|default:"-" }}</div>
+                            {% if history.17 %}
+                                <small class="text-muted">Edit: {{ history.17 }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="max-width: 160px; overflow: hidden; text-overflow: ellipsis;">
+                                {{ history.2|default:"-" }}
+                            </div>
+                            {% if history.9 != 'N/A' %}
+                                <br><small class="text-info">{{ history.9 }}</small>
+                            {% endif %}
+                        </td>
                         <td>{{ history.3|default:"-" }}</td>
                         <td>
                             <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
@@ -484,83 +386,47 @@
                             </div>
                         </td>
                         <td>
-                            <div style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;">
-                                {{ history.7|default:"-" }}
+                            <!-- UPDATED: Hanya Status Pekerjaan yang ditampilkan -->
+                            <span class="status-badge {% if history.5 == 'O' %}status-pekerjaan-open{% else %}status-pekerjaan-close{% endif %}" 
+                                  id="status-pekerjaan-badge-{{ history.0 }}">
+                                {% if history.5 == 'O' %}Open{% else %}Close{% endif %}
+                            </span>
+                            <br><small class="text-muted">Status Umum: Auto A</small>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.8rem;">
+                                <div><strong>Prod:</strong> {{ history.6|default:"-"|truncatechars:20 }}</div>
+                                <div><strong>Maint:</strong> {{ history.7|default:"-"|truncatechars:20 }}</div>
                             </div>
                         </td>
                         <td>
-                            <div style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;">
-                                {{ history.8|default:"-" }}
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <!-- Status Umum -->
-                                {% if history.5 == '0' %}
-                                    <span class="status-badge status-open">Open</span>
-                                {% elif history.5 == '1' %}
-                                    <span class="status-badge status-close">Close</span>
-                                {% else %}
-                                    <span class="status-badge">{{ history.5|default:"-" }}</span>
-                                {% endif %}
-                                
-                                <br>
-                                
-                                <!-- Status Pekerjaan -->
-                                {% if history.6 == '0' %}
-                                    <span class="status-badge status-pekerjaan-open" style="font-size: 0.65rem;">Work: Open</span>
-                                {% elif history.6 == '1' %}
-                                    <span class="status-badge status-pekerjaan-close" style="font-size: 0.65rem;">Work: Close</span>
-                                {% else %}
-                                    <span class="status-badge" style="font-size: 0.65rem;">Work: {{ history.6|default:"-" }}</span>
-                                {% endif %}
-                            </div>
-                        </td>
-                        <td>
-                            {% if history.9 %}
-                                {{ history.9|date:"d/m/Y" }}
-                                <br><small class="text-muted">{{ history.9|date:"H:i" }}</small>
+                            {% if history.8 %}
+                                <div style="font-weight: 600;">{{ history.8|date:"d/m/Y" }}</div>
+                                <small class="text-muted">{{ history.8|date:"H:i" }}</small>
                             {% else %}
                                 -
                             {% endif %}
+                            {% if history.16 %}
+                                <br><small class="text-success">Edit: {{ history.16|date:"d/m H:i" }}</small>
+                            {% endif %}
                         </td>
                         <td>
-                            <div class="d-flex flex-column gap-1">
-                                {% if history.0 %}
-                                    <!-- Detail Button -->
-                                    <a href="{% url 'wo_maintenance_app:history_pengajuan_detail' history.0 %}" 
-                                       class="action-btn btn-detail" title="Detail & Edit">
-                                        <i data-feather="eye"></i> Detail
-                                    </a>
-                                    
-                                    <!-- Quick Status Toggle -->
-                                    <button type="button" 
-                                            class="action-btn btn-quick-status" 
-                                            onclick="quickStatusToggle('{{ history.0 }}', '{{ history.5 }}')"
-                                            title="Quick Toggle Status">
-                                        <i data-feather="toggle-left"></i> 
-                                        {% if history.5 == '0' %}Close{% else %}Open{% endif %}
-                                    </button>
-                                    
-                                    <!-- Progress Indicator -->
-                                    {% if history.11 or history.12 or history.13 or history.14 %}
-                                    <div class="progress-indicator" title="Progress Analysis">
-                                        <div class="progress-bar">
-                                            <div class="progress-fill" style="width: 
-                                                {% if history.11 and history.12 and history.13 and history.14 %}100
-                                                {% elif history.11 and history.12 and history.13 %}75
-                                                {% elif history.11 and history.12 %}50
-                                                {% elif history.11 %}25
-                                                {% else %}0{% endif %}%;"></div>
-                                        </div>
-                                        <span>
-                                            {% if history.11 and history.12 and history.13 and history.14 %}Complete
-                                            {% elif history.11 %}Analysis
-                                            {% else %}New{% endif %}
-                                        </span>
-                                    </div>
-                                    {% endif %}
-                                {% endif %}
+                            <div class="btn-group-vertical" role="group" style="width: 100%;">
+                                <!-- UPDATED: Hanya Button untuk Status Pekerjaan -->
+                                <button type="button" 
+                                        class="action-btn {% if history.5 == 'O' %}btn-pekerjaan-toggle-close{% else %}btn-pekerjaan-toggle-open{% endif %}" 
+                                        onclick="toggleStatusPekerjaan('{{ history.0 }}', '{% if history.5 == 'O' %}C{% else %}O{% endif %}')"
+                                        id="status-pekerjaan-btn-{{ history.0 }}"
+                                        title="{% if history.5 == 'O' %}Set Work to Close{% else %}Set Work to Open{% endif %}">
+                                    <i class="fas fa-{% if history.5 == 'O' %}stop{% else %}play{% endif %}"></i>
+                                    {% if history.5 == 'O' %}Close Work{% else %}Open Work{% endif %}
+                                </button>
+                                
+                                <!-- Button Detail -->
+                                <a href="{% url 'wo_maintenance_app:history_pengajuan_detail' history.0 %}" 
+                                   class="action-btn btn-detail" title="View Detail">
+                                    <i class="fas fa-eye"></i> Detail
+                                </a>
                             </div>
                         </td>
                     </tr>
@@ -571,176 +437,188 @@
         
         <!-- Pagination -->
         {% if total_pages > 1 %}
-        <div class="pagination-container">
-            <div class="pagination-info">
-                Halaman {{ page_number }} dari {{ total_pages }} 
-                ({{ total_records }} total history)
+        <div class="pagination-section">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    Halaman {{ page_number }} dari {{ total_pages }} 
+                    ({{ total_records }} total records)
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        {% if has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                    Previous
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page_num in "12345"|make_list %}
+                            {% if page_num|add:0 <= total_pages %}
+                                {% if page_num|add:0 == page_number %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_num }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% for field in filter_form %}{% if field.value %}{% if field.name != 'search' %}&{{ field.name }}={{ field.value }}{% endif %}{% endif %}{% endfor %}">
+                                    Next
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
             </div>
-            
-            <nav aria-label="History pagination">
-                <ul class="pagination mb-0">
-                    {% if has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
-                                <i data-feather="chevron-left"></i>
-                            </a>
-                        </li>
-                    {% endif %}
-                    
-                    <li class="page-item active">
-                        <span class="page-link">{{ page_number }}</span>
-                    </li>
-                    
-                    {% if has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
-                                <i data-feather="chevron-right"></i>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
         </div>
         {% endif %}
-        
         {% else %}
-        <!-- Empty State -->
-        <div class="empty-state">
-            <i data-feather="inbox"></i>
-            <h5>Belum Ada Data History</h5>
+        <div class="text-center p-5">
+            <i class="fas fa-search" style="font-size: 48px; color: #6c757d; margin-bottom: 20px;"></i>
+            <h5>Tidak Ada Data History</h5>
             <p class="text-muted">
                 {% if search_query %}
-                    Tidak ditemukan hasil untuk pencarian "{{ search_query }}"
+                    Tidak ditemukan history untuk pencarian "{{ search_query }}"
                 {% else %}
-                    Belum ada pengajuan yang masuk ke history maintenance.
-                    Data akan muncul setelah pengajuan di-review oleh SITI FATIMAH.
+                    Belum ada data history pengajuan maintenance
                 {% endif %}
             </p>
-            <a href="{% url 'wo_maintenance_app:enhanced_daftar_laporan' %}" class="btn btn-primary">
-                <i data-feather="arrow-left"></i> Kembali ke Daftar Pengajuan
+            <a href="{% url 'wo_maintenance_app:daftar_laporan' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Lihat Pengajuan
             </a>
         </div>
         {% endif %}
     </div>
 </div>
+
+<!-- CSRF Token -->
+{% csrf_token %}
 {% endblock content %}
 
 {% block scriptcontent %}
 {{ block.super }}
 <script>
-$(document).ready(function() {
-    // Initialize Feather Icons
-    feather.replace();
+// UPDATED: Toggle hanya untuk status pekerjaan, status umum otomatis A
+function toggleStatusPekerjaan(historyId, newStatus) {
+    const statusText = newStatus === 'O' ? 'Open' : 'Close';
     
-    // Toggle filter visibility
-    window.toggleFilter = function() {
-        const content = $('#filter-content');
-        const chevron = $('#filter-chevron');
-        
-        if (content.hasClass('show')) {
-            content.removeClass('show').slideUp();
-            chevron.attr('data-feather', 'chevron-down');
+    if (!confirm(`Yakin ingin mengubah Status Pekerjaan ke ${statusText}?`)) {
+        return;
+    }
+    
+    // Show loading
+    const button = document.getElementById(`status-pekerjaan-btn-${historyId}`);
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    button.disabled = true;
+    button.classList.add('btn-loading');
+    
+    // AJAX call - UPDATED: Hanya untuk status_pekerjaan
+    fetch('{% url "wo_maintenance_app:ajax_quick_update_status" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            history_id: historyId,
+            status: newStatus,
+            field_type: 'status_pekerjaan'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update badge
+            const badge = document.getElementById(`status-pekerjaan-badge-${historyId}`);
+            if (badge) {
+                badge.textContent = data.status_display;
+                badge.className = `status-badge ${data.new_status === 'O' ? 'status-pekerjaan-open' : 'status-pekerjaan-close'}`;
+            }
+            
+            // Update button
+            const oppositeText = data.opposite_status === 'O' ? 'Open' : 'Close';
+            const oppositeIcon = data.opposite_status === 'O' ? 'play' : 'stop';
+            const oppositeClass = data.opposite_status === 'O' ? 'btn-pekerjaan-toggle-open' : 'btn-pekerjaan-toggle-close';
+            
+            button.innerHTML = `<i class="fas fa-${oppositeIcon}"></i> ${oppositeText} Work`;
+            button.className = `action-btn ${oppositeClass}`;
+            
+            // Update onclick
+            button.onclick = () => toggleStatusPekerjaan(historyId, data.opposite_status);
+            button.title = `Set Work to ${oppositeText}`;
+            
+            // Show success message
+            showAlert('success', data.message + ' (Status umum tetap A)');
         } else {
-            content.addClass('show').slideDown();
-            chevron.attr('data-feather', 'chevron-up');
+            button.innerHTML = originalHTML;
+            showAlert('error', data.error || 'Gagal update status');
         }
-        feather.replace();
-    };
-    
-    // Quick status toggle
-    window.quickStatusToggle = function(historyId, currentStatus) {
-        const newStatus = currentStatus === '0' ? '1' : '0';
-        const statusText = newStatus === '1' ? 'Close' : 'Open';
-        
-        if (!confirm(`Yakin ingin mengubah status history ${historyId} menjadi ${statusText}?`)) {
-            return;
-        }
-        
-        $.ajax({
-            url: '{% url "wo_maintenance_app:ajax_quick_update_status" %}',
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
-                'Content-Type': 'application/json'
-            },
-            data: JSON.stringify({
-                history_id: historyId,
-                status: newStatus
-            }),
-            success: function(response) {
-                if (response.success) {
-                    alert(response.message);
-                    location.reload();
-                } else {
-                    alert('Error: ' + response.error);
-                }
-            },
-            error: function() {
-                alert('Terjadi kesalahan saat mengupdate status');
-            }
-        });
-    };
-    
-    // Refresh stats
-    window.refreshStats = function() {
-        $.ajax({
-            url: '{% url "wo_maintenance_app:ajax_get_history_stats" %}',
-            method: 'GET',
-            success: function(response) {
-                if (response.success) {
-                    const stats = response.stats;
-                    $('.stat-card:eq(0) .stat-number').text(stats.total);
-                    $('.stat-card:eq(1) .stat-number').text(stats.open);
-                    $('.stat-card:eq(2) .stat-number').text(stats.close);
-                    $('.stat-card:eq(3) .stat-number').text(stats.today_edits);
-                    
-                    // Show refresh animation
-                    $('.stat-card').addClass('animate');
-                    setTimeout(() => $('.stat-card').removeClass('animate'), 500);
-                }
-            },
-            error: function() {
-                console.log('Error refreshing stats');
-            }
-        });
-    };
-    
-    // Auto-refresh stats every 30 seconds
-    setInterval(refreshStats, 30000);
-    
-    
-    // Enhanced tooltip untuk action buttons
-    $('.action-btn').tooltip();
-    
-    // Log history system info
-    console.log('History Pengajuan System loaded successfully');
-    console.log('Total Records:', {{ total_records|default:0 }});
-    console.log('Current Page:', {{ page_number|default:1 }});
-    
-    // Highlight rows based on status
-    $('.table tbody tr').each(function() {
-        const $row = $(this);
-        const statusBadges = $row.find('.status-badge');
-        
-        if (statusBadges.length > 0) {
-            const firstBadge = statusBadges.first();
-            if (firstBadge.hasClass('status-close')) {
-                $row.css('border-left', '3px solid #28a745');
-            } else if (firstBadge.hasClass('status-open')) {
-                $row.css('border-left', '3px solid #ffc107');
-            }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        button.innerHTML = originalHTML;
+        showAlert('error', 'Terjadi kesalahan jaringan');
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.classList.remove('btn-loading');
+    });
+}
+
+function showAlert(type, message) {
+    // Remove existing alerts
+    const existingAlerts = document.querySelectorAll('.alert');
+    existingAlerts.forEach(alert => {
+        if (!alert.classList.contains('show')) {
+            alert.remove();
         }
     });
-});
-
-// CSS Animation for refresh
-document.head.insertAdjacentHTML('beforeend', `
-<style>
-.stat-card.animate {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
+    
+    // Create new alert
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    // Insert at top of page
+    const container = document.querySelector('.page-body');
+    container.insertBefore(alertDiv, container.firstChild);
+    
+    // Auto dismiss after 3 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            const bsAlert = new bootstrap.Alert(alertDiv);
+            bsAlert.close();
+        }
+    }, 3000);
 }
-</style>
-`);
+
+// Initialize page
+$(document).ready(function() {
+    // Auto submit filter on select change
+    $('#filterForm select').on('change', function() {
+        $('#filterForm').submit();
+    });
+    
+    // Auto dismiss existing alerts
+    setTimeout(() => {
+        $('.alert').alert('close');
+    }, 5000);
+    
+    console.log('History Pengajuan List loaded - STATUS UMUM REMOVED, AUTO-SET TO A');
+    console.log('Only Status Pekerjaan controls available');
+});
 </script>
 {% endblock scriptcontent %}

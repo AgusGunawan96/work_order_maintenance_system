@@ -1,5 +1,5 @@
 <!-- wo_maintenance_app/templates/wo_maintenance_app/review_pengajuan_detail.html -->
-<!-- FIXED Template tanpa Template Syntax Error -->
+<!-- ENHANCED Template dengan Priority Level Support -->
 
 {% extends 'starter_kit/base.html' %}
 {% load static %}
@@ -42,6 +42,30 @@
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 600;
+    }
+    
+    /* ENHANCED: Priority Level Card */
+    .priority-level-card {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .priority-level-card h6 {
+        margin: 0 0 10px 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .priority-level-card p {
+        margin: 0;
+        opacity: 0.9;
+        line-height: 1.4;
     }
     
     /* Status Flow Indicator */
@@ -197,6 +221,24 @@
         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
     
+    /* ENHANCED: Priority Level Styling */
+    .priority-select {
+        border-color: #28a745 !important;
+        background: linear-gradient(135deg, #f8fff9 0%, #e8f8e8 100%);
+    }
+    
+    .priority-select:focus {
+        border-color: #20c997 !important;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+    }
+    
+    .priority-info-text {
+        font-size: 0.85rem;
+        color: #28a745;
+        margin-top: 5px;
+        font-weight: 500;
+    }
+    
     .btn-review {
         padding: 12px 30px;
         border-radius: 25px;
@@ -258,30 +300,7 @@
         font-size: 0.9rem;
     }
     
-    /* Alerts */
-    .final-processing-alert {
-        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
-    }
-    
-    .final-processing-alert h6 {
-        margin: 0 0 10px 0;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .final-processing-alert p {
-        margin: 0;
-        opacity: 0.9;
-        line-height: 1.4;
-    }
-    
+    /* Section Change Preview */
     .section-change-alert {
         background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
         color: #212529;
@@ -356,17 +375,31 @@
 
     <!-- Review Header -->
     <div class="review-header">
-        <h3>🎯 Review Pengajuan Maintenance</h3>
+        <h3>Review Pengajuan Maintenance dengan Priority Level</h3>
         <div class="review-info">
-            <span>SITI FATIMAH Review System dengan Section Change</span>
+            <span>SITI FATIMAH Review System dengan Section Change & Priority Level</span>
             <div class="reviewer-badge">
-                👤 {{ reviewer_name }}
+                {{ reviewer_name }}
             </div>
             <div class="reviewer-badge">
-                📋 ID: {{ pengajuan.history_id }}
+                ID: {{ pengajuan.history_id }}
             </div>
         </div>
     </div>
+
+    <!-- ENHANCED: Priority Level Info Card -->
+    {% if priority_level_enabled and not already_reviewed %}
+    <div class="priority-level-card">
+        <h6>
+            <i data-feather="star"></i>
+            Priority Level Feature Active
+        </h6>
+        <p>
+            Anda dapat menentukan prioritas pekerjaan yang akan disimpan ke field PriMa di tabel_main. 
+            Pilihan tersedia: BI, AI, AOL, AOI, BOL, BOI.
+        </p>
+    </div>
+    {% endif %}
 
     <!-- Status Flow Indicator -->
     <div class="status-flow-indicator">
@@ -380,31 +413,17 @@
                 Pending (0/0)
             </div>
             <div class="status-arrow">→</div>
-            <div class="status-step approved-atasan {% if pengajuan.status == 'B' and pengajuan.approve == 'N' %}current{% endif %}">
+            <div class="status-step approved-atasan {% if pengajuan.status == 'A' and pengajuan.approve == 'Y' %}current{% endif %}">
                 <i data-feather="check-circle"></i>
-                Approved Atasan (B/N)
+                Approved Atasan (A/Y)
             </div>
             <div class="status-arrow">→</div>
-            <div class="status-step final-processed {% if pengajuan.status == 'A' and pengajuan.approve == 'Y' %}current{% endif %}">
+            <div class="status-step final-processed">
                 <i data-feather="check-circle-2"></i>
-                Final Processed (A/Y)
+                Final Processed & Transfer
             </div>
         </div>
     </div>
-
-    <!-- Final Processing Alert -->
-    {% if not already_reviewed %}
-    <div class="final-processing-alert">
-        <h6>
-            <i data-feather="info"></i>
-            Perhatian: Final Processing dengan Section Change
-        </h6>
-        <p>
-            Ketika Anda memproses pengajuan ini, status akan berubah menjadi <strong>A/Y</strong> (Final Processed). 
-            Jika Anda memilih Target Section, section tujuan pengajuan akan otomatis berubah sesuai pilihan Anda.
-        </p>
-    </div>
-    {% endif %}
 
     <!-- Pengajuan Info Card -->
     <div class="pengajuan-info-card">
@@ -452,8 +471,8 @@
             <div class="info-item">
                 <div class="info-label">Current Status</div>
                 <div class="info-value">
-                    {% if pengajuan.status == 'B' and pengajuan.approve == 'N' %}
-                        <span class="badge bg-primary">B/N - Approved Atasan</span>
+                    {% if pengajuan.status == 'A' and pengajuan.approve == 'Y' %}
+                        <span class="badge bg-primary">A/Y - Approved Atasan</span>
                     {% elif pengajuan.status == 'A' and pengajuan.approve == 'Y' %}
                         <span class="badge bg-success">A/Y - Final Processed</span>
                     {% else %}
@@ -492,9 +511,9 @@
                 <span class="review-summary-label">Status Review:</span>
                 <span class="review-summary-value">
                     {% if pengajuan.review_status == '1' %}
-                        <span class="badge bg-success">✅ Processed</span>
+                        <span class="badge bg-success">Processed</span>
                     {% elif pengajuan.review_status == '2' %}
-                        <span class="badge bg-danger">❌ Rejected</span>
+                        <span class="badge bg-danger">Rejected</span>
                     {% else %}
                         <span class="badge bg-secondary">{{ pengajuan.review_status|default:"-" }}</span>
                     {% endif %}
@@ -512,11 +531,11 @@
                 <div class="review-summary-item">
                     <span class="review-summary-label">Final Status:</span>
                     <span class="review-summary-value">
-                        <span class="badge bg-success">A/Y - Final Processed</span>
+                        <span class="badge bg-success">Final Processed & Transferred</span>
                     </span>
                 </div>
                 <small class="text-muted">
-                    Pengajuan ini sudah selesai diproses dan tidak akan muncul lagi di daftar pengajuan.
+                    Pengajuan ini sudah selesai diproses dan data sudah masuk ke History Maintenance.
                 </small>
             </div>
             {% endif %}
@@ -527,11 +546,31 @@
     <div class="review-form-card">
         <h5>
             <i data-feather="edit-3"></i>
-            Form Review Pengajuan dengan Section Change
+            Form Review Pengajuan dengan Section Change & Priority Level
         </h5>
         
         <form method="post" id="reviewForm">
             {% csrf_token %}
+            
+            <!-- ENHANCED: Priority Level Field (NEW) -->
+            <div class="form-group">
+                <label class="form-label" for="{{ review_form.priority_level.id_for_label }}">
+                    <i data-feather="star"></i>
+                    Prioritas Pekerjaan (Optional)
+                </label>
+                <select class="form-select priority-select" name="{{ review_form.priority_level.name }}" id="{{ review_form.priority_level.id_for_label }}">
+                    {% for value, label in review_form.priority_level.field.choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <div class="priority-info-text">
+                    <i data-feather="info"></i>
+                    Prioritas akan disimpan ke field PriMa di tabel_main untuk tracking prioritas pekerjaan
+                </div>
+                {% if review_form.priority_level.help_text %}
+                    <small class="form-text text-muted">{{ review_form.priority_level.help_text }}</small>
+                {% endif %}
+            </div>
             
             <div class="form-group">
                 <label class="form-label" for="{{ review_form.action.id_for_label }}">
@@ -540,15 +579,15 @@
                 </label>
                 <select class="form-select" name="{{ review_form.action.name }}" id="{{ review_form.action.id_for_label }}" required>
                     <option value="">-- Pilih Action --</option>
-                    <option value="process">✅ Process (Final: A/Y)</option>
-                    <option value="reject">❌ Reject</option>
+                    <option value="process">Process (Final: A/Y)</option>
+                    <option value="reject">Reject</option>
                 </select>
                 {% if review_form.action.help_text %}
                     <small class="form-text text-muted">{{ review_form.action.help_text }}</small>
                 {% endif %}
             </div>
             
-            {% comment %} <!-- Target Section Selection -->
+            <!-- Target Section Selection -->
             <div class="form-group" id="target-section-group">
                 <label class="form-label" for="{{ review_form.target_section.id_for_label }}">
                     <i data-feather="target"></i>
@@ -556,43 +595,21 @@
                 </label>
                 <select class="form-select" name="{{ review_form.target_section.name }}" id="{{ review_form.target_section.id_for_label }}">
                     {% for value, label in review_form.target_section.field.choices %}
-                        <option value="{{ value }}">{{ label }}</option>
+                        <option value="{{ value }}" data-section-id="{% if value == 'it' %}8{% elif value == 'elektrik' %}5{% elif value == 'mekanik' %}4{% elif value == 'utility' %}6{% endif %}">{{ label }}</option>
                     {% endfor %}
                 </select>
                 <small class="form-text text-muted">
-                    Pilih section lain jika ingin mengubah section tujuan pengajuan. 
-                    <strong>Section tujuan pengajuan akan otomatis berubah sesuai pilihan ini.</strong>
+                    <strong>Section Mapping:</strong> Mekanik=4(M), Elektrik=5(E), Utility=6(U), IT=8(I)<br>
+                    Section tujuan pengajuan akan otomatis berubah sesuai pilihan ini.
                 </small>
                 
                 <!-- Section Change Preview -->
                 <div id="section-change-preview" class="section-change-alert" style="display: none;">
-                    <h6>⚠️ Section Change Preview:</h6>
+                    <h6>Section Change Preview:</h6>
                     <p id="section-change-text"></p>
+                    <div id="section-debug-info" style="font-size: 0.8rem; opacity: 0.7;"></div>
                 </div>
-            </div> {% endcomment %}
-            <!-- Target Section Selection dengan Enhanced Validation -->
-<div class="form-group" id="target-section-group">
-    <label class="form-label" for="{{ review_form.target_section.id_for_label }}">
-        <i data-feather="target"></i>
-        Target Section (Optional)
-    </label>
-    <select class="form-select" name="{{ review_form.target_section.name }}" id="{{ review_form.target_section.id_for_label }}">
-        {% for value, label in review_form.target_section.field.choices %}
-            <option value="{{ value }}" data-section-id="{% if value == 'it' %}1{% elif value == 'elektrik' %}2{% elif value == 'mekanik' %}3{% elif value == 'utility' %}4{% elif value == 'civil' %}5{% endif %}">{{ label }}</option>
-        {% endfor %}
-    </select>
-    <small class="form-text text-muted">
-        <strong>FIXED Section Mapping:</strong> IT=1, Elektrik=2, Mekanik=3, Utility=4, Civil=5<br>
-        Section tujuan pengajuan akan otomatis berubah sesuai pilihan ini.
-    </small>
-    
-    <!-- Enhanced Section Change Preview -->
-    <div id="section-change-preview" class="section-change-alert" style="display: none;">
-        <h6>⚠️ Section Change Preview:</h6>
-        <p id="section-change-text"></p>
-        <div id="section-debug-info" style="font-size: 0.8rem; opacity: 0.7;"></div>
-    </div>
-</div>
+            </div>
             
             <div class="form-group">
                 <label class="form-label" for="{{ review_form.review_notes.id_for_label }}">
@@ -640,13 +657,13 @@
 {{ block.super }}
 <script>
 $(document).ready(function() {
-    // FIXED: Enhanced section change preview dengan mapping yang benar
+    // ENHANCED: Section change preview dengan priority level support
     $('#{{ review_form.target_section.id_for_label }}').on('change', function() {
         const selectedValue = $(this).val();
         const selectedOption = $(this).find('option:selected');
         const selectedText = selectedOption.text();
         
-        // FIXED: Section mapping sesuai database aktual
+        // Section mapping sesuai database aktual
         const sectionMapping = {
             'mekanik': { id: 4, code: 'M', name: 'Mekanik' },
             'elektrik': { id: 5, code: 'E', name: 'Elektrik' },
@@ -657,7 +674,7 @@ $(document).ready(function() {
         const currentSection = '{{ pengajuan.section_tujuan|default:"Section Saat Ini" }}';
         const currentSectionId = {{ pengajuan.current_section_id|default:0 }};
         
-        console.log('FIXED SECTION CHANGE PREVIEW:');
+        console.log('ENHANCED SECTION CHANGE PREVIEW:');
         console.log('  Selected Value:', selectedValue);
         console.log('  Selected Text:', selectedText);
         console.log('  Current Section:', currentSection);
@@ -704,31 +721,50 @@ $(document).ready(function() {
         }
     });
     
+    // ENHANCED: Priority level change handler
+    $('#{{ review_form.priority_level.id_for_label }}').on('change', function() {
+        const selectedPriority = $(this).val();
+        
+        if (selectedPriority) {
+            console.log('Priority Level Selected:', selectedPriority);
+            $(this).addClass('priority-selected');
+        } else {
+            $(this).removeClass('priority-selected');
+        }
+    });
+    
     // Action change handler
     $('select[name="action"]').on('change', function() {
         const selectedAction = $(this).val();
         const notesField = $('textarea[name="review_notes"]');
         const targetSectionGroup = $('#target-section-group');
+        const priorityGroup = $('#{{ review_form.priority_level.id_for_label }}').closest('.form-group');
         
         if (selectedAction === 'process') {
             notesField.attr('placeholder', 'Catatan untuk pemrosesan pengajuan (akan set status menjadi A/Y)...');
             targetSectionGroup.show();
+            priorityGroup.show(); // Show priority for process action
         } else if (selectedAction === 'reject') {
             notesField.attr('placeholder', 'Alasan penolakan pengajuan...');
             targetSectionGroup.hide();
+            priorityGroup.hide(); // Hide priority for reject action
             $('#section-change-preview').hide();
+            // Clear priority selection on reject
+            $('#{{ review_form.priority_level.id_for_label }}').val('');
         } else {
             notesField.attr('placeholder', 'Masukkan catatan review...');
             targetSectionGroup.show();
+            priorityGroup.show();
         }
     });
     
-    // FIXED: Enhanced form validation dengan section debug
+    // ENHANCED: Form validation dengan priority level
     $('#reviewForm').on('submit', function(e) {
         const action = $('select[name="action"]').val();
         const targetSection = $('#{{ review_form.target_section.id_for_label }}').val();
+        const priorityLevel = $('#{{ review_form.priority_level.id_for_label }}').val();
         
-        // FIXED: Section mapping untuk validation
+        // Section mapping untuk validation
         const sectionMapping = {
             'mekanik': { id: 4, code: 'M', name: 'Mekanik' },
             'elektrik': { id: 5, code: 'E', name: 'Elektrik' },
@@ -736,31 +772,38 @@ $(document).ready(function() {
             'it': { id: 8, code: 'I', name: 'IT' }
         };
         
-        console.log('FIXED FORM SUBMISSION DEBUG:');
+        console.log('ENHANCED FORM SUBMISSION DEBUG:');
         console.log('  Action:', action);
         console.log('  Target Section:', targetSection);
+        console.log('  Priority Level:', priorityLevel);
         
-        if (action === 'process' && targetSection) {
-            const targetInfo = sectionMapping[targetSection];
+        if (action === 'process') {
+            let confirmMessage = `KONFIRMASI REVIEW:\n\n`;
+            confirmMessage += `Action: ${action.toUpperCase()}\n`;
             
-            if (targetInfo) {
-                const today = new Date();
-                const year = today.getFullYear().toString().substr(-2);
-                const month = (today.getMonth() + 1).toString().padStart(2, '0');
-                const exampleNumber = `${year}-${targetInfo.code}-${month}-0001`;
-                
-                const confirmMessage = `KONFIRMASI SECTION CHANGE:\n\n` +
-                                     `Target Section: "${targetSection}"\n` +
-                                     `Section ID: ${targetInfo.id}\n` +
-                                     `Section Code: ${targetInfo.code}\n` +
-                                     `Section Name: "${targetInfo.name}"\n` +
-                                     `Number WO Format: ${exampleNumber}\n\n` +
-                                     `Apakah Anda yakin ingin memproses dengan section ini?`;
-                
-                if (!confirm(confirmMessage)) {
-                    e.preventDefault();
-                    return false;
+            if (targetSection) {
+                const targetInfo = sectionMapping[targetSection];
+                if (targetInfo) {
+                    const today = new Date();
+                    const year = today.getFullYear().toString().substr(-2);
+                    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+                    const exampleNumber = `${year}-${targetInfo.code}-${month}-0001`;
+                    
+                    confirmMessage += `Target Section: "${targetSection}" (ID: ${targetInfo.id}, Code: ${targetInfo.code})\n`;
+                    confirmMessage += `Number WO Format: ${exampleNumber}\n`;
                 }
+            }
+            
+            if (priorityLevel) {
+                confirmMessage += `Priority Level: ${priorityLevel}\n`;
+                confirmMessage += `(akan disimpan ke field PriMa di tabel_main)\n`;
+            }
+            
+            confirmMessage += `\nApakah Anda yakin ingin memproses pengajuan ini?`;
+            
+            if (!confirm(confirmMessage)) {
+                e.preventDefault();
+                return false;
             }
         }
         
@@ -771,21 +814,10 @@ $(document).ready(function() {
     const initialAction = $('select[name="action"]').val();
     if (!initialAction || initialAction === 'reject') {
         $('#target-section-group').hide();
+        $('#{{ review_form.priority_level.id_for_label }}').closest('.form-group').hide();
     }
     
-    console.log('FIXED Review System dengan Section Mapping 4=M, 5=E, 6=U, 8=I loaded successfully');
+    console.log('ENHANCED Review System dengan Priority Level Support loaded successfully');
 });
-
-// FIXED: Helper function untuk convert section
-function getSectionInfo(sectionKey) {
-    const sectionMapping = {
-        'mekanik': { id: 4, code: 'M', name: 'Mekanik' },
-        'elektrik': { id: 5, code: 'E', name: 'Elektrik' },
-        'utility': { id: 6, code: 'U', name: 'Utility' },
-        'it': { id: 8, code: 'I', name: 'IT' }
-    };
-    
-    return sectionMapping[sectionKey] || null;
-}
 </script>
 {% endblock scriptcontent %}

@@ -1,5 +1,5 @@
 <!-- wo_maintenance_app/templates/wo_maintenance_app/history_pengajuan_detail.html -->
-<!-- Template Detail & Edit History Pengajuan - Form lengkap buat edit semua data -->
+<!-- Template Detail & Edit History Pengajuan - UPDATED: Hapus Status Umum -->
 
 {% extends 'starter_kit/base.html' %}
 {% load static %}
@@ -318,7 +318,7 @@
         color: #0369a1;
     }
     
-    /* Status Section */
+    /* Status Section - UPDATED: Hanya Status Pekerjaan */
     .status-section {
         background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
         border: none;
@@ -411,6 +411,20 @@
     .progress-icon.incomplete {
         background: #e9ecef;
         color: #6c757d;
+    }
+    
+    /* Auto-Set Status Notice */
+    .auto-status-notice {
+        background: linear-gradient(135deg, #e7f3ff 0%, #cce7ff 100%);
+        border: 1px solid #b3d7ff;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #0066cc;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
     
     /* Responsive Design */
@@ -718,57 +732,45 @@
             </div>
         </div>
 
-        <!-- Status Section -->
+        <!-- UPDATED: Status Section - Hanya Status Pekerjaan, Status Umum dihilangkan -->
         <div class="card-section editable-card status-section">
             <h5>
                 <i data-feather="check-circle"></i>
                 Status Pekerjaan
             </h5>
             
+            <!-- Notice untuk Status Umum -->
+            <div class="auto-status-notice">
+                <i data-feather="info"></i>
+                <div>
+                    <strong>Info:</strong> Status umum akan otomatis di-set ke "A" (Active). 
+                    Anda hanya perlu mengatur status pekerjaan maintenance.
+                </div>
+            </div>
+            
             <div class="form-section">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">
-                                <i data-feather="activity"></i>
-                                {{ form.status_pekerjaan.label }}
-                            </label>
-                            <div class="radio-group">
-                                {% for value, label in form.status_pekerjaan.field.choices %}
-                                <div class="radio-item">
-                                    <input type="radio" name="{{ form.status_pekerjaan.name }}" 
-                                           value="{{ value }}" id="status_pekerjaan_{{ value }}"
-                                           {% if form.status_pekerjaan.value == value %}checked{% endif %}>
-                                    <label for="status_pekerjaan_{{ value }}">{{ label }}</label>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% if form.status_pekerjaan.help_text %}
-                                <small class="form-text text-muted">{{ form.status_pekerjaan.help_text }}</small>
-                            {% endif %}
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-feather="activity"></i>
+                        Status Pekerjaan (O = Open, C = Close)
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="status_pekerjaan" 
+                                   value="O" id="status_pekerjaan_O"
+                                   {% if form.status_pekerjaan.value == 'O' or form.status_pekerjaan.value == '0' %}checked{% endif %}>
+                            <label for="status_pekerjaan_O">Open</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="status_pekerjaan" 
+                                   value="C" id="status_pekerjaan_C"
+                                   {% if form.status_pekerjaan.value == 'C' or form.status_pekerjaan.value == '1' %}checked{% endif %}>
+                            <label for="status_pekerjaan_C">Close</label>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">
-                                <i data-feather="flag"></i>
-                                {{ form.status.label }}
-                            </label>
-                            <div class="radio-group">
-                                {% for value, label in form.status.field.choices %}
-                                <div class="radio-item">
-                                    <input type="radio" name="{{ form.status.name }}" 
-                                           value="{{ value }}" id="status_{{ value }}"
-                                           {% if form.status.value == value %}checked{% endif %}>
-                                    <label for="status_{{ value }}">{{ label }}</label>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% if form.status.help_text %}
-                                <small class="form-text text-muted">{{ form.status.help_text }}</small>
-                            {% endif %}
-                        </div>
-                    </div>
+                    <small class="form-text text-muted">
+                        Status pekerjaan maintenance (O=Open masih dikerjakan, C=Close sudah selesai)
+                    </small>
                 </div>
             </div>
         </div>
@@ -933,9 +935,9 @@ $(document).ready(function() {
         $(this).closest('.radio-item').addClass('selected');
     });
     
-    // Form validation
+    // Form validation - UPDATED: Hanya validate status_pekerjaan
     $('#historyForm').on('submit', function(e) {
-        const requiredFields = ['pic_produksi', 'pic_maintenance', 'status_pekerjaan', 'status'];
+        const requiredFields = ['pic_produksi', 'pic_maintenance', 'status_pekerjaan'];
         let isValid = true;
         let firstErrorField = null;
         
@@ -967,7 +969,7 @@ $(document).ready(function() {
         
         if (!isValid) {
             e.preventDefault();
-            alert('Harap lengkapi semua field wajib (PIC dan Status)');
+            alert('Harap lengkapi semua field wajib (PIC dan Status Pekerjaan)');
             if (firstErrorField) {
                 firstErrorField.focus();
                 firstErrorField[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1030,7 +1032,7 @@ $(document).ready(function() {
     
     // Debug function
     window.debugFormData = function() {
-        console.log('=== HISTORY FORM DEBUG ===');
+        console.log('=== HISTORY FORM DEBUG (STATUS UMUM REMOVED) ===');
         console.log('History ID:', '{{ history_data.history_id }}');
         console.log('Pengaju:', '{{ history_data.oleh }}');
         console.log('Current User:', '{{ user.username }}');
@@ -1040,6 +1042,10 @@ $(document).ready(function() {
         for (let [key, value] of formData.entries()) {
             console.log(`  ${key}: ${value}`);
         }
+        
+        console.log('Status Info:');
+        console.log('  Status Umum: AUTO-SET to "A" (tidak ditampilkan di form)');
+        console.log('  Status Pekerjaan:', $('[name="status_pekerjaan"]:checked').val());
         
         console.log('Progress Status:');
         console.log('  Penyebab:', '{{ history_data.penyebab|yesno:"Yes,No,Partial" }}');
@@ -1055,8 +1061,7 @@ $(document).ready(function() {
     function startAutoSave() {
         clearTimeout(autoSaveTimer);
         autoSaveTimer = setTimeout(function() {
-            // Auto save logic here if needed
-            console.log('Auto-save triggered (placeholder)');
+            console.log('Auto-save triggered (Status Umum auto-set to A)');
         }, 30000); // 30 seconds
     }
     
@@ -1090,9 +1095,10 @@ $(document).ready(function() {
     // Initial progress update
     updateProgressTracker();
     
-    console.log('History Detail Form loaded successfully');
+    console.log('History Detail Form loaded - STATUS UMUM REMOVED, AUTO-SET TO "A"');
     console.log('History ID:', '{{ history_data.history_id }}');
     console.log('Can Edit:', {{ can_edit|yesno:"true,false" }});
+    console.log('Status Umum: AUTO-SET (Hidden from form)');
 });
 </script>
 {% endblock scriptcontent %}

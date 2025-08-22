@@ -727,9 +727,11 @@ class ReviewFilterForm(forms.Form):
         
 #         return cleaned_data
 
+# wo_maintenance_app/forms.py - UPDATE ReviewForm dengan Priority Level
+
 class ReviewForm(forms.Form):
     """
-    FIXED: Form untuk review pengajuan dengan mapping section yang benar
+    ENHANCED: Form untuk review pengajuan dengan mapping section yang benar dan Priority Level
     Section mapping: 4=Mekanik(M), 5=Elektrik(E), 6=Utility(U), 8=IT(I)
     """
     
@@ -748,6 +750,17 @@ class ReviewForm(forms.Form):
         ('it', '💻 IT (ID: 8 → Code: I)')
     ]
     
+    # NEW: Priority Level choices untuk user 007522
+    PRIORITY_CHOICES = [
+        ('', '-- Pilih Prioritas (Optional) --'),
+        ('BI', 'BI - Basic Important'),
+        ('AI', 'AI - Advanced Important'),
+        ('AOL', 'AOL - Advanced Online'),
+        ('AOI', 'AOI - Advanced Offline Important'),
+        ('BOL', 'BOL - Basic Online'),
+        ('BOI', 'BOI - Basic Offline Important')
+    ]
+    
     action = forms.ChoiceField(
         choices=ACTION_CHOICES,
         required=True,
@@ -756,6 +769,17 @@ class ReviewForm(forms.Form):
             'id': 'reviewAction'
         }),
         help_text='Pilih action yang akan dilakukan untuk pengajuan ini'
+    )
+    
+    # NEW: Priority level field
+    priority_level = forms.ChoiceField(
+        choices=PRIORITY_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'form-select',
+            'id': 'priorityLevel'
+        }),
+        help_text='Pilih prioritas pekerjaan (akan disimpan ke field PriMa di tabel_main)'
     )
     
     target_section = forms.ChoiceField(
@@ -779,6 +803,20 @@ class ReviewForm(forms.Form):
         help_text='Catatan wajib diisi untuk semua action review'
     )
     
+    def clean_priority_level(self):
+        """
+        Validasi priority_level
+        """
+        priority_level = self.cleaned_data.get('priority_level', '').strip()
+        
+        valid_priorities = ['BI', 'AI', 'AOL', 'AOI', 'BOL', 'BOI']
+        
+        if priority_level and priority_level not in valid_priorities:
+            logger.warning(f"Invalid priority_level {priority_level}")
+            raise ValidationError(f'Priority tidak valid. Pilihan yang tersedia: {", ".join(valid_priorities)}')
+        
+        return priority_level
+    
     def clean_target_section(self):
         """
         FIXED: Validasi target_section dengan mapping yang benar
@@ -796,11 +834,12 @@ class ReviewForm(forms.Form):
     
     def clean(self):
         """
-        FIXED: Validasi form secara keseluruhan
+        ENHANCED: Validasi form secara keseluruhan dengan priority level
         """
         cleaned_data = super().clean()
         action = cleaned_data.get('action')
         target_section = cleaned_data.get('target_section')
+        priority_level = cleaned_data.get('priority_level')
         review_notes = cleaned_data.get('review_notes')
         
         # Validasi action
@@ -817,11 +856,20 @@ class ReviewForm(forms.Form):
                     'it': 8
                 }
                 section_id = section_mapping.get(target_section)
-                logger.info(f"FIXED FORM: Target section {target_section} mapped to ID {section_id}")
+                logger.info(f"ENHANCED FORM: Target section {target_section} mapped to ID {section_id}")
+            
+            # Log priority level untuk debugging
+            if priority_level:
+                logger.info(f"ENHANCED FORM: Priority level selected: {priority_level}")
         
         elif action == 'reject':
             if not review_notes:
                 raise ValidationError('Alasan penolakan wajib diisi untuk action Reject')
+            
+            # Clear priority jika reject (optional)
+            if priority_level:
+                logger.info(f"ENHANCED FORM: Priority level cleared for reject action")
+                cleaned_data['priority_level'] = ''
         
         return cleaned_data
 
@@ -1236,22 +1284,254 @@ __all__ = [
     'get_approve_display_name'
 ]
 
-class HistoryMaintenanceForm(forms.Form):
-    """
-    Form buat edit data history maintenance di tabel_main
-    Form yang asik dan user-friendly buat ngatur data history
-    """
+# class HistoryMaintenanceForm(forms.Form):
+#     """
+#     Form buat edit data history maintenance di tabel_main
+#     Form yang asik dan user-friendly buat ngatur data history
+#     """
     
-    # Analisis masalah
+#     # Analisis masalah
+#     penyebab = forms.CharField(
+#         label='Penyebab Masalah',
+#         required=False,
+#         widget=forms.Textarea(attrs={
+#             'class': 'form-control',
+#             'rows': 3,
+#             'placeholder': 'Deskripsikan penyebab utama masalah yang terjadi...'
+#         }),
+#         help_text='Jelaskan apa yang menyebabkan masalah ini terjadi'
+#     )
+    
+#     akar_masalah = forms.CharField(
+#         label='Akar Masalah',
+#         required=False,
+#         widget=forms.Textarea(attrs={
+#             'class': 'form-control',
+#             'rows': 3,
+#             'placeholder': 'Analisa akar masalah yang sebenarnya...'
+#         }),
+#         help_text='Root cause analysis - akar masalah yang mendasari'
+#     )
+    
+#     # Tindakan yang diambil
+#     tindakan_perbaikan = forms.CharField(
+#         label='Tindakan Perbaikan',
+#         required=False,
+#         widget=forms.Textarea(attrs={
+#             'class': 'form-control',
+#             'rows': 3,
+#             'placeholder': 'Jelaskan tindakan perbaikan yang sudah/akan dilakukan...'
+#         }),
+#         help_text='Tindakan corrective action yang dilakukan'
+#     )
+    
+#     tindakan_pencegahan = forms.CharField(
+#         label='Tindakan Pencegahan',
+#         required=False,
+#         widget=forms.Textarea(attrs={
+#             'class': 'form-control',
+#             'rows': 3,
+#             'placeholder': 'Jelaskan tindakan preventive untuk mencegah masalah serupa...'
+#         }),
+#         help_text='Tindakan preventive action untuk mencegah masalah berulang'
+#     )
+    
+#     # Status pekerjaan
+#     STATUS_PEKERJAAN_CHOICES = [
+#         ('0', 'Open - Belum Selesai'),
+#         ('1', 'Close - Sudah Selesai'),
+#     ]
+    
+#     status_pekerjaan = forms.ChoiceField(
+#         label='Status Pekerjaan',
+#         choices=STATUS_PEKERJAAN_CHOICES,
+#         widget=forms.RadioSelect(attrs={
+#             'class': 'form-check-input'
+#         }),
+#         help_text='Status penyelesaian pekerjaan maintenance'
+#     )
+    
+#     # PIC (Person In Charge)
+#     pic_produksi = forms.CharField(
+#         label='PIC Produksi',
+#         max_length=500,
+#         widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'placeholder': 'Nama PIC dari sisi produksi...'
+#         }),
+#         help_text='Person In Charge dari departemen produksi'
+#     )
+    
+#     pic_maintenance = forms.CharField(
+#         label='PIC Maintenance',
+#         max_length=500,
+#         widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'placeholder': 'Nama PIC dari sisi maintenance...'
+#         }),
+#         help_text='Person In Charge dari departemen maintenance'
+#     )
+    
+#     # Status general
+#     STATUS_CHOICES = [
+#         ('0', 'Open - Masih Aktif'),
+#         ('1', 'Close - Sudah Selesai'),
+#     ]
+    
+#     status = forms.ChoiceField(
+#         label='Status Umum',
+#         choices=STATUS_CHOICES,
+#         widget=forms.RadioSelect(attrs={
+#             'class': 'form-check-input'
+#         }),
+#         help_text='Status umum dari pengajuan maintenance'
+#     )
+    
+#     # Tanggal pekerjaan mulai dan selesai
+#     tgl_wp_dari = forms.DateTimeField(
+#         label='Tanggal Mulai Work',
+#         required=False,
+#         widget=forms.DateTimeInput(attrs={
+#             'type': 'datetime-local',
+#             'class': 'form-control'
+#         }),
+#         help_text='Tanggal dan waktu mulai pekerjaan'
+#     )
+    
+#     tgl_wp_sampai = forms.DateTimeField(
+#         label='Tanggal Selesai Work',
+#         required=False,
+#         widget=forms.DateTimeInput(attrs={
+#             'type': 'datetime-local',
+#             'class': 'form-control'
+#         }),
+#         help_text='Tanggal dan waktu selesai pekerjaan'
+#     )
+    
+#     # Lead time
+#     tgl_lt_dari = forms.DateTimeField(
+#         label='Lead Time Mulai',
+#         required=False,
+#         widget=forms.DateTimeInput(attrs={
+#             'type': 'datetime-local',
+#             'class': 'form-control'
+#         }),
+#         help_text='Tanggal mulai lead time'
+#     )
+    
+#     tgl_lt_sampai = forms.DateTimeField(
+#         label='Lead Time Selesai',
+#         required=False,
+#         widget=forms.DateTimeInput(attrs={
+#             'type': 'datetime-local',
+#             'class': 'form-control'
+#         }),
+#         help_text='Tanggal selesai lead time'
+#     )
+    
+#     # Downtime
+#     tgl_dt_dari = forms.DateTimeField(
+#         label='Downtime Mulai',
+#         required=False,
+#         widget=forms.DateTimeInput(attrs={
+#             'type': 'datetime-local',
+#             'class': 'form-control'
+#         }),
+#         help_text='Tanggal mulai downtime'
+#     )
+    
+#     tgl_dt_sampai = forms.DateTimeField(
+#         label='Downtime Selesai',
+#         required=False,
+#         widget=forms.DateTimeInput(attrs={
+#             'type': 'datetime-local',
+#             'class': 'form-control'
+#         }),
+#         help_text='Tanggal selesai downtime'
+#     )
+    
+#     alasan_dt = forms.CharField(
+#         label='Alasan Downtime',
+#         required=False,
+#         max_length=240,
+#         widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'placeholder': 'Jelaskan alasan terjadinya downtime...'
+#         }),
+#         help_text='Alasan mengapa terjadi downtime'
+#     )
+    
+#     # Estimasi dan selesai
+#     tgl_estimasidt = forms.DateTimeField(
+#         label='Estimasi Selesai',
+#         required=False,
+#         widget=forms.DateTimeInput(attrs={
+#             'type': 'datetime-local',
+#             'class': 'form-control'
+#         }),
+#         help_text='Estimasi tanggal dan waktu selesai'
+#     )
+    
+#     tgl_selesai = forms.DateTimeField(
+#         label='Tanggal Selesai Aktual',
+#         required=False,
+#         widget=forms.DateTimeInput(attrs={
+#             'type': 'datetime-local',
+#             'class': 'form-control'
+#         }),
+#         help_text='Tanggal dan waktu selesai yang sebenarnya'
+#     )
+    
+#     # Additional fields
+#     alasan_delay = forms.CharField(
+#         label='Alasan Delay (jika ada)',
+#         required=False,
+#         widget=forms.Textarea(attrs={
+#             'class': 'form-control',
+#             'rows': 2,
+#             'placeholder': 'Jelaskan alasan jika ada delay...'
+#         }),
+#         help_text='Alasan jika terjadi keterlambatan'
+#     )
+    
+#     masalah = forms.CharField(
+#         label='Detail Masalah',
+#         required=False,
+#         max_length=500,
+#         widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'placeholder': 'Detail tambahan tentang masalah...'
+#         }),
+#         help_text='Detail tambahan masalah (maksimal 500 karakter)'
+#     )
+    
+#     def __init__(self, *args, **kwargs):
+#         self.history_data = kwargs.pop('history_data', None)
+#         super().__init__(*args, **kwargs)
+        
+#         # Pre-populate form jika ada data history
+#         if self.history_data:
+#             self.populate_from_history()
+
+class HistoryMaintenanceForm(forms.Form):
+    """Form untuk edit history maintenance - UPDATED: Hapus Status Umum"""
+    
+    # UPDATED: Hanya Status Pekerjaan yang ditampilkan
+    STATUS_PEKERJAAN_CHOICES = [
+        ('O', 'Open'),
+        ('C', 'Close'),
+    ]
+    
+    # Analysis fields
     penyebab = forms.CharField(
         label='Penyebab Masalah',
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'placeholder': 'Deskripsikan penyebab utama masalah yang terjadi...'
+            'placeholder': 'Jelaskan penyebab masalah...'
         }),
-        help_text='Jelaskan apa yang menyebabkan masalah ini terjadi'
+        help_text='Identifikasi penyebab masalah yang terjadi'
     )
     
     akar_masalah = forms.CharField(
@@ -1260,21 +1540,21 @@ class HistoryMaintenanceForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'placeholder': 'Analisa akar masalah yang sebenarnya...'
+            'placeholder': 'Jelaskan akar masalah...'
         }),
-        help_text='Root cause analysis - akar masalah yang mendasari'
+        help_text='Analisis mendalam tentang akar masalah'
     )
     
-    # Tindakan yang diambil
+    # Action fields
     tindakan_perbaikan = forms.CharField(
         label='Tindakan Perbaikan',
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'placeholder': 'Jelaskan tindakan perbaikan yang sudah/akan dilakukan...'
+            'placeholder': 'Jelaskan tindakan perbaikan yang dilakukan...'
         }),
-        help_text='Tindakan corrective action yang dilakukan'
+        help_text='Detail tindakan perbaikan yang telah dilakukan'
     )
     
     tindakan_pencegahan = forms.CharField(
@@ -1283,123 +1563,104 @@ class HistoryMaintenanceForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'placeholder': 'Jelaskan tindakan preventive untuk mencegah masalah serupa...'
+            'placeholder': 'Jelaskan tindakan pencegahan...'
         }),
-        help_text='Tindakan preventive action untuk mencegah masalah berulang'
+        help_text='Tindakan untuk mencegah masalah serupa di masa depan'
     )
     
-    # Status pekerjaan
-    STATUS_PEKERJAAN_CHOICES = [
-        ('0', 'Open - Belum Selesai'),
-        ('1', 'Close - Sudah Selesai'),
-    ]
-    
-    status_pekerjaan = forms.ChoiceField(
-        label='Status Pekerjaan',
-        choices=STATUS_PEKERJAAN_CHOICES,
-        widget=forms.RadioSelect(attrs={
-            'class': 'form-check-input'
-        }),
-        help_text='Status penyelesaian pekerjaan maintenance'
-    )
-    
-    # PIC (Person In Charge)
+    # PIC fields
     pic_produksi = forms.CharField(
         label='PIC Produksi',
+        required=True,
         max_length=500,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nama PIC dari sisi produksi...'
+            'placeholder': 'Nama PIC dari produksi...'
         }),
-        help_text='Person In Charge dari departemen produksi'
+        help_text='Person In Charge dari sisi produksi'
     )
     
     pic_maintenance = forms.CharField(
         label='PIC Maintenance',
+        required=True,
         max_length=500,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nama PIC dari sisi maintenance...'
+            'placeholder': 'Nama PIC dari maintenance...'
         }),
-        help_text='Person In Charge dari departemen maintenance'
+        help_text='Person In Charge dari sisi maintenance'
     )
     
-    # Status general
-    STATUS_CHOICES = [
-        ('0', 'Open - Masih Aktif'),
-        ('1', 'Close - Sudah Selesai'),
-    ]
-    
-    status = forms.ChoiceField(
-        label='Status Umum',
-        choices=STATUS_CHOICES,
+    # UPDATED: Hanya Status Pekerjaan field, Status Umum dihapus
+    status_pekerjaan = forms.ChoiceField(
+        label='Status Pekerjaan',
+        choices=STATUS_PEKERJAAN_CHOICES,
+        required=True,
         widget=forms.RadioSelect(attrs={
             'class': 'form-check-input'
         }),
-        help_text='Status umum dari pengajuan maintenance'
+        help_text='Status pekerjaan maintenance (O=Open, C=Close)'
     )
     
-    # Tanggal pekerjaan mulai dan selesai
+    # Datetime fields (unchanged)
     tgl_wp_dari = forms.DateTimeField(
-        label='Tanggal Mulai Work',
+        label='Waktu Pekerjaan Dari',
         required=False,
         widget=forms.DateTimeInput(attrs={
             'type': 'datetime-local',
             'class': 'form-control'
         }),
-        help_text='Tanggal dan waktu mulai pekerjaan'
+        help_text='Waktu mulai pekerjaan'
     )
     
     tgl_wp_sampai = forms.DateTimeField(
-        label='Tanggal Selesai Work',
+        label='Waktu Pekerjaan Sampai',
         required=False,
         widget=forms.DateTimeInput(attrs={
             'type': 'datetime-local',
             'class': 'form-control'
         }),
-        help_text='Tanggal dan waktu selesai pekerjaan'
+        help_text='Waktu selesai pekerjaan'
     )
     
-    # Lead time
     tgl_lt_dari = forms.DateTimeField(
-        label='Lead Time Mulai',
+        label='Lead Time Dari',
         required=False,
         widget=forms.DateTimeInput(attrs={
             'type': 'datetime-local',
             'class': 'form-control'
         }),
-        help_text='Tanggal mulai lead time'
+        help_text='Lead time mulai'
     )
     
     tgl_lt_sampai = forms.DateTimeField(
-        label='Lead Time Selesai',
+        label='Lead Time Sampai',
         required=False,
         widget=forms.DateTimeInput(attrs={
             'type': 'datetime-local',
             'class': 'form-control'
         }),
-        help_text='Tanggal selesai lead time'
+        help_text='Lead time selesai'
     )
     
-    # Downtime
     tgl_dt_dari = forms.DateTimeField(
-        label='Downtime Mulai',
+        label='Downtime Dari',
         required=False,
         widget=forms.DateTimeInput(attrs={
             'type': 'datetime-local',
             'class': 'form-control'
         }),
-        help_text='Tanggal mulai downtime'
+        help_text='Downtime mulai'
     )
     
     tgl_dt_sampai = forms.DateTimeField(
-        label='Downtime Selesai',
+        label='Downtime Sampai',
         required=False,
         widget=forms.DateTimeInput(attrs={
             'type': 'datetime-local',
             'class': 'form-control'
         }),
-        help_text='Tanggal selesai downtime'
+        help_text='Downtime selesai'
     )
     
     alasan_dt = forms.CharField(
@@ -1408,12 +1669,11 @@ class HistoryMaintenanceForm(forms.Form):
         max_length=240,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Jelaskan alasan terjadinya downtime...'
+            'placeholder': 'Alasan terjadinya downtime...'
         }),
-        help_text='Alasan mengapa terjadi downtime'
+        help_text='Penjelasan alasan terjadinya downtime'
     )
     
-    # Estimasi dan selesai
     tgl_estimasidt = forms.DateTimeField(
         label='Estimasi Selesai',
         required=False,
@@ -1421,84 +1681,52 @@ class HistoryMaintenanceForm(forms.Form):
             'type': 'datetime-local',
             'class': 'form-control'
         }),
-        help_text='Estimasi tanggal dan waktu selesai'
+        help_text='Estimasi waktu selesai'
     )
     
     tgl_selesai = forms.DateTimeField(
-        label='Tanggal Selesai Aktual',
+        label='Tanggal Selesai',
         required=False,
         widget=forms.DateTimeInput(attrs={
             'type': 'datetime-local',
             'class': 'form-control'
         }),
-        help_text='Tanggal dan waktu selesai yang sebenarnya'
+        help_text='Tanggal aktual selesai'
     )
     
-    # Additional fields
     alasan_delay = forms.CharField(
-        label='Alasan Delay (jika ada)',
+        label='Alasan Delay',
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 2,
-            'placeholder': 'Jelaskan alasan jika ada delay...'
+            'placeholder': 'Alasan jika terjadi delay...'
         }),
-        help_text='Alasan jika terjadi keterlambatan'
+        help_text='Penjelasan jika terjadi keterlambatan'
     )
     
     masalah = forms.CharField(
-        label='Detail Masalah',
+        label='Masalah Tambahan',
         required=False,
         max_length=500,
-        widget=forms.TextInput(attrs={
+        widget=forms.Textarea(attrs={
             'class': 'form-control',
-            'placeholder': 'Detail tambahan tentang masalah...'
+            'rows': 2,
+            'placeholder': 'Masalah tambahan yang ditemukan...'
         }),
-        help_text='Detail tambahan masalah (maksimal 500 karakter)'
+        help_text='Masalah tambahan yang ditemukan selama proses'
     )
     
     def __init__(self, *args, **kwargs):
-        self.history_data = kwargs.pop('history_data', None)
+        history_data = kwargs.pop('history_data', {})
         super().__init__(*args, **kwargs)
         
-        # Pre-populate form jika ada data history
-        if self.history_data:
-            self.populate_from_history()
-    
-    def populate_from_history(self):
-        """Populate form dengan data dari history yang ada"""
-        if not self.history_data:
-            return
-        
-        # Map data dari database ke form fields
-        field_mapping = {
-            'penyebab': 'penyebab',
-            'akar_masalah': 'akar_masalah', 
-            'tindakan_perbaikan': 'tindakan_perbaikan',
-            'tindakan_pencegahan': 'tindakan_pencegahan',
-            'status_pekerjaan': 'status_pekerjaan',
-            'pic_produksi': 'pic_produksi',
-            'pic_maintenance': 'pic_maintenance',
-            'status': 'status',
-            'tgl_wp_dari': 'tgl_wp_dari',
-            'tgl_wp_sampai': 'tgl_wp_sampai',
-            'tgl_lt_dari': 'tgl_lt_dari',
-            'tgl_lt_sampai': 'tgl_lt_sampai',
-            'tgl_dt_dari': 'tgl_dt_dari',
-            'tgl_dt_sampai': 'tgl_dt_sampai',
-            'alasan_dt': 'alasan_dt',
-            'tgl_estimasidt': 'tgl_estimasidt',
-            'tgl_selesai': 'tgl_selesai',
-            'alasan_delay': 'alasan_delay',
-            'masalah': 'masalah'
-        }
-        
-        for form_field, db_field in field_mapping.items():
-            if form_field in self.fields and db_field in self.history_data:
-                value = self.history_data[db_field]
-                if value:
-                    self.fields[form_field].initial = value
-    
+        # Pre-populate fields dengan data yang ada
+        if history_data:
+            for field_name, field in self.fields.items():
+                if field_name in history_data and history_data[field_name]:
+                    self.initial[field_name] = history_data[field_name]
+
     def clean_pic_produksi(self):
         """Validasi PIC produksi"""
         pic_produksi = self.cleaned_data.get('pic_produksi', '').strip()
@@ -1561,25 +1789,155 @@ class HistoryMaintenanceForm(forms.Form):
         return cleaned_data
 
 
+# class HistoryFilterForm(forms.Form):
+#     """
+#     Form filter buat history pengajuan maintenance
+#     Bikin searching dan filtering jadi lebih asik
+#     """
+    
+#     STATUS_CHOICES = [
+#         ('', 'Semua Status'),
+#         ('0', 'Open'),
+#         ('1', 'Close'),
+#     ]
+    
+#     STATUS_PEKERJAAN_CHOICES = [
+#         ('', 'Semua Status Pekerjaan'),
+#         ('0', 'Open'),
+#         ('1', 'Close'),
+#     ]
+    
+#     # Filter tanggal
+#     tanggal_dari = forms.DateField(
+#         label='Tanggal Dari',
+#         required=False,
+#         widget=forms.DateInput(attrs={
+#             'type': 'date',
+#             'class': 'form-control'
+#         })
+#     )
+    
+#     tanggal_sampai = forms.DateField(
+#         label='Tanggal Sampai',
+#         required=False,
+#         widget=forms.DateInput(attrs={
+#             'type': 'date',
+#             'class': 'form-control'
+#         })
+#     )
+    
+#     # Filter status
+#     status = forms.ChoiceField(
+#         label='Status Umum',
+#         choices=STATUS_CHOICES,
+#         required=False,
+#         widget=forms.Select(attrs={
+#             'class': 'form-control'
+#         })
+#     )
+    
+#     status_pekerjaan = forms.ChoiceField(
+#         label='Status Pekerjaan',
+#         choices=STATUS_PEKERJAAN_CHOICES,
+#         required=False,
+#         widget=forms.Select(attrs={
+#             'class': 'form-control'
+#         })
+#     )
+    
+#     # Search fields
+#     history_id = forms.CharField(
+#         label='History ID',
+#         required=False,
+#         max_length=15,
+#         widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'placeholder': 'Cari History ID...'
+#         })
+#     )
+    
+#     pengaju = forms.CharField(
+#         label='Pengaju',
+#         required=False,
+#         max_length=100,
+#         widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'placeholder': 'Cari nama pengaju...'
+#         })
+#     )
+    
+#     pic_produksi = forms.CharField(
+#         label='PIC Produksi',
+#         required=False,
+#         max_length=100,
+#         widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'placeholder': 'Cari PIC Produksi...'
+#         })
+#     )
+    
+#     pic_maintenance = forms.CharField(
+#         label='PIC Maintenance',
+#         required=False,
+#         max_length=100,
+#         widget=forms.TextInput(attrs={
+#             'class': 'form-control',
+#             'placeholder': 'Cari PIC Maintenance...'
+#         })
+#     )
+    
+#     # Filter berdasarkan section
+#     section_filter = forms.ChoiceField(
+#         label='Filter Section',
+#         choices=[],  # Will be populated in __init__
+#         required=False,
+#         widget=forms.Select(attrs={
+#             'class': 'form-control'
+#         })
+#     )
+    
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+        
+#         # Load section choices dari database
+#         self.load_section_choices()
+    
+#     def load_section_choices(self):
+#         """Load pilihan section dari database"""
+#         try:
+#             choices = [('', 'Semua Section')]
+            
+#             with connections['DB_Maintenance'].cursor() as cursor:
+#                 cursor.execute("""
+#                     SELECT DISTINCT tm.id_section, ms.seksi
+#                     FROM tabel_main tm
+#                     LEFT JOIN tabel_msection ms ON tm.id_section = ms.id_section
+#                     WHERE ms.seksi IS NOT NULL AND ms.seksi != ''
+#                     ORDER BY ms.seksi
+#                 """)
+                
+#                 for row in cursor.fetchall():
+#                     if row[0] and row[1]:
+#                         choices.append((str(int(float(row[0]))), row[1]))
+            
+#             self.fields['section_filter'].choices = choices
+            
+#         except Exception as e:
+#             import logging
+#             logger = logging.getLogger(__name__)
+#             logger.error(f"Error loading section choices for history: {e}")
+#             self.fields['section_filter'].choices = [('', 'Semua Section')]
+
 class HistoryFilterForm(forms.Form):
-    """
-    Form filter buat history pengajuan maintenance
-    Bikin searching dan filtering jadi lebih asik
-    """
+    """Form untuk filter history pengajuan - UPDATED: Hapus Status Umum Filter"""
     
-    STATUS_CHOICES = [
-        ('', 'Semua Status'),
-        ('0', 'Open'),
-        ('1', 'Close'),
-    ]
-    
+    # UPDATED: Hanya Status Pekerjaan filter, Status Umum dihapus
     STATUS_PEKERJAAN_CHOICES = [
         ('', 'Semua Status Pekerjaan'),
-        ('0', 'Open'),
-        ('1', 'Close'),
+        ('O', 'Open'),
+        ('C', 'Close'),
     ]
     
-    # Filter tanggal
     tanggal_dari = forms.DateField(
         label='Tanggal Dari',
         required=False,
@@ -1598,16 +1956,7 @@ class HistoryFilterForm(forms.Form):
         })
     )
     
-    # Filter status
-    status = forms.ChoiceField(
-        label='Status Umum',
-        choices=STATUS_CHOICES,
-        required=False,
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        })
-    )
-    
+    # UPDATED: Hanya status_pekerjaan field, status umum dihapus
     status_pekerjaan = forms.ChoiceField(
         label='Status Pekerjaan',
         choices=STATUS_PEKERJAAN_CHOICES,
@@ -1617,7 +1966,6 @@ class HistoryFilterForm(forms.Form):
         })
     )
     
-    # Search fields
     history_id = forms.CharField(
         label='History ID',
         required=False,
@@ -1658,10 +2006,9 @@ class HistoryFilterForm(forms.Form):
         })
     )
     
-    # Filter berdasarkan section
     section_filter = forms.ChoiceField(
-        label='Filter Section',
-        choices=[],  # Will be populated in __init__
+        label='Section Filter',
+        choices=[],
         required=False,
         widget=forms.Select(attrs={
             'class': 'form-control'
@@ -1670,8 +2017,6 @@ class HistoryFilterForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # Load section choices dari database
         self.load_section_choices()
     
     def load_section_choices(self):
@@ -1681,82 +2026,88 @@ class HistoryFilterForm(forms.Form):
             
             with connections['DB_Maintenance'].cursor() as cursor:
                 cursor.execute("""
-                    SELECT DISTINCT tm.id_section, ms.seksi
-                    FROM tabel_main tm
-                    LEFT JOIN tabel_msection ms ON tm.id_section = ms.id_section
-                    WHERE ms.seksi IS NOT NULL AND ms.seksi != ''
-                    ORDER BY ms.seksi
+                    SELECT DISTINCT id_section, seksi 
+                    FROM tabel_msection 
+                    WHERE (status = 'A' OR status IS NULL) AND seksi IS NOT NULL
+                    ORDER BY seksi
                 """)
                 
                 for row in cursor.fetchall():
-                    if row[0] and row[1]:
-                        choices.append((str(int(float(row[0]))), row[1]))
+                    section_id = int(float(row[0]))
+                    section_name = str(row[1]).strip()
+                    choices.append((str(section_id), section_name))
             
             self.fields['section_filter'].choices = choices
             
         except Exception as e:
-            import logging
-            logger = logging.getLogger(__name__)
-            logger.error(f"Error loading section choices for history: {e}")
-            self.fields['section_filter'].choices = [('', 'Semua Section')]
+            logger.error(f"Error loading section choices for history filter: {e}")
+            self.fields['section_filter'].choices = [('', 'Error loading sections')]
 
-
-# Helper function buat update history data
+# UPDATED: Helper function untuk update history maintenance
 def update_history_maintenance(history_id, form_data, user):
     """
-    Update data history maintenance di tabel_main
+    Update data history maintenance - UPDATED: Auto-set status umum ke 'A'
     
     Args:
-        history_id: ID history yang mau di-update
-        form_data: Data dari form yang sudah di-clean
+        history_id: ID history yang akan diupdate
+        form_data: Data dari form
         user: User yang melakukan update
     
     Returns:
         dict: Result dengan success status dan message
     """
     try:
-        from django.db import connections
-        from datetime import datetime
-        
         with connections['DB_Maintenance'].cursor() as cursor:
-            # Update query yang comprehensive
+            # UPDATED: Status umum otomatis di-set ke 'A', hanya status_pekerjaan yang bisa diubah
+            status_pekerjaan = form_data.get('status_pekerjaan', 'O')
+            
+            # Ensure valid values
+            if status_pekerjaan not in ['O', 'C']:
+                status_pekerjaan = 'O'  # Default ke Open
+            
+            # Build update query dengan semua fields
             update_fields = []
             update_params = []
             
-            # Map form fields ke database columns
-            field_mapping = {
-                'penyebab': 'penyebab',
-                'akar_masalah': 'akar_masalah',
-                'tindakan_perbaikan': 'tindakan_perbaikan', 
-                'tindakan_pencegahan': 'tindakan_pencegahan',
-                'status_pekerjaan': 'status_pekerjaan',
-                'pic_produksi': 'pic_produksi',
-                'pic_maintenance': 'pic_maintenance',
-                'status': 'status',
-                'tgl_wp_dari': 'tgl_wp_dari',
-                'tgl_wp_sampai': 'tgl_wp_sampai',
-                'tgl_lt_dari': 'tgl_lt_dari',
-                'tgl_lt_sampai': 'tgl_lt_sampai',
-                'tgl_dt_dari': 'tgl_dt_dari',
-                'tgl_dt_sampai': 'tgl_dt_sampai',
-                'alasan_dt': 'alasan_dt',
-                'tgl_estimasidt': 'tgl_estimasidt',
-                'tgl_selesai': 'tgl_selesai',
-                'alasan_delay': 'alasan_delay',
-                'masalah': 'masalah'
-            }
+            # Text fields
+            text_fields = [
+                'penyebab', 'akar_masalah', 'tindakan_perbaikan', 
+                'tindakan_pencegahan', 'pic_produksi', 'pic_maintenance',
+                'alasan_dt', 'alasan_delay', 'masalah'
+            ]
             
-            # Build update query
-            for form_field, db_field in field_mapping.items():
-                if form_field in form_data:
-                    update_fields.append(f"{db_field} = %s")
-                    update_params.append(form_data[form_field])
+            for field in text_fields:
+                if field in form_data:
+                    value = form_data[field]
+                    if value:  # Only update if not empty
+                        update_fields.append(f"{field} = %s")
+                        update_params.append(value)
             
-            # Add edit tracking
-            update_fields.extend(['usert_edit = %s', 'tgl_edit = %s'])
-            update_params.extend([user.username, datetime.now()])
+            # Datetime fields
+            datetime_fields = [
+                'tgl_wp_dari', 'tgl_wp_sampai', 'tgl_lt_dari', 'tgl_lt_sampai',
+                'tgl_dt_dari', 'tgl_dt_sampai', 'tgl_estimasidt', 'tgl_selesai'
+            ]
             
-            # Execute update
+            for field in datetime_fields:
+                if field in form_data and form_data[field]:
+                    update_fields.append(f"{field} = %s")
+                    update_params.append(form_data[field])
+            
+            # UPDATED: Status fields - auto set status umum ke 'A', hanya status_pekerjaan yang user bisa ubah
+            update_fields.extend([
+                "status = %s",              # Auto-set ke 'A'
+                "status_pekerjaan = %s",    # User controlled
+                "usert_edit = %s",
+                "tgl_edit = GETDATE()"
+            ])
+            update_params.extend([
+                'A',                        # UPDATED: Auto-set status umum ke 'A'
+                status_pekerjaan,           # User controlled status pekerjaan
+                user.username
+            ])
+            
+            # Build final query
             update_query = f"""
                 UPDATE tabel_main 
                 SET {', '.join(update_fields)}
@@ -1764,27 +2115,26 @@ def update_history_maintenance(history_id, form_data, user):
             """
             update_params.append(history_id)
             
+            # Execute update
             cursor.execute(update_query, update_params)
             
             if cursor.rowcount > 0:
+                logger.info(f"Successfully updated history {history_id} by {user.username} (status auto-set to A)")
                 return {
                     'success': True,
-                    'message': f'History {history_id} berhasil diupdate!'
+                    'message': f'Data history {history_id} berhasil diperbarui!'
                 }
             else:
                 return {
                     'success': False,
-                    'message': f'History {history_id} tidak ditemukan atau tidak ada perubahan'
+                    'message': f'History {history_id} tidak ditemukan atau tidak ada perubahan.'
                 }
-                
+            
     except Exception as e:
-        import logging
-        logger = logging.getLogger(__name__)
         logger.error(f"Error updating history {history_id}: {e}")
-        
         return {
             'success': False,
-            'message': f'Terjadi kesalahan saat update: {str(e)}'
+            'message': f'Terjadi kesalahan saat mengupdate data: {str(e)}'
         }
 
 

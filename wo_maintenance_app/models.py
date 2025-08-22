@@ -499,35 +499,87 @@ class TabelMain(models.Model):
     def __str__(self):
         return f"History {self.history_id} - {self.oleh}"
 
+    # @property
+    # def status_display(self):
+    #     """Display status pekerjaan"""
+    #     if self.status == '0':
+    #         return 'Open'
+    #     elif self.status == '1':
+    #         return 'Close'
+    #     else:
+    #         return 'Unknown'
+
+    # @property
+    # def status_pekerjaan_display(self):
+    #     """Display status pekerjaan"""
+    #     if self.status_pekerjaan == '0':
+    #         return 'Open'
+    #     elif self.status_pekerjaan == '1':
+    #         return 'Close'
+    #     else:
+    #         return 'Unknown'
+
+    # @property
+    # def is_open(self):
+    #     """Check if status is open"""
+    #     return self.status == '0'
+
+    # @property
+    # def is_closed(self):
+    #     """Check if status is closed"""
+    #     return self.status == '1'
+
     @property
     def status_display(self):
-        """Display status pekerjaan"""
-        if self.status == '0':
+        """Display status dengan sistem O/C yang baru"""
+        if self.status == 'O':
             return 'Open'
-        elif self.status == '1':
+        elif self.status == 'C':
             return 'Close'
         else:
-            return 'Unknown'
+            # Backward compatibility untuk data lama
+            if self.status == '0':
+                return 'Open'
+            elif self.status == '1':
+                return 'Close'
+            else:
+                return 'Unknown'
 
     @property
     def status_pekerjaan_display(self):
-        """Display status pekerjaan"""
-        if self.status_pekerjaan == '0':
+        """Display status pekerjaan dengan sistem O/C yang baru"""
+        if self.status_pekerjaan == 'O':
             return 'Open'
-        elif self.status_pekerjaan == '1':
+        elif self.status_pekerjaan == 'C':
             return 'Close'
         else:
-            return 'Unknown'
+            # Backward compatibility untuk data lama
+            if self.status_pekerjaan == '0':
+                return 'Open'
+            elif self.status_pekerjaan == '1':
+                return 'Close'
+            else:
+                return 'Unknown'
 
     @property
     def is_open(self):
-        """Check if status is open"""
-        return self.status == '0'
+        """Check if status is open - support O/C dan backward compatibility"""
+        return self.status in ['O', '0']
 
     @property
     def is_closed(self):
-        """Check if status is closed"""
-        return self.status == '1'
+        """Check if status is closed - support O/C dan backward compatibility"""
+        return self.status in ['C', '1']
+
+    @property
+    def is_pekerjaan_open(self):
+        """Check if status pekerjaan is open - support O/C dan backward compatibility"""
+        return self.status_pekerjaan in ['O', '0']
+
+    @property
+    def is_pekerjaan_closed(self):
+        """Check if status pekerjaan is closed - support O/C dan backward compatibility"""
+        return self.status_pekerjaan in ['C', '1']
 
     @property
     def mesin_info(self):
