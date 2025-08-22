@@ -8261,7 +8261,7 @@ __all__ = [
 def monitoring_informasi_system(request):
     """
     View untuk MONITORING INFORMASI SYSTEM
-    Logic sesuai dengan kode PHP - fallback jika View_Monitor tidak ada
+    FIXED: Prioritas dari PriMa field, Status logic yang benar
     """
     
     # Ambil data employee dari session
@@ -8303,7 +8303,8 @@ def monitoring_informasi_system(request):
                         MAX(a.oleh) as oleh,
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
-                        MAX(a.prima) as prima
+                        MAX(a.prima) as prima,
+                        MAX(a.approve) as approve
                     FROM View_Monitor a 
                     JOIN tabel_line b ON b.id_line = a.id_line
                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
@@ -8323,7 +8324,7 @@ def monitoring_informasi_system(request):
                         MAX(a.tgl_his) DESC
                 """)
             else:
-                # Manual UNION query sebagai fallback
+                # FIXED: Manual UNION query dengan data yang benar
                 cursor.execute(f"""
                     SELECT 
                         a.history_id,
@@ -8337,12 +8338,13 @@ def monitoring_informasi_system(request):
                         MAX(c.mesin) as mesin,
                         MAX(a.status_pekerjaan) as status_pekerjaan,
                         MAX(a.status) as status,
-                        NULL as user_insert,
+                        MAX(a.user_insert) as user_insert,
                         MAX(a.tgl_insert) as tgl_insert,
-                        NULL as oleh,
+                        MAX(a.oleh) as oleh,
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
-                        MAX(a.prima) as prima
+                        MAX(a.prima) as prima,
+                        MAX(a.approve) as approve
                     FROM (
                         SELECT 
                             tp.history_id,
@@ -8356,7 +8358,11 @@ def monitoring_informasi_system(request):
                             tp.status,
                             tp.id_section,
                             NULL as prima,
-                            tp.tgl_insert
+                            tp.tgl_insert,
+                            tp.user_insert,
+                            tp.oleh,
+                            
+                            tp.approve
                         FROM tabel_pengajuan tp
                         WHERE tp.status_pekerjaan != 'C'
                           AND tp.history_id IS NOT NULL 
@@ -8376,7 +8382,11 @@ def monitoring_informasi_system(request):
                             tm.status,
                             tm.id_section,
                             tm.PriMa as prima,
-                            tm.tgl_insert
+                            tm.tgl_insert,
+                            NULL as user_insert,
+                            tm.oleh,
+                           
+                            NULL as approve
                         FROM tabel_main tm
                         WHERE tm.status_pekerjaan != 'C'
                           AND tm.history_id IS NOT NULL 
@@ -8399,43 +8409,81 @@ def monitoring_informasi_system(request):
             
             results = cursor.fetchall()
             
-            # Processing data sesuai logika PHP
+            # FIXED: Processing data dengan logic status yang benar
             for row in results:
-                # Tentukan status berdasarkan logika PHP
+                # FIXED: Map data dengan index yang benar
+                history_id = row[0]
+                tgl_his = row[1]
+                jam_his = row[2]
+                id_line = row[3] 
+                id_mesin = row[4]
+                deskripsi_perbaikan = row[5]
                 number_wo = row[6] if row[6] else ''
+                line_name = row[7]
+                mesin_name = row[8]
                 status_pekerjaan = row[9] if row[9] else ''
+                status = row[10] if row[10] else ''
+                user_insert = row[11]
+                tgl_insert = row[12]
+                oleh = row[13]
+                nomer = row[14]
+                seksi = row[15]  # Section name
+                prima = row[16]  # FIXED: PriMa field untuk prioritas
                 
-                if not number_wo or number_wo.strip() == '':
+                approve = row[18] if len(row) > 18 else None
+                
+                # FIXED: Logic status yang benar sesuai requirement
+                status_display = ''
+                status_color = ''
+                
+                # Skip jika status_pekerjaan = 'C' (completed, tidak ditampilkan)
+                if status_pekerjaan == 'C':
+                    continue
+                
+                # Logic status berdasarkan flow proses:
+                # 1. PENGAJUAN: Belum ada number_wo yang valid atau belum di-review
+                # 2. DIPROSES: Sudah di-review oleh 007522 (SITI FATIMAH)
+                
+                if (not number_wo or 
+                    number_wo.strip() == '' or 
+                    number_wo.startswith('TEMP-') or
+                    (status != 'A' and approve != 'Y')):
+                    # Masih dalam tahap pengajuan
                     status_display = 'pengajuan'
                     status_color = '#DC143C'  # Merah
-                elif status_pekerjaan == 'O':
+                elif (status == 'A' and 
+                      approve == 'Y' and 
+                     
+                      status_pekerjaan == 'O'):
+                    # Sudah di-review oleh SITI FATIMAH dan sedang diproses
                     status_display = 'diproses'
                     status_color = '#7FFF00'  # Hijau
                 else:
-                    status_display = 'selesai'
+                    # Default: diproses (untuk data di tabel_main yang aktif)
+                    status_display = 'diproses'
                     status_color = '#7FFF00'  # Hijau
                 
                 # Format waktu sesuai PHP (d/m/Y - H:i:s WIB)
                 waktu_display = ''
-                if row[1]:  # tgl_his
-                    waktu_display = row[1].strftime('%d/%m/%Y') + ' - ' + row[1].strftime('%H:%M:%S') + ' WIB'
+                if tgl_his:
+                    waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
                 
-                # Gabung mesin + nomer seperti di PHP
-                mesin_display = f"{row[8] or ''} {row[14] or ''}".strip() or '-'
+                # FIXED: Gabung mesin + nomer seperti di PHP
+                mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
                 
                 monitoring_data.append({
-                    'history_id': row[0] or '-',
-                    'prioritas': row[15] or '-',  # prima
+                    'history_id': history_id or '-',
+                    'prioritas': prima or '-',  # FIXED: Gunakan prima (PriMa field)
                     'waktu_pengajuan': waktu_display,
-                    'no_pengajuan': row[0] or '-',  # history_id
+                    'no_pengajuan': history_id or '-',
                     'nomor_wo': number_wo or '-',
-                    'line_name': row[7] or '-',  # line
-                    'mesin_name': mesin_display,  # mesin + nomer
-                    'deskripsi': row[5] or '-',  # deskripsi_perbaikan
-                    'section_name': row[15] or '-',  # seksi
+                    'line_name': line_name or '-',
+                    'mesin_name': mesin_display,
+                    'deskripsi': deskripsi_perbaikan or '-',
+                    'section_name': seksi or '-',  # FIXED: Gunakan seksi untuk section
                     'status': status_display,
                     'status_color': status_color,
-                    'tgl_insert': row[12],
+                    'tgl_insert': tgl_insert,
                 })
                 
     except Exception as e:
@@ -8465,7 +8513,7 @@ def monitoring_informasi_system(request):
 @login_required  
 def ajax_monitoring_refresh(request):
     """
-    AJAX endpoint untuk refresh data monitoring - fixed dengan fallback
+    AJAX endpoint untuk refresh data monitoring - FIXED untuk prioritas dan status logic
     """
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Method not allowed'})
@@ -8503,7 +8551,9 @@ def ajax_monitoring_refresh(request):
                         MAX(a.oleh) as oleh,
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
-                        MAX(a.prima) as prima
+                        MAX(a.prima) as prima,
+                       
+                        MAX(a.approve) as approve
                     FROM View_Monitor a 
                     JOIN tabel_line b ON b.id_line = a.id_line
                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
@@ -8523,7 +8573,7 @@ def ajax_monitoring_refresh(request):
                         MAX(a.tgl_his) DESC
                 """)
             else:
-                # Manual UNION query sebagai fallback
+                # FIXED: Manual UNION query dengan data lengkap
                 cursor.execute(f"""
                     SELECT 
                         a.history_id,
@@ -8537,12 +8587,14 @@ def ajax_monitoring_refresh(request):
                         MAX(c.mesin) as mesin,
                         MAX(a.status_pekerjaan) as status_pekerjaan,
                         MAX(a.status) as status,
-                        NULL as user_insert,
+                        MAX(a.user_insert) as user_insert,
                         MAX(a.tgl_insert) as tgl_insert,
-                        NULL as oleh,
+                        MAX(a.oleh) as oleh,
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
-                        MAX(a.prima) as prima
+                        MAX(a.prima) as prima,
+                       
+                        MAX(a.approve) as approve
                     FROM (
                         SELECT 
                             tp.history_id,
@@ -8556,7 +8608,11 @@ def ajax_monitoring_refresh(request):
                             tp.status,
                             tp.id_section,
                             NULL as prima,
-                            tp.tgl_insert
+                            tp.tgl_insert,
+                            tp.user_insert,
+                            tp.oleh,
+                            
+                            tp.approve
                         FROM tabel_pengajuan tp
                         WHERE tp.status_pekerjaan != 'C'
                           AND tp.history_id IS NOT NULL 
@@ -8576,7 +8632,11 @@ def ajax_monitoring_refresh(request):
                             tm.status,
                             tm.id_section,
                             tm.PriMa as prima,
-                            tm.tgl_insert
+                            tm.tgl_insert,
+                            NULL as user_insert,
+                            tm.oleh,
+                           
+                            NULL as approve
                         FROM tabel_main tm
                         WHERE tm.status_pekerjaan != 'C'
                           AND tm.history_id IS NOT NULL 
@@ -8599,35 +8659,58 @@ def ajax_monitoring_refresh(request):
             
             results = cursor.fetchall()
             
+            # FIXED: Process data dengan logic yang sama
             for row in results:
-                # Tentukan status berdasarkan logika PHP
+                # Map data dengan index yang benar
+                history_id = row[0]
+                tgl_his = row[1]
                 number_wo = row[6] if row[6] else ''
+                line_name = row[7]
+                mesin_name = row[8]
                 status_pekerjaan = row[9] if row[9] else ''
+                status = row[10] if row[10] else ''
+                nomer = row[14]
+                seksi = row[15]  # Section name
+                prima = row[16]  # FIXED: PriMa field
+               
+                approve = row[18] if len(row) > 18 else None
+                deskripsi_perbaikan = row[5]
                 
-                if not number_wo or number_wo.strip() == '':
+                # Skip jika completed
+                if status_pekerjaan == 'C':
+                    continue
+                
+                # FIXED: Logic status yang sama dengan main function
+                if (not number_wo or 
+                    number_wo.strip() == '' or 
+                    number_wo.startswith('TEMP-') or
+                    (status != 'A' and approve != 'Y')):
                     status_display = 'pengajuan'
-                elif status_pekerjaan == 'O':
+                elif (status == 'A' and 
+                      approve == 'Y' and 
+                     
+                      status_pekerjaan == 'O'):
                     status_display = 'diproses'
                 else:
-                    status_display = 'selesai'
+                    status_display = 'diproses'
                 
                 # Format waktu sesuai PHP
                 waktu_display = ''
-                if row[1]:  # tgl_his
-                    waktu_display = row[1].strftime('%d/%m/%Y') + ' - ' + row[1].strftime('%H:%M:%S') + ' WIB'
+                if tgl_his:
+                    waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
                 
                 # Gabung mesin + nomer
-                mesin_display = f"{row[8] or ''} {row[14] or ''}".strip() or '-'
+                mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
                 
                 monitoring_data.append({
-                    'prioritas': row[15] or '-',  # prima
+                    'prioritas': prima or '-',  # FIXED: Gunakan prima (PriMa field)
                     'waktu_pengajuan': waktu_display,
-                    'no_pengajuan': row[0] or '-',  # history_id
+                    'no_pengajuan': history_id or '-',
                     'nomor_wo': number_wo or '-',
-                    'line_name': row[7] or '-',  # line
-                    'mesin_name': mesin_display,  # mesin + nomer
-                    'deskripsi': (row[5][:50] + '...') if row[5] and len(row[5]) > 50 else (row[5] or '-'),
-                    'section_name': row[15] or '-',  # seksi
+                    'line_name': line_name or '-',
+                    'mesin_name': mesin_display,
+                    'deskripsi': (deskripsi_perbaikan[:50] + '...') if deskripsi_perbaikan and len(deskripsi_perbaikan) > 50 else (deskripsi_perbaikan or '-'),
+                    'section_name': seksi or '-',  # FIXED: Gunakan seksi untuk section
                     'status': status_display,
                 })
         

@@ -20205,3 +20205,352 @@ INFO 2025-08-22 13:13:47,090 views 12476 2008   Status: A, Approve: T, Review: 0
 INFO 2025-08-22 13:13:47,091 views 12476 2008   Status: A, Approve: Y, Review: 0
 INFO 2025-08-22 13:13:47,091 views 12476 2008   Status: A, Approve: Y, Review: 1
 INFO 2025-08-22 13:13:47,091 views 12476 2008 === END VALIDATION ===
+INFO 2025-08-22 13:13:51,400 basehttp 12476 17364 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 25445
+INFO 2025-08-22 13:13:59,662 views 12476 17364 History query executed - Found 31465 records
+INFO 2025-08-22 13:14:00,200 basehttp 12476 17364 "GET /wo-maintenance/history/?tanggal_dari=&tanggal_sampai=&status_pekerjaan=C&section_filter=&history_id=&pengaju=&pic_produksi=&search= HTTP/1.1" 200 105896
+INFO 2025-08-22 13:14:03,312 basehttp 12476 15824 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 25445
+INFO 2025-08-22 13:14:33,880 basehttp 12476 17200 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:15:03,880 basehttp 12476 11504 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:15:33,880 basehttp 12476 16696 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:16:03,887 basehttp 12476 14428 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:16:07,587 basehttp 12476 14428 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 24127
+INFO 2025-08-22 13:16:10,771 basehttp 12476 14428 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 24127
+INFO 2025-08-22 13:16:17,336 basehttp 12476 17480 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 24127
+INFO 2025-08-22 13:16:23,137 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:16:47,470 basehttp 12476 11712 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:16:53,144 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:17:14,665 basehttp 12476 18088 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 25445
+INFO 2025-08-22 13:17:23,209 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:17:44,737 basehttp 12476 14864 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:17:53,211 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:18:14,879 basehttp 12476 18064 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 1942
+INFO 2025-08-22 13:18:23,246 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2221
+INFO 2025-08-22 13:18:44,732 basehttp 12476 17696 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2221
+INFO 2025-08-22 13:18:53,235 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2221
+INFO 2025-08-22 13:19:14,881 basehttp 12476 10012 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2221
+INFO 2025-08-22 13:19:23,250 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2221
+INFO 2025-08-22 13:19:43,223 basehttp 12476 11936 "GET /wo-maintenance/input/ HTTP/1.1" 200 52342
+INFO 2025-08-22 13:19:44,874 basehttp 12476 11936 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2221
+INFO 2025-08-22 13:19:47,115 basehttp 12476 11936 "GET /wo-maintenance/ajax/get-mesin-by-line/?line_id=40&_=1755843583470 HTTP/1.1" 200 208
+INFO 2025-08-22 13:19:53,264 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2221
+INFO 2025-08-22 13:20:03,319 forms 12476 14236 Validation SUCCESS: Komputer (ID: 790.0) di Engineering
+INFO 2025-08-22 13:20:03,339 views 12476 14236 SUCCESS: Pengajuan 25-08-0392 berhasil disimpan dengan format baru
+INFO 2025-08-22 13:20:03,341 basehttp 12476 14236 "POST /wo-maintenance/input/ HTTP/1.1" 302 0
+INFO 2025-08-22 13:20:03,438 views 12476 14236 Applied conditional exclude logic for user 002186
+INFO 2025-08-22 13:20:03,464 views 12476 14236 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 13:20:03,568 basehttp 12476 14236 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 29558
+INFO 2025-08-22 13:20:14,875 basehttp 12476 4868 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:20:23,277 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:20:44,870 basehttp 12476 12488 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:20:53,293 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:21:14,759 basehttp 12476 18052 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:21:23,302 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:21:44,746 basehttp 12476 14144 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:21:53,309 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:22:14,843 basehttp 12476 10068 "POST /wo-maintenance/keep-session-alive/ HTTP/1.1" 200 80
+INFO 2025-08-22 13:22:14,878 basehttp 12476 18156 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:22:23,335 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:22:44,867 basehttp 12476 12908 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:22:47,542 basehttp 12476 12908 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27383
+INFO 2025-08-22 13:22:49,420 basehttp 12476 12908 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27383
+INFO 2025-08-22 13:22:50,152 basehttp 12476 12908 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27383
+INFO 2025-08-22 13:22:50,794 basehttp 12476 12908 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27383
+INFO 2025-08-22 13:22:53,442 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:23:20,872 basehttp 12476 18032 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:23:23,441 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:23:50,866 basehttp 12476 13792 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:23:53,459 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:24:20,893 basehttp 12476 16360 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:24:23,456 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:24:50,896 basehttp 12476 4424 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:24:53,466 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:25:20,878 basehttp 12476 3272 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:25:23,474 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:25:50,869 basehttp 12476 16692 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:25:53,489 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:26:20,853 basehttp 12476 15116 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:26:23,505 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:26:50,878 basehttp 12476 15724 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:26:53,499 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:27:20,879 basehttp 12476 17524 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:27:23,535 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:27:50,829 basehttp 12476 11676 "POST /wo-maintenance/keep-session-alive/ HTTP/1.1" 200 80
+INFO 2025-08-22 13:27:53,520 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:28:01,873 basehttp 12476 14760 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:28:23,529 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:28:53,529 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:29:01,852 basehttp 12476 13036 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:29:23,549 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:29:53,563 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:30:01,890 basehttp 12476 17848 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:30:23,571 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:30:53,579 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:31:01,899 basehttp 12476 9764 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2488
+INFO 2025-08-22 13:31:23,610 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:31:53,599 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:32:01,870 basehttp 12476 13668 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:32:23,616 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:32:50,820 basehttp 12476 10928 "POST /wo-maintenance/keep-session-alive/ HTTP/1.1" 200 80
+INFO 2025-08-22 13:32:53,649 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:33:01,862 basehttp 12476 10928 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:33:23,621 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:33:53,639 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:34:01,850 basehttp 12476 16768 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:34:23,643 basehttp 12476 1500 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2491
+INFO 2025-08-22 13:34:30,754 autoreload 12476 2008 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 13:34:32,683 autoreload 17392 15228 Watching for file changes with StatReloader
+INFO 2025-08-22 13:34:46,293 autoreload 6556 17752 Watching for file changes with StatReloader
+INFO 2025-08-22 13:34:48,284 views 6556 17752 === STATUS VALIDATION ===
+INFO 2025-08-22 13:34:48,285 views 6556 17752 Expected STATUS_APPROVED: B
+INFO 2025-08-22 13:34:48,285 views 6556 17752 Expected APPROVE_YES: N
+INFO 2025-08-22 13:34:48,286 views 6556 17752 Actual values in database:
+INFO 2025-08-22 13:34:48,286 views 6556 17752   Status: , Approve: N, Review: None
+INFO 2025-08-22 13:34:48,286 views 6556 17752   Status: 0, Approve: O, Review: 0
+INFO 2025-08-22 13:34:48,287 views 6556 17752   Status: A, Approve: T, Review: None
+INFO 2025-08-22 13:34:48,287 views 6556 17752   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 13:34:48,287 views 6556 17752   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 13:34:48,288 views 6556 17752 === END VALIDATION ===
+ERROR 2025-08-22 13:34:53,508 views 6556 14396 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:34:53,510 basehttp 6556 14396 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:34:53,637 views 6556 13648 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:34:53,639 basehttp 6556 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:34:54,614 views 6556 14396 Error loading monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:34:54,631 basehttp 6556 14396 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 18645
+INFO 2025-08-22 13:34:56,685 views 6556 14396 Applied conditional exclude logic for user 002186
+INFO 2025-08-22 13:34:56,708 views 6556 14396 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 13:34:56,890 basehttp 6556 14396 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 29078
+ERROR 2025-08-22 13:34:59,538 views 6556 13892 Error loading monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:34:59,540 basehttp 6556 13892 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 18645
+ERROR 2025-08-22 13:35:07,449 views 6556 14512 Error loading monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:35:07,451 basehttp 6556 14512 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 18645
+ERROR 2025-08-22 13:35:23,610 views 6556 13648 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:35:23,611 basehttp 6556 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:35:37,829 views 6556 2360 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:35:37,831 basehttp 6556 2360 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:35:53,637 views 6556 13648 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:35:53,638 basehttp 6556 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:36:07,828 views 6556 10312 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:36:07,829 basehttp 6556 10312 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:36:23,729 views 6556 13648 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:36:23,730 basehttp 6556 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:36:37,852 views 6556 5044 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:36:37,853 basehttp 6556 5044 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:36:53,649 views 6556 13648 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:36:53,650 basehttp 6556 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:37:07,828 views 6556 2280 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:37:07,829 basehttp 6556 2280 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:37:23,642 views 6556 13648 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:37:23,643 basehttp 6556 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:37:37,821 views 6556 6820 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:37:37,822 basehttp 6556 6820 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:37:53,655 views 6556 13648 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:37:53,656 basehttp 6556 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:38:07,828 views 6556 16324 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:38:07,828 basehttp 6556 16324 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 13:38:23,659 views 6556 13648 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 13:38:23,660 basehttp 6556 13648 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+INFO 2025-08-22 13:38:35,395 autoreload 6556 17752 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 13:38:37,315 autoreload 13172 17612 Watching for file changes with StatReloader
+INFO 2025-08-22 14:00:08,718 autoreload 9900 16312 Watching for file changes with StatReloader
+INFO 2025-08-22 14:00:10,739 views 9900 16312 === STATUS VALIDATION ===
+INFO 2025-08-22 14:00:10,740 views 9900 16312 Expected STATUS_APPROVED: B
+INFO 2025-08-22 14:00:10,740 views 9900 16312 Expected APPROVE_YES: N
+INFO 2025-08-22 14:00:10,741 views 9900 16312 Actual values in database:
+INFO 2025-08-22 14:00:10,741 views 9900 16312   Status: , Approve: N, Review: None
+INFO 2025-08-22 14:00:10,742 views 9900 16312   Status: 0, Approve: O, Review: 0
+INFO 2025-08-22 14:00:10,742 views 9900 16312   Status: A, Approve: T, Review: None
+INFO 2025-08-22 14:00:10,742 views 9900 16312   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 14:00:10,743 views 9900 16312   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 14:00:10,743 views 9900 16312 === END VALIDATION ===
+INFO 2025-08-22 14:12:51,392 basehttp 9900 16664 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:12:51,625 basehttp 9900 16664 "GET /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 200 10284
+INFO 2025-08-22 14:12:58,992 views 9900 16264 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 14:12:59,034 authentication 9900 16264 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 14:12:59,043 views 9900 16264 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 14:12:59,044 views 9900 16264 LOGIN REDIRECT: 002186 -> /wo-maintenance/monitoring/
+INFO 2025-08-22 14:12:59,049 basehttp 9900 16264 "POST /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:12:59,173 basehttp 9900 16264 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27138
+INFO 2025-08-22 14:13:21,434 basehttp 9900 17112 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27138
+INFO 2025-08-22 14:13:34,697 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:13:34,824 basehttp 9900 12296 "GET /login/?next=/wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 10592
+INFO 2025-08-22 14:13:37,228 basehttp 9900 12296 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:13:37,348 basehttp 9900 12296 "GET /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 200 10284
+INFO 2025-08-22 14:13:43,960 views 9900 12296 LOGIN ATTEMPT: 002186
+INFO 2025-08-22 14:13:43,975 authentication 9900 12296 Successful SDBM authentication for 002186 - AGUS GUNAWAN
+INFO 2025-08-22 14:13:43,985 views 9900 12296 LOGIN: Using existing session data for 002186
+INFO 2025-08-22 14:13:43,986 views 9900 12296 LOGIN REDIRECT: 002186 -> /wo-maintenance/monitoring/
+INFO 2025-08-22 14:13:43,993 basehttp 9900 12296 "POST /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:13:44,105 basehttp 9900 12296 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27138
+INFO 2025-08-22 14:13:51,515 basehttp 9900 15836 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2434
+INFO 2025-08-22 14:14:14,243 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2434
+INFO 2025-08-22 14:14:21,507 basehttp 9900 5344 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2434
+INFO 2025-08-22 14:14:21,905 views 9900 5344 Applied conditional exclude logic for user 002186
+INFO 2025-08-22 14:14:21,932 views 9900 5344 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 14:14:22,051 basehttp 9900 5344 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 29387
+INFO 2025-08-22 14:14:25,861 basehttp 9900 5344 "GET /logout/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:14:25,912 basehttp 9900 5344 "GET /wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:14:26,019 basehttp 9900 5344 "GET /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 200 10284
+INFO 2025-08-22 14:14:31,466 basehttp 9900 11776 "GET /wo-maintenance/monitoring/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:14:31,574 basehttp 9900 11776 "GET /login/?next=/wo-maintenance/monitoring/ HTTP/1.1" 200 10284
+INFO 2025-08-22 14:14:43,118 views 9900 13820 LOGIN ATTEMPT: 002104
+INFO 2025-08-22 14:14:43,129 authentication 9900 13820 Successful SDBM authentication for 002104 - BADRI KIMAN
+INFO 2025-08-22 14:14:43,136 views 9900 13820 LOGIN: Using existing session data for 002104
+INFO 2025-08-22 14:14:43,136 views 9900 13820 LOGIN REDIRECT: 002104 -> /wo-maintenance/daftar/
+INFO 2025-08-22 14:14:43,141 basehttp 9900 13820 "POST /login/?next=/wo-maintenance/daftar/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:14:43,227 views 9900 13820 Applied conditional exclude logic for user 002104
+INFO 2025-08-22 14:14:43,274 views 9900 13820 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 14:14:43,341 basehttp 9900 13820 "GET /wo-maintenance/daftar/ HTTP/1.1" 200 31855
+INFO 2025-08-22 14:14:44,257 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2434
+ERROR 2025-08-22 14:14:46,921 utils 9900 17652 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 14:14:47,038 basehttp 9900 17652 "GET /wo-maintenance/detail/25-08-0392/ HTTP/1.1" 200 36183
+ERROR 2025-08-22 14:14:53,554 utils 9900 17652 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 14:14:53,578 views 9900 17652 Pengajuan 25-08-0392 approved by BADRI KIMAN - sent to review queue (status=B, approve=N)
+INFO 2025-08-22 14:14:53,593 utils 9900 17652 Assignment, approval log, and review tables created/verified successfully
+ERROR 2025-08-22 14:14:53,594 utils 9900 17652 Error logging approval action: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 14:14:53,595 views 9900 17652 Pengajuan 25-08-0392 disetujui by BADRI KIMAN
+INFO 2025-08-22 14:14:53,596 basehttp 9900 17652 "POST /wo-maintenance/detail/25-08-0392/ HTTP/1.1" 302 0
+ERROR 2025-08-22 14:14:53,692 utils 9900 17652 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 14:14:53,764 basehttp 9900 17652 "GET /wo-maintenance/detail/25-08-0392/ HTTP/1.1" 200 34303
+INFO 2025-08-22 14:14:59,415 basehttp 9900 1944 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27138
+INFO 2025-08-22 14:15:04,674 basehttp 9900 1944 "GET /logout/?next=/wo-maintenance/detail/25-08-0392/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:15:04,726 basehttp 9900 1944 "GET /wo-maintenance/detail/25-08-0392/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:15:04,843 basehttp 9900 1944 "GET /login/?next=/wo-maintenance/detail/25-08-0392/ HTTP/1.1" 200 10284
+INFO 2025-08-22 14:15:14,263 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2434
+INFO 2025-08-22 14:15:14,455 views 9900 17012 LOGIN ATTEMPT: 007522
+INFO 2025-08-22 14:15:14,467 authentication 9900 17012 Successful SDBM authentication for 007522 - SITI FATIMAH
+INFO 2025-08-22 14:15:14,468 authentication 9900 17012 REVIEWER LOGIN: SITI FATIMAH authenticated successfully
+INFO 2025-08-22 14:15:14,478 views 9900 17012 LOGIN: Using existing session data for 007522
+INFO 2025-08-22 14:15:14,478 views 9900 17012 LOGIN REDIRECT: 007522 -> /wo-maintenance/detail/25-08-0392/
+INFO 2025-08-22 14:15:14,482 basehttp 9900 17012 "POST /login/?next=/wo-maintenance/detail/25-08-0392/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:15:14,554 utils 9900 17012 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+ERROR 2025-08-22 14:15:14,571 utils 9900 17012 Error getting approval log: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_employee_number'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'approver_fullname'. (207); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+INFO 2025-08-22 14:15:14,644 basehttp 9900 17012 "GET /wo-maintenance/detail/25-08-0392/ HTTP/1.1" 200 32973
+INFO 2025-08-22 14:15:17,836 utils 9900 2392 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:15:17,843 views 9900 2392 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-22 14:15:17,845 views 9900 2392 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-22 14:15:17,870 views 9900 2392 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 14:15:17,882 views 9900 2392 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11785}
+INFO 2025-08-22 14:15:17,947 basehttp 9900 2392 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 30333
+INFO 2025-08-22 14:15:21,004 views 9900 2392 ENHANCED REVIEW: Starting review for 25-08-0392 by 007522
+INFO 2025-08-22 14:15:21,021 views 9900 2392 ENHANCED REVIEW: Rendering template dengan priority level support untuk 25-08-0392
+INFO 2025-08-22 14:15:21,151 basehttp 9900 2392 "GET /wo-maintenance/review/pengajuan/25-08-0392/ HTTP/1.1" 200 40256
+INFO 2025-08-22 14:15:28,286 basehttp 9900 6572 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27138
+INFO 2025-08-22 14:15:44,272 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2434
+INFO 2025-08-22 14:15:54,294 views 9900 4052 ENHANCED REVIEW: Starting review for 25-08-0392 by 007522
+INFO 2025-08-22 14:15:54,313 views 9900 4052 ENHANCED REVIEW: Processing POST with priority level for 25-08-0392
+INFO 2025-08-22 14:15:54,314 forms 9900 4052 ENHANCED FORM: Priority level selected: BI
+INFO 2025-08-22 14:15:54,314 views 9900 4052 ENHANCED REVIEW: Form valid - Action: process, Target: , Priority: BI
+INFO 2025-08-22 14:15:54,317 views 9900 4052 ENHANCED REVIEW: Original section from database - ID: 8.0
+INFO 2025-08-22 14:15:54,318 views 9900 4052 ENHANCED REVIEW: No target section specified, keeping original section 8.0
+INFO 2025-08-22 14:15:54,319 models 9900 4052 FIXED CREATE WO: Processing section_id = 8
+INFO 2025-08-22 14:15:54,319 models 9900 4052 FIXED CREATE WO: Using correct mapping - section 8 = code I
+INFO 2025-08-22 14:15:54,320 models 9900 4052 FIXED CREATE WO: Searching pattern: 25-I-08-%
+INFO 2025-08-22 14:15:54,347 models 9900 4052 FIXED CREATE WO: Found last number 3, using 4
+INFO 2025-08-22 14:15:54,348 models 9900 4052 FIXED CREATE WO: Generated number_wo = 25-I-08-0004 for section 8
+INFO 2025-08-22 14:15:54,351 views 9900 4052 ENHANCED REVIEW: Generated Number WO: 25-I-08-0004 for mapped section 8.0
+INFO 2025-08-22 14:15:54,351 views 9900 4052 ENHANCED REVIEW: Section Summary:
+INFO 2025-08-22 14:15:54,352 views 9900 4052   - Original Section ID: 8.0
+INFO 2025-08-22 14:15:54,353 views 9900 4052   - Final Section ID: 8.0
+INFO 2025-08-22 14:15:54,353 views 9900 4052   - Section Changed: False
+INFO 2025-08-22 14:15:54,354 views 9900 4052   - Generated Number WO: 25-I-08-0004
+INFO 2025-08-22 14:15:54,355 views 9900 4052   - Priority Level: BI
+INFO 2025-08-22 14:15:54,373 views 9900 4052 ENHANCED REVIEW: Updated number WO only, section unchanged
+INFO 2025-08-22 14:15:54,373 views 9900 4052 ENHANCED REVIEW: Updated 1 row(s) in tabel_pengajuan
+INFO 2025-08-22 14:15:54,376 views 9900 4052 ENHANCED REVIEW: Starting auto transfer to tabel_main for 25-08-0392 with priority BI
+INFO 2025-08-22 14:15:54,395 views 9900 4052 ENHANCED REVIEW: Transfer with ORIGINAL section 8.0
+INFO 2025-08-22 14:15:54,396 views 9900 4052 ENHANCED REVIEW: Inserting to tabel_main - Section: 8.0, Number WO: 25-I-08-0004, PriMa: BI
+INFO 2025-08-22 14:15:54,401 views 9900 4052 ENHANCED REVIEW: Inserted 1 row(s) to tabel_main with section 8.0 and priority BI
+INFO 2025-08-22 14:15:54,402 views 9900 4052 ENHANCED REVIEW SUCCESS SUMMARY:
+INFO 2025-08-22 14:15:54,403 views 9900 4052   - Pengajuan: 25-08-0392
+INFO 2025-08-22 14:15:54,404 views 9900 4052   - Section Changed: False
+INFO 2025-08-22 14:15:54,404 views 9900 4052   - Final Section ID: 8.0
+INFO 2025-08-22 14:15:54,405 views 9900 4052   - Number WO (NEW FORMAT): 25-I-08-0004
+INFO 2025-08-22 14:15:54,406 views 9900 4052   - Priority Level: BI
+INFO 2025-08-22 14:15:54,409 views 9900 4052   - Transfer Success: True
+INFO 2025-08-22 14:15:54,413 views 9900 4052 ENHANCED REVIEW: Transaction completed successfully for 25-08-0392
+INFO 2025-08-22 14:15:54,424 basehttp 9900 4052 "POST /wo-maintenance/review/pengajuan/25-08-0392/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:15:54,488 views 9900 4052 ENHANCED REVIEW: Starting review for 25-08-0392 by 007522
+WARNING 2025-08-22 14:15:54,510 views 9900 4052 ENHANCED REVIEW: Pengajuan 25-08-0392 not approved
+INFO 2025-08-22 14:15:54,512 basehttp 9900 4052 "GET /wo-maintenance/review/pengajuan/25-08-0392/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:15:54,625 views 9900 4052 Found 0 pengajuan for review by SITI FATIMAH (status=B, approve=N)
+INFO 2025-08-22 14:15:54,788 basehttp 9900 4052 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 200 34778
+INFO 2025-08-22 14:15:58,829 basehttp 9900 11976 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2422
+INFO 2025-08-22 14:16:14,280 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2422
+INFO 2025-08-22 14:16:28,361 basehttp 9900 14364 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2422
+INFO 2025-08-22 14:16:38,881 basehttp 9900 13252 "GET /wo-maintenance/ajax/review/pending-count/ HTTP/1.1" 200 118
+INFO 2025-08-22 14:16:44,292 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2422
+INFO 2025-08-22 14:16:53,741 basehttp 9900 2868 "GET /wo-maintenance/ajax/review/pending-count/ HTTP/1.1" 200 118
+INFO 2025-08-22 14:16:55,042 utils 9900 2868 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:16:55,346 views 9900 2868 History query executed - Found 32559 records
+INFO 2025-08-22 14:16:55,530 basehttp 9900 2868 "GET /wo-maintenance/history/ HTTP/1.1" 200 105513
+INFO 2025-08-22 14:16:58,819 basehttp 9900 17236 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2422
+INFO 2025-08-22 14:17:00,659 utils 9900 17236 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:17:00,824 basehttp 9900 17236 "GET /wo-maintenance/history/25-08-0392/ HTTP/1.1" 200 50122
+INFO 2025-08-22 14:17:10,216 utils 9900 16360 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:17:10,285 views 9900 16360 Successfully updated history 25-08-0392 by 007522
+INFO 2025-08-22 14:17:10,288 basehttp 9900 16360 "POST /wo-maintenance/history/25-08-0392/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:17:10,363 utils 9900 16360 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:17:10,464 basehttp 9900 16360 "GET /wo-maintenance/history/25-08-0392/ HTTP/1.1" 200 50477
+INFO 2025-08-22 14:17:14,291 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2166
+INFO 2025-08-22 14:17:28,828 basehttp 9900 13016 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2166
+INFO 2025-08-22 14:17:44,308 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2166
+INFO 2025-08-22 14:17:58,828 basehttp 9900 11620 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2166
+INFO 2025-08-22 14:18:14,320 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2166
+INFO 2025-08-22 14:18:28,822 basehttp 9900 12972 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2166
+INFO 2025-08-22 14:18:44,274 basehttp 9900 12296 "POST /wo-maintenance/keep-session-alive/ HTTP/1.1" 200 80
+INFO 2025-08-22 14:18:45,313 basehttp 9900 12296 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2166
+INFO 2025-08-22 14:18:58,813 basehttp 9900 716 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 2166
+INFO 2025-08-22 14:19:10,481 autoreload 9900 16312 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 14:19:12,413 autoreload 1948 15176 Watching for file changes with StatReloader
+INFO 2025-08-22 14:19:28,779 autoreload 17696 11832 Watching for file changes with StatReloader
+INFO 2025-08-22 14:19:30,839 views 17696 11832 === STATUS VALIDATION ===
+INFO 2025-08-22 14:19:30,840 views 17696 11832 Expected STATUS_APPROVED: B
+INFO 2025-08-22 14:19:30,841 views 17696 11832 Expected APPROVE_YES: N
+INFO 2025-08-22 14:19:30,841 views 17696 11832 Actual values in database:
+INFO 2025-08-22 14:19:30,841 views 17696 11832   Status: , Approve: N, Review: None
+INFO 2025-08-22 14:19:30,842 views 17696 11832   Status: A, Approve: T, Review: None
+INFO 2025-08-22 14:19:30,842 views 17696 11832   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 14:19:30,843 views 17696 11832   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 14:19:30,843 views 17696 11832   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 14:19:30,844 views 17696 11832 === END VALIDATION ===
+INFO 2025-08-22 14:19:34,693 basehttp 17696 12476 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 26310
+ERROR 2025-08-22 14:19:47,343 views 17696 12772 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 14:19:47,344 basehttp 17696 12772 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+INFO 2025-08-22 14:19:47,356 utils 17696 18224 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:19:47,422 views 17696 18224 Successfully updated history 25-08-0392 by 007522
+INFO 2025-08-22 14:19:47,491 basehttp 17696 18224 "POST /wo-maintenance/history/25-08-0392/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:19:47,568 utils 17696 18224 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:19:47,726 basehttp 17696 18224 "GET /wo-maintenance/history/25-08-0392/ HTTP/1.1" 200 50477
+INFO 2025-08-22 14:20:02,156 basehttp 17696 12772 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27246
+ERROR 2025-08-22 14:20:05,799 views 17696 16760 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 14:20:05,800 basehttp 17696 16760 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+INFO 2025-08-22 14:20:11,903 basehttp 17696 16760 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27246
+INFO 2025-08-22 14:20:14,479 basehttp 17696 16616 "GET /wo-maintenance/monitoring/ HTTP/1.1" 200 27246
+INFO 2025-08-22 14:20:24,340 utils 17696 13472 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:20:24,405 views 17696 13472 Successfully updated history 25-08-0392 by 007522
+INFO 2025-08-22 14:20:24,408 basehttp 17696 13472 "POST /wo-maintenance/history/25-08-0392/ HTTP/1.1" 302 0
+INFO 2025-08-22 14:20:24,478 utils 17696 13472 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 14:20:24,587 basehttp 17696 13472 "GET /wo-maintenance/history/25-08-0392/ HTTP/1.1" 200 50477
+ERROR 2025-08-22 14:20:32,232 views 17696 12772 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 14:20:32,234 basehttp 17696 12772 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 14:20:44,544 views 17696 17024 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 14:20:44,545 basehttp 17696 17024 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+ERROR 2025-08-22 14:21:02,287 views 17696 12772 Error refreshing monitoring data: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'reviewed_by'. (207) (SQLExecDirectW)")
+INFO 2025-08-22 14:21:02,288 basehttp 17696 12772 "POST /wo-maintenance/ajax/monitoring/refresh/ HTTP/1.1" 200 191
+INFO 2025-08-22 14:21:13,889 autoreload 17696 11832 C:\xampp7.2\htdocs\wo_maintenance_reborn\web_seiwa\wo_maintenance_app\views.py changed, reloading.
+INFO 2025-08-22 14:21:15,790 autoreload 6104 17848 Watching for file changes with StatReloader
+INFO 2025-08-22 14:21:26,442 autoreload 17076 2892 Watching for file changes with StatReloader
+INFO 2025-08-22 14:21:33,760 autoreload 14144 332 Watching for file changes with StatReloader
+INFO 2025-08-22 14:21:44,092 autoreload 16068 16968 Watching for file changes with StatReloader
+INFO 2025-08-22 14:21:51,510 autoreload 14828 5172 Watching for file changes with StatReloader
+INFO 2025-08-22 14:22:01,890 autoreload 16492 16368 Watching for file changes with StatReloader
+INFO 2025-08-22 14:22:03,879 views 16492 16368 === STATUS VALIDATION ===
+INFO 2025-08-22 14:22:03,879 views 16492 16368 Expected STATUS_APPROVED: B
+INFO 2025-08-22 14:22:03,880 views 16492 16368 Expected APPROVE_YES: N
+INFO 2025-08-22 14:22:03,880 views 16492 16368 Actual values in database:
+INFO 2025-08-22 14:22:03,880 views 16492 16368   Status: , Approve: N, Review: None
+INFO 2025-08-22 14:22:03,880 views 16492 16368   Status: A, Approve: T, Review: None
+INFO 2025-08-22 14:22:03,880 views 16492 16368   Status: A, Approve: T, Review: 0
+INFO 2025-08-22 14:22:03,881 views 16492 16368   Status: A, Approve: Y, Review: 0
+INFO 2025-08-22 14:22:03,881 views 16492 16368   Status: A, Approve: Y, Review: 1
+INFO 2025-08-22 14:22:03,881 views 16492 16368 === END VALIDATION ===

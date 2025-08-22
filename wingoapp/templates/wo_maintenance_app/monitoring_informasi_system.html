@@ -73,45 +73,9 @@
             margin-top: 5px;
         }
         
-        .controls-section {
-            padding: 20px 30px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .refresh-btn {
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .refresh-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-        }
-        
-        .filter-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
         .table-container {
             padding: 30px;
-            max-height: 70vh;
+            max-height: 80vh;
             overflow-y: auto;
         }
         
@@ -150,27 +114,6 @@
             transition: all 0.3s ease;
         }
         
-        /* Status Colors */
-        .status-pengajuan {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 11px;
-            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
-        }
-        
-        .status-diproses {
-            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 11px;
-            box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3);
-        }
-        
         .prioritas-badge {
             padding: 4px 8px;
             border-radius: 15px;
@@ -194,11 +137,11 @@
         }
         
         .deskripsi-cell {
-            max-width: 200px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
             text-align: left;
+            padding: 12px 15px;
+            word-wrap: break-word;
+            white-space: normal;
+            line-height: 1.4;
         }
         
         .loading-overlay {
@@ -228,12 +171,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        .last-update {
-            font-size: 12px;
-            color: #7f8c8d;
-            font-style: italic;
-        }
-        
         .empty-state {
             text-align: center;
             padding: 50px;
@@ -246,19 +183,17 @@
             opacity: 0.5;
         }
         
+        .last-update {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: right;
+            margin-top: 10px;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .monitoring-container {
                 margin: 10px;
-            }
-            
-            .controls-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .filter-controls {
-                justify-content: center;
             }
             
             .monitoring-table th,
@@ -273,6 +208,10 @@
             
             .stats-panel {
                 justify-content: center;
+            }
+            
+            .deskripsi-cell {
+                padding: 8px 6px;
             }
         }
     </style>
@@ -291,51 +230,29 @@
                 <span>MONITORING INFORMASI SYSTEM</span>
             </div>
             
-            <div class="stats-panel">
-                <div class="stat-item">
-                    <div class="stat-number" id="totalPengajuan">{{ stats.total_pengajuan }}</div>
-                    <div class="stat-label">Pengajuan</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="totalDiproses">{{ stats.total_diproses }}</div>
-                    <div class="stat-label">Diproses</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="totalAll">{{ stats.total_all }}</div>
-                    <div class="stat-label">Total</div>
-                </div>
-                {% if stats.use_marquee %}
-                <div class="stat-item">
-                    <div class="stat-number">MARQUEE</div>
-                    <div class="stat-label">Mode</div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Controls -->
-        <div class="controls-section">
-            <div class="filter-controls">
-                <label for="statusFilter">Filter Status:</label>
-                <select id="statusFilter" class="form-select form-select-sm" style="width: auto;">
-                    <option value="">Semua Status</option>
-                    <option value="pengajuan">Pengajuan</option>
-                    <option value="diproses">Diproses</option>
-                </select>
-                
-                <label for="sectionFilter">Filter Section:</label>
-                <select id="sectionFilter" class="form-select form-select-sm" style="width: auto;">
-                    <option value="">Semua Section</option>
-                </select>
-            </div>
-            
             <div>
-                <button class="refresh-btn" onclick="refreshData()">
-                    <i class="fas fa-sync-alt"></i>
-                    Refresh Data
-                </button>
+                <div class="stats-panel">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalPengajuan">{{ stats.total_pengajuan }}</div>
+                        <div class="stat-label">Pengajuan</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalDiproses">{{ stats.total_diproses }}</div>
+                        <div class="stat-label">Diproses</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalAll">{{ stats.total_all }}</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    {% if stats.use_marquee %}
+                    <div class="stat-item">
+                        <div class="stat-number">MARQUEE</div>
+                        <div class="stat-label">Mode</div>
+                    </div>
+                    {% endif %}
+                </div>
                 <div class="last-update" id="lastUpdate">
-                    Last update: {{ current_time|date:"d/m/Y H:i:s" }}
+                    Auto-refresh setiap 30 detik | Last update: {{ current_time|date:"d/m/Y H:i:s" }}
                 </div>
             </div>
         </div>
@@ -352,14 +269,14 @@
                         <th style="width: 10%;">NOMOR WO</th>
                         <th style="width: 8%;">LINE</th>
                         <th style="width: 12%;">MESIN</th>
-                        <th style="width: 20%;">DESKRIPSI</th>
-                        <th style="width: 10%;">SECTION</th>
-                        <th style="width: 8%;">STATUS</th>
+                        <th style="width: 25%;">DESKRIPSI</th>
+                        <th style="width: 8%;">SECTION</th>
+                        <th style="width: 5%;">STATUS</th>
                     </tr>
                 </thead>
                 <tbody id="monitoringTableBody">
                     {% for item in monitoring_data %}
-                    <tr data-status="{{ item.status }}" data-section="{{ item.section_name }}">
+                    <tr>
                         <td>
                             {% if item.prioritas != '-' %}
                                 <span class="prioritas-badge {% if item.prioritas == 'H' %}prioritas-high{% elif item.prioritas == 'M' %}prioritas-medium{% else %}prioritas-low{% endif %}">
@@ -374,7 +291,7 @@
                         <td>{{ item.nomor_wo }}</td>
                         <td>{{ item.line_name }}</td>
                         <td>{{ item.mesin_name }}</td>
-                        <td class="deskripsi-cell" title="{{ item.deskripsi }}">{{ item.deskripsi }}</td>
+                        <td class="deskripsi-cell">{{ item.deskripsi }}</td>
                         <td>{{ item.section_name }}</td>
                         <td style="background-color: {{ item.status_color }}; color: {% if item.status == 'pengajuan' %}white{% else %}black{% endif %}; font-weight: bold; text-align: center;">
                             {{ item.status|upper }}
@@ -422,55 +339,8 @@
             }
         }
         
-        // Populate section filter
-        function populateSectionFilter() {
-            const sectionFilter = document.getElementById('sectionFilter');
-            const sections = new Set();
-            
-            document.querySelectorAll('#monitoringTableBody tr').forEach(row => {
-                const section = row.dataset.section;
-                if (section && section !== '-') {
-                    sections.add(section);
-                }
-            });
-            
-            sections.forEach(section => {
-                const option = document.createElement('option');
-                option.value = section;
-                option.textContent = section;
-                sectionFilter.appendChild(option);
-            });
-        }
-        
-        // Filter table
-        function filterTable() {
-            const statusFilter = document.getElementById('statusFilter').value;
-            const sectionFilter = document.getElementById('sectionFilter').value;
-            const rows = document.querySelectorAll('#monitoringTableBody tr');
-            
-            rows.forEach(row => {
-                const status = row.dataset.status;
-                const section = row.dataset.section;
-                
-                let showRow = true;
-                
-                if (statusFilter && status !== statusFilter) {
-                    showRow = false;
-                }
-                
-                if (sectionFilter && section !== sectionFilter) {
-                    showRow = false;
-                }
-                
-                row.style.display = showRow ? '' : 'none';
-            });
-        }
-        
-        // Auto refresh setiap 30 detik dengan error handling
+        // Auto refresh dengan error handling
         async function refreshData() {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'flex';
-            
             try {
                 const response = await fetch('/wo-maintenance/ajax/monitoring/refresh/', {
                     method: 'POST',
@@ -485,31 +355,25 @@
                 if (data.success) {
                     updateTable(data.data);
                     updateStats(data.stats);
-                    document.getElementById('lastUpdate').textContent = `Last update: ${data.stats.last_update}`;
+                    document.getElementById('lastUpdate').textContent = `Auto-refresh setiap 30 detik | Last update: ${data.stats.last_update}`;
                 } else {
-                    // Don't show error alert, just log it
                     console.warn('Refresh warning:', data.error || data.message);
                 }
                 
             } catch (error) {
                 console.warn('Refresh request failed:', error);
-                // Don't show error alert to prevent user confusion
-            } finally {
-                loadingOverlay.style.display = 'none';
             }
         }
         
-        // Update table with new data - PHP-like logic
+        // Update table with new data
         function updateTable(data) {
             const tbody = document.getElementById('monitoringTableBody');
             tbody.innerHTML = '';
             
             data.forEach(item => {
                 const row = document.createElement('tr');
-                row.dataset.status = item.status;
-                row.dataset.section = item.section_name;
                 
-                // Determine status color based on PHP logic
+                // Determine status color
                 let statusColor = '#7FFF00'; // Default green
                 let textColor = 'black';
                 
@@ -533,7 +397,7 @@
                     <td>${item.nomor_wo}</td>
                     <td>${item.line_name}</td>
                     <td>${item.mesin_name}</td>
-                    <td class="deskripsi-cell" title="${item.deskripsi}">${item.deskripsi}</td>
+                    <td class="deskripsi-cell">${item.deskripsi}</td>
                     <td>${item.section_name}</td>
                     <td style="background-color: ${statusColor}; color: ${textColor}; font-weight: bold; text-align: center;">
                         ${item.status.toUpperCase()}
@@ -542,8 +406,6 @@
                 
                 tbody.appendChild(row);
             });
-            
-            populateSectionFilter();
         }
         
         // Update stats
@@ -578,19 +440,13 @@
         
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            populateSectionFilter();
-            
-            // Filter events
-            document.getElementById('statusFilter').addEventListener('change', filterTable);
-            document.getElementById('sectionFilter').addEventListener('change', filterTable);
-            
             // Start auto refresh
             autoRefreshInterval = setInterval(refreshData, 30000); // 30 seconds
             
             // Start keep alive - setiap 5 menit untuk mencegah logout
             keepAliveInterval = setInterval(keepSessionAlive, 300000); // 5 minutes
             
-            console.log('Monitoring system initialized with keep-alive protection');
+            console.log('Monitoring system initialized - auto refresh every 30 seconds');
         });
         
         // Cleanup on page unload
