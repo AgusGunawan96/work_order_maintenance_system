@@ -19309,3 +19309,83 @@ INFO 2025-08-22 09:42:17,869 views 276 11500   Status: A, Approve: Y, Review: 0
 INFO 2025-08-22 09:42:17,872 views 276 11500   Status: A, Approve: Y, Review: 1
 INFO 2025-08-22 09:42:17,874 views 276 11500   Status: B, Approve: N, Review: 0
 INFO 2025-08-22 09:42:17,874 views 276 11500 === END VALIDATION ===
+INFO 2025-08-22 09:42:59,518 utils 276 16272 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:42:59,897 views 276 16272 History query executed - Found 32556 records
+INFO 2025-08-22 09:43:00,246 basehttp 276 16272 "GET /wo-maintenance/history/ HTTP/1.1" 200 104871
+INFO 2025-08-22 09:43:03,365 utils 276 16272 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:43:03,376 views 276 16272 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-22 09:43:03,377 views 276 16272 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-22 09:43:03,402 views 276 16272 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 09:43:03,415 views 276 16272 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11783}
+INFO 2025-08-22 09:43:03,534 basehttp 276 16272 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 29451
+INFO 2025-08-22 09:43:06,480 utils 276 16272 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:43:06,821 views 276 16272 History query executed - Found 32556 records
+INFO 2025-08-22 09:43:06,998 basehttp 276 16272 "GET /wo-maintenance/history/ HTTP/1.1" 200 104871
+INFO 2025-08-22 09:43:08,649 utils 276 16272 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:43:08,656 views 276 16272 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-22 09:43:08,657 views 276 16272 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-22 09:43:08,682 views 276 16272 FIXED query executed successfully - Found 1 records for view_mode: normal
+INFO 2025-08-22 09:43:08,693 views 276 16272 SITI FATIMAH stats: {'total_approved': 1, 'pending_review': 1, 'already_reviewed': 0, 'final_processed': 11783}
+INFO 2025-08-22 09:43:08,757 basehttp 276 16272 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 29451
+INFO 2025-08-22 09:43:10,391 views 276 16272 ENHANCED REVIEW: Starting review for 25-08-0390 by 007522
+INFO 2025-08-22 09:43:10,414 views 276 16272 ENHANCED REVIEW: Rendering template dengan priority level support untuk 25-08-0390
+INFO 2025-08-22 09:43:10,489 basehttp 276 16272 "GET /wo-maintenance/review/pengajuan/25-08-0390/ HTTP/1.1" 200 39374
+INFO 2025-08-22 09:43:39,492 views 276 17672 ENHANCED REVIEW: Starting review for 25-08-0390 by 007522
+INFO 2025-08-22 09:43:39,506 views 276 17672 ENHANCED REVIEW: Processing POST with priority level for 25-08-0390
+INFO 2025-08-22 09:43:39,506 forms 276 17672 ENHANCED FORM: Priority level selected: BI
+INFO 2025-08-22 09:43:39,507 views 276 17672 ENHANCED REVIEW: Form valid - Action: process, Target: , Priority: BI
+INFO 2025-08-22 09:43:39,508 views 276 17672 ENHANCED REVIEW: Original section from database - ID: 8.0
+INFO 2025-08-22 09:43:39,509 views 276 17672 ENHANCED REVIEW: No target section specified, keeping original section 8.0
+INFO 2025-08-22 09:43:39,510 models 276 17672 FIXED CREATE WO: Processing section_id = 8
+INFO 2025-08-22 09:43:39,511 models 276 17672 FIXED CREATE WO: Using correct mapping - section 8 = code I
+INFO 2025-08-22 09:43:39,512 models 276 17672 FIXED CREATE WO: Searching pattern: 25-I-08-%
+INFO 2025-08-22 09:43:39,535 models 276 17672 FIXED CREATE WO: Found last number 3, using 4
+INFO 2025-08-22 09:43:39,535 models 276 17672 FIXED CREATE WO: Generated number_wo = 25-I-08-0004 for section 8
+INFO 2025-08-22 09:43:39,537 views 276 17672 ENHANCED REVIEW: Generated Number WO: 25-I-08-0004 for mapped section 8.0
+INFO 2025-08-22 09:43:39,538 views 276 17672 ENHANCED REVIEW: Section Summary:
+INFO 2025-08-22 09:43:39,538 views 276 17672   - Original Section ID: 8.0
+INFO 2025-08-22 09:43:39,539 views 276 17672   - Final Section ID: 8.0
+INFO 2025-08-22 09:43:39,540 views 276 17672   - Section Changed: False
+INFO 2025-08-22 09:43:39,540 views 276 17672   - Generated Number WO: 25-I-08-0004
+INFO 2025-08-22 09:43:39,541 views 276 17672   - Priority Level: BI
+INFO 2025-08-22 09:43:39,555 views 276 17672 ENHANCED REVIEW: Updated number WO only, section unchanged
+INFO 2025-08-22 09:43:39,555 views 276 17672 ENHANCED REVIEW: Updated 1 row(s) in tabel_pengajuan
+INFO 2025-08-22 09:43:39,556 views 276 17672 ENHANCED REVIEW: Starting auto transfer to tabel_main for 25-08-0390 with priority BI
+INFO 2025-08-22 09:43:39,578 views 276 17672 ENHANCED REVIEW: Transfer with ORIGINAL section 8.0
+INFO 2025-08-22 09:43:39,579 views 276 17672 ENHANCED REVIEW: Inserting to tabel_main - Section: 8.0, Number WO: 25-I-08-0004, PriMa: BI
+INFO 2025-08-22 09:43:39,587 views 276 17672 ENHANCED REVIEW: Inserted 1 row(s) to tabel_main with section 8.0 and priority BI
+INFO 2025-08-22 09:43:39,587 views 276 17672 ENHANCED REVIEW SUCCESS SUMMARY:
+INFO 2025-08-22 09:43:39,588 views 276 17672   - Pengajuan: 25-08-0390
+INFO 2025-08-22 09:43:39,589 views 276 17672   - Section Changed: False
+INFO 2025-08-22 09:43:39,591 views 276 17672   - Final Section ID: 8.0
+INFO 2025-08-22 09:43:39,592 views 276 17672   - Number WO (NEW FORMAT): 25-I-08-0004
+INFO 2025-08-22 09:43:39,592 views 276 17672   - Priority Level: BI
+INFO 2025-08-22 09:43:39,593 views 276 17672   - Transfer Success: True
+INFO 2025-08-22 09:43:39,597 views 276 17672 ENHANCED REVIEW: Transaction completed successfully for 25-08-0390
+INFO 2025-08-22 09:43:39,609 basehttp 276 17672 "POST /wo-maintenance/review/pengajuan/25-08-0390/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:43:39,672 views 276 17672 ENHANCED REVIEW: Starting review for 25-08-0390 by 007522
+WARNING 2025-08-22 09:43:39,690 views 276 17672 ENHANCED REVIEW: Pengajuan 25-08-0390 not approved
+INFO 2025-08-22 09:43:39,692 basehttp 276 17672 "GET /wo-maintenance/review/pengajuan/25-08-0390/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:43:39,780 views 276 17672 Found 0 pengajuan for review by SITI FATIMAH (status=B, approve=N)
+INFO 2025-08-22 09:43:39,869 basehttp 276 17672 "GET /wo-maintenance/review/pengajuan/ HTTP/1.1" 200 33894
+INFO 2025-08-22 09:43:49,232 utils 276 9380 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:43:49,560 views 276 9380 History query executed - Found 32557 records
+INFO 2025-08-22 09:43:49,755 basehttp 276 9380 "GET /wo-maintenance/history/ HTTP/1.1" 200 104516
+INFO 2025-08-22 09:43:57,098 utils 276 10616 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:43:57,199 basehttp 276 10616 "GET /wo-maintenance/history/25-08-0390/ HTTP/1.1" 200 49240
+INFO 2025-08-22 09:44:10,336 utils 276 11920 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:44:10,407 views 276 11920 Successfully updated history 25-08-0390 by 007522
+INFO 2025-08-22 09:44:10,410 basehttp 276 11920 "POST /wo-maintenance/history/25-08-0390/ HTTP/1.1" 302 0
+INFO 2025-08-22 09:44:10,483 utils 276 11920 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:44:10,580 basehttp 276 11920 "GET /wo-maintenance/history/25-08-0390/ HTTP/1.1" 200 49595
+INFO 2025-08-22 09:44:13,244 utils 276 11920 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:44:13,252 views 276 11920 SITI FATIMAH (007522) accessing enhanced daftar laporan
+INFO 2025-08-22 09:44:13,253 views 276 11920 SITI FATIMAH mode: accessing pengajuan ready for review
+INFO 2025-08-22 09:44:13,277 views 276 11920 FIXED query executed successfully - Found 0 records for view_mode: normal
+INFO 2025-08-22 09:44:13,286 views 276 11920 SITI FATIMAH stats: {'total_approved': 0, 'pending_review': 0, 'already_reviewed': 0, 'final_processed': 11784}
+INFO 2025-08-22 09:44:13,353 basehttp 276 11920 "GET /wo-maintenance/enhanced/ HTTP/1.1" 200 25148
+INFO 2025-08-22 09:44:15,523 utils 276 11920 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:44:15,857 views 276 11920 History query executed - Found 32557 records
+INFO 2025-08-22 09:44:16,029 basehttp 276 11920 "GET /wo-maintenance/history/ HTTP/1.1" 200 104859
+INFO 2025-08-22 09:45:24,785 utils 276 5172 Enhanced privileges granted to SITI FATIMAH: SITI FATIMAH
+INFO 2025-08-22 09:45:24,888 basehttp 276 5172 "GET /wo-maintenance/history/25-08-0390/ HTTP/1.1" 200 49289
