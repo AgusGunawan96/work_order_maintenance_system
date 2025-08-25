@@ -8,13 +8,13 @@ from django.db.models import Q, Count
 from django.db import connections, transaction
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
 import json
 import logging
 from functools import wraps
 from django.http import JsonResponse
-from wo_maintenance_app.models import transfer_pengajuan_to_main, create_new_history_id, create_number_wo_with_section
-
+from wo_maintenance_app.models import transfer_pengajuan_to_main, create_new_history_id, create_number_wo_with_section, save_checker_to_database, get_checker_data_from_database, transfer_checker_pengajuan_to_main, save_checker_to_pengajuan, save_checker_to_main
 from wo_maintenance_app.forms import PengajuanMaintenanceForm, PengajuanFilterForm, ApprovalForm, ReviewForm, ReviewFilterForm, HistoryMaintenanceForm, HistoryFilterForm, update_history_maintenance
 from wo_maintenance_app.utils import (
     get_employee_hierarchy_data, 
@@ -1056,25 +1056,822 @@ __all__ = [
 
 # wo_maintenance_app/views.py - UPDATE review_pengajuan_detail dengan Priority Level
 
+# @login_required
+# @reviewer_required_fixed
+# def review_pengajuan_detail(request, nomor_pengajuan):
+#     """
+#     ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH dengan priority level support
+#     FIXED: Section mapping untuk 4=M, 5=E, 6=U, 8=I sesuai database + Priority Level
+#     """
+#     try:
+#         logger.info(f"ENHANCED REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
+        
+#         employee_data = get_employee_data_for_request_fixed(request)
+        
+#         if not employee_data:
+#             logger.error(f"ENHANCED REVIEW: No employee data for {request.user.username}")
+#             messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
+#             return redirect('login')
+        
+#         initialize_review_data()
+        
+#         # Ambil data pengajuan
+#         pengajuan = None
+        
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             cursor.execute("""
+#                 SELECT 
+#                     tp.history_id, tp.number_wo, tp.tgl_insert, tp.oleh, tp.user_insert,
+#                     tm.mesin, tms.seksi as section_tujuan, tpek.pekerjaan,
+#                     tp.deskripsi_perbaikan, tp.status, tp.approve, tl.line as line_name,
+#                     tp.tgl_his, tp.jam_his, tp.review_status, tp.reviewed_by,
+#                     tp.review_date, tp.review_notes, tp.final_section_id,
+#                     final_section.seksi as final_section_name, tp.status_pekerjaan,
+#                     tp.id_section as current_section_id, tp.id_line, tp.id_mesin,
+#                     tp.id_pekerjaan
+#                 FROM tabel_pengajuan tp
+#                 LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+#                 LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
+#                 LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+#                 LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+#                 LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
+#                 WHERE tp.history_id = %s
+#             """, [nomor_pengajuan])
+            
+#             row = cursor.fetchone()
+            
+#             if not row:
+#                 logger.error(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not found")
+#                 messages.error(request, 'Pengajuan tidak ditemukan.')
+#                 return redirect('wo_maintenance_app:review_pengajuan_list')
+            
+#             pengajuan = {
+#                 'history_id': row[0], 'number_wo': row[1], 'tgl_insert': row[2],
+#                 'oleh': row[3], 'user_insert': row[4], 'mesin': row[5],
+#                 'section_tujuan': row[6], 'pekerjaan': row[7], 'deskripsi_perbaikan': row[8],
+#                 'status': row[9], 'approve': row[10], 'line_name': row[11],
+#                 'tgl_his': row[12], 'jam_his': row[13], 'review_status': row[14],
+#                 'reviewed_by': row[15], 'review_date': row[16], 'review_notes': row[17],
+#                 'final_section_id': row[18], 'final_section_name': row[19],
+#                 'status_pekerjaan': row[20], 'current_section_id': row[21],
+#                 'id_line': row[22], 'id_mesin': row[23], 'id_pekerjaan': row[24]
+#             }
+        
+#         # Cek apakah pengajuan siap di-review
+#         if pengajuan['status'] != STATUS_APPROVED or pengajuan['approve'] != APPROVE_YES:
+#             logger.warning(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not approved")
+#             messages.warning(request, 'Pengajuan ini belum di-approve oleh atasan.')
+#             return redirect('wo_maintenance_app:review_pengajuan_list')
+        
+#         already_reviewed = pengajuan['review_status'] in ['1', '2']
+        
+#         # Handle review form submission dengan ENHANCED NUMBER WO LOGIC + PRIORITY LEVEL
+#         if request.method == 'POST' and not already_reviewed:
+#             logger.info(f"ENHANCED REVIEW: Processing POST with priority level for {nomor_pengajuan}")
+            
+#             request.session.modified = True
+            
+#             review_form = ReviewForm(request.POST)
+            
+#             if review_form.is_valid():
+#                 action = review_form.cleaned_data['action']
+#                 target_section = review_form.cleaned_data.get('target_section', '').strip()
+#                 priority_level = review_form.cleaned_data.get('priority_level', '').strip()  # NEW: Priority level
+#                 review_notes = review_form.cleaned_data['review_notes']
+                
+#                 logger.info(f"ENHANCED REVIEW: Form valid - Action: {action}, Target: {target_section}, Priority: {priority_level}")
+                
+#                 try:
+#                     with transaction.atomic(using='DB_Maintenance'):
+#                         with connections['DB_Maintenance'].cursor() as cursor:
+                            
+#                             if action == 'process':
+#                                 # FIXED: Preserve original section, hanya validate target section
+#                                 original_section_id = pengajuan['current_section_id']
+#                                 final_section_id = original_section_id  # Default ke original section
+#                                 section_changed = False
+#                                 section_change_info = ""
+                                
+#                                 logger.info(f"ENHANCED REVIEW: Original section from database - ID: {original_section_id}")
+                                
+#                                 if target_section:
+#                                     # FIXED: Mapping section sesuai database aktual (4=M, 5=E, 6=U, 8=I)
+#                                     section_mapping = {
+#                                         'mekanik': 4,    # Mekanik = 4 
+#                                         'elektrik': 5,   # Elektrik = 5
+#                                         'utility': 6,    # Utility = 6
+#                                         'it': 8          # IT = 8
+#                                     }
+                                    
+#                                     if target_section in section_mapping:
+#                                         target_section_id = section_mapping[target_section]
+                                        
+#                                         # Check if section actually changes
+#                                         if target_section_id != original_section_id:
+#                                             section_changed = True
+#                                             final_section_id = target_section_id
+#                                             section_change_info = f"Section berubah dari {pengajuan['section_tujuan']} (ID: {original_section_id}) ke {target_section.title()} (ID: {target_section_id})"
+#                                             logger.info(f"ENHANCED REVIEW: Section changed from {original_section_id} to {target_section_id}")
+#                                         else:
+#                                             # Target sama dengan current
+#                                             final_section_id = target_section_id
+#                                             section_change_info = f"Section dikonfirmasi tetap di {target_section.title()} (ID: {target_section_id})"
+#                                             logger.info(f"ENHANCED REVIEW: Section confirmed at {target_section_id}")
+#                                     else:
+#                                         logger.warning(f"ENHANCED REVIEW: Unknown target_section {target_section}")
+#                                         final_section_id = original_section_id
+#                                         section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id}) - target tidak valid"
+#                                 else:
+#                                     final_section_id = original_section_id
+#                                     section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id})"
+#                                     logger.info(f"ENHANCED REVIEW: No target section specified, keeping original section {original_section_id}")
+                                
+#                                 # FIXED: Generate number WO berdasarkan final section dengan mapping yang benar
+#                                 from wo_maintenance_app.models import create_number_wo_with_section_fixed
+                                
+#                                 # FIXED: Support untuk section 4, 5, 6, 8 sesuai database
+#                                 if final_section_id in [4, 5, 6, 8]:
+#                                     new_number_wo = create_number_wo_with_section_fixed(final_section_id)
+#                                     logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo} for mapped section {final_section_id}")
+#                                 else:
+#                                     # Section lain, gunakan fallback ke IT (section 8)
+#                                     fallback_section = 8  # IT sebagai default
+#                                     new_number_wo = create_number_wo_with_section_fixed(fallback_section)
+#                                     logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo} for unmapped section {final_section_id} (using IT fallback)")
+                                
+#                                 # VALIDATION: Log section info
+#                                 logger.info(f"ENHANCED REVIEW: Section Summary:")
+#                                 logger.info(f"  - Original Section ID: {original_section_id}")
+#                                 logger.info(f"  - Final Section ID: {final_section_id}")
+#                                 logger.info(f"  - Section Changed: {section_changed}")
+#                                 logger.info(f"  - Generated Number WO: {new_number_wo}")
+#                                 logger.info(f"  - Priority Level: {priority_level}")
+                                
+#                                 # ENHANCED: Update review status dengan conditional section update + priority
+#                                 if section_changed:
+#                                     # Jika section berubah, update final_section_id
+#                                     cursor.execute("""
+#                                         UPDATE tabel_pengajuan
+#                                         SET review_status = %s,
+#                                             reviewed_by = %s,
+#                                             review_date = GETDATE(),
+#                                             review_notes = %s,
+#                                             status = %s,
+#                                             approve = %s,
+#                                             final_section_id = %s,
+#                                             number_wo = %s
+#                                         WHERE history_id = %s
+#                                     """, [
+#                                         '1',                        # review_status = processed
+#                                         REVIEWER_EMPLOYEE_NUMBER, 
+#                                         review_notes,
+#                                         STATUS_REVIEWED,            # A - final processed
+#                                         APPROVE_REVIEWED,           # Y - final processed
+#                                         float(final_section_id),   # Update section karena berubah
+#                                         new_number_wo,
+#                                         nomor_pengajuan
+#                                     ])
+#                                     logger.info(f"ENHANCED REVIEW: Updated with section change to {final_section_id}")
+#                                 else:
+#                                     # Jika section TIDAK berubah, TIDAK update final_section_id
+#                                     cursor.execute("""
+#                                         UPDATE tabel_pengajuan
+#                                         SET review_status = %s,
+#                                             reviewed_by = %s,
+#                                             review_date = GETDATE(),
+#                                             review_notes = %s,
+#                                             status = %s,
+#                                             approve = %s,
+#                                             number_wo = %s
+#                                         WHERE history_id = %s
+#                                     """, [
+#                                         '1',                        # review_status = processed
+#                                         REVIEWER_EMPLOYEE_NUMBER, 
+#                                         review_notes,
+#                                         STATUS_REVIEWED,            # A - final processed
+#                                         APPROVE_REVIEWED,           # Y - final processed
+#                                         new_number_wo,              # Update number WO aja
+#                                         nomor_pengajuan
+#                                     ])
+#                                     logger.info(f"ENHANCED REVIEW: Updated number WO only, section unchanged")
+                                
+#                                 update_count = cursor.rowcount
+#                                 logger.info(f"ENHANCED REVIEW: Updated {update_count} row(s) in tabel_pengajuan")
+                                
+#                                 # ENHANCED: Transfer ke tabel_main dengan priority level
+#                                 logger.info(f"ENHANCED REVIEW: Starting auto transfer to tabel_main for {nomor_pengajuan} with priority {priority_level}")
+                                
+#                                 # Check apakah data sudah ada di tabel_main
+#                                 truncated_history_id = nomor_pengajuan[:11]
+#                                 cursor.execute("""
+#                                     SELECT COUNT(*) FROM tabel_main WHERE history_id = %s
+#                                 """, [truncated_history_id])
+#                                 exists_in_main = cursor.fetchone()[0] > 0
+                                
+#                                 transfer_success = False
+                                
+#                                 if not exists_in_main:
+#                                     # ENHANCED: Gunakan section yang BENAR untuk transfer + priority level
+#                                     if section_changed:
+#                                         transfer_section_id = final_section_id
+#                                         logger.info(f"ENHANCED REVIEW: Transfer with CHANGED section {transfer_section_id}")
+#                                     else:
+#                                         transfer_section_id = original_section_id
+#                                         logger.info(f"ENHANCED REVIEW: Transfer with ORIGINAL section {transfer_section_id}")
+                                    
+#                                     # Insert data ke tabel_main dengan section ASLI + PriMa field
+#                                     truncated_number_wo = new_number_wo[:15]
+#                                     user_insert_truncated = pengajuan['user_insert'][:50] if pengajuan['user_insert'] else None
+#                                     oleh_truncated = pengajuan['oleh'][:500] if pengajuan['oleh'] else '-'
+                                    
+#                                     # ENHANCED: Prepare PriMa value dengan validation
+#                                     prima_value = priority_level if priority_level in ['BI', 'AI', 'AOL', 'AOI', 'BOL', 'BOI'] else None
+                                    
+#                                     logger.info(f"ENHANCED REVIEW: Inserting to tabel_main - Section: {transfer_section_id}, Number WO: {truncated_number_wo}, PriMa: {prima_value}")
+                                    
+#                                     insert_sql = """
+#                                         INSERT INTO tabel_main (
+#                                             history_id, tgl_his, jam_his, id_line, id_mesin, 
+#                                             id_section, id_pekerjaan, number_wo, deskripsi_perbaikan,
+#                                             pic_produksi, pic_maintenance, status, user_insert, 
+#                                             tgl_insert, oleh, status_pekerjaan, PriMa
+#                                         ) VALUES (
+#                                             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+#                                         )
+#                                     """
+                                    
+#                                     insert_params = [
+#                                         truncated_history_id,
+#                                         pengajuan['tgl_his'],
+#                                         pengajuan['jam_his'],
+#                                         float(pengajuan['id_line']) if pengajuan['id_line'] else None,
+#                                         float(pengajuan['id_mesin']) if pengajuan['id_mesin'] else None,
+#                                         float(transfer_section_id),             # CORRECT: Section asli atau yang berubah
+#                                         float(pengajuan['id_pekerjaan']) if pengajuan['id_pekerjaan'] else None,
+#                                         truncated_number_wo,                    # Number WO format baru
+#                                         pengajuan['deskripsi_perbaikan'],
+#                                         oleh_truncated,
+#                                         '-',
+#                                         'A',                                    # Status umum 'A'
+#                                         user_insert_truncated,
+#                                         pengajuan['tgl_insert'],
+#                                         oleh_truncated,
+#                                         'O',                                    # Status pekerjaan 'O'
+#                                         prima_value                             # NEW: PriMa priority level
+#                                     ]
+                                    
+#                                     cursor.execute(insert_sql, insert_params)
+#                                     insert_count = cursor.rowcount
+                                    
+#                                     logger.info(f"ENHANCED REVIEW: Inserted {insert_count} row(s) to tabel_main with section {transfer_section_id} and priority {prima_value}")
+#                                     transfer_success = True
+                                    
+#                                 else:
+#                                     logger.warning(f"ENHANCED REVIEW: Data {nomor_pengajuan} already exists in tabel_main")
+#                                     transfer_success = True
+                                
+#                                 # ENHANCED success message dengan number WO format baru + priority info
+#                                 success_parts = []
+#                                 success_parts.append(f'Pengajuan {nomor_pengajuan} berhasil diproses dan diselesaikan!')
+                                
+#                                 # Number WO info
+#                                 section_code_map = {4: 'M', 5: 'E', 6: 'U', 8: 'I'}
+#                                 current_section_code = section_code_map.get(final_section_id, 'X')
+#                                 success_parts.append(f'Number WO: {new_number_wo} (format section {current_section_code})')
+                                
+#                                 # Priority info
+#                                 if priority_level:
+#                                     success_parts.append(f'Prioritas Pekerjaan: {priority_level}')
+                                
+#                                 success_parts.append(f'Status: Final Processed (A/Y)')
+                                
+#                                 if transfer_success:
+#                                     success_parts.append(f'Data berhasil masuk ke History Maintenance')
+                                
+#                                 # Section info
+#                                 success_parts.append(section_change_info)
+                                
+#                                 messages.success(request, '\n'.join(success_parts))
+                                
+#                                 logger.info(f"ENHANCED REVIEW SUCCESS SUMMARY:")
+#                                 logger.info(f"  - Pengajuan: {nomor_pengajuan}")
+#                                 logger.info(f"  - Section Changed: {section_changed}")
+#                                 logger.info(f"  - Final Section ID: {final_section_id}")
+#                                 logger.info(f"  - Number WO (NEW FORMAT): {new_number_wo}")
+#                                 logger.info(f"  - Priority Level: {priority_level}")
+#                                 logger.info(f"  - Transfer Success: {transfer_success}")
+                                
+#                             elif action == 'reject':
+#                                 # Update pengajuan dengan review rejection
+#                                 cursor.execute("""
+#                                     UPDATE tabel_pengajuan
+#                                     SET review_status = %s,
+#                                         reviewed_by = %s,
+#                                         review_date = GETDATE(),
+#                                         review_notes = %s,
+#                                         status = %s
+#                                     WHERE history_id = %s
+#                                 """, ['2', REVIEWER_EMPLOYEE_NUMBER, review_notes, STATUS_REJECTED, nomor_pengajuan])
+                                
+#                                 logger.info(f"ENHANCED REVIEW: Rejected pengajuan {nomor_pengajuan}")
+#                                 messages.success(request, f'Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
+                    
+#                     logger.info(f"ENHANCED REVIEW: Transaction completed successfully for {nomor_pengajuan}")
+                    
+#                     request.session.modified = True
+#                     request.session.save()
+                    
+#                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
+                    
+#                 except Exception as update_error:
+#                     logger.error(f"ENHANCED REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
+#                     import traceback
+#                     logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
+#                     messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
+#             else:
+#                 logger.warning(f"ENHANCED REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
+#                 messages.error(request, 'Form review tidak valid. Periksa kembali input Anda.')
+#         else:
+#             review_form = ReviewForm()
+        
+#         # FIXED: Available sections dengan mapping yang benar sesuai database
+#         available_sections = [
+#             {'key': 'mekanik', 'name': '🔧 Mekanik', 'section_id': 4, 'format_code': 'M', 'example': '25-M-08-0001'},
+#             {'key': 'elektrik', 'name': '⚡ Elektrik', 'section_id': 5, 'format_code': 'E', 'example': '25-E-08-0001'},
+#             {'key': 'utility', 'name': '🏭 Utility', 'section_id': 6, 'format_code': 'U', 'example': '25-U-08-0001'},
+#             {'key': 'it', 'name': '💻 IT', 'section_id': 8, 'format_code': 'I', 'example': '25-I-08-0001'}
+#         ]
+        
+#         # ENHANCED: Priority choices info
+#         priority_choices = [
+#             {'value': 'BI', 'label': 'BI - Basic Important', 'description': 'Prioritas basic yang penting'},
+#             {'value': 'AI', 'label': 'AI - Advanced Important', 'description': 'Prioritas advanced yang penting'},
+#             {'value': 'AOL', 'label': 'AOL - Advanced Online', 'description': 'Prioritas advanced online'},
+#             {'value': 'AOI', 'label': 'AOI - Advanced Offline Important', 'description': 'Prioritas advanced offline penting'},
+#             {'value': 'BOL', 'label': 'BOL - Basic Online', 'description': 'Prioritas basic online'},
+#             {'value': 'BOI', 'label': 'BOI - Basic Offline Important', 'description': 'Prioritas basic offline penting'}
+#         ]
+        
+#         context = {
+#             'pengajuan': pengajuan,
+#             'review_form': review_form,
+#             'already_reviewed': already_reviewed,
+#             'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
+#             'available_sections': available_sections,
+#             'priority_choices': priority_choices,  # NEW: Priority choices for template
+#             'employee_data': employee_data,
+#             'page_title': f'ENHANCED Review dengan Priority Level {nomor_pengajuan}',
+            
+#             # Enhanced context dengan number WO info yang benar + priority
+#             'enhanced_mode': True,
+#             'priority_level_enabled': True,  # NEW: Flag for priority level feature
+#             'always_new_format': True,
+#             'current_number_wo': pengajuan['number_wo'],
+#             'current_section_info': {
+#                 'id': pengajuan['current_section_id'],
+#                 'name': pengajuan['section_tujuan']
+#             },
+#             'format_info': {
+#                 'description': 'Number WO akan selalu menggunakan format baru: YY-S-MM-NNNN',
+#                 'based_on_section': 'Berdasarkan section tujuan (4=M, 5=E, 6=U, 8=I)',
+#                 'section_mapping': '4=Mekanik(M), 5=Elektrik(E), 6=Utility(U), 8=IT(I)',
+#                 'priority_info': 'Priority Level akan disimpan ke field PriMa di tabel_main'  # NEW
+#             },
+            
+#             # Status constants untuk template
+#             'STATUS_APPROVED': STATUS_APPROVED,
+#             'STATUS_REVIEWED': STATUS_REVIEWED,
+#             'APPROVE_YES': APPROVE_YES,
+#             'APPROVE_REVIEWED': APPROVE_REVIEWED
+#         }
+        
+#         logger.info(f"ENHANCED REVIEW: Rendering template dengan priority level support untuk {nomor_pengajuan}")
+#         return render(request, 'wo_maintenance_app/review_pengajuan_detail.html', context)
+        
+#     except Exception as e:
+#         logger.error(f"ENHANCED REVIEW: Critical error for {nomor_pengajuan}: {e}")
+#         import traceback
+#         logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
+#         messages.error(request, 'Terjadi kesalahan saat memuat detail review.')
+#         return redirect('wo_maintenance_app:review_pengajuan_list')
+
+# @login_required
+# @reviewer_required_fixed
+# def review_pengajuan_detail(request, nomor_pengajuan):
+#     """
+#     ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH dengan priority level support
+#     FIXED: Section mapping untuk 4=M, 5=E, 6=U, 8=I sesuai database + Priority Level
+#     """
+#     try:
+#         logger.info(f"ENHANCED REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
+        
+#         employee_data = get_employee_data_for_request_fixed(request)
+        
+#         if not employee_data:
+#             logger.error(f"ENHANCED REVIEW: No employee data for {request.user.username}")
+#             messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
+#             return redirect('login')
+        
+#         initialize_review_data()
+        
+#         # Ambil data pengajuan
+#         pengajuan = None
+        
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             cursor.execute("""
+#                 SELECT 
+#                     tp.history_id, tp.number_wo, tp.tgl_insert, tp.oleh, tp.user_insert,
+#                     tm.mesin, tms.seksi as section_tujuan, tpek.pekerjaan,
+#                     tp.deskripsi_perbaikan, tp.status, tp.approve, tl.line as line_name,
+#                     tp.tgl_his, tp.jam_his, tp.review_status, tp.reviewed_by,
+#                     tp.review_date, tp.review_notes, tp.final_section_id,
+#                     final_section.seksi as final_section_name, tp.status_pekerjaan,
+#                     tp.id_section as current_section_id, tp.id_line, tp.id_mesin,
+#                     tp.id_pekerjaan
+#                 FROM tabel_pengajuan tp
+#                 LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
+#                 LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
+#                 LEFT JOIN tabel_msection tms ON tp.id_section = tms.id_section
+#                 LEFT JOIN tabel_pekerjaan tpek ON tp.id_pekerjaan = tpek.id_pekerjaan
+#                 LEFT JOIN tabel_msection final_section ON tp.final_section_id = final_section.id_section
+#                 WHERE tp.history_id = %s
+#             """, [nomor_pengajuan])
+            
+#             row = cursor.fetchone()
+            
+#             if not row:
+#                 logger.error(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not found")
+#                 messages.error(request, 'Pengajuan tidak ditemukan.')
+#                 return redirect('wo_maintenance_app:review_pengajuan_list')
+            
+#             pengajuan = {
+#                 'history_id': row[0], 'number_wo': row[1], 'tgl_insert': row[2],
+#                 'oleh': row[3], 'user_insert': row[4], 'mesin': row[5],
+#                 'section_tujuan': row[6], 'pekerjaan': row[7], 'deskripsi_perbaikan': row[8],
+#                 'status': row[9], 'approve': row[10], 'line_name': row[11],
+#                 'tgl_his': row[12], 'jam_his': row[13], 'review_status': row[14],
+#                 'reviewed_by': row[15], 'review_date': row[16], 'review_notes': row[17],
+#                 'final_section_id': row[18], 'final_section_name': row[19],
+#                 'status_pekerjaan': row[20], 'current_section_id': row[21],
+#                 'id_line': row[22], 'id_mesin': row[23], 'id_pekerjaan': row[24]
+#             }
+        
+#         # Cek apakah pengajuan siap di-review
+#         if pengajuan['status'] != STATUS_APPROVED or pengajuan['approve'] != APPROVE_YES:
+#             logger.warning(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not approved")
+#             messages.warning(request, 'Pengajuan ini belum di-approve oleh atasan.')
+#             return redirect('wo_maintenance_app:review_pengajuan_list')
+        
+#         already_reviewed = pengajuan['review_status'] in ['1', '2']
+        
+#         # Handle review form submission dengan ENHANCED NUMBER WO LOGIC + PRIORITY LEVEL
+#         if request.method == 'POST' and not already_reviewed:
+#             logger.info(f"ENHANCED REVIEW: Processing POST with priority level for {nomor_pengajuan}")
+            
+#             request.session.modified = True
+            
+#             review_form = ReviewForm(request.POST)
+            
+#             if review_form.is_valid():
+#                 action = review_form.cleaned_data['action']
+#                 target_section = review_form.cleaned_data.get('target_section', '').strip()
+#                 priority_level = review_form.cleaned_data.get('priority_level', '').strip()  # NEW: Priority level
+#                 review_notes = review_form.cleaned_data['review_notes']
+                
+#                 logger.info(f"ENHANCED REVIEW: Form valid - Action: {action}, Target: {target_section}, Priority: {priority_level}")
+                
+#                 try:
+#                     with transaction.atomic(using='DB_Maintenance'):
+#                         with connections['DB_Maintenance'].cursor() as cursor:
+                            
+#                             if action == 'process':
+#                                 # FIXED: Preserve original section, hanya validate target section
+#                                 original_section_id = pengajuan['current_section_id']
+#                                 final_section_id = original_section_id  # Default ke original section
+#                                 section_changed = False
+#                                 section_change_info = ""
+                                
+#                                 logger.info(f"ENHANCED REVIEW: Original section from database - ID: {original_section_id}")
+                                
+#                                 if target_section:
+#                                     # FIXED: Mapping section sesuai database aktual (4=M, 5=E, 6=U, 8=I)
+#                                     section_mapping = {
+#                                         'mekanik': 4,    # Mekanik = 4 
+#                                         'elektrik': 5,   # Elektrik = 5
+#                                         'utility': 6,    # Utility = 6
+#                                         'it': 8          # IT = 8
+#                                     }
+                                    
+#                                     if target_section in section_mapping:
+#                                         target_section_id = section_mapping[target_section]
+                                        
+#                                         # Check if section actually changes
+#                                         if target_section_id != original_section_id:
+#                                             section_changed = True
+#                                             final_section_id = target_section_id
+#                                             section_change_info = f"Section berubah dari {pengajuan['section_tujuan']} (ID: {original_section_id}) ke {target_section.title()} (ID: {target_section_id})"
+#                                             logger.info(f"ENHANCED REVIEW: Section changed from {original_section_id} to {target_section_id}")
+#                                         else:
+#                                             # Target sama dengan current
+#                                             final_section_id = target_section_id
+#                                             section_change_info = f"Section dikonfirmasi tetap di {target_section.title()} (ID: {target_section_id})"
+#                                             logger.info(f"ENHANCED REVIEW: Section confirmed at {target_section_id}")
+#                                     else:
+#                                         logger.warning(f"ENHANCED REVIEW: Unknown target_section {target_section}")
+#                                         final_section_id = original_section_id
+#                                         section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id}) - target tidak valid"
+#                                 else:
+#                                     final_section_id = original_section_id
+#                                     section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id})"
+#                                     logger.info(f"ENHANCED REVIEW: No target section specified, keeping original section {original_section_id}")
+                                
+#                                 # FIXED: Generate number WO berdasarkan final section dengan mapping yang benar
+#                                 from wo_maintenance_app.models import create_number_wo_with_section_fixed
+                                
+#                                 # FIXED: Support untuk section 4, 5, 6, 8 sesuai database
+#                                 if final_section_id in [4, 5, 6, 8]:
+#                                     new_number_wo = create_number_wo_with_section_fixed(final_section_id)
+#                                     logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo} for mapped section {final_section_id}")
+#                                 else:
+#                                     # Section lain, gunakan fallback ke IT (section 8)
+#                                     fallback_section = 8  # IT sebagai default
+#                                     new_number_wo = create_number_wo_with_section_fixed(fallback_section)
+#                                     logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo} for unmapped section {final_section_id} (using IT fallback)")
+                                
+#                                 # VALIDATION: Log section info
+#                                 logger.info(f"ENHANCED REVIEW: Section Summary:")
+#                                 logger.info(f"  - Original Section ID: {original_section_id}")
+#                                 logger.info(f"  - Final Section ID: {final_section_id}")
+#                                 logger.info(f"  - Section Changed: {section_changed}")
+#                                 logger.info(f"  - Generated Number WO: {new_number_wo}")
+#                                 logger.info(f"  - Priority Level: {priority_level}")
+                                
+#                                 # ENHANCED: Update review status dengan conditional section update + priority
+#                                 if section_changed:
+#                                     # Jika section berubah, update final_section_id
+#                                     cursor.execute("""
+#                                         UPDATE tabel_pengajuan
+#                                         SET review_status = %s,
+#                                             reviewed_by = %s,
+#                                             review_date = GETDATE(),
+#                                             review_notes = %s,
+#                                             status = %s,
+#                                             approve = %s,
+#                                             final_section_id = %s,
+#                                             number_wo = %s
+#                                         WHERE history_id = %s
+#                                     """, [
+#                                         '1',                        # review_status = processed
+#                                         REVIEWER_EMPLOYEE_NUMBER, 
+#                                         review_notes,
+#                                         STATUS_REVIEWED,            # A - final processed
+#                                         APPROVE_REVIEWED,           # Y - final processed
+#                                         float(final_section_id),   # Update section karena berubah
+#                                         new_number_wo,
+#                                         nomor_pengajuan
+#                                     ])
+#                                     logger.info(f"ENHANCED REVIEW: Updated with section change to {final_section_id}")
+#                                 else:
+#                                     # Jika section TIDAK berubah, TIDAK update final_section_id
+#                                     cursor.execute("""
+#                                         UPDATE tabel_pengajuan
+#                                         SET review_status = %s,
+#                                             reviewed_by = %s,
+#                                             review_date = GETDATE(),
+#                                             review_notes = %s,
+#                                             status = %s,
+#                                             approve = %s,
+#                                             number_wo = %s
+#                                         WHERE history_id = %s
+#                                     """, [
+#                                         '1',                        # review_status = processed
+#                                         REVIEWER_EMPLOYEE_NUMBER, 
+#                                         review_notes,
+#                                         STATUS_REVIEWED,            # A - final processed
+#                                         APPROVE_REVIEWED,           # Y - final processed
+#                                         new_number_wo,              # Update number WO aja
+#                                         nomor_pengajuan
+#                                     ])
+#                                     logger.info(f"ENHANCED REVIEW: Updated number WO only, section unchanged")
+                                
+#                                 update_count = cursor.rowcount
+#                                 logger.info(f"ENHANCED REVIEW: Updated {update_count} row(s) in tabel_pengajuan")
+                                
+#                                 # ENHANCED: Transfer ke tabel_main dengan priority level
+#                                 logger.info(f"ENHANCED REVIEW: Starting auto transfer to tabel_main for {nomor_pengajuan} with priority {priority_level}")
+                                
+#                                 # Check apakah data sudah ada di tabel_main
+#                                 truncated_history_id = nomor_pengajuan[:11]
+#                                 cursor.execute("""
+#                                     SELECT COUNT(*) FROM tabel_main WHERE history_id = %s
+#                                 """, [truncated_history_id])
+#                                 exists_in_main = cursor.fetchone()[0] > 0
+                                
+#                                 transfer_success = False
+                                
+#                                 if not exists_in_main:
+#                                     # ENHANCED: Gunakan section yang BENAR untuk transfer + priority level
+#                                     if section_changed:
+#                                         transfer_section_id = final_section_id
+#                                         logger.info(f"ENHANCED REVIEW: Transfer with CHANGED section {transfer_section_id}")
+#                                     else:
+#                                         transfer_section_id = original_section_id
+#                                         logger.info(f"ENHANCED REVIEW: Transfer with ORIGINAL section {transfer_section_id}")
+                                    
+#                                     # Insert data ke tabel_main dengan section ASLI + PriMa field
+#                                     truncated_number_wo = new_number_wo[:15]
+#                                     user_insert_truncated = pengajuan['user_insert'][:50] if pengajuan['user_insert'] else None
+#                                     oleh_truncated = pengajuan['oleh'][:500] if pengajuan['oleh'] else '-'
+                                    
+#                                     # ENHANCED: Prepare PriMa value dengan validation
+#                                     prima_value = priority_level if priority_level in ['BI', 'AI', 'AOL', 'AOI', 'BOL', 'BOI'] else None
+                                    
+#                                     logger.info(f"ENHANCED REVIEW: Inserting to tabel_main - Section: {transfer_section_id}, Number WO: {truncated_number_wo}, PriMa: {prima_value}")
+                                    
+#                                     insert_sql = """
+#                                         INSERT INTO tabel_main (
+#                                             history_id, tgl_his, jam_his, id_line, id_mesin, 
+#                                             id_section, id_pekerjaan, number_wo, deskripsi_perbaikan,
+#                                             pic_produksi, pic_maintenance, status, user_insert, 
+#                                             tgl_insert, oleh, status_pekerjaan, PriMa
+#                                         ) VALUES (
+#                                             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+#                                         )
+#                                     """
+                                    
+#                                     insert_params = [
+#                                         truncated_history_id,
+#                                         pengajuan['tgl_his'],
+#                                         pengajuan['jam_his'],
+#                                         float(pengajuan['id_line']) if pengajuan['id_line'] else None,
+#                                         float(pengajuan['id_mesin']) if pengajuan['id_mesin'] else None,
+#                                         float(transfer_section_id),             # CORRECT: Section asli atau yang berubah
+#                                         float(pengajuan['id_pekerjaan']) if pengajuan['id_pekerjaan'] else None,
+#                                         truncated_number_wo,                    # Number WO format baru
+#                                         pengajuan['deskripsi_perbaikan'],
+#                                         oleh_truncated,
+#                                         '-',
+#                                         'A',                                    # Status umum 'A'
+#                                         user_insert_truncated,
+#                                         pengajuan['tgl_insert'],
+#                                         oleh_truncated,
+#                                         'O',                                    # Status pekerjaan 'O'
+#                                         prima_value                             # NEW: PriMa priority level
+#                                     ]
+                                    
+#                                     cursor.execute(insert_sql, insert_params)
+#                                     insert_count = cursor.rowcount
+                                    
+#                                     logger.info(f"ENHANCED REVIEW: Inserted {insert_count} row(s) to tabel_main with section {transfer_section_id} and priority {prima_value}")
+#                                     transfer_success = True
+                                    
+#                                 else:
+#                                     logger.warning(f"ENHANCED REVIEW: Data {nomor_pengajuan} already exists in tabel_main")
+#                                     transfer_success = True
+                                
+#                                 # ENHANCED success message dengan number WO format baru + priority info
+#                                 success_parts = []
+#                                 success_parts.append(f'Pengajuan {nomor_pengajuan} berhasil diproses dan diselesaikan!')
+                                
+#                                 # Number WO info
+#                                 section_code_map = {4: 'M', 5: 'E', 6: 'U', 8: 'I'}
+#                                 current_section_code = section_code_map.get(final_section_id, 'X')
+#                                 success_parts.append(f'Number WO: {new_number_wo} (format section {current_section_code})')
+                                
+#                                 # Priority info
+#                                 if priority_level:
+#                                     success_parts.append(f'Prioritas Pekerjaan: {priority_level}')
+                                
+#                                 success_parts.append(f'Status: Final Processed (A/Y)')
+                                
+#                                 if transfer_success:
+#                                     success_parts.append(f'Data berhasil masuk ke History Maintenance')
+                                
+#                                 # Section info
+#                                 success_parts.append(section_change_info)
+                                
+#                                 messages.success(request, '\n'.join(success_parts))
+                                
+#                                 logger.info(f"ENHANCED REVIEW SUCCESS SUMMARY:")
+#                                 logger.info(f"  - Pengajuan: {nomor_pengajuan}")
+#                                 logger.info(f"  - Section Changed: {section_changed}")
+#                                 logger.info(f"  - Final Section ID: {final_section_id}")
+#                                 logger.info(f"  - Number WO (NEW FORMAT): {new_number_wo}")
+#                                 logger.info(f"  - Priority Level: {priority_level}")
+#                                 logger.info(f"  - Transfer Success: {transfer_success}")
+                                
+#                             elif action == 'reject':
+#                                 # Update pengajuan dengan review rejection
+#                                 cursor.execute("""
+#                                     UPDATE tabel_pengajuan
+#                                     SET review_status = %s,
+#                                         reviewed_by = %s,
+#                                         review_date = GETDATE(),
+#                                         review_notes = %s,
+#                                         status = %s
+#                                     WHERE history_id = %s
+#                                 """, ['2', REVIEWER_EMPLOYEE_NUMBER, review_notes, STATUS_REJECTED, nomor_pengajuan])
+                                
+#                                 logger.info(f"ENHANCED REVIEW: Rejected pengajuan {nomor_pengajuan}")
+#                                 messages.success(request, f'Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
+                    
+#                     logger.info(f"ENHANCED REVIEW: Transaction completed successfully for {nomor_pengajuan}")
+                    
+#                     request.session.modified = True
+#                     request.session.save()
+                    
+#                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
+                    
+#                 except Exception as update_error:
+#                     logger.error(f"ENHANCED REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
+#                     import traceback
+#                     logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
+#                     messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
+#             else:
+#                 logger.warning(f"ENHANCED REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
+#                 messages.error(request, 'Form review tidak valid. Periksa kembali input Anda.')
+#         else:
+#             review_form = ReviewForm()
+        
+#         # FIXED: Available sections dengan mapping yang benar sesuai database
+#         available_sections = [
+#             {'key': 'mekanik', 'name': '🔧 Mekanik', 'section_id': 4, 'format_code': 'M', 'example': '25-M-08-0001'},
+#             {'key': 'elektrik', 'name': '⚡ Elektrik', 'section_id': 5, 'format_code': 'E', 'example': '25-E-08-0001'},
+#             {'key': 'utility', 'name': '🏭 Utility', 'section_id': 6, 'format_code': 'U', 'example': '25-U-08-0001'},
+#             {'key': 'it', 'name': '💻 IT', 'section_id': 8, 'format_code': 'I', 'example': '25-I-08-0001'}
+#         ]
+        
+#         # ENHANCED: Priority choices info
+#         priority_choices = [
+#             {'value': 'BI', 'label': 'BI - Basic Important', 'description': 'Prioritas basic yang penting'},
+#             {'value': 'AI', 'label': 'AI - Advanced Important', 'description': 'Prioritas advanced yang penting'},
+#             {'value': 'AOL', 'label': 'AOL - Advanced Online', 'description': 'Prioritas advanced online'},
+#             {'value': 'AOI', 'label': 'AOI - Advanced Offline Important', 'description': 'Prioritas advanced offline penting'},
+#             {'value': 'BOL', 'label': 'BOL - Basic Online', 'description': 'Prioritas basic online'},
+#             {'value': 'BOI', 'label': 'BOI - Basic Offline Important', 'description': 'Prioritas basic offline penting'}
+#         ]
+        
+#         context = {
+#             'pengajuan': pengajuan,
+#             'review_form': review_form,
+#             'already_reviewed': already_reviewed,
+#             'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
+#             'available_sections': available_sections,
+#             'priority_choices': priority_choices,  # NEW: Priority choices for template
+#             'employee_data': employee_data,
+#             'page_title': f'ENHANCED Review dengan Priority Level {nomor_pengajuan}',
+            
+#             # Enhanced context dengan number WO info yang benar + priority
+#             'enhanced_mode': True,
+#             'priority_level_enabled': True,  # NEW: Flag for priority level feature
+#             'always_new_format': True,
+#             'current_number_wo': pengajuan['number_wo'],
+#             'current_section_info': {
+#                 'id': pengajuan['current_section_id'],
+#                 'name': pengajuan['section_tujuan']
+#             },
+#             'format_info': {
+#                 'description': 'Number WO akan selalu menggunakan format baru: YY-S-MM-NNNN',
+#                 'based_on_section': 'Berdasarkan section tujuan (4=M, 5=E, 6=U, 8=I)',
+#                 'section_mapping': '4=Mekanik(M), 5=Elektrik(E), 6=Utility(U), 8=IT(I)',
+#                 'priority_info': 'Priority Level akan disimpan ke field PriMa di tabel_main'  # NEW
+#             },
+            
+#             # Status constants untuk template
+#             'STATUS_APPROVED': STATUS_APPROVED,
+#             'STATUS_REVIEWED': STATUS_REVIEWED,
+#             'APPROVE_YES': APPROVE_YES,
+#             'APPROVE_REVIEWED': APPROVE_REVIEWED
+#         }
+        
+#         logger.info(f"ENHANCED REVIEW: Rendering template dengan priority level support untuk {nomor_pengajuan}")
+#         return render(request, 'wo_maintenance_app/review_pengajuan_detail.html', context)
+        
+#     except Exception as e:
+#         logger.error(f"ENHANCED REVIEW: Critical error for {nomor_pengajuan}: {e}")
+#         import traceback
+#         logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
+#         messages.error(request, 'Terjadi kesalahan saat memuat detail review.')
+#         return redirect('wo_maintenance_app:review_pengajuan_list')
+
 @login_required
 @reviewer_required_fixed
 def review_pengajuan_detail(request, nomor_pengajuan):
     """
-    ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH dengan priority level support
-    FIXED: Section mapping untuk 4=M, 5=E, 6=U, 8=I sesuai database + Priority Level
+    ENHANCED: Detail pengajuan untuk review oleh SITI FATIMAH 
+    dengan AUTO TRANSFER CHECKER dari pengajuan ke diproses
     """
     try:
-        logger.info(f"ENHANCED REVIEW: Starting review for {nomor_pengajuan} by {request.user.username}")
+        logger.info(f"ENHANCED REVIEW dengan CHECKER TRANSFER: Starting review for {nomor_pengajuan} by {request.user.username}")
         
         employee_data = get_employee_data_for_request_fixed(request)
         
         if not employee_data:
             logger.error(f"ENHANCED REVIEW: No employee data for {request.user.username}")
-            messages.error(request, 'Data employee tidak ditemukan. Silakan login ulang.')
+            messages.error(request, 'Data employee ga ketemu bro. Silakan login ulang.')
             return redirect('login')
         
         initialize_review_data()
-        
         # Ambil data pengajuan
         pengajuan = None
         
@@ -1088,7 +1885,8 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                     tp.review_date, tp.review_notes, tp.final_section_id,
                     final_section.seksi as final_section_name, tp.status_pekerjaan,
                     tp.id_section as current_section_id, tp.id_line, tp.id_mesin,
-                    tp.id_pekerjaan
+                    tp.id_pekerjaan,
+                    tp.checker_name, tp.checker_time, tp.checker_status  -- NEW: Checker info
                 FROM tabel_pengajuan tp
                 LEFT JOIN tabel_mesin tm ON tp.id_mesin = tm.id_mesin
                 LEFT JOIN tabel_line tl ON tp.id_line = tl.id_line
@@ -1102,7 +1900,7 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             
             if not row:
                 logger.error(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not found")
-                messages.error(request, 'Pengajuan tidak ditemukan.')
+                messages.error(request, 'Pengajuan ga ketemu bro.')
                 return redirect('wo_maintenance_app:review_pengajuan_list')
             
             pengajuan = {
@@ -1114,102 +1912,69 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                 'reviewed_by': row[15], 'review_date': row[16], 'review_notes': row[17],
                 'final_section_id': row[18], 'final_section_name': row[19],
                 'status_pekerjaan': row[20], 'current_section_id': row[21],
-                'id_line': row[22], 'id_mesin': row[23], 'id_pekerjaan': row[24]
+                'id_line': row[22], 'id_mesin': row[23], 'id_pekerjaan': row[24],
+                # NEW: Checker data
+                'checker_name': row[25], 'checker_time': row[26], 'checker_status': row[27]
             }
         
         # Cek apakah pengajuan siap di-review
         if pengajuan['status'] != STATUS_APPROVED or pengajuan['approve'] != APPROVE_YES:
-            logger.warning(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} not approved")
-            messages.warning(request, 'Pengajuan ini belum di-approve oleh atasan.')
+            logger.warning(f"ENHANCED REVIEW: Pengajuan {nomor_pengajuan} belum di-approve")
+            messages.warning(request, 'Pengajuan ini belum di-approve sama atasan dulu bro.')
             return redirect('wo_maintenance_app:review_pengajuan_list')
         
         already_reviewed = pengajuan['review_status'] in ['1', '2']
         
-        # Handle review form submission dengan ENHANCED NUMBER WO LOGIC + PRIORITY LEVEL
+        # NEW: Checker info untuk display
+        has_checker_in_pengajuan = bool(pengajuan['checker_status'] == '1' and pengajuan['checker_name'])
+        
+        # Handle review form submission dengan ENHANCED CHECKER TRANSFER
         if request.method == 'POST' and not already_reviewed:
-            logger.info(f"ENHANCED REVIEW: Processing POST with priority level for {nomor_pengajuan}")
-            
-            request.session.modified = True
+            logger.info(f"ENHANCED REVIEW dengan CHECKER TRANSFER: Processing POST for {nomor_pengajuan}")
             
             review_form = ReviewForm(request.POST)
             
             if review_form.is_valid():
                 action = review_form.cleaned_data['action']
                 target_section = review_form.cleaned_data.get('target_section', '').strip()
-                priority_level = review_form.cleaned_data.get('priority_level', '').strip()  # NEW: Priority level
+                priority_level = review_form.cleaned_data.get('priority_level', '').strip()
                 review_notes = review_form.cleaned_data['review_notes']
                 
                 logger.info(f"ENHANCED REVIEW: Form valid - Action: {action}, Target: {target_section}, Priority: {priority_level}")
+                logger.info(f"CHECKER INFO: Has checker in pengajuan = {has_checker_in_pengajuan}")
                 
                 try:
                     with transaction.atomic(using='DB_Maintenance'):
                         with connections['DB_Maintenance'].cursor() as cursor:
                             
                             if action == 'process':
-                                # FIXED: Preserve original section, hanya validate target section
+                                # Section mapping logic (same as before)
                                 original_section_id = pengajuan['current_section_id']
-                                final_section_id = original_section_id  # Default ke original section
+                                final_section_id = original_section_id
                                 section_changed = False
-                                section_change_info = ""
-                                
-                                logger.info(f"ENHANCED REVIEW: Original section from database - ID: {original_section_id}")
                                 
                                 if target_section:
-                                    # FIXED: Mapping section sesuai database aktual (4=M, 5=E, 6=U, 8=I)
                                     section_mapping = {
-                                        'mekanik': 4,    # Mekanik = 4 
-                                        'elektrik': 5,   # Elektrik = 5
-                                        'utility': 6,    # Utility = 6
-                                        'it': 8          # IT = 8
+                                        'mekanik': 4, 'elektrik': 5, 'utility': 6, 'it': 8
                                     }
                                     
                                     if target_section in section_mapping:
                                         target_section_id = section_mapping[target_section]
-                                        
-                                        # Check if section actually changes
                                         if target_section_id != original_section_id:
                                             section_changed = True
                                             final_section_id = target_section_id
-                                            section_change_info = f"Section berubah dari {pengajuan['section_tujuan']} (ID: {original_section_id}) ke {target_section.title()} (ID: {target_section_id})"
-                                            logger.info(f"ENHANCED REVIEW: Section changed from {original_section_id} to {target_section_id}")
-                                        else:
-                                            # Target sama dengan current
-                                            final_section_id = target_section_id
-                                            section_change_info = f"Section dikonfirmasi tetap di {target_section.title()} (ID: {target_section_id})"
-                                            logger.info(f"ENHANCED REVIEW: Section confirmed at {target_section_id}")
-                                    else:
-                                        logger.warning(f"ENHANCED REVIEW: Unknown target_section {target_section}")
-                                        final_section_id = original_section_id
-                                        section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id}) - target tidak valid"
-                                else:
-                                    final_section_id = original_section_id
-                                    section_change_info = f"Section tetap di {pengajuan['section_tujuan']} (ID: {original_section_id})"
-                                    logger.info(f"ENHANCED REVIEW: No target section specified, keeping original section {original_section_id}")
                                 
-                                # FIXED: Generate number WO berdasarkan final section dengan mapping yang benar
+                                # Generate number WO
                                 from wo_maintenance_app.models import create_number_wo_with_section_fixed
-                                
-                                # FIXED: Support untuk section 4, 5, 6, 8 sesuai database
                                 if final_section_id in [4, 5, 6, 8]:
                                     new_number_wo = create_number_wo_with_section_fixed(final_section_id)
-                                    logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo} for mapped section {final_section_id}")
                                 else:
-                                    # Section lain, gunakan fallback ke IT (section 8)
-                                    fallback_section = 8  # IT sebagai default
-                                    new_number_wo = create_number_wo_with_section_fixed(fallback_section)
-                                    logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo} for unmapped section {final_section_id} (using IT fallback)")
+                                    new_number_wo = create_number_wo_with_section_fixed(8)  # IT fallback
                                 
-                                # VALIDATION: Log section info
-                                logger.info(f"ENHANCED REVIEW: Section Summary:")
-                                logger.info(f"  - Original Section ID: {original_section_id}")
-                                logger.info(f"  - Final Section ID: {final_section_id}")
-                                logger.info(f"  - Section Changed: {section_changed}")
-                                logger.info(f"  - Generated Number WO: {new_number_wo}")
-                                logger.info(f"  - Priority Level: {priority_level}")
+                                logger.info(f"ENHANCED REVIEW: Generated Number WO: {new_number_wo}")
                                 
-                                # ENHANCED: Update review status dengan conditional section update + priority
+                                # Update review status di tabel_pengajuan
                                 if section_changed:
-                                    # Jika section berubah, update final_section_id
                                     cursor.execute("""
                                         UPDATE tabel_pengajuan
                                         SET review_status = %s,
@@ -1222,18 +1987,11 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                             number_wo = %s
                                         WHERE history_id = %s
                                     """, [
-                                        '1',                        # review_status = processed
-                                        REVIEWER_EMPLOYEE_NUMBER, 
-                                        review_notes,
-                                        STATUS_REVIEWED,            # A - final processed
-                                        APPROVE_REVIEWED,           # Y - final processed
-                                        float(final_section_id),   # Update section karena berubah
-                                        new_number_wo,
-                                        nomor_pengajuan
+                                        '1', REVIEWER_EMPLOYEE_NUMBER, review_notes,
+                                        STATUS_REVIEWED, APPROVE_REVIEWED,
+                                        float(final_section_id), new_number_wo, nomor_pengajuan
                                     ])
-                                    logger.info(f"ENHANCED REVIEW: Updated with section change to {final_section_id}")
                                 else:
-                                    # Jika section TIDAK berubah, TIDAK update final_section_id
                                     cursor.execute("""
                                         UPDATE tabel_pengajuan
                                         SET review_status = %s,
@@ -1245,23 +2003,14 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                             number_wo = %s
                                         WHERE history_id = %s
                                     """, [
-                                        '1',                        # review_status = processed
-                                        REVIEWER_EMPLOYEE_NUMBER, 
-                                        review_notes,
-                                        STATUS_REVIEWED,            # A - final processed
-                                        APPROVE_REVIEWED,           # Y - final processed
-                                        new_number_wo,              # Update number WO aja
-                                        nomor_pengajuan
+                                        '1', REVIEWER_EMPLOYEE_NUMBER, review_notes,
+                                        STATUS_REVIEWED, APPROVE_REVIEWED,
+                                        new_number_wo, nomor_pengajuan
                                     ])
-                                    logger.info(f"ENHANCED REVIEW: Updated number WO only, section unchanged")
                                 
-                                update_count = cursor.rowcount
-                                logger.info(f"ENHANCED REVIEW: Updated {update_count} row(s) in tabel_pengajuan")
+                                # ENHANCED: Transfer ke tabel_main dengan CHECKER AUTO TRANSFER
+                                logger.info(f"ENHANCED REVIEW: Starting auto transfer to tabel_main dengan CHECKER TRANSFER")
                                 
-                                # ENHANCED: Transfer ke tabel_main dengan priority level
-                                logger.info(f"ENHANCED REVIEW: Starting auto transfer to tabel_main for {nomor_pengajuan} with priority {priority_level}")
-                                
-                                # Check apakah data sudah ada di tabel_main
                                 truncated_history_id = nomor_pengajuan[:11]
                                 cursor.execute("""
                                     SELECT COUNT(*) FROM tabel_main WHERE history_id = %s
@@ -1269,27 +2018,19 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                 exists_in_main = cursor.fetchone()[0] > 0
                                 
                                 transfer_success = False
+                                checker_transfer_result = {'transferred': False, 'message': ''}
                                 
                                 if not exists_in_main:
-                                    # ENHANCED: Gunakan section yang BENAR untuk transfer + priority level
-                                    if section_changed:
-                                        transfer_section_id = final_section_id
-                                        logger.info(f"ENHANCED REVIEW: Transfer with CHANGED section {transfer_section_id}")
-                                    else:
-                                        transfer_section_id = original_section_id
-                                        logger.info(f"ENHANCED REVIEW: Transfer with ORIGINAL section {transfer_section_id}")
-                                    
-                                    # Insert data ke tabel_main dengan section ASLI + PriMa field
+                                    # Insert data ke tabel_main
+                                    transfer_section_id = final_section_id if section_changed else original_section_id
                                     truncated_number_wo = new_number_wo[:15]
                                     user_insert_truncated = pengajuan['user_insert'][:50] if pengajuan['user_insert'] else None
                                     oleh_truncated = pengajuan['oleh'][:500] if pengajuan['oleh'] else '-'
-                                    
-                                    # ENHANCED: Prepare PriMa value dengan validation
                                     prima_value = priority_level if priority_level in ['BI', 'AI', 'AOL', 'AOI', 'BOL', 'BOI'] else None
                                     
-                                    logger.info(f"ENHANCED REVIEW: Inserting to tabel_main - Section: {transfer_section_id}, Number WO: {truncated_number_wo}, PriMa: {prima_value}")
+                                    logger.info(f"ENHANCED REVIEW: Inserting to tabel_main - Section: {transfer_section_id}, PriMa: {prima_value}")
                                     
-                                    insert_sql = """
+                                    cursor.execute("""
                                         INSERT INTO tabel_main (
                                             history_id, tgl_his, jam_his, id_line, id_mesin, 
                                             id_section, id_pekerjaan, number_wo, deskripsi_perbaikan,
@@ -1298,68 +2039,73 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                         ) VALUES (
                                             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                                         )
-                                    """
-                                    
-                                    insert_params = [
-                                        truncated_history_id,
-                                        pengajuan['tgl_his'],
-                                        pengajuan['jam_his'],
+                                    """, [
+                                        truncated_history_id, pengajuan['tgl_his'], pengajuan['jam_his'],
                                         float(pengajuan['id_line']) if pengajuan['id_line'] else None,
                                         float(pengajuan['id_mesin']) if pengajuan['id_mesin'] else None,
-                                        float(transfer_section_id),             # CORRECT: Section asli atau yang berubah
+                                        float(transfer_section_id),
                                         float(pengajuan['id_pekerjaan']) if pengajuan['id_pekerjaan'] else None,
-                                        truncated_number_wo,                    # Number WO format baru
-                                        pengajuan['deskripsi_perbaikan'],
-                                        oleh_truncated,
-                                        '-',
-                                        'A',                                    # Status umum 'A'
-                                        user_insert_truncated,
-                                        pengajuan['tgl_insert'],
-                                        oleh_truncated,
-                                        'O',                                    # Status pekerjaan 'O'
-                                        prima_value                             # NEW: PriMa priority level
-                                    ]
+                                        truncated_number_wo, pengajuan['deskripsi_perbaikan'],
+                                        oleh_truncated, '-', 'A', user_insert_truncated,
+                                        pengajuan['tgl_insert'], oleh_truncated, 'O', prima_value
+                                    ])
                                     
-                                    cursor.execute(insert_sql, insert_params)
-                                    insert_count = cursor.rowcount
-                                    
-                                    logger.info(f"ENHANCED REVIEW: Inserted {insert_count} row(s) to tabel_main with section {transfer_section_id} and priority {prima_value}")
                                     transfer_success = True
                                     
+                                    # ENHANCED: AUTO TRANSFER CHECKER dari tabel_pengajuan ke tabel_main
+                                    if has_checker_in_pengajuan:
+                                        logger.info(f"ENHANCED CHECKER TRANSFER: Found checker in pengajuan: {pengajuan['checker_name']}")
+                                        checker_transfer_result = transfer_checker_on_review_process(
+                                            nomor_pengajuan, 
+                                            REVIEWER_EMPLOYEE_NUMBER
+                                        )
+                                        logger.info(f"ENHANCED CHECKER TRANSFER: Result = {checker_transfer_result}")
+                                    else:
+                                        logger.info(f"ENHANCED CHECKER TRANSFER: No checker found in pengajuan")
+                                        checker_transfer_result = {'transferred': False, 'message': 'Tidak ada checker untuk di-transfer'}
                                 else:
                                     logger.warning(f"ENHANCED REVIEW: Data {nomor_pengajuan} already exists in tabel_main")
                                     transfer_success = True
+                                    
+                                    # Cek apakah perlu transfer checker untuk data yang sudah ada
+                                    if has_checker_in_pengajuan:
+                                        checker_transfer_result = transfer_checker_on_review_process(
+                                            nomor_pengajuan, 
+                                            REVIEWER_EMPLOYEE_NUMBER
+                                        )
                                 
-                                # ENHANCED success message dengan number WO format baru + priority info
+                                # ENHANCED success message dengan checker transfer info
                                 success_parts = []
-                                success_parts.append(f'Pengajuan {nomor_pengajuan} berhasil diproses dan diselesaikan!')
+                                success_parts.append(f'Pengajuan {nomor_pengajuan} berhasil diproses!')
                                 
-                                # Number WO info
                                 section_code_map = {4: 'M', 5: 'E', 6: 'U', 8: 'I'}
                                 current_section_code = section_code_map.get(final_section_id, 'X')
-                                success_parts.append(f'Number WO: {new_number_wo} (format section {current_section_code})')
+                                success_parts.append(f'Number WO: {new_number_wo} (section {current_section_code})')
                                 
-                                # Priority info
                                 if priority_level:
-                                    success_parts.append(f'Prioritas Pekerjaan: {priority_level}')
+                                    success_parts.append(f'Prioritas: {priority_level}')
                                 
                                 success_parts.append(f'Status: Final Processed (A/Y)')
                                 
                                 if transfer_success:
                                     success_parts.append(f'Data berhasil masuk ke History Maintenance')
                                 
-                                # Section info
-                                success_parts.append(section_change_info)
+                                # NEW: Checker transfer result
+                                if checker_transfer_result['transferred']:
+                                    success_parts.append(f'✅ Checker berhasil di-transfer ke tabel_main: {pengajuan["checker_name"]}')
+                                elif has_checker_in_pengajuan and not checker_transfer_result['transferred']:
+                                    success_parts.append(f'⚠️ Checker transfer gagal: {checker_transfer_result["message"]}')
+                                else:
+                                    success_parts.append(f'ℹ️ Tidak ada checker untuk di-transfer')
                                 
                                 messages.success(request, '\n'.join(success_parts))
                                 
-                                logger.info(f"ENHANCED REVIEW SUCCESS SUMMARY:")
+                                logger.info(f"ENHANCED REVIEW SUCCESS dengan CHECKER TRANSFER:")
                                 logger.info(f"  - Pengajuan: {nomor_pengajuan}")
-                                logger.info(f"  - Section Changed: {section_changed}")
-                                logger.info(f"  - Final Section ID: {final_section_id}")
-                                logger.info(f"  - Number WO (NEW FORMAT): {new_number_wo}")
-                                logger.info(f"  - Priority Level: {priority_level}")
+                                logger.info(f"  - Number WO: {new_number_wo}")
+                                logger.info(f"  - Priority: {priority_level}")
                                 logger.info(f"  - Transfer Success: {transfer_success}")
+                                logger.info(f"  - Checker Transfer: {checker_transfer_result}")
                                 
                             elif action == 'reject':
                                 # Update pengajuan dengan review rejection
@@ -1376,40 +2122,33 @@ def review_pengajuan_detail(request, nomor_pengajuan):
                                 logger.info(f"ENHANCED REVIEW: Rejected pengajuan {nomor_pengajuan}")
                                 messages.success(request, f'Pengajuan {nomor_pengajuan} berhasil ditolak. Alasan: {review_notes}')
                     
-                    logger.info(f"ENHANCED REVIEW: Transaction completed successfully for {nomor_pengajuan}")
-                    
-                    request.session.modified = True
-                    request.session.save()
-                    
+                    logger.info(f"ENHANCED REVIEW dengan CHECKER TRANSFER: Transaction completed for {nomor_pengajuan}")
                     return redirect('wo_maintenance_app:review_pengajuan_detail', nomor_pengajuan=nomor_pengajuan)
                     
                 except Exception as update_error:
-                    logger.error(f"ENHANCED REVIEW: Error processing review for {nomor_pengajuan}: {update_error}")
-                    import traceback
-                    logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
+                    logger.error(f"ENHANCED REVIEW: Error processing review with checker transfer: {update_error}")
                     messages.error(request, f'Terjadi kesalahan saat memproses review: {str(update_error)}')
             else:
-                logger.warning(f"ENHANCED REVIEW: Form validation failed for {nomor_pengajuan}: {review_form.errors}")
-                messages.error(request, 'Form review tidak valid. Periksa kembali input Anda.')
+                logger.warning(f"ENHANCED REVIEW: Form validation failed: {review_form.errors}")
+                messages.error(request, 'Form review ga valid bro. Cek lagi input-nya.')
         else:
             review_form = ReviewForm()
         
-        # FIXED: Available sections dengan mapping yang benar sesuai database
+        # Available sections
         available_sections = [
-            {'key': 'mekanik', 'name': '🔧 Mekanik', 'section_id': 4, 'format_code': 'M', 'example': '25-M-08-0001'},
-            {'key': 'elektrik', 'name': '⚡ Elektrik', 'section_id': 5, 'format_code': 'E', 'example': '25-E-08-0001'},
-            {'key': 'utility', 'name': '🏭 Utility', 'section_id': 6, 'format_code': 'U', 'example': '25-U-08-0001'},
-            {'key': 'it', 'name': '💻 IT', 'section_id': 8, 'format_code': 'I', 'example': '25-I-08-0001'}
+            {'key': 'mekanik', 'name': '🔧 Mekanik', 'section_id': 4, 'format_code': 'M'},
+            {'key': 'elektrik', 'name': '⚡ Elektrik', 'section_id': 5, 'format_code': 'E'},
+            {'key': 'utility', 'name': '🏭 Utility', 'section_id': 6, 'format_code': 'U'},
+            {'key': 'it', 'name': '💻 IT', 'section_id': 8, 'format_code': 'I'}
         ]
         
-        # ENHANCED: Priority choices info
         priority_choices = [
-            {'value': 'BI', 'label': 'BI - Basic Important', 'description': 'Prioritas basic yang penting'},
-            {'value': 'AI', 'label': 'AI - Advanced Important', 'description': 'Prioritas advanced yang penting'},
-            {'value': 'AOL', 'label': 'AOL - Advanced Online', 'description': 'Prioritas advanced online'},
-            {'value': 'AOI', 'label': 'AOI - Advanced Offline Important', 'description': 'Prioritas advanced offline penting'},
-            {'value': 'BOL', 'label': 'BOL - Basic Online', 'description': 'Prioritas basic online'},
-            {'value': 'BOI', 'label': 'BOI - Basic Offline Important', 'description': 'Prioritas basic offline penting'}
+            {'value': 'BI', 'label': 'BI - Basic Important'},
+            {'value': 'AI', 'label': 'AI - Advanced Important'},
+            {'value': 'AOL', 'label': 'AOL - Advanced Online'},
+            {'value': 'AOI', 'label': 'AOI - Advanced Offline Important'},
+            {'value': 'BOL', 'label': 'BOL - Basic Online'},
+            {'value': 'BOI', 'label': 'BOI - Basic Offline Important'}
         ]
         
         context = {
@@ -1418,42 +2157,42 @@ def review_pengajuan_detail(request, nomor_pengajuan):
             'already_reviewed': already_reviewed,
             'reviewer_name': employee_data.get('fullname', REVIEWER_FULLNAME),
             'available_sections': available_sections,
-            'priority_choices': priority_choices,  # NEW: Priority choices for template
+            'priority_choices': priority_choices,
             'employee_data': employee_data,
-            'page_title': f'ENHANCED Review dengan Priority Level {nomor_pengajuan}',
             
-            # Enhanced context dengan number WO info yang benar + priority
+            # NEW: Checker context
+            'has_checker_in_pengajuan': has_checker_in_pengajuan,
+            'checker_info': {
+                'name': pengajuan.get('checker_name', ''),
+                'time': pengajuan.get('checker_time', ''),
+                'status': pengajuan.get('checker_status', '0')
+            } if has_checker_in_pengajuan else None,
+            
+            'page_title': f'ENHANCED Review dengan Auto Checker Transfer - {nomor_pengajuan}',
             'enhanced_mode': True,
-            'priority_level_enabled': True,  # NEW: Flag for priority level feature
+            'priority_level_enabled': True,
+            'checker_transfer_enabled': True,  # NEW: Flag for checker transfer
             'always_new_format': True,
             'current_number_wo': pengajuan['number_wo'],
-            'current_section_info': {
-                'id': pengajuan['current_section_id'],
-                'name': pengajuan['section_tujuan']
-            },
-            'format_info': {
-                'description': 'Number WO akan selalu menggunakan format baru: YY-S-MM-NNNN',
-                'based_on_section': 'Berdasarkan section tujuan (4=M, 5=E, 6=U, 8=I)',
-                'section_mapping': '4=Mekanik(M), 5=Elektrik(E), 6=Utility(U), 8=IT(I)',
-                'priority_info': 'Priority Level akan disimpan ke field PriMa di tabel_main'  # NEW
-            },
-            
-            # Status constants untuk template
-            'STATUS_APPROVED': STATUS_APPROVED,
-            'STATUS_REVIEWED': STATUS_REVIEWED,
-            'APPROVE_YES': APPROVE_YES,
-            'APPROVE_REVIEWED': APPROVE_REVIEWED
         }
         
-        logger.info(f"ENHANCED REVIEW: Rendering template dengan priority level support untuk {nomor_pengajuan}")
+        logger.info(f"ENHANCED REVIEW: Rendering template dengan checker transfer support untuk {nomor_pengajuan}")
         return render(request, 'wo_maintenance_app/review_pengajuan_detail.html', context)
         
     except Exception as e:
-        logger.error(f"ENHANCED REVIEW: Critical error for {nomor_pengajuan}: {e}")
-        import traceback
-        logger.error(f"ENHANCED REVIEW: Traceback: {traceback.format_exc()}")
-        messages.error(request, 'Terjadi kesalahan saat memuat detail review.')
+        logger.error(f"ENHANCED REVIEW: Critical error untuk {nomor_pengajuan}: {e}")
+        messages.error(request, 'Terjadi kesalahan saat memuat detail review bro.')
         return redirect('wo_maintenance_app:review_pengajuan_list')
+
+# Export functions
+__all__ = [
+    'monitoring_informasi_system',
+    'ajax_monitoring_refresh',
+    'save_checker_to_database',
+    'get_all_checkers_from_database', 
+    'clear_checker_from_database',
+    'review_pengajuan_detail'
+]
 
 @login_required
 def debug_transfer_status_fixed(request, nomor_pengajuan):
@@ -8257,26 +8996,534 @@ __all__ = [
     'get_opposite_status'
 ]
 
-@login_required  
+# @login_required  
+# def monitoring_informasi_system(request):
+#     """
+#     View untuk MONITORING INFORMASI SYSTEM
+#     FIXED: Prioritas dari PriMa field, Status logic yang benar
+#     """
+    
+#     # Ambil data employee dari session
+#     employee_data = request.session.get('employee_data', {})
+    
+#     monitoring_data = []
+    
+#     try:
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             # Logic waktu sesuai PHP
+#             today = timezone.now().date()
+            
+#             # Try using View_Monitor first, fallback to manual UNION if not exists
+#             try:
+#                 # Test if View_Monitor exists
+#                 cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
+#                 use_view_monitor = True
+#             except:
+#                 use_view_monitor = False
+#                 logger.warning("View_Monitor not found, using manual UNION query")
+            
+#             if use_view_monitor:
+#                 # Query menggunakan View_Monitor (jika ada)
+#                 cursor.execute(f"""
+#                     SELECT 
+#                         a.history_id,
+#                         MAX(a.tgl_his) as tgl_his,
+#                         MAX(a.jam_his) as jam_his,
+#                         a.id_line,
+#                         a.id_mesin,
+#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+#                         MAX(a.number_wo) as number_wo,
+#                         MAX(b.line) as line,
+#                         MAX(c.mesin) as mesin,
+#                         MAX(a.status_pekerjaan) as status_pekerjaan,
+#                         MAX(a.status) as status,
+#                         MAX(a.user_insert) as user_insert,
+#                         MAX(a.tgl_insert) as tgl_insert,
+#                         MAX(a.oleh) as oleh,
+#                         MAX(c.nomer) as nomer,
+#                         MAX(d.seksi) as seksi,
+#                         MAX(a.prima) as prima,
+#                         MAX(a.approve) as approve
+#                     FROM View_Monitor a 
+#                     JOIN tabel_line b ON b.id_line = a.id_line
+#                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+#                     JOIN tabel_msection d ON d.id_section = a.id_section
+#                     WHERE a.status_pekerjaan != 'C' 
+#                       AND a.history_id IS NOT NULL 
+#                       AND a.history_id != ''
+#                       AND convert(datetime,a.tgl_his,120) BETWEEN 
+#                           dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+#                           dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+#                     GROUP BY a.history_id, a.id_line, a.id_mesin
+#                     ORDER BY
+#                         CASE
+#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+#                             ELSE 1
+#                         END, 
+#                         MAX(a.tgl_his) DESC
+#                 """)
+#             else:
+#                 # FIXED: Manual UNION query dengan data yang benar
+#                 cursor.execute(f"""
+#                     SELECT 
+#                         a.history_id,
+#                         MAX(a.tgl_his) as tgl_his,
+#                         MAX(a.jam_his) as jam_his,
+#                         a.id_line,
+#                         a.id_mesin,
+#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+#                         MAX(a.number_wo) as number_wo,
+#                         MAX(b.line) as line,
+#                         MAX(c.mesin) as mesin,
+#                         MAX(a.status_pekerjaan) as status_pekerjaan,
+#                         MAX(a.status) as status,
+#                         MAX(a.user_insert) as user_insert,
+#                         MAX(a.tgl_insert) as tgl_insert,
+#                         MAX(a.oleh) as oleh,
+#                         MAX(c.nomer) as nomer,
+#                         MAX(d.seksi) as seksi,
+#                         MAX(a.prima) as prima,
+#                         MAX(a.approve) as approve
+#                     FROM (
+#                         SELECT 
+#                             tp.history_id,
+#                             tp.tgl_his,
+#                             tp.jam_his,
+#                             tp.id_line,
+#                             tp.id_mesin,
+#                             tp.deskripsi_perbaikan,
+#                             tp.number_wo,
+#                             tp.status_pekerjaan,
+#                             tp.status,
+#                             tp.id_section,
+#                             NULL as prima,
+#                             tp.tgl_insert,
+#                             tp.user_insert,
+#                             tp.oleh,
+                            
+#                             tp.approve
+#                         FROM tabel_pengajuan tp
+#                         WHERE tp.status_pekerjaan != 'C'
+#                           AND tp.history_id IS NOT NULL 
+#                           AND tp.history_id != ''
+                        
+#                         UNION ALL
+                        
+#                         SELECT 
+#                             tm.history_id,
+#                             tm.tgl_his,
+#                             tm.jam_his,
+#                             tm.id_line,
+#                             tm.id_mesin,
+#                             tm.deskripsi_perbaikan,
+#                             tm.number_wo,
+#                             tm.status_pekerjaan,
+#                             tm.status,
+#                             tm.id_section,
+#                             tm.PriMa as prima,
+#                             tm.tgl_insert,
+#                             NULL as user_insert,
+#                             tm.oleh,
+                           
+#                             NULL as approve
+#                         FROM tabel_main tm
+#                         WHERE tm.status_pekerjaan != 'C'
+#                           AND tm.history_id IS NOT NULL 
+#                           AND tm.history_id != ''
+#                     ) a
+#                     LEFT JOIN tabel_line b ON b.id_line = a.id_line
+#                     LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+#                     LEFT JOIN tabel_msection d ON d.id_section = a.id_section
+#                     WHERE convert(datetime,a.tgl_his,120) BETWEEN 
+#                         dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+#                         dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+#                     GROUP BY a.history_id, a.id_line, a.id_mesin
+#                     ORDER BY
+#                         CASE
+#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+#                             ELSE 1
+#                         END, 
+#                         MAX(a.tgl_his) DESC
+#                 """)
+            
+#             results = cursor.fetchall()
+            
+#             # FIXED: Processing data dengan logic status yang benar
+#             for row in results:
+#                 # FIXED: Map data dengan index yang benar
+#                 history_id = row[0]
+#                 tgl_his = row[1]
+#                 jam_his = row[2]
+#                 id_line = row[3] 
+#                 id_mesin = row[4]
+#                 deskripsi_perbaikan = row[5]
+#                 number_wo = row[6] if row[6] else ''
+#                 line_name = row[7]
+#                 mesin_name = row[8]
+#                 status_pekerjaan = row[9] if row[9] else ''
+#                 status = row[10] if row[10] else ''
+#                 user_insert = row[11]
+#                 tgl_insert = row[12]
+#                 oleh = row[13]
+#                 nomer = row[14]
+#                 seksi = row[15]  # Section name
+#                 prima = row[16]  # FIXED: PriMa field untuk prioritas
+                
+#                 approve = row[18] if len(row) > 18 else None
+                
+#                 # FIXED: Logic status yang benar sesuai requirement
+#                 status_display = ''
+#                 status_color = ''
+                
+#                 # Skip jika status_pekerjaan = 'C' (completed, tidak ditampilkan)
+#                 if status_pekerjaan == 'C':
+#                     continue
+                
+#                 # Logic status berdasarkan flow proses:
+#                 # 1. PENGAJUAN: Belum ada number_wo yang valid atau belum di-review
+#                 # 2. DIPROSES: Sudah di-review oleh 007522 (SITI FATIMAH)
+                
+#                 if (not number_wo or 
+#                     number_wo.strip() == '' or 
+#                     number_wo.startswith('TEMP-') or
+#                     (status != 'A' and approve != 'Y')):
+#                     # Masih dalam tahap pengajuan
+#                     status_display = 'pengajuan'
+#                     status_color = '#DC143C'  # Merah
+#                 elif (status == 'A' and 
+#                       approve == 'Y' and 
+                     
+#                       status_pekerjaan == 'O'):
+#                     # Sudah di-review oleh SITI FATIMAH dan sedang diproses
+#                     status_display = 'diproses'
+#                     status_color = '#7FFF00'  # Hijau
+#                 else:
+#                     # Default: diproses (untuk data di tabel_main yang aktif)
+#                     status_display = 'diproses'
+#                     status_color = '#7FFF00'  # Hijau
+                
+#                 # Format waktu sesuai PHP (d/m/Y - H:i:s WIB)
+#                 waktu_display = ''
+#                 if tgl_his:
+#                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
+                
+#                 # FIXED: Gabung mesin + nomer seperti di PHP
+#                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
+                
+#                 monitoring_data.append({
+#                     'history_id': history_id or '-',
+#                     'prioritas': prima or '-',  # FIXED: Gunakan prima (PriMa field)
+#                     'waktu_pengajuan': waktu_display,
+#                     'no_pengajuan': history_id or '-',
+#                     'nomor_wo': number_wo or '-',
+#                     'line_name': line_name or '-',
+#                     'mesin_name': mesin_display,
+#                     'deskripsi': deskripsi_perbaikan or '-',
+#                     'section_name': seksi or '-',  # FIXED: Gunakan seksi untuk section
+#                     'status': status_display,
+#                     'status_color': status_color,
+#                     'tgl_insert': tgl_insert,
+#                 })
+                
+#     except Exception as e:
+#         logger.error(f"Error loading monitoring data: {e}")
+#         monitoring_data = []
+#         # Don't show error to user, just log it
+    
+#     # Statistik untuk dashboard monitoring
+#     stats = {
+#         'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
+#         'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
+#         'total_all': len(monitoring_data),
+#         'use_marquee': len(monitoring_data) > 30
+#     }
+    
+#     context = {
+#         'monitoring_data': monitoring_data,
+#         'stats': stats,
+#         'employee_data': employee_data,
+#         'page_title': 'MONITORING INFORMASI SYSTEM',
+#         'current_time': timezone.now(),
+#     }
+    
+#     return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
+
+
+# @login_required  
+# def ajax_monitoring_refresh(request):
+#     """
+#     AJAX endpoint untuk refresh data monitoring - FIXED untuk prioritas dan status logic
+#     """
+#     if request.method != 'POST':
+#         return JsonResponse({'success': False, 'error': 'Method not allowed'})
+    
+#     monitoring_data = []
+    
+#     try:
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             today = timezone.now().date()
+            
+#             # Try using View_Monitor first, fallback to manual UNION if not exists
+#             try:
+#                 cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
+#                 use_view_monitor = True
+#             except:
+#                 use_view_monitor = False
+            
+#             if use_view_monitor:
+#                 # Query menggunakan View_Monitor
+#                 cursor.execute(f"""
+#                     SELECT 
+#                         a.history_id,
+#                         MAX(a.tgl_his) as tgl_his,
+#                         MAX(a.jam_his) as jam_his,
+#                         a.id_line,
+#                         a.id_mesin,
+#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+#                         MAX(a.number_wo) as number_wo,
+#                         MAX(b.line) as line,
+#                         MAX(c.mesin) as mesin,
+#                         MAX(a.status_pekerjaan) as status_pekerjaan,
+#                         MAX(a.status) as status,
+#                         MAX(a.user_insert) as user_insert,
+#                         MAX(a.tgl_insert) as tgl_insert,
+#                         MAX(a.oleh) as oleh,
+#                         MAX(c.nomer) as nomer,
+#                         MAX(d.seksi) as seksi,
+#                         MAX(a.prima) as prima,
+                       
+#                         MAX(a.approve) as approve
+#                     FROM View_Monitor a 
+#                     JOIN tabel_line b ON b.id_line = a.id_line
+#                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+#                     JOIN tabel_msection d ON d.id_section = a.id_section
+#                     WHERE a.status_pekerjaan != 'C' 
+#                       AND a.history_id IS NOT NULL 
+#                       AND a.history_id != ''
+#                       AND convert(datetime,a.tgl_his,120) BETWEEN 
+#                           dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+#                           dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+#                     GROUP BY a.history_id, a.id_line, a.id_mesin
+#                     ORDER BY
+#                         CASE
+#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+#                             ELSE 1
+#                         END, 
+#                         MAX(a.tgl_his) DESC
+#                 """)
+#             else:
+#                 # FIXED: Manual UNION query dengan data lengkap
+#                 cursor.execute(f"""
+#                     SELECT 
+#                         a.history_id,
+#                         MAX(a.tgl_his) as tgl_his,
+#                         MAX(a.jam_his) as jam_his,
+#                         a.id_line,
+#                         a.id_mesin,
+#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+#                         MAX(a.number_wo) as number_wo,
+#                         MAX(b.line) as line,
+#                         MAX(c.mesin) as mesin,
+#                         MAX(a.status_pekerjaan) as status_pekerjaan,
+#                         MAX(a.status) as status,
+#                         MAX(a.user_insert) as user_insert,
+#                         MAX(a.tgl_insert) as tgl_insert,
+#                         MAX(a.oleh) as oleh,
+#                         MAX(c.nomer) as nomer,
+#                         MAX(d.seksi) as seksi,
+#                         MAX(a.prima) as prima,
+                       
+#                         MAX(a.approve) as approve
+#                     FROM (
+#                         SELECT 
+#                             tp.history_id,
+#                             tp.tgl_his,
+#                             tp.jam_his,
+#                             tp.id_line,
+#                             tp.id_mesin,
+#                             tp.deskripsi_perbaikan,
+#                             tp.number_wo,
+#                             tp.status_pekerjaan,
+#                             tp.status,
+#                             tp.id_section,
+#                             NULL as prima,
+#                             tp.tgl_insert,
+#                             tp.user_insert,
+#                             tp.oleh,
+                            
+#                             tp.approve
+#                         FROM tabel_pengajuan tp
+#                         WHERE tp.status_pekerjaan != 'C'
+#                           AND tp.history_id IS NOT NULL 
+#                           AND tp.history_id != ''
+                        
+#                         UNION ALL
+                        
+#                         SELECT 
+#                             tm.history_id,
+#                             tm.tgl_his,
+#                             tm.jam_his,
+#                             tm.id_line,
+#                             tm.id_mesin,
+#                             tm.deskripsi_perbaikan,
+#                             tm.number_wo,
+#                             tm.status_pekerjaan,
+#                             tm.status,
+#                             tm.id_section,
+#                             tm.PriMa as prima,
+#                             tm.tgl_insert,
+#                             NULL as user_insert,
+#                             tm.oleh,
+                           
+#                             NULL as approve
+#                         FROM tabel_main tm
+#                         WHERE tm.status_pekerjaan != 'C'
+#                           AND tm.history_id IS NOT NULL 
+#                           AND tm.history_id != ''
+#                     ) a
+#                     LEFT JOIN tabel_line b ON b.id_line = a.id_line
+#                     LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+#                     LEFT JOIN tabel_msection d ON d.id_section = a.id_section
+#                     WHERE convert(datetime,a.tgl_his,120) BETWEEN 
+#                         dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+#                         dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+#                     GROUP BY a.history_id, a.id_line, a.id_mesin
+#                     ORDER BY
+#                         CASE
+#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+#                             ELSE 1
+#                         END, 
+#                         MAX(a.tgl_his) DESC
+#                 """)
+            
+#             results = cursor.fetchall()
+            
+#             # FIXED: Process data dengan logic yang sama
+#             for row in results:
+#                 # Map data dengan index yang benar
+#                 history_id = row[0]
+#                 tgl_his = row[1]
+#                 number_wo = row[6] if row[6] else ''
+#                 line_name = row[7]
+#                 mesin_name = row[8]
+#                 status_pekerjaan = row[9] if row[9] else ''
+#                 status = row[10] if row[10] else ''
+#                 nomer = row[14]
+#                 seksi = row[15]  # Section name
+#                 prima = row[16]  # FIXED: PriMa field
+               
+#                 approve = row[18] if len(row) > 18 else None
+#                 deskripsi_perbaikan = row[5]
+                
+#                 # Skip jika completed
+#                 if status_pekerjaan == 'C':
+#                     continue
+                
+#                 # FIXED: Logic status yang sama dengan main function
+#                 if (not number_wo or 
+#                     number_wo.strip() == '' or 
+#                     number_wo.startswith('TEMP-') or
+#                     (status != 'A' and approve != 'Y')):
+#                     status_display = 'pengajuan'
+#                 elif (status == 'A' and 
+#                       approve == 'Y' and 
+                     
+#                       status_pekerjaan == 'O'):
+#                     status_display = 'diproses'
+#                 else:
+#                     status_display = 'diproses'
+                
+#                 # Format waktu sesuai PHP
+#                 waktu_display = ''
+#                 if tgl_his:
+#                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
+                
+#                 # Gabung mesin + nomer
+#                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
+                
+#                 monitoring_data.append({
+#                     'prioritas': prima or '-',  # FIXED: Gunakan prima (PriMa field)
+#                     'waktu_pengajuan': waktu_display,
+#                     'no_pengajuan': history_id or '-',
+#                     'nomor_wo': number_wo or '-',
+#                     'line_name': line_name or '-',
+#                     'mesin_name': mesin_display,
+#                     'deskripsi': (deskripsi_perbaikan[:50] + '...') if deskripsi_perbaikan and len(deskripsi_perbaikan) > 50 else (deskripsi_perbaikan or '-'),
+#                     'section_name': seksi or '-',  # FIXED: Gunakan seksi untuk section
+#                     'status': status_display,
+#                 })
+        
+#         stats = {
+#             'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
+#             'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
+#             'total_all': len(monitoring_data),
+#             'use_marquee': len(monitoring_data) > 30,
+#             'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+#         }
+        
+#         return JsonResponse({
+#             'success': True,
+#             'data': monitoring_data,
+#             'stats': stats
+#         })
+        
+#     except Exception as e:
+#         logger.error(f"Error refreshing monitoring data: {e}")
+#         # Return success with empty data instead of error to prevent logout
+#         return JsonResponse({
+#             'success': True,
+#             'data': [],
+#             'stats': {
+#                 'total_pengajuan': 0,
+#                 'total_diproses': 0,
+#                 'total_all': 0,
+#                 'use_marquee': False,
+#                 'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+#             },
+#             'message': 'No data available'
+#         })
+
+
+# # Tambahkan view untuk keep session alive
+# @login_required
+# def keep_session_alive(request):
+#     """
+#     Endpoint untuk menjaga session tetap aktif
+#     """
+#     return JsonResponse({
+#         'success': True,
+#         'message': 'Session refreshed',
+#         'time': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+#     })
+
+# # Export functions
+# __all__ = [
+#     'monitoring_informasi_system',
+#     'ajax_monitoring_refresh'
+# ]
+
+logger = logging.getLogger(__name__)
+
+@login_required   
 def monitoring_informasi_system(request):
     """
-    View untuk MONITORING INFORMASI SYSTEM
-    FIXED: Prioritas dari PriMa field, Status logic yang benar
+    View untuk halaman monitoring standalone (fullscreen) 
+    Tanpa sidebar, header, dll - khusus untuk tab baru
     """
     
-    # Ambil data employee dari session
     employee_data = request.session.get('employee_data', {})
-    
     monitoring_data = []
     
     try:
+        # Load checker data dari database
+        existing_checkers = load_checkers_from_database()
+        logger.info(f"Standalone monitoring: Loaded {len(existing_checkers)} existing checkers")
+        
         with connections['DB_Maintenance'].cursor() as cursor:
-            # Logic waktu sesuai PHP
             today = timezone.now().date()
             
-            # Try using View_Monitor first, fallback to manual UNION if not exists
+            # Query monitoring data (sama dengan view utama)
             try:
-                # Test if View_Monitor exists
                 cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
                 use_view_monitor = True
             except:
@@ -8284,7 +9531,6 @@ def monitoring_informasi_system(request):
                 logger.warning("View_Monitor not found, using manual UNION query")
             
             if use_view_monitor:
-                # Query menggunakan View_Monitor (jika ada)
                 cursor.execute(f"""
                     SELECT 
                         a.history_id,
@@ -8324,7 +9570,7 @@ def monitoring_informasi_system(request):
                         MAX(a.tgl_his) DESC
                 """)
             else:
-                # FIXED: Manual UNION query dengan data yang benar
+                # Manual UNION query
                 cursor.execute(f"""
                     SELECT 
                         a.history_id,
@@ -8361,7 +9607,6 @@ def monitoring_informasi_system(request):
                             tp.tgl_insert,
                             tp.user_insert,
                             tp.oleh,
-                            
                             tp.approve
                         FROM tabel_pengajuan tp
                         WHERE tp.status_pekerjaan != 'C'
@@ -8385,7 +9630,6 @@ def monitoring_informasi_system(request):
                             tm.tgl_insert,
                             NULL as user_insert,
                             tm.oleh,
-                           
                             NULL as approve
                         FROM tabel_main tm
                         WHERE tm.status_pekerjaan != 'C'
@@ -8409,9 +9653,8 @@ def monitoring_informasi_system(request):
             
             results = cursor.fetchall()
             
-            # FIXED: Processing data dengan logic status yang benar
+            # Process data dengan database checker integration
             for row in results:
-                # FIXED: Map data dengan index yang benar
                 history_id = row[0]
                 tgl_his = row[1]
                 jam_his = row[2]
@@ -8427,75 +9670,78 @@ def monitoring_informasi_system(request):
                 tgl_insert = row[12]
                 oleh = row[13]
                 nomer = row[14]
-                seksi = row[15]  # Section name
-                prima = row[16]  # FIXED: PriMa field untuk prioritas
+                seksi = row[15]
+                prima = row[16]
+                approve = row[17] if len(row) > 17 else None
                 
-                approve = row[18] if len(row) > 18 else None
-                
-                # FIXED: Logic status yang benar sesuai requirement
-                status_display = ''
-                status_color = ''
-                
-                # Skip jika status_pekerjaan = 'C' (completed, tidak ditampilkan)
+                # Skip jika completed
                 if status_pekerjaan == 'C':
                     continue
                 
-                # Logic status berdasarkan flow proses:
-                # 1. PENGAJUAN: Belum ada number_wo yang valid atau belum di-review
-                # 2. DIPROSES: Sudah di-review oleh 007522 (SITI FATIMAH)
+                # Determine status display
+                status_display = ''
+                status_color = ''
                 
                 if (not number_wo or 
                     number_wo.strip() == '' or 
                     number_wo.startswith('TEMP-') or
                     (status != 'A' and approve != 'Y')):
-                    # Masih dalam tahap pengajuan
                     status_display = 'pengajuan'
-                    status_color = '#DC143C'  # Merah
+                    status_color = '#DC143C'
                 elif (status == 'A' and 
                       approve == 'Y' and 
-                     
                       status_pekerjaan == 'O'):
-                    # Sudah di-review oleh SITI FATIMAH dan sedang diproses
                     status_display = 'diproses'
-                    status_color = '#7FFF00'  # Hijau
+                    status_color = '#7FFF00'
                 else:
-                    # Default: diproses (untuk data di tabel_main yang aktif)
                     status_display = 'diproses'
-                    status_color = '#7FFF00'  # Hijau
+                    status_color = '#7FFF00'
                 
-                # Format waktu sesuai PHP (d/m/Y - H:i:s WIB)
+                # FIXED: Check database checker dengan history_id asli tanpa format tambahan
+                checker_key = f"row-{history_id}"
+                has_checker = checker_key in existing_checkers
+                checker_info = existing_checkers.get(checker_key, {})
+                
+                # Format waktu
                 waktu_display = ''
                 if tgl_his:
                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
                 
-                # FIXED: Gabung mesin + nomer seperti di PHP
+                # Gabung mesin + nomer
                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
                 
                 monitoring_data.append({
                     'history_id': history_id or '-',
-                    'prioritas': prima or '-',  # FIXED: Gunakan prima (PriMa field)
+                    'prioritas': prima or '-',
                     'waktu_pengajuan': waktu_display,
-                    'no_pengajuan': history_id or '-',
+                    'no_pengajuan': history_id or '-',  # PENTING: Pake history_id asli
                     'nomor_wo': number_wo or '-',
                     'line_name': line_name or '-',
                     'mesin_name': mesin_display,
                     'deskripsi': deskripsi_perbaikan or '-',
-                    'section_name': seksi or '-',  # FIXED: Gunakan seksi untuk section
+                    'section_name': seksi or '-',
                     'status': status_display,
                     'status_color': status_color,
                     'tgl_insert': tgl_insert,
+                    
+                    # Database checker info
+                    'has_checker': has_checker,
+                    'checker_name': checker_info.get('user', ''),
+                    'checker_time': checker_info.get('time', ''),
+                    'checker_source_table': checker_info.get('source_table', ''),
+                    'checker_status_type': checker_info.get('status_type', status_display)
                 })
                 
     except Exception as e:
-        logger.error(f"Error loading monitoring data: {e}")
+        logger.error(f"Error loading standalone monitoring data: {e}")
         monitoring_data = []
-        # Don't show error to user, just log it
     
-    # Statistik untuk dashboard monitoring
+    # Statistik
     stats = {
         'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
         'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
         'total_all': len(monitoring_data),
+        'total_checked': len([x for x in monitoring_data if x['has_checker']]),
         'use_marquee': len(monitoring_data) > 30
     }
     
@@ -8503,17 +9749,19 @@ def monitoring_informasi_system(request):
         'monitoring_data': monitoring_data,
         'stats': stats,
         'employee_data': employee_data,
-        'page_title': 'MONITORING INFORMASI SYSTEM',
+        'page_title': 'MONITORING INFORMASI SYSTEM - Fullscreen Mode',
         'current_time': timezone.now(),
+        'standalone_mode': True,  # Flag untuk template standalone
+        'database_mode': True
     }
     
     return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
 
-
-@login_required  
-def ajax_monitoring_refresh(request):
+# FIXED: Ajax refresh dengan URL yang benar
+@login_required
+def ajax_monitoring_refresh_database(request):
     """
-    AJAX endpoint untuk refresh data monitoring - FIXED untuk prioritas dan status logic
+    FIXED: AJAX endpoint untuk refresh monitoring - URL sesuai dengan yang dipanggil JavaScript
     """
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Method not allowed'})
@@ -8521,10 +9769,13 @@ def ajax_monitoring_refresh(request):
     monitoring_data = []
     
     try:
+        # Load checker data dari database
+        existing_checkers = load_checkers_from_database()
+        
         with connections['DB_Maintenance'].cursor() as cursor:
             today = timezone.now().date()
             
-            # Try using View_Monitor first, fallback to manual UNION if not exists
+            # SAME QUERY as monitoring_informasi_system
             try:
                 cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
                 use_view_monitor = True
@@ -8532,7 +9783,6 @@ def ajax_monitoring_refresh(request):
                 use_view_monitor = False
             
             if use_view_monitor:
-                # Query menggunakan View_Monitor
                 cursor.execute(f"""
                     SELECT 
                         a.history_id,
@@ -8552,7 +9802,6 @@ def ajax_monitoring_refresh(request):
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
                         MAX(a.prima) as prima,
-                       
                         MAX(a.approve) as approve
                     FROM View_Monitor a 
                     JOIN tabel_line b ON b.id_line = a.id_line
@@ -8565,15 +9814,9 @@ def ajax_monitoring_refresh(request):
                           dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
                           dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
                     GROUP BY a.history_id, a.id_line, a.id_mesin
-                    ORDER BY
-                        CASE
-                            WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
-                            ELSE 1
-                        END, 
-                        MAX(a.tgl_his) DESC
+                    ORDER BY MAX(a.tgl_his) DESC
                 """)
             else:
-                # FIXED: Manual UNION query dengan data lengkap
                 cursor.execute(f"""
                     SELECT 
                         a.history_id,
@@ -8593,26 +9836,13 @@ def ajax_monitoring_refresh(request):
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
                         MAX(a.prima) as prima,
-                       
                         MAX(a.approve) as approve
                     FROM (
                         SELECT 
-                            tp.history_id,
-                            tp.tgl_his,
-                            tp.jam_his,
-                            tp.id_line,
-                            tp.id_mesin,
-                            tp.deskripsi_perbaikan,
-                            tp.number_wo,
-                            tp.status_pekerjaan,
-                            tp.status,
-                            tp.id_section,
-                            NULL as prima,
-                            tp.tgl_insert,
-                            tp.user_insert,
-                            tp.oleh,
-                            
-                            tp.approve
+                            tp.history_id, tp.tgl_his, tp.jam_his, tp.id_line, tp.id_mesin,
+                            tp.deskripsi_perbaikan, tp.number_wo, tp.status_pekerjaan,
+                            tp.status, tp.id_section, NULL as prima, tp.tgl_insert,
+                            tp.user_insert, tp.oleh, tp.approve
                         FROM tabel_pengajuan tp
                         WHERE tp.status_pekerjaan != 'C'
                           AND tp.history_id IS NOT NULL 
@@ -8621,22 +9851,10 @@ def ajax_monitoring_refresh(request):
                         UNION ALL
                         
                         SELECT 
-                            tm.history_id,
-                            tm.tgl_his,
-                            tm.jam_his,
-                            tm.id_line,
-                            tm.id_mesin,
-                            tm.deskripsi_perbaikan,
-                            tm.number_wo,
-                            tm.status_pekerjaan,
-                            tm.status,
-                            tm.id_section,
-                            tm.PriMa as prima,
-                            tm.tgl_insert,
-                            NULL as user_insert,
-                            tm.oleh,
-                           
-                            NULL as approve
+                            tm.history_id, tm.tgl_his, tm.jam_his, tm.id_line, tm.id_mesin,
+                            tm.deskripsi_perbaikan, tm.number_wo, tm.status_pekerjaan,
+                            tm.status, tm.id_section, tm.PriMa as prima, tm.tgl_insert,
+                            NULL as user_insert, tm.oleh, NULL as approve
                         FROM tabel_main tm
                         WHERE tm.status_pekerjaan != 'C'
                           AND tm.history_id IS NOT NULL 
@@ -8649,103 +9867,867 @@ def ajax_monitoring_refresh(request):
                         dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
                         dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
                     GROUP BY a.history_id, a.id_line, a.id_mesin
-                    ORDER BY
-                        CASE
-                            WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
-                            ELSE 1
-                        END, 
-                        MAX(a.tgl_his) DESC
+                    ORDER BY MAX(a.tgl_his) DESC
                 """)
             
             results = cursor.fetchall()
             
-            # FIXED: Process data dengan logic yang sama
+            # Process sama seperti main view
             for row in results:
-                # Map data dengan index yang benar
                 history_id = row[0]
                 tgl_his = row[1]
+                jam_his = row[2]
+                id_line = row[3] 
+                id_mesin = row[4]
+                deskripsi_perbaikan = row[5]
                 number_wo = row[6] if row[6] else ''
                 line_name = row[7]
                 mesin_name = row[8]
                 status_pekerjaan = row[9] if row[9] else ''
                 status = row[10] if row[10] else ''
+                user_insert = row[11]
+                tgl_insert = row[12]
+                oleh = row[13]
                 nomer = row[14]
-                seksi = row[15]  # Section name
-                prima = row[16]  # FIXED: PriMa field
-               
-                approve = row[18] if len(row) > 18 else None
-                deskripsi_perbaikan = row[5]
+                seksi = row[15]
+                prima = row[16]
+                approve = row[17] if len(row) > 17 else None
                 
-                # Skip jika completed
                 if status_pekerjaan == 'C':
                     continue
                 
-                # FIXED: Logic status yang sama dengan main function
-                if (not number_wo or 
-                    number_wo.strip() == '' or 
-                    number_wo.startswith('TEMP-') or
-                    (status != 'A' and approve != 'Y')):
+                # Status determination
+                if (not number_wo or number_wo.strip() == '' or number_wo.startswith('TEMP-') or (status != 'A' and approve != 'Y')):
                     status_display = 'pengajuan'
-                elif (status == 'A' and 
-                      approve == 'Y' and 
-                     
-                      status_pekerjaan == 'O'):
+                elif (status == 'A' and approve == 'Y' and status_pekerjaan == 'O'):
                     status_display = 'diproses'
                 else:
                     status_display = 'diproses'
                 
-                # Format waktu sesuai PHP
+                # Checker mapping
+                checker_key = f"row-{history_id}"
+                has_checker = checker_key in existing_checkers
+                checker_info = existing_checkers.get(checker_key, {})
+                
                 waktu_display = ''
                 if tgl_his:
                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
                 
-                # Gabung mesin + nomer
                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
                 
                 monitoring_data.append({
-                    'prioritas': prima or '-',  # FIXED: Gunakan prima (PriMa field)
+                    'prioritas': prima or '-',
                     'waktu_pengajuan': waktu_display,
-                    'no_pengajuan': history_id or '-',
+                    'no_pengajuan': history_id,  # PENTING: history_id asli
                     'nomor_wo': number_wo or '-',
                     'line_name': line_name or '-',
                     'mesin_name': mesin_display,
-                    'deskripsi': (deskripsi_perbaikan[:50] + '...') if deskripsi_perbaikan and len(deskripsi_perbaikan) > 50 else (deskripsi_perbaikan or '-'),
-                    'section_name': seksi or '-',  # FIXED: Gunakan seksi untuk section
+                    'deskripsi': deskripsi_perbaikan or '-',
+                    'section_name': seksi or '-',
                     'status': status_display,
+                    'oleh': oleh or '-',
+                    
+                    # Database checker integration
+                    'has_checker': has_checker,
+                    'checker_name': checker_info.get('user', ''),
+                    'checker_time': checker_info.get('time', ''),
+                    'checker_source_table': checker_info.get('source_table', ''),
+                    'checker_status_type': checker_info.get('status_type', status_display)
                 })
         
         stats = {
             'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
             'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
             'total_all': len(monitoring_data),
-            'use_marquee': len(monitoring_data) > 30,
+            'total_checked': len([x for x in monitoring_data if x['has_checker']]),
             'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
         }
         
         return JsonResponse({
             'success': True,
             'data': monitoring_data,
-            'stats': stats
+            'stats': stats,
+            'checker_data': existing_checkers,
+            'standalone_mode': True,
+            'sync_timestamp': timezone.now().timestamp()
         })
         
     except Exception as e:
         logger.error(f"Error refreshing monitoring data: {e}")
-        # Return success with empty data instead of error to prevent logout
         return JsonResponse({
             'success': True,
             'data': [],
             'stats': {
-                'total_pengajuan': 0,
-                'total_diproses': 0,
-                'total_all': 0,
-                'use_marquee': False,
+                'total_pengajuan': 0, 'total_diproses': 0,
+                'total_all': 0, 'total_checked': 0,
                 'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
             },
-            'message': 'No data available'
+            'checker_data': {},
+            'message': 'No data available',
+            'standalone_mode': True
+        })
+    
+# Export functions
+__all__ = [
+    'save_checker_to_database_api',
+    'get_all_checkers_from_database_api', 
+    'save_checker_to_pengajuan_table',
+    'save_checker_to_main_table',
+    'load_checkers_from_database',
+    'transfer_checker_on_review_process',
+    'monitoring_informasi_system_database'
+]
+
+@login_required
+@require_http_methods(["POST"])
+def save_checker_api(request):
+    """
+    API untuk save checker ke database - UPDATED: Langsung ke Database
+    """
+    try:
+        data = json.loads(request.body)
+        history_id = data.get('history_id', '').strip()
+        checker_name = data.get('checker_name', '').strip()
+        status_type = data.get('status_type', 'pengajuan').strip()  # 'pengajuan' atau 'diproses'
+        device_id = data.get('device_id', None)
+        
+        logger.info(f"Save checker API called - History: {history_id}, Name: {checker_name}, Type: {status_type}")
+        
+        # Validasi input
+        if not all([history_id, checker_name]):
+            return JsonResponse({
+                'success': False,
+                'error': 'History ID dan nama checker wajib diisi bro!'
+            })
+        
+        # Validasi nama
+        if checker_name.lower() in ['test', 'testing', '']:
+            return JsonResponse({
+                'success': False,
+                'error': 'Jangan pake nama testing dong, pake nama asli!'
+            })
+        
+        # Validasi status type
+        if status_type not in ['pengajuan', 'diproses']:
+            return JsonResponse({
+                'success': False,
+                'error': 'Status type harus pengajuan atau diproses!'
+            })
+        
+        # Check apakah sudah ada checker untuk history_id ini
+        with connections['DB_Maintenance'].cursor() as cursor:
+            if status_type == 'pengajuan':
+                cursor.execute("""
+                    SELECT checker_name, checker_status 
+                    FROM tabel_pengajuan 
+                    WHERE history_id = %s
+                """, [history_id])
+            else:  # diproses
+                short_history_id = history_id[:11] if len(history_id) > 11 else history_id
+                cursor.execute("""
+                    SELECT checker_name, checker_status 
+                    FROM tabel_main 
+                    WHERE history_id = %s
+                """, [short_history_id])
+            
+            existing_data = cursor.fetchone()
+            
+            if existing_data and existing_data[1] == '1' and existing_data[0]:
+                return JsonResponse({
+                    'success': False,
+                    'error': f'Item ini udah dicek sama: {existing_data[0]}'
+                })
+        
+        # Save ke database
+        result = save_checker_to_database(
+            history_id=history_id,
+            checker_name=checker_name,
+            device_id=device_id,
+            status_type=status_type
+        )
+        
+        if result['success']:
+            logger.info(f"Checker saved successfully: {history_id} by {checker_name}")
+            return JsonResponse({
+                'success': True,
+                'message': f'Checker berhasil disimpan: {checker_name}',
+                'history_id': history_id,
+                'checker_name': checker_name,
+                'status_type': status_type,
+                'rows_affected': result.get('rows_affected', 0)
+            })
+        else:
+            logger.error(f"Failed to save checker: {result['message']}")
+            return JsonResponse({
+                'success': False,
+                'error': result['message']
+            })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Format data tidak valid bro!'
+        })
+    except Exception as e:
+        logger.error(f"Error in save_checker_api: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Terjadi kesalahan server: {str(e)}'
         })
 
 
-# Tambahkan view untuk keep session alive
+@login_required
+@require_http_methods(["GET"])
+def get_checker_data_api(request):
+    """
+    API untuk ambil data checker dari database
+    """
+    try:
+        # Load checker data dari database
+        checker_data = get_checker_data_from_database()
+        
+        logger.info(f"Loaded {len(checker_data)} checker records from database")
+        
+        return JsonResponse({
+            'success': True,
+            'checker_data': checker_data,
+            'total_checkers': len(checker_data),
+            'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S'),
+            'source': 'database'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in get_checker_data_api: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Gagal mengambil data checker: {str(e)}',
+            'checker_data': {}
+        })
+
+
+# @login_required  
+# def ajax_monitoring_refresh(request):
+#     """
+#     AJAX endpoint untuk refresh data monitoring dengan real-time checker support - FIXED
+#     """
+#     if request.method != 'POST':
+#         return JsonResponse({'success': False, 'error': 'Method not allowed'})
+    
+#     # Handle real-time checker data dengan debugging
+#     try:
+#         if hasattr(request, 'body') and request.body:
+#             data = json.loads(request.body)
+#             action = data.get('action', '')
+            
+#             logger.info(f"AJAX Action received: {action}")
+            
+#             # Real-time save checker data ke session
+#             if action == 'save_checker':
+#                 row_id = data.get('row_id', '').strip()
+#                 checker_name = data.get('checker_name', '').strip()
+#                 checker_data = data.get('checker_data', {})
+#                 timestamp = data.get('timestamp', timezone.now().timestamp())
+#                 device_id = data.get('device_id', '')
+                
+#                 logger.info(f"Save checker: {row_id} - {checker_name} from {device_id}")
+                
+#                 if row_id and checker_name:
+#                     # Initialize session checker data jika belum ada
+#                     if 'monitoring_checker_data' not in request.session:
+#                         request.session['monitoring_checker_data'] = {}
+#                         logger.info("Initialized new session checker data")
+                    
+#                     # Simpan data checker dengan timestamp untuk real-time sync
+#                     checker_entry = {
+#                         'user': checker_name,
+#                         'time': timezone.now().isoformat(),
+#                         'data': checker_data,
+#                         'last_updated': timezone.now().isoformat(),
+#                         'timestamp': timestamp,
+#                         'device_id': device_id,
+#                         'input_source': 'real_time_input',
+#                         'row_id': row_id
+#                     }
+                    
+#                     request.session['monitoring_checker_data'][row_id] = checker_entry
+                    
+#                     # Update session sync timestamp
+#                     request.session['monitoring_last_sync'] = timezone.now().timestamp()
+#                     request.session.modified = True
+                    
+#                     logger.info(f"✅ Checker saved to session: {row_id} - {checker_name}")
+#                     logger.info(f"Total checkers in session: {len(request.session['monitoring_checker_data'])}")
+                    
+#                     return JsonResponse({
+#                         'success': True,
+#                         'message': f'Real-time checker saved: {checker_name}',
+#                         'sync_timestamp': request.session['monitoring_last_sync'],
+#                         'total_saved': len(request.session['monitoring_checker_data']),
+#                         'saved_data': checker_entry
+#                     })
+#                 else:
+#                     logger.warning(f"Invalid save data: row_id={row_id}, checker_name={checker_name}")
+#                     return JsonResponse({
+#                         'success': False,
+#                         'error': 'Invalid row_id or checker_name'
+#                     })
+            
+#             # Real-time get checker data dari session dengan change detection
+#             elif action == 'get_checkers':
+#                 last_sync_hash = data.get('last_sync_hash', '')
+#                 device_id = data.get('device_id', '')
+                
+#                 # Ambil checker data dari session
+#                 checker_data = request.session.get('monitoring_checker_data', {})
+                
+#                 logger.info(f"Get checkers request from device: {device_id}")
+#                 logger.info(f"Session checker data count: {len(checker_data)}")
+#                 logger.info(f"Last sync hash received: {last_sync_hash}")
+                
+#                 # Clean up old data (lebih dari 24 jam) untuk performance
+#                 current_time = timezone.now()
+#                 cleaned_data = {}
+                
+#                 for row_id, checker_info in checker_data.items():
+#                     try:
+#                         # Pastikan format time yang benar
+#                         time_str = checker_info.get('time', '')
+#                         if time_str:
+#                             if 'T' in time_str:  # ISO format
+#                                 data_time = datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+#                             else:
+#                                 data_time = datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')
+                            
+#                             # Keep data dalam 24 jam
+#                             time_diff = (current_time - data_time.replace(tzinfo=timezone.get_current_timezone())).total_seconds()
+#                             if time_diff < 86400:  # 24 hours
+#                                 cleaned_data[row_id] = checker_info
+#                             else:
+#                                 logger.info(f"Removed old checker data: {row_id} (age: {time_diff/3600:.1f} hours)")
+#                         else:
+#                             # Keep data tanpa timestamp valid
+#                             cleaned_data[row_id] = checker_info
+#                     except (ValueError, TypeError) as e:
+#                         logger.warning(f"Error parsing time for {row_id}: {e}")
+#                         # Keep data dengan error timestamp
+#                         cleaned_data[row_id] = checker_info
+#                         continue
+                
+#                 # Update session jika ada cleanup
+#                 if len(cleaned_data) != len(checker_data):
+#                     request.session['monitoring_checker_data'] = cleaned_data
+#                     request.session.modified = True
+#                     checker_data = cleaned_data
+#                     logger.info(f"Cleaned up session data. New count: {len(cleaned_data)}")
+                
+#                 # Generate current data hash untuk change detection
+#                 data_string = json.dumps(checker_data, sort_keys=True)
+#                 current_hash = str(hash(data_string))
+                
+#                 # Debug output
+#                 logger.info(f"Current data hash: {current_hash}")
+#                 logger.info(f"Has changes: {current_hash != last_sync_hash}")
+                
+#                 # Debug: log all checker data
+#                 for row_id, checker_info in checker_data.items():
+#                     logger.info(f"Session data: {row_id} -> {checker_info.get('user', 'NO_USER')}")
+                
+#                 return JsonResponse({
+#                     'success': True,
+#                     'checker_data': checker_data,
+#                     'data_hash': current_hash,
+#                     'has_changes': current_hash != last_sync_hash,
+#                     'total_checkers': len(checker_data),
+#                     'sync_timestamp': request.session.get('monitoring_last_sync', timezone.now().timestamp()),
+#                     'device_id': device_id,
+#                     'debug_info': {
+#                         'session_keys': list(request.session.keys()),
+#                         'checker_data_exists': 'monitoring_checker_data' in request.session,
+#                         'session_modified': request.session.modified,
+#                         'raw_data_count': len(request.session.get('monitoring_checker_data', {}))
+#                     }
+#                 })
+    
+#     except json.JSONDecodeError as e:
+#         logger.error(f"JSON decode error: {e}")
+#         pass  # Continue dengan refresh normal
+#     except Exception as e:
+#         logger.error(f"Error handling real-time checker data: {e}")
+#         import traceback
+#         logger.error(f"Traceback: {traceback.format_exc()}")
+    
+#     # Normal refresh monitoring data (existing code remains the same)
+#     monitoring_data = []
+    
+#     try:
+#         with connections['DB_Maintenance'].cursor() as cursor:
+#             today = timezone.now().date()
+            
+#             # Try using View_Monitor first, fallback to manual UNION if not exists
+#             try:
+#                 cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
+#                 use_view_monitor = True
+#             except:
+#                 use_view_monitor = False
+            
+#             if use_view_monitor:
+#                 # Query menggunakan View_Monitor
+#                 cursor.execute(f"""
+#                     SELECT 
+#                         a.history_id,
+#                         MAX(a.tgl_his) as tgl_his,
+#                         MAX(a.jam_his) as jam_his,
+#                         a.id_line,
+#                         a.id_mesin,
+#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+#                         MAX(a.number_wo) as number_wo,
+#                         MAX(b.line) as line,
+#                         MAX(c.mesin) as mesin,
+#                         MAX(a.status_pekerjaan) as status_pekerjaan,
+#                         MAX(a.status) as status,
+#                         MAX(a.user_insert) as user_insert,
+#                         MAX(a.tgl_insert) as tgl_insert,
+#                         MAX(a.oleh) as oleh,
+#                         MAX(c.nomer) as nomer,
+#                         MAX(d.seksi) as seksi,
+#                         MAX(a.prima) as prima,
+#                         MAX(a.approve) as approve
+#                     FROM View_Monitor a 
+#                     JOIN tabel_line b ON b.id_line = a.id_line
+#                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+#                     JOIN tabel_msection d ON d.id_section = a.id_section
+#                     WHERE a.status_pekerjaan != 'C' 
+#                       AND a.history_id IS NOT NULL 
+#                       AND a.history_id != ''
+#                       AND convert(datetime,a.tgl_his,120) BETWEEN 
+#                           dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+#                           dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+#                     GROUP BY a.history_id, a.id_line, a.id_mesin
+#                     ORDER BY
+#                         CASE
+#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+#                             ELSE 1
+#                         END, 
+#                         MAX(a.tgl_his) DESC
+#                 """)
+#             else:
+#                 # Manual UNION query dengan data lengkap
+#                 cursor.execute(f"""
+#                     SELECT 
+#                         a.history_id,
+#                         MAX(a.tgl_his) as tgl_his,
+#                         MAX(a.jam_his) as jam_his,
+#                         a.id_line,
+#                         a.id_mesin,
+#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+#                         MAX(a.number_wo) as number_wo,
+#                         MAX(b.line) as line,
+#                         MAX(c.mesin) as mesin,
+#                         MAX(a.status_pekerjaan) as status_pekerjaan,
+#                         MAX(a.status) as status,
+#                         MAX(a.user_insert) as user_insert,
+#                         MAX(a.tgl_insert) as tgl_insert,
+#                         MAX(a.oleh) as oleh,
+#                         MAX(c.nomer) as nomer,
+#                         MAX(d.seksi) as seksi,
+#                         MAX(a.prima) as prima,
+#                         MAX(a.approve) as approve
+#                     FROM (
+#                         SELECT 
+#                             tp.history_id,
+#                             tp.tgl_his,
+#                             tp.jam_his,
+#                             tp.id_line,
+#                             tp.id_mesin,
+#                             tp.deskripsi_perbaikan,
+#                             tp.number_wo,
+#                             tp.status_pekerjaan,
+#                             tp.status,
+#                             tp.id_section,
+#                             NULL as prima,
+#                             tp.tgl_insert,
+#                             tp.user_insert,
+#                             tp.oleh,
+#                             tp.approve
+#                         FROM tabel_pengajuan tp
+#                         WHERE tp.status_pekerjaan != 'C'
+#                           AND tp.history_id IS NOT NULL 
+#                           AND tp.history_id != ''
+                        
+#                         UNION ALL
+                        
+#                         SELECT 
+#                             tm.history_id,
+#                             tm.tgl_his,
+#                             tm.jam_his,
+#                             tm.id_line,
+#                             tm.id_mesin,
+#                             tm.deskripsi_perbaikan,
+#                             tm.number_wo,
+#                             tm.status_pekerjaan,
+#                             tm.status,
+#                             tm.id_section,
+#                             tm.PriMa as prima,
+#                             tm.tgl_insert,
+#                             NULL as user_insert,
+#                             tm.oleh,
+#                             NULL as approve
+#                         FROM tabel_main tm
+#                         WHERE tm.status_pekerjaan != 'C'
+#                           AND tm.history_id IS NOT NULL 
+#                           AND tm.history_id != ''
+#                     ) a
+#                     LEFT JOIN tabel_line b ON b.id_line = a.id_line
+#                     LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+#                     LEFT JOIN tabel_msection d ON d.id_section = a.id_section
+#                     WHERE convert(datetime,a.tgl_his,120) BETWEEN 
+#                         dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+#                         dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+#                     GROUP BY a.history_id, a.id_line, a.id_mesin
+#                     ORDER BY
+#                         CASE
+#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
+#                             ELSE 1
+#                         END, 
+#                         MAX(a.tgl_his) DESC
+#                 """)
+            
+#             results = cursor.fetchall()
+            
+#             # Process data dengan logic yang sama
+#             for row in results:
+#                 # Map data dengan index yang benar
+#                 history_id = row[0]
+#                 tgl_his = row[1]
+#                 number_wo = row[6] if row[6] else ''
+#                 line_name = row[7]
+#                 mesin_name = row[8]
+#                 status_pekerjaan = row[9] if row[9] else ''
+#                 status = row[10] if row[10] else ''
+#                 nomer = row[14]
+#                 seksi = row[15]  # Section name
+#                 prima = row[16]  # PriMa field
+#                 approve = row[17] if len(row) > 17 else None
+#                 deskripsi_perbaikan = row[5]
+                
+#                 # Skip jika completed
+#                 if status_pekerjaan == 'C':
+#                     continue
+                
+#                 # Logic status yang sama dengan main function
+#                 if (not number_wo or 
+#                     number_wo.strip() == '' or 
+#                     number_wo.startswith('TEMP-') or
+#                     (status != 'A' and approve != 'Y')):
+#                     status_display = 'pengajuan'
+#                 elif (status == 'A' and 
+#                       approve == 'Y' and 
+#                       status_pekerjaan == 'O'):
+#                     status_display = 'diproses'
+#                 else:
+#                     status_display = 'diproses'
+                
+#                 # Format waktu sesuai PHP
+#                 waktu_display = ''
+#                 if tgl_his:
+#                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
+                
+#                 # Gabung mesin + nomer
+#                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
+                
+#                 monitoring_data.append({
+#                     'prioritas': prima or '-',
+#                     'waktu_pengajuan': waktu_display,
+#                     'no_pengajuan': history_id or '-',
+#                     'nomor_wo': number_wo or '-',
+#                     'line_name': line_name or '-',
+#                     'mesin_name': mesin_display,
+#                     'deskripsi': (deskripsi_perbaikan[:50] + '...') if deskripsi_perbaikan and len(deskripsi_perbaikan) > 50 else (deskripsi_perbaikan or '-'),
+#                     'section_name': seksi or '-',
+#                     'status': status_display,
+#                 })
+        
+#         stats = {
+#             'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
+#             'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
+#             'total_all': len(monitoring_data),
+#             'use_marquee': len(monitoring_data) > 30,
+#             'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+#         }
+        
+#         # Include real-time checker data untuk multi-device sync
+#         checker_data = request.session.get('monitoring_checker_data', {})
+        
+#         return JsonResponse({
+#             'success': True,
+#             'data': monitoring_data,
+#             'stats': stats,
+#             'checker_data': checker_data,  # Real-time checker sync
+#             'data_hash': str(hash(json.dumps(checker_data, sort_keys=True))),
+#             'sync_timestamp': request.session.get('monitoring_last_sync', timezone.now().timestamp()),
+#             'debug_session_info': {
+#                 'session_id': request.session.session_key,
+#                 'session_data_keys': list(request.session.keys()),
+#                 'checker_count': len(checker_data)
+#             }
+#         })
+        
+#     except Exception as e:
+#         logger.error(f"Error refreshing monitoring data: {e}")
+#         # Return success with empty data instead of error to prevent logout
+#         return JsonResponse({
+#             'success': True,
+#             'data': [],
+#             'stats': {
+#                 'total_pengajuan': 0,
+#                 'total_diproses': 0,
+#                 'total_all': 0,
+#                 'use_marquee': False,
+#                 'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+#             },
+#             'checker_data': request.session.get('monitoring_checker_data', {}),
+#             'data_hash': '',
+#             'sync_timestamp': timezone.now().timestamp(),
+#             'message': 'No data available'
+#         })
+
+def load_checkers_from_database_fixed():
+    """
+    Load checker data dengan exact history_id mapping
+    """
+    checker_data = {}
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Get checker data dari tabel_pengajuan
+            cursor.execute("""
+                SELECT 
+                    history_id, 
+                    checker_name, 
+                    checker_time, 
+                    checker_device_id, 
+                    checker_status,
+                    checker_notes
+                FROM tabel_pengajuan 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+                  AND history_id IS NOT NULL
+                  AND history_id != ''
+            """)
+            
+            pengajuan_rows = cursor.fetchall()
+            logger.info(f"Found {len(pengajuan_rows)} checked items in tabel_pengajuan")
+            
+            for row in pengajuan_rows:
+                history_id, checker_name, checker_time, device_id, status, notes = row
+                if history_id:
+                    checker_data[f"row-{history_id}"] = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'notes': notes,
+                        'status_type': 'pengajuan',
+                        'source_table': 'tabel_pengajuan',
+                        'last_updated': checker_time.isoformat() if checker_time else None
+                    }
+            
+            # Get checker data dari tabel_main
+            cursor.execute("""
+                SELECT 
+                    history_id, 
+                    checker_name, 
+                    checker_time, 
+                    checker_device_id, 
+                    checker_status,
+                    checker_transferred_from,
+                    checker_notes
+                FROM tabel_main 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+                  AND history_id IS NOT NULL
+                  AND history_id != ''
+            """)
+            
+            main_rows = cursor.fetchall()
+            logger.info(f"Found {len(main_rows)} checked items in tabel_main")
+            
+            for row in main_rows:
+                history_id, checker_name, checker_time, device_id, status, transferred_from, notes = row
+                if history_id:
+                    # Use transferred_from for mapping if available
+                    mapping_id = transferred_from if transferred_from else history_id
+                    
+                    checker_data[f"row-{mapping_id}"] = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'notes': notes,
+                        'status_type': 'diproses',
+                        'source_table': 'tabel_main',
+                        'short_history_id': history_id,
+                        'transferred_from': transferred_from,
+                        'last_updated': checker_time.isoformat() if checker_time else None
+                    }
+            
+            logger.info(f"Total checker data loaded: {len(checker_data)}")
+            return checker_data
+            
+    except Exception as e:
+        logger.error(f"Error loading checkers from database: {e}")
+        return {}
+
+# AJAX refresh dengan database integration
+@login_required
+def ajax_monitoring_refresh(request):
+    """
+    AJAX endpoint untuk refresh monitoring dengan original query structure
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'})
+    
+    monitoring_data = []
+    
+    try:
+        # Load checker data dari database
+        existing_checkers = load_checkers_from_database_fixed()
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            today = timezone.now().date()
+            
+            # SAME ORIGINAL QUERY as monitoring_informasi_system
+            cursor.execute(f"""
+                SELECT 
+                    a.history_id,
+                    MAX(a.tgl_his) as tgl_his,
+                    a.id_line,
+                    a.id_mesin,
+                    MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+                    MAX(a.number_wo) as number_wo,
+                    MAX(b.line) as line,
+                    MAX(c.mesin) as mesin,
+                    MAX(a.status_pekerjaan) as status_pekerjaan,
+                    MAX(a.status) as status,
+                    MAX(c.nomer) as nomer,
+                    MAX(d.seksi) as seksi,
+                    MAX(a.prima) as prima,
+                    MAX(a.approve) as approve,
+                    MAX(a.oleh) as oleh
+                FROM (
+                    SELECT 
+                        tp.history_id, tp.tgl_his, tp.id_line, tp.id_mesin,
+                        tp.deskripsi_perbaikan, tp.number_wo, tp.status_pekerjaan,
+                        tp.status, tp.id_section, NULL as prima, tp.approve, tp.oleh
+                    FROM tabel_pengajuan tp
+                    WHERE tp.status_pekerjaan != 'C' 
+                      AND tp.history_id IS NOT NULL 
+                      AND tp.history_id != ''
+                    
+                    UNION ALL
+                    
+                    SELECT 
+                        tm.history_id, tm.tgl_his, tm.id_line, tm.id_mesin,
+                        tm.deskripsi_perbaikan, tm.number_wo, tm.status_pekerjaan,
+                        tm.status, tm.id_section, tm.PriMa as prima, NULL as approve, tm.oleh
+                    FROM tabel_main tm
+                    WHERE tm.status_pekerjaan != 'C' 
+                      AND tm.history_id IS NOT NULL 
+                      AND tm.history_id != ''
+                ) a
+                LEFT JOIN tabel_line b ON b.id_line = a.id_line
+                LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+                LEFT JOIN tabel_msection d ON d.id_section = a.id_section
+                WHERE convert(datetime,a.tgl_his,120) BETWEEN 
+                    dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+                    dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+                GROUP BY a.history_id, a.id_line, a.id_mesin
+                ORDER BY MAX(a.tgl_his) DESC
+            """)
+            
+            results = cursor.fetchall()
+            logger.info(f"Ajax refresh found {len(results)} monitoring records")
+            
+            # Process data dengan logic yang sama
+            for row in results:
+                history_id, tgl_his, id_line, id_mesin, deskripsi, number_wo, line_name, mesin_name, status_pekerjaan, status, nomer, seksi, prima, approve, oleh = row
+                
+                if status_pekerjaan == 'C':
+                    continue
+                
+                # Status determination - sama dengan original
+                if (not number_wo or number_wo.strip() == '' or (status != 'A' and approve != 'Y')):
+                    status_display = 'pengajuan'
+                else:
+                    status_display = 'diproses'
+                
+                # Checker mapping
+                checker_key = f"row-{history_id}"
+                has_checker = checker_key in existing_checkers
+                checker_info = existing_checkers.get(checker_key, {})
+                
+                waktu_display = tgl_his.strftime('%d/%m/%Y - %H:%M:%S WIB') if tgl_his else '-'
+                mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
+                
+                # Truncate long descriptions
+                deskripsi_display = deskripsi or '-'
+                if len(deskripsi_display) > 50:
+                    deskripsi_display = deskripsi_display[:50] + '...'
+                
+                monitoring_data.append({
+                    'prioritas': prima or '-',
+                    'waktu_pengajuan': waktu_display,
+                    'no_pengajuan': history_id,
+                    'nomor_wo': number_wo or '-',
+                    'line_name': line_name or '-',
+                    'mesin_name': mesin_display,
+                    'deskripsi': deskripsi_display,
+                    'section_name': seksi or '-',
+                    'status': status_display,
+                    'oleh': oleh or '-',
+                    
+                    # Database checker integration
+                    'has_checker': has_checker,
+                    'checker_name': checker_info.get('user', ''),
+                    'checker_time': checker_info.get('time', ''),
+                    'checker_source_table': checker_info.get('source_table', ''),
+                    'checker_status_type': checker_info.get('status_type', status_display)
+                })
+        
+        stats = {
+            'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
+            'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
+            'total_all': len(monitoring_data),
+            'total_checked': len([x for x in monitoring_data if x['has_checker']]),
+            'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+        }
+        
+        return JsonResponse({
+            'success': True,
+            'data': monitoring_data,
+            'stats': stats,
+            'checker_data': existing_checkers,
+            'standalone_mode': True,
+            'sync_timestamp': timezone.now().timestamp()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error refreshing monitoring data: {e}")
+        return JsonResponse({
+            'success': True,
+            'data': [],
+            'stats': {
+                'total_pengajuan': 0, 'total_diproses': 0,
+                'total_all': 0, 'total_checked': 0,
+                'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+            },
+            'checker_data': {},
+            'message': 'No data available',
+            'standalone_mode': True
+        })
+
 @login_required
 def keep_session_alive(request):
     """
@@ -8757,8 +10739,624 @@ def keep_session_alive(request):
         'time': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
     })
 
+
 # Export functions
 __all__ = [
     'monitoring_informasi_system',
-    'ajax_monitoring_refresh'
+    'ajax_monitoring_refresh',
+    'keep_session_alive',
+    'save_checker_api',
+    'get_checker_data_api'
 ]
+
+# ============== SESSION-BASED CHECKER MANAGEMENT FUNCTIONS ==============
+
+@login_required
+@require_http_methods(["POST"])
+def session_save_checker(request):
+    """
+    API untuk save checker data ke session - Tanpa Database Model
+    """
+    try:
+        data = json.loads(request.body)
+        row_id = data.get('row_id', '').strip()
+        checker_name = data.get('checker_name', '').strip()
+        
+        # Validasi input
+        if not all([row_id, checker_name]):
+            return JsonResponse({
+                'success': False,
+                'error': 'Data tidak lengkap'
+            })
+        
+        # Validasi nama
+        if checker_name.lower() in ['test', 'testing', '']:
+            return JsonResponse({
+                'success': False,
+                'error': 'Jangan pake nama testing, pake nama asli!'
+            })
+        
+        # Initialize session checker data jika belum ada
+        if 'checker_data' not in request.session:
+            request.session['checker_data'] = {}
+        
+        # Cek apakah sudah ada data
+        if row_id in request.session['checker_data']:
+            existing_checker = request.session['checker_data'][row_id]
+            return JsonResponse({
+                'success': False,
+                'error': f'Item ini udah dicek sama: {existing_checker["user"]}'
+            })
+        
+        # Simpan data checker ke session
+        request.session['checker_data'][row_id] = {
+            'user': checker_name,
+            'time': timezone.now().isoformat(),
+            'input_source': 'manual_user_input',
+            'last_updated': timezone.now().isoformat(),
+            'browser_info': request.META.get('HTTP_USER_AGENT', '')[:200],
+            'additional_data': data.get('additional_data', {})
+        }
+        
+        request.session.modified = True
+        
+        logger.info(f"Session checker saved: {row_id} - {checker_name}")
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Data checker berhasil disimpan: {checker_name}',
+            'row_id': row_id,
+            'checker_name': checker_name
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Format data tidak valid'
+        })
+    except Exception as e:
+        logger.error(f"Error save session checker: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': 'Terjadi kesalahan server'
+        })
+
+
+@login_required
+@require_http_methods(["GET"])
+def session_get_checkers(request):
+    """
+    API untuk get semua checker data dari session
+    """
+    try:
+        checker_data = request.session.get('checker_data', {})
+        
+        # Clean up old data (lebih dari 24 jam)
+        current_time = timezone.now()
+        cleaned_data = {}
+        
+        for row_id, data in checker_data.items():
+            try:
+                data_time = datetime.fromisoformat(data.get('time', ''))
+                if (current_time - data_time.replace(tzinfo=timezone.get_current_timezone())).total_seconds() < 86400:  # 24 hours
+                    cleaned_data[row_id] = data
+            except (ValueError, TypeError):
+                # Skip invalid time data
+                continue
+        
+        # Update session jika ada perubahan
+        if len(cleaned_data) != len(checker_data):
+            request.session['checker_data'] = cleaned_data
+            request.session.modified = True
+        
+        return JsonResponse({
+            'success': True,
+            'checker_data': cleaned_data,
+            'total_checkers': len(cleaned_data),
+            'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+        })
+        
+    except Exception as e:
+        logger.error(f"Error get session checkers: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': 'Gagal mengambil data',
+            'checker_data': {}
+        })
+
+
+@login_required
+@require_http_methods(["POST"])
+def session_clear_checker(request):
+    """
+    API untuk clear specific checker data dari session
+    """
+    try:
+        data = json.loads(request.body)
+        row_id = data.get('row_id', '').strip()
+        
+        if not row_id:
+            return JsonResponse({
+                'success': False,
+                'error': 'Row ID diperlukan'
+            })
+        
+        checker_data = request.session.get('checker_data', {})
+        
+        if row_id in checker_data:
+            removed_checker = checker_data.pop(row_id)
+            request.session['checker_data'] = checker_data
+            request.session.modified = True
+            
+            return JsonResponse({
+                'success': True,
+                'message': f'Checker data dihapus: {removed_checker.get("user", "Unknown")}',
+                'removed_row_id': row_id
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'error': 'Data checker tidak ditemukan'
+            })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Format data tidak valid'
+        })
+    except Exception as e:
+        logger.error(f"Error clear session checker: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': 'Terjadi kesalahan server'
+        })
+
+
+# Export functions
+__all__ = [
+    'monitoring_informasi_system',
+    'ajax_monitoring_refresh',
+    'keep_session_alive',
+    'session_save_checker',
+    'session_get_checkers', 
+    'session_clear_checker'
+]
+
+# =============== DATABASE CHECKER API FUNCTIONS ===============
+
+@login_required
+@require_http_methods(["POST"])
+def save_checker_to_database_api(request):
+    """
+    FIXED: API untuk save checker dengan improved history_id handling
+    """
+    try:
+        data = json.loads(request.body)
+        history_id = data.get('history_id', '').strip()
+        checker_name = data.get('checker_name', '').strip()
+        status_type = data.get('status_type', 'pengajuan').strip()
+        device_id = data.get('device_id', request.META.get('HTTP_USER_AGENT', '')[:50])
+        checker_notes = data.get('checker_notes', '')
+        
+        logger.info(f"FIXED: Save checker API - ID: '{history_id}', Name: '{checker_name}', Type: '{status_type}'")
+        
+        # Validasi input
+        if not all([history_id, checker_name]):
+            return JsonResponse({
+                'success': False,
+                'error': 'History ID dan nama checker wajib diisi!'
+            })
+        
+        if checker_name.lower() in ['test', 'testing', '']:
+            return JsonResponse({
+                'success': False,
+                'error': 'Jangan pake nama testing, pake nama asli!'
+            })
+        
+        if status_type not in ['pengajuan', 'diproses']:
+            return JsonResponse({
+                'success': False,
+                'error': 'Status type harus "pengajuan" atau "diproses"!'
+            })
+        
+        # Save based on status type
+        if status_type == 'pengajuan':
+            result = save_checker_to_pengajuan_table_fixed(history_id, checker_name, device_id, checker_notes)
+        else:
+            result = save_checker_to_main_table_fixed(history_id, checker_name, device_id, checker_notes)
+        
+        if result['success']:
+            logger.info(f"FIXED: Checker saved: {history_id} by {checker_name} to {result['table']}")
+            return JsonResponse({
+                'success': True,
+                'message': result['message'],
+                'history_id': history_id,
+                'checker_name': checker_name,
+                'status_type': status_type,
+                'table_saved': result['table'],
+                'rows_affected': result.get('rows_affected', 0)
+            })
+        else:
+            logger.error(f"FIXED: Failed to save checker: {result['message']}")
+            return JsonResponse({
+                'success': False,
+                'error': result['message']
+            })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Format data tidak valid!'
+        })
+    except Exception as e:
+        logger.error(f"FIXED: Error in save_checker_to_database_api: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Terjadi kesalahan server: {str(e)}'
+        })
+
+# FIXED: Checker save functions untuk handle history_id yang benar
+def save_checker_to_pengajuan_table_fixed(history_id, checker_name, device_id=None, checker_notes=None):
+    """
+    FIXED: Save checker ke tabel_pengajuan dengan exact history_id match
+    """
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            logger.info(f"FIXED: Searching pengajuan exact match for history_id: '{history_id}'")
+            
+            # STEP 1: Coba exact match dulu dengan history_id asli
+            cursor.execute("""
+                SELECT history_id, status, approve, checker_name, checker_status,
+                       tgl_his, oleh, deskripsi_perbaikan
+                FROM tabel_pengajuan 
+                WHERE history_id = %s
+            """, [history_id])
+            
+            result = cursor.fetchone()
+            
+            if not result:
+                logger.warning(f"FIXED: Exact match failed for '{history_id}', trying without format")
+                
+                # STEP 2: Parse history_id jika ada format "20856 -- 25-08-0429"
+                clean_history_id = history_id
+                if ' -- ' in history_id:
+                    # Split dan coba berbagai kombinasi
+                    parts = history_id.split(' -- ')
+                    clean_history_id = parts[0]  # "20856"
+                    
+                    logger.info(f"FIXED: Trying clean history_id: '{clean_history_id}'")
+                    
+                    cursor.execute("""
+                        SELECT history_id, status, approve, checker_name, checker_status,
+                               tgl_his, oleh, deskripsi_perbaikan
+                        FROM tabel_pengajuan 
+                        WHERE history_id = %s OR history_id LIKE %s
+                    """, [clean_history_id, f'{clean_history_id}%'])
+                    
+                    result = cursor.fetchone()
+                
+                if not result:
+                    # STEP 3: Debug - show available data
+                    cursor.execute("""
+                        SELECT TOP 10 history_id, tgl_his, oleh 
+                        FROM tabel_pengajuan 
+                        WHERE tgl_his >= DATEADD(day, -2, GETDATE())
+                        ORDER BY tgl_his DESC
+                    """)
+                    
+                    recent_data = cursor.fetchall()
+                    available_ids = [row[0] for row in recent_data if row[0]]
+                    
+                    logger.error(f"FIXED: No match found for '{history_id}' or '{clean_history_id}'")
+                    logger.error(f"FIXED: Available recent IDs: {available_ids}")
+                    
+                    return {
+                        'success': False,
+                        'message': f'Pengajuan dengan history_id "{history_id}" tidak ditemukan. Available: {available_ids[:3]}',
+                        'table': 'tabel_pengajuan'
+                    }
+            
+            history_id_found, status, approve, existing_checker, checker_status, tgl_his, oleh, deskripsi = result
+            logger.info(f"FIXED: Found pengajuan: {history_id_found}")
+            
+            # STEP 4: Cek apakah sudah ada checker
+            if checker_status == '1' and existing_checker and existing_checker.strip():
+                return {
+                    'success': False,
+                    'message': f'Item ini sudah dicek oleh: {existing_checker}',
+                    'table': 'tabel_pengajuan'
+                }
+            
+            # STEP 5: Update checker info - IZINKAN semua status pengajuan
+            cursor.execute("""
+                UPDATE tabel_pengajuan 
+                SET checker_name = %s, 
+                    checker_time = GETDATE(),
+                    checker_device_id = %s,
+                    checker_status = '1',
+                    checker_notes = %s
+                WHERE history_id = %s
+            """, [checker_name.strip(), device_id, checker_notes, history_id_found])
+            
+            rows_affected = cursor.rowcount
+            
+            if rows_affected > 0:
+                logger.info(f"FIXED: Checker saved to tabel_pengajuan: {history_id_found}")
+                return {
+                    'success': True,
+                    'message': f'Berhasil dicek oleh: {checker_name}',
+                    'table': 'tabel_pengajuan',
+                    'rows_affected': rows_affected,
+                    'actual_history_id': history_id_found
+                }
+            else:
+                return {
+                    'success': False,
+                    'message': 'Gagal menyimpan data checker ke tabel_pengajuan',
+                    'table': 'tabel_pengajuan'
+                }
+                
+    except Exception as e:
+        logger.error(f"FIXED: Error save_checker_to_pengajuan_table: {e}")
+        return {
+            'success': False,
+            'message': f'Error database: {str(e)}',
+            'table': 'tabel_pengajuan'
+        }
+
+    
+def save_checker_to_main_table_fixed(history_id, checker_name, device_id=None, checker_notes=None):
+    """
+    FIXED: Save checker ke tabel_main
+    """
+    try:
+        truncated_history_id = history_id[:11]
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            cursor.execute("""
+                SELECT history_id, status_pekerjaan, checker_name, checker_status
+                FROM tabel_main 
+                WHERE history_id = %s
+            """, [truncated_history_id])
+            
+            result = cursor.fetchone()
+            if not result:
+                return {
+                    'success': False,
+                    'message': f'Data history {history_id} tidak ditemukan di tabel_main',
+                    'table': 'tabel_main'
+                }
+            
+            found_history_id, status_pekerjaan, existing_checker, checker_status = result
+            
+            if checker_status == '1' and existing_checker and existing_checker.strip():
+                return {
+                    'success': False,
+                    'message': f'Item ini sudah dicek oleh: {existing_checker}',
+                    'table': 'tabel_main'
+                }
+            
+            if status_pekerjaan == 'C':
+                return {
+                    'success': False,
+                    'message': 'Pekerjaan sudah selesai, tidak bisa dicek lagi',
+                    'table': 'tabel_main'
+                }
+            
+            cursor.execute("""
+                UPDATE tabel_main 
+                SET checker_name = %s, 
+                    checker_time = GETDATE(),
+                    checker_device_id = %s,
+                    checker_status = '1',
+                    checker_notes = %s
+                WHERE history_id = %s
+            """, [checker_name.strip(), device_id, checker_notes, truncated_history_id])
+            
+            rows_affected = cursor.rowcount
+            
+            if rows_affected > 0:
+                return {
+                    'success': True,
+                    'message': f'Berhasil dicek oleh: {checker_name}',
+                    'table': 'tabel_main',
+                    'rows_affected': rows_affected
+                }
+            else:
+                return {
+                    'success': False,
+                    'message': 'Gagal menyimpan data checker ke tabel_main',
+                    'table': 'tabel_main'
+                }
+                
+    except Exception as e:
+        logger.error(f"FIXED: Error save_checker_to_main_table: {e}")
+        return {
+            'success': False,
+            'message': f'Error database: {str(e)}',
+            'table': 'tabel_main'
+        }
+    
+@login_required
+@require_http_methods(["GET"])
+def get_all_checkers_from_database_api(request):
+    """
+    API untuk get semua data checker dari database
+    """
+    try:
+        checker_data = load_checkers_from_database_fixed()
+        
+        return JsonResponse({
+            'success': True,
+            'checker_data': checker_data,
+            'total_checkers': len(checker_data),
+            'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S'),
+            'source': 'database_direct'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in get_all_checkers_from_database_api: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': f'Gagal mengambil data checker: {str(e)}',
+            'checker_data': {}
+        })
+
+
+def load_checkers_from_database():
+    """
+    Load checker data dari database
+    """
+    checker_data = {}
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Get checker data dari tabel_pengajuan
+            cursor.execute("""
+                SELECT 
+                    history_id, checker_name, checker_time, checker_device_id, 
+                    checker_status, checker_notes
+                FROM tabel_pengajuan 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+                  AND history_id IS NOT NULL
+                  AND history_id != ''
+            """)
+            
+            pengajuan_rows = cursor.fetchall()
+            
+            for row in pengajuan_rows:
+                history_id, checker_name, checker_time, device_id, status, notes = row
+                if history_id:
+                    checker_data[f"row-{history_id}"] = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'notes': notes,
+                        'status_type': 'pengajuan',
+                        'source_table': 'tabel_pengajuan',
+                        'last_updated': checker_time.isoformat() if checker_time else None
+                    }
+            
+            # Get checker data dari tabel_main
+            cursor.execute("""
+                SELECT 
+                    history_id, checker_name, checker_time, checker_device_id, 
+                    checker_status, checker_transferred_from, checker_notes
+                FROM tabel_main 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+                  AND history_id IS NOT NULL
+                  AND history_id != ''
+            """)
+            
+            main_rows = cursor.fetchall()
+            
+            for row in main_rows:
+                history_id, checker_name, checker_time, device_id, status, transferred_from, notes = row
+                if history_id:
+                    mapping_id = transferred_from if transferred_from else history_id
+                    
+                    checker_data[f"row-{mapping_id}"] = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'notes': notes,
+                        'status_type': 'diproses',
+                        'source_table': 'tabel_main',
+                        'short_history_id': history_id,
+                        'transferred_from': transferred_from,
+                        'last_updated': checker_time.isoformat() if checker_time else None
+                    }
+            
+            return checker_data
+            
+    except Exception as e:
+        logger.error(f"Error loading checkers from database: {e}")
+        return {}
+
+
+def transfer_checker_on_review_process(original_history_id, reviewed_by):
+    """
+    Transfer checker data dari tabel_pengajuan ke tabel_main saat review process
+    Dipanggil otomatis saat SITI FATIMAH review pengajuan dari pengajuan ke diproses
+    
+    Args:
+        original_history_id: History ID di tabel_pengajuan 
+        reviewed_by: Employee number reviewer (007522)
+    
+    Returns:
+        dict: Result dengan transfer info
+    """
+    logger.info(f"Starting checker transfer: {original_history_id} reviewed by {reviewed_by}")
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Get checker data dari tabel_pengajuan
+            cursor.execute("""
+                SELECT checker_name, checker_time, checker_device_id, checker_notes
+                FROM tabel_pengajuan 
+                WHERE history_id = %s 
+                  AND checker_status = '1'
+                  AND checker_name IS NOT NULL
+            """, [original_history_id])
+            
+            checker_data = cursor.fetchone()
+            
+            if not checker_data:
+                logger.info(f"No checker data found for {original_history_id} in tabel_pengajuan")
+                return {
+                    'success': True, 
+                    'message': 'Tidak ada checker data untuk di-transfer',
+                    'transferred': False
+                }
+            
+            checker_name, checker_time, device_id, notes = checker_data
+            logger.info(f"Found checker data: {checker_name} at {checker_time}")
+            
+            # Target history_id untuk tabel_main (max 11 chars)
+            target_history_id = original_history_id[:11]
+            
+            # Update tabel_main dengan checker data yang di-transfer
+            cursor.execute("""
+                UPDATE tabel_main 
+                SET checker_name = %s,
+                    checker_time = %s,
+                    checker_device_id = %s,
+                    checker_status = '1',
+                    checker_transferred_from = %s,
+                    checker_notes = %s
+                WHERE history_id = %s
+            """, [checker_name, checker_time, device_id, original_history_id, notes, target_history_id])
+            
+            rows_affected = cursor.rowcount
+            
+            if rows_affected > 0:
+                logger.info(f"✅ Checker transferred: {original_history_id} -> {target_history_id} ({checker_name})")
+                return {
+                    'success': True,
+                    'message': f'Checker {checker_name} berhasil di-transfer ke tabel_main',
+                    'transferred': True,
+                    'checker_name': checker_name,
+                    'target_history_id': target_history_id,
+                    'rows_affected': rows_affected
+                }
+            else:
+                logger.warning(f"❌ Failed to transfer checker to {target_history_id}")
+                return {
+                    'success': False,
+                    'message': f'Gagal transfer checker ke tabel_main (history_id: {target_history_id})',
+                    'transferred': False
+                }
+                
+    except Exception as e:
+        logger.error(f"Error transferring checker data: {e}")
+        return {
+            'success': False,
+            'message': f'Error transfer: {str(e)}',
+            'transferred': False
+        }

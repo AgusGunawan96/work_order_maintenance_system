@@ -1,167 +1,322 @@
-<!-- templates/wo_maintenance_app/monitoring_informasi_system.html -->
+<!-- wo_maintenance_app/templates/wo_maintenance_app/monitoring_informasi_system.html -->
+<!-- FULLSCREEN STANDALONE - Tanpa Sidebar/Header dengan Fixed History ID -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONITORING INFORMASI SYSTEM - WO Maintenance</title>
+    <title>{{ page_title|default:"MONITORING INFORMASI SYSTEM" }}</title>
     
-    <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- jQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
     <style>
+        /* Reset dan Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
         body {
-            background: #ffffff;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
         }
         
-        .monitoring-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            margin: 20px;
-            padding: 0;
-            overflow: hidden;
+        .fullscreen-container {
+            padding: 20px;
+            min-height: 100vh;
         }
         
+        /* Header Style */
         .monitoring-header {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 15px 15px 0 0;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
         .header-title {
             display: flex;
             align-items: center;
             gap: 15px;
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
         }
         
         .stats-panel {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            display: flex;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 20px;
-            flex-wrap: wrap;
+            backdrop-filter: blur(10px);
         }
         
         .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 100px;
+            text-align: center;
         }
         
         .stat-number {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
             color: #3498db;
+            display: block;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
         .stat-label {
-            font-size: 12px;
+            font-size: 13px;
             opacity: 0.9;
-            margin-top: 5px;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
         
+        .last-update {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Database Indicator */
+        .database-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+        
+        /* Table Container */
         .table-container {
-            padding: 30px;
-            max-height: 80vh;
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-height: calc(100vh - 300px);
             overflow-y: auto;
         }
         
+        /* Table Styles */
         .monitoring-table {
             width: 100%;
             border-collapse: collapse;
             background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .monitoring-table th {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
-            font-weight: 600;
-            padding: 15px 12px;
+            font-weight: 700;
+            padding: 18px 15px;
             text-align: center;
             font-size: 14px;
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 3px solid #2c3e50;
         }
         
         .monitoring-table td {
-            padding: 12px;
+            padding: 15px 12px;
             border-bottom: 1px solid #ecf0f1;
             text-align: center;
             font-size: 13px;
             vertical-align: middle;
-        }
-        
-        .monitoring-table tr:hover {
-            background: rgba(52, 152, 219, 0.1);
-            transform: scale(1.01);
             transition: all 0.3s ease;
         }
         
+        .monitoring-table tr:hover {
+            background: rgba(52, 152, 219, 0.08);
+            transform: scale(1.002);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Priority Badge */
         .prioritas-badge {
-            padding: 4px 8px;
-            border-radius: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 11px;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .prioritas-high {
-            background: #ff6b6b;
-            color: white;
-        }
-        
-        .prioritas-medium {
-            background: #feca57;
-            color: white;
-        }
-        
-        .prioritas-low {
-            background: #48dbfb;
-            color: white;
-        }
+        .prioritas-high { background: #ff6b6b; color: white; }
+        .prioritas-medium { background: #feca57; color: white; }
+        .prioritas-low { background: #48dbfb; color: white; }
         
         .deskripsi-cell {
             text-align: left;
-            padding: 12px 15px;
+            padding: 15px 18px;
             word-wrap: break-word;
             white-space: normal;
-            line-height: 1.4;
+            line-height: 1.5;
+            max-width: 250px;
         }
         
+        /* Checker Button */
+        .btn-cek {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 12px;
+            margin: 3px;
+            cursor: pointer;
+            border-radius: 20px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+        }
+        
+        .btn-cek:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+        }
+        
+        .btn-cek:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Checker Display */
+        .checker-display {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 11px;
+            font-weight: bold;
+            margin: 3px;
+            display: inline-block;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);
+            animation: checkerAppear 0.5s ease;
+        }
+        
+        @keyframes checkerAppear {
+            from { opacity: 0; transform: scale(0.8) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .checker-display.from-pengajuan {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: 2px solid #ff4757;
+        }
+        
+        .checker-display.from-diproses {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: 2px solid #28a745;
+        }
+        
+        .checker-time {
+            font-size: 9px;
+            opacity: 0.9;
+            display: block;
+            margin-top: 3px;
+            font-weight: 500;
+        }
+        
+        /* Row States */
+        .row-checked-pengajuan {
+            background: linear-gradient(90deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .row-checked-diproses {
+            background: linear-gradient(90deg, rgba(40, 167, 69, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+            border-left: 4px solid #28a745;
+        }
+        
+        /* Status Colors */
+        .status-pengajuan {
+            background: linear-gradient(135deg, #DC143C 0%, #B91828 100%) !important;
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .status-diproses {
+            background: linear-gradient(135deg, #7FFF00 0%, #32CD32 100%) !important;
+            color: #2c3e50 !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .status-cell-database {
+            min-height: 70px;
+            vertical-align: middle;
+            padding: 12px 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 10000;
         }
         
         .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -171,95 +326,110 @@
             100% { transform: rotate(360deg); }
         }
         
+        .loading-text {
+            color: white;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            z-index: 10000;
+            animation: slideIn 0.5s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 50px;
+            padding: 80px 20px;
             color: #7f8c8d;
         }
         
-        .empty-state i {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.5;
+        .empty-state h4 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #5a6c7d;
         }
         
-        .last-update {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            text-align: right;
-            margin-top: 10px;
-        }
-        
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .monitoring-container {
-                margin: 10px;
-            }
-            
-            .monitoring-table th,
-            .monitoring-table td {
-                padding: 8px 6px;
-                font-size: 11px;
-            }
-            
-            .header-title {
-                font-size: 18px;
-            }
-            
-            .stats-panel {
-                justify-content: center;
-            }
-            
-            .deskripsi-cell {
-                padding: 8px 6px;
-            }
+            .fullscreen-container { padding: 10px; }
+            .header-title { font-size: 22px; }
+            .stats-panel { grid-template-columns: 1fr 1fr; }
+            .monitoring-table th, .monitoring-table td { padding: 8px 4px; font-size: 11px; }
+            .database-indicator { position: relative; top: auto; right: auto; margin-bottom: 20px; }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-    </div>
+    <div class="fullscreen-container">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div>
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Menyimpan ke Database...</div>
+            </div>
+        </div>
 
-    <div class="monitoring-container">
+        <!-- Database indicator -->
+        <div class="database-indicator" id="databaseIndicator">
+            Database System: AKTIF (Loading...)
+        </div>
+
         <!-- Header -->
         <div class="monitoring-header">
             <div class="header-title">
-                <i class="fas fa-desktop"></i>
-                <span>MONITORING INFORMASI SYSTEM</span>
+                <div class="header-icon">💻</div>
+                <span>MONITORING INFORMASI SYSTEM - Fullscreen</span>
             </div>
             
-            <div>
-                <div class="stats-panel">
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalPengajuan">{{ stats.total_pengajuan }}</div>
-                        <div class="stat-label">Pengajuan</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalDiproses">{{ stats.total_diproses }}</div>
-                        <div class="stat-label">Diproses</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalAll">{{ stats.total_all }}</div>
-                        <div class="stat-label">Total</div>
-                    </div>
-                    {% if stats.use_marquee %}
-                    <div class="stat-item">
-                        <div class="stat-number">MARQUEE</div>
-                        <div class="stat-label">Mode</div>
-                    </div>
-                    {% endif %}
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalPengajuan">{{ stats.total_pengajuan|default:0 }}</div>
+                    <div class="stat-label">Pengajuan</div>
                 </div>
-                <div class="last-update" id="lastUpdate">
-                    Auto-refresh setiap 30 detik | Last update: {{ current_time|date:"d/m/Y H:i:s" }}
+                <div class="stat-item">
+                    <div class="stat-number" id="totalDiproses">{{ stats.total_diproses|default:0 }}</div>
+                    <div class="stat-label">Diproses</div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalAll">{{ stats.total_all|default:0 }}</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalChecked">{{ stats.total_checked|default:0 }}</div>
+                    <div class="stat-label">Dicek</div>
+                </div>
+            </div>
+            <div class="last-update" id="lastUpdate">
+                Auto-refresh setiap 30 detik | Last update: {{ current_time|date:"d/m/Y H:i:s" }}
             </div>
         </div>
 
         <!-- Table -->
         <div class="table-container">
-            {% if monitoring_data %}
             <table class="monitoring-table" id="monitoringTable">
                 <thead>
                     <tr>
@@ -275,160 +445,349 @@
                     </tr>
                 </thead>
                 <tbody id="monitoringTableBody">
-                    {% for item in monitoring_data %}
-                    <tr>
-                        <td>
-                            {% if item.prioritas != '-' %}
-                                <span class="prioritas-badge {% if item.prioritas == 'H' %}prioritas-high{% elif item.prioritas == 'M' %}prioritas-medium{% else %}prioritas-low{% endif %}">
-                                    {{ item.prioritas }}
-                                </span>
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>{{ item.waktu_pengajuan|default:"-" }}</td>
-                        <td>{{ item.no_pengajuan }}</td>
-                        <td>{{ item.nomor_wo }}</td>
-                        <td>{{ item.line_name }}</td>
-                        <td>{{ item.mesin_name }}</td>
-                        <td class="deskripsi-cell">{{ item.deskripsi }}</td>
-                        <td>{{ item.section_name }}</td>
-                        <td style="background-color: {{ item.status_color }}; color: {% if item.status == 'pengajuan' %}white{% else %}black{% endif %}; font-weight: bold; text-align: center;">
-                            {{ item.status|upper }}
-                        </td>
-                    </tr>
-                    {% endfor %}
+                    {% if monitoring_data %}
+                        {% for item in monitoring_data %}
+                        <tr id="row-{{ item.no_pengajuan }}" data-database-row="true" 
+                            {% if item.has_checker %}class="{% if item.checker_status_type == 'pengajuan' %}row-checked-pengajuan{% else %}row-checked-diproses{% endif %}"{% endif %}>
+                            <td>
+                                {% if item.prioritas != '-' %}
+                                    <span class="prioritas-badge {% if item.prioritas == 'H' %}prioritas-high{% elif item.prioritas == 'M' %}prioritas-medium{% else %}prioritas-low{% endif %}">
+                                        {{ item.prioritas }}
+                                    </span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ item.waktu_pengajuan|default:"-" }}</td>
+                            <td>{{ item.no_pengajuan }}</td>
+                            <td>{{ item.nomor_wo }}</td>
+                            <td>{{ item.line_name }}</td>
+                            <td>{{ item.mesin_name }}</td>
+                            <td class="deskripsi-cell">{{ item.deskripsi }}</td>
+                            <td>{{ item.section_name }}</td>
+                            <td class="status-cell-database {% if item.status == 'pengajuan' %}status-pengajuan{% else %}status-diproses{% endif %}">
+                                {{ item.status|upper }}
+                                <br><br>
+                                <!-- FIXED: Checker System dengan history_id asli -->
+                                <div class="database-checker-container" 
+                                     data-row-id="row-{{ item.no_pengajuan }}" 
+                                     data-history-id="{{ item.no_pengajuan }}" 
+                                     data-status-type="{{ item.status }}">
+                                    {% if item.has_checker %}
+                                        <div class="checker-display {% if item.checker_status_type == 'pengajuan' %}from-pengajuan{% else %}from-diproses{% endif %}">
+                                            ✅ {{ item.checker_name }}
+                                            {% if item.checker_time %}
+                                                <span class="checker-time">{{ item.checker_time|date:"d/m H:i" }}</span>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <button class="btn-cek" 
+                                                data-id="{{ item.no_pengajuan }}" 
+                                                data-history-id="{{ item.no_pengajuan }}" 
+                                                title="Klik untuk cek item ini">
+                                            Cek
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <h4>Tidak Ada Data</h4>
+                                <p>Belum ada data monitoring untuk ditampilkan saat ini.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
-            {% else %}
-            <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <h4>Tidak Ada Data</h4>
-                <p>Belum ada data monitoring untuk ditampilkan.</p>
-            </div>
-            {% endif %}
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        // Auto refresh setiap 30 detik
-        let autoRefreshInterval;
+    $(document).ready(function() {
+        console.log("=== FIXED FULLSCREEN MONITORING SYSTEM LOADED ===");
+
+        var isUpdating = false;
+        var isProcessingClick = false;
+        var autoRefreshInterval;
+        var keepAliveInterval;
+
+        // =============== FIXED BUTTON CLICK HANDLER ===============
         
-        // Keep session alive setiap 5 menit untuk mencegah auto logout
-        let keepAliveInterval;
-        
-        // Function untuk keep session alive
-        async function keepSessionAlive() {
-            try {
-                const response = await fetch('/wo-maintenance/keep-session-alive/', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken'),
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                if (!response.ok) {
-                    console.warn('Keep alive failed, but continuing...');
-                }
-            } catch (error) {
-                console.warn('Keep alive request failed:', error);
-            }
-        }
-        
-        // Auto refresh dengan error handling
-        async function refreshData() {
-            try {
-                const response = await fetch('/wo-maintenance/ajax/monitoring/refresh/', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken'),
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    updateTable(data.data);
-                    updateStats(data.stats);
-                    document.getElementById('lastUpdate').textContent = `Auto-refresh setiap 30 detik | Last update: ${data.stats.last_update}`;
-                } else {
-                    console.warn('Refresh warning:', data.error || data.message);
-                }
-                
-            } catch (error) {
-                console.warn('Refresh request failed:', error);
-            }
-        }
-        
-        // Update table with new data
-        function updateTable(data) {
-            const tbody = document.getElementById('monitoringTableBody');
-            tbody.innerHTML = '';
+        $(document).on('click', '.btn-cek', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                
-                // Determine status color
-                let statusColor = '#7FFF00'; // Default green
-                let textColor = 'black';
-                
-                if (item.status === 'pengajuan') {
-                    statusColor = '#DC143C'; // Red
-                    textColor = 'white';
-                } else if (item.status === 'diproses' || item.status === 'selesai') {
-                    statusColor = '#7FFF00'; // Green  
-                    textColor = 'black';
+            if (isProcessingClick) return;
+            isProcessingClick = true;
+            
+            var $button = $(this);
+            var $row = $button.closest('tr');
+            var rowId = $row.attr('id');
+            var historyId = $button.attr('data-history-id');
+            var $container = $button.closest('.database-checker-container');
+            var statusType = $container.attr('data-status-type');
+            
+            console.log("=== FIXED BUTTON CLICK ===");
+            console.log("Row ID:", rowId);
+            console.log("History ID (EXACT):", historyId);
+            console.log("Status Type:", statusType);
+            
+            // INPUT NAMA USER
+            var userName = prompt("Siapa yang ngecek? Masukin nama asli:");
+            
+            if (!userName || userName.trim() === '') {
+                isProcessingClick = false;
+                return;
+            }
+            
+            userName = userName.trim();
+            
+            // Validasi nama
+            if (userName.toLowerCase() === 'test' || userName.toLowerCase() === 'testing') {
+                showNotification('Jangan pake nama testing, pake nama asli!', 'error');
+                isProcessingClick = false;
+                return;
+            }
+            
+            if (userName.length < 3) {
+                showNotification('Nama minimal 3 karakter!', 'error');
+                isProcessingClick = false;
+                return;
+            }
+            
+            console.log("Input valid - History:", historyId, "User:", userName, "Status:", statusType);
+            
+            // FIXED: SAVE TO DATABASE dengan history_id asli
+            saveCheckerToDatabase(historyId, userName, statusType, function(success, response) {
+                if (success) {
+                    console.log("Database save success:", response);
+                    
+                    // Update UI immediately
+                    updateRowUIFromDatabase($row, userName, statusType, new Date());
+                    updateCheckedStatsFromDatabase();
+                    
+                    showNotification(response.message || `Berhasil dicek oleh: ${userName}`, 'success');
+                    
+                    // Refresh setelah 1 detik
+                    setTimeout(function() {
+                        if (!isUpdating) {
+                            refreshDataFromDatabase();
+                        }
+                    }, 1000);
+                    
+                } else {
+                    console.log("Database save failed:", response);
+                    showNotification(response.error || 'Gagal menyimpan ke database', 'error');
                 }
                 
-                row.innerHTML = `
-                    <td>
-                        ${item.prioritas !== '-' ? 
-                            `<span class="prioritas-badge ${getPriorityClass(item.prioritas)}">${item.prioritas}</span>` : 
-                            '-'
-                        }
-                    </td>
-                    <td>${item.waktu_pengajuan}</td>
-                    <td>${item.no_pengajuan}</td>
-                    <td>${item.nomor_wo}</td>
-                    <td>${item.line_name}</td>
-                    <td>${item.mesin_name}</td>
-                    <td class="deskripsi-cell">${item.deskripsi}</td>
-                    <td>${item.section_name}</td>
-                    <td style="background-color: ${statusColor}; color: ${textColor}; font-weight: bold; text-align: center;">
-                        ${item.status.toUpperCase()}
-                    </td>
+                isProcessingClick = false;
+            });
+        });
+
+        // =============== FIXED DATABASE FUNCTIONS ===============
+        
+        function saveCheckerToDatabase(historyId, checkerName, statusType, callback) {
+            console.log("Saving to database:", historyId, checkerName, statusType);
+            
+            showLoadingOverlay(true);
+            
+            var requestData = {
+                history_id: historyId,  // FIXED: Pake history_id asli tanpa format tambahan
+                checker_name: checkerName,
+                status_type: statusType,
+                device_id: navigator.userAgent.substring(0, 50),
+                checker_notes: `FIXED: Status: ${statusType}`
+            };
+            
+            $.ajax({
+                url: '/wo-maintenance/database/save-checker/',  // FIXED: URL sesuai routing
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify(requestData),
+                timeout: 30000,
+                success: function(data) {
+                    showLoadingOverlay(false);
+                    console.log("Database save response:", data);
+                    callback(data.success, data);
+                },
+                error: function(xhr, status, error) {
+                    showLoadingOverlay(false);
+                    console.error("Database save error:", error);
+                    var errorMsg = 'Network error: ' + error;
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMsg = xhr.responseJSON.error;
+                    }
+                    callback(false, { error: errorMsg });
+                }
+            });
+        }
+
+        function refreshDataFromDatabase() {
+            if (isUpdating) return;
+            isUpdating = true;
+            
+            console.log("Starting refresh...");
+            
+            $.ajax({
+                url: '/wo-maintenance/ajax/monitoring/refresh-database/',  // FIXED: URL sesuai routing  
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify({}),
+                timeout: 25000,
+                success: function(data) {
+                    if (data.success) {
+                        console.log("Refresh success");
+                        updateTableFromDatabase(data.data);
+                        updateStatsFromDatabase(data.stats);
+                        updateLastUpdateTime(data.stats.last_update);
+                    } else {
+                        console.warn("Refresh failed:", data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.warn('Refresh error:', error);
+                },
+                complete: function() {
+                    isUpdating = false;
+                }
+            });
+        }
+
+        function updateTableFromDatabase(data) {
+            var $tbody = $('#monitoringTableBody');
+            $tbody.empty();
+            
+            console.log("Updating table with", data.length, "rows");
+            
+            if (data.length === 0) {
+                $tbody.append('<tr><td colspan="9" class="empty-state"><h4>Tidak Ada Data</h4></td></tr>');
+                return;
+            }
+            
+            $.each(data, function(index, item) {
+                var rowId = `row-${item.no_pengajuan}`;
+                var statusColor = item.status === 'pengajuan' ? 'status-pengajuan' : 'status-diproses';
+                
+                var rowClass = '';
+                if (item.has_checker) {
+                    rowClass = item.checker_status_type === 'pengajuan' ? 'row-checked-pengajuan' : 'row-checked-diproses';
+                }
+                
+                var checkerContent = '';
+                if (item.has_checker && item.checker_name) {
+                    var checkerClass = item.checker_status_type === 'pengajuan' ? 'from-pengajuan' : 'from-diproses';
+                    var checkerTime = '';
+                    if (item.checker_time) {
+                        var timeObj = new Date(item.checker_time);
+                        checkerTime = `<span class="checker-time">${timeObj.toLocaleDateString('id-ID', {day: '2-digit', month: '2-digit'})} ${timeObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'})}</span>`;
+                    }
+                    checkerContent = `<div class="checker-display ${checkerClass}">✅ ${item.checker_name}${checkerTime}</div>`;
+                } else {
+                    checkerContent = `<button class="btn-cek" data-id="${item.no_pengajuan}" data-history-id="${item.no_pengajuan}" title="Klik untuk cek">Cek</button>`;
+                }
+                
+                var priorityHtml = item.prioritas !== '-' ? 
+                    `<span class="prioritas-badge ${getPriorityClass(item.prioritas)}">${item.prioritas}</span>` : '-';
+                
+                var rowHtml = `
+                    <tr id="${rowId}" ${rowClass ? `class="${rowClass}"` : ''}>
+                        <td>${priorityHtml}</td>
+                        <td>${item.waktu_pengajuan}</td>
+                        <td>${item.no_pengajuan}</td>
+                        <td>${item.nomor_wo}</td>
+                        <td>${item.line_name}</td>
+                        <td>${item.mesin_name}</td>
+                        <td class="deskripsi-cell">${item.deskripsi}</td>
+                        <td>${item.section_name}</td>
+                        <td class="status-cell-database ${statusColor}">
+                            ${item.status.toUpperCase()}
+                            <br><br>
+                            <div class="database-checker-container" data-row-id="${rowId}" data-history-id="${item.no_pengajuan}" data-status-type="${item.status}">
+                                ${checkerContent}
+                            </div>
+                        </td>
+                    </tr>
                 `;
                 
-                tbody.appendChild(row);
+                $tbody.append(rowHtml);
+            });
+        }
+
+        function updateRowUIFromDatabase($row, checkerName, statusType, checkerTime) {
+            var $container = $row.find('.database-checker-container');
+            if (!$container.length) return;
+            
+            $container.find('.btn-cek').remove();
+            $container.find('.checker-display').remove();
+            
+            var cssClass = statusType === 'pengajuan' ? 'from-pengajuan' : 'from-diproses';
+            var timeStr = '';
+            if (checkerTime) {
+                var timeObj = new Date(checkerTime);
+                timeStr = `<span class="checker-time">${timeObj.toLocaleDateString('id-ID', {day: '2-digit', month: '2-digit'})} ${timeObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'})}</span>`;
+            }
+            
+            var checkerHtml = `<div class="checker-display ${cssClass}">✅ ${checkerName}${timeStr}</div>`;
+            $container.append(checkerHtml);
+            
+            $row.removeClass('row-checked-pengajuan row-checked-diproses');
+            var rowClass = statusType === 'pengajuan' ? 'row-checked-pengajuan' : 'row-checked-diproses';
+            $row.addClass(rowClass);
+        }
+
+        // =============== UTILITY FUNCTIONS ===============
+        
+        function updateStatsFromDatabase(stats) {
+            $('#totalPengajuan').text(stats.total_pengajuan || 0);
+            $('#totalDiproses').text(stats.total_diproses || 0);
+            $('#totalAll').text(stats.total_all || 0);
+            $('#totalChecked').text(stats.total_checked || 0);
+        }
+
+        function updateCheckedStatsFromDatabase() {
+            var checkedCount = $('.checker-display').length;
+            $('#totalChecked').text(checkedCount);
+        }
+
+        function updateLastUpdateTime(lastUpdate) {
+            $('#lastUpdate').text(`Auto-refresh setiap 30 detik | Last update: ${lastUpdate}`);
+        }
+        
+        function keepSessionAlive() {
+            $.ajax({
+                url: '/wo-maintenance/ajax/keep-session-alive/',
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify({})
+            }).fail(function() {
+                console.warn('Keep alive warning');
             });
         }
         
-        // Update stats
-        function updateStats(stats) {
-            document.getElementById('totalPengajuan').textContent = stats.total_pengajuan;
-            document.getElementById('totalDiproses').textContent = stats.total_diproses;
-            document.getElementById('totalAll').textContent = stats.total_all;
-        }
-        
-        // Get priority CSS class
         function getPriorityClass(priority) {
             if (priority === 'H') return 'prioritas-high';
             if (priority === 'M') return 'prioritas-medium';
             return 'prioritas-low';
         }
         
-        // Get CSRF token
         function getCookie(name) {
-            let cookieValue = null;
+            var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
@@ -437,27 +796,52 @@
             }
             return cookieValue;
         }
-        
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Start auto refresh
-            autoRefreshInterval = setInterval(refreshData, 30000); // 30 seconds
+
+        function showLoadingOverlay(show) {
+            $('#loadingOverlay').css('display', show ? 'flex' : 'none');
+        }
+
+        function showNotification(message, type) {
+            var $notification = $(`<div class="notification ${type}">${message}</div>`);
+            $('body').append($notification);
             
-            // Start keep alive - setiap 5 menit untuk mencegah logout
-            keepAliveInterval = setInterval(keepSessionAlive, 300000); // 5 minutes
-            
-            console.log('Monitoring system initialized - auto refresh every 30 seconds');
-        });
+            setTimeout(function() {
+                $notification.css('animation', 'slideIn 0.5s ease reverse');
+                setTimeout(function() {
+                    $notification.remove();
+                }, 500);
+            }, 4000);
+        }
+
+        // =============== INITIALIZATION ===============
         
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', function() {
-            if (autoRefreshInterval) {
-                clearInterval(autoRefreshInterval);
-            }
-            if (keepAliveInterval) {
-                clearInterval(keepAliveInterval);
-            }
+        setTimeout(function() {
+            updateCheckedStatsFromDatabase();
+            console.log("Initialization completed");
+        }, 500);
+        
+        // Auto refresh setiap 30 detik
+        autoRefreshInterval = setInterval(refreshDataFromDatabase, 30000);
+        
+        // Keep alive setiap 5 menit
+        keepAliveInterval = setInterval(keepSessionAlive, 300000);
+        
+        // Update indicator
+        setInterval(function() {
+            var checkedCount = $('.checker-display').length;
+            $('#databaseIndicator').html('Database System: AKTIF (' + checkedCount + ' tersimpan)');
+        }, 3000);
+        
+        console.log("MONITORING SYSTEM READY");
+        console.log("Auto-refresh: 30 detik");
+        console.log("Database: Real-time sync");
+        
+        // Cleanup
+        $(window).on('beforeunload', function() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            if (keepAliveInterval) clearInterval(keepAliveInterval);
         });
+    });
     </script>
 </body>
 </html>

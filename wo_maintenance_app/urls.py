@@ -41,6 +41,9 @@ urlpatterns = [
     path('monitor/', views.monitoring_informasi_system, name='monitor'),  # Alias pendek
     path('monitoring/system/', views.monitoring_informasi_system, name='monitoring_system'),  # Alternative URL
     path('ajax/monitoring/refresh/', views.ajax_monitoring_refresh, name='ajax_monitoring_refresh'),
+
+    path('ajax/monitoring/refresh-database/', views.ajax_monitoring_refresh_database, name='ajax_monitoring_refresh_database'),
+    
     
     # ===== ENHANCED REVIEW SYSTEM - SITI FATIMAH dengan Auto Transfer =====
     path('review/', views.review_dashboard, name='review_dashboard'),
@@ -126,6 +129,14 @@ urlpatterns = [
 
     # Tambahkan di urlpatterns
 path('keep-session-alive/', views.keep_session_alive, name='keep_session_alive'),
+
+# Session-Based Checker APIs (No Database Models Required)
+    path('api/session/save-checker/', views.session_save_checker, name='session_save_checker'),
+    path('api/session/get-checkers/', views.session_get_checkers, name='session_get_checkers'),
+    path('api/session/clear-checker/', views.session_clear_checker, name='session_clear_checker'),
+    # ===== DATABASE CHECKER API ENDPOINTS =====
+    path('database/save-checker/', views.save_checker_to_database_api, name='save_checker_database'),
+    path('database/get-checkers/', views.get_all_checkers_from_database_api, name='get_checkers_database'),
 ]
 
 

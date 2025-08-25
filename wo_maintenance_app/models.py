@@ -48,26 +48,39 @@ class TabelPengajuan(models.Model):
     id_mesin = models.FloatField(null=True, blank=True)
     number_wo = models.CharField(max_length=15, null=True, blank=True)
     deskripsi_perbaikan = models.TextField(null=True, blank=True)
-    status = models.CharField(max_length=1, null=True, blank=True, help_text="0=Pending, 1=Approved, 2=Rejected, 3=In Progress, 4=Completed")
+    status = models.CharField(max_length=1, null=True, blank=True, help_text="0=Pending, A=Approved, 2=Rejected, 3=In Progress, 4=Completed")
     user_insert = models.CharField(max_length=50, null=True, blank=True)
     tgl_insert = models.DateTimeField(null=True, blank=True)
     oleh = models.CharField(max_length=500, null=True, blank=True)
-    approve = models.CharField(max_length=10, null=True, blank=True, help_text="0=Not Approved, 1=Approved, 2=Rejected")
+    approve = models.CharField(max_length=10, null=True, blank=True, help_text="0=Not Approved, Y=Approved, 2=Rejected")
     status_pekerjaan = models.CharField(max_length=1, null=True, blank=True)
     id_pengajuan = models.IntegerField(null=True, blank=True)
     id_section = models.FloatField(null=True, blank=True)
     id_pekerjaan = models.FloatField(null=True, blank=True)
     idpengajuan = models.FloatField(null=True, blank=True)
     
-    # ===== REVIEW SYSTEM FIELDS =====
-    review_status = models.CharField(max_length=1, null=True, blank=True, default='0', 
+    # Review system fields
+    review_status = models.CharField(max_length=1, null=True, blank=True, default='0',
                                    help_text="0=Pending Review, 1=Reviewed Approved, 2=Reviewed Rejected")
-    reviewed_by = models.CharField(max_length=50, null=True, blank=True, 
+    reviewed_by = models.CharField(max_length=50, null=True, blank=True,
                                  help_text="Employee number of reviewer (007522)")
     review_date = models.DateTimeField(null=True, blank=True)
     review_notes = models.TextField(null=True, blank=True)
-    final_section_id = models.FloatField(null=True, blank=True, 
+    final_section_id = models.FloatField(null=True, blank=True,
                                        help_text="Final section assigned by reviewer")
+
+
+    # NEW: Checker fields untuk monitoring system (status pengajuan)
+    checker_name = models.CharField(max_length=100, null=True, blank=True,
+                                  help_text="Nama pengecek untuk monitoring sistem (status pengajuan)")
+    checker_time = models.DateTimeField(null=True, blank=True,
+                                      help_text="Waktu pengecekan untuk monitoring sistem")
+    checker_device_id = models.CharField(max_length=50, null=True, blank=True,
+                                       help_text="Device ID yang melakukan pengecekan")
+    checker_status = models.CharField(max_length=1, null=True, blank=True, default='0',
+                                    help_text="Status checker: 0=Belum dicek, 1=Sudah dicek")
+    checker_notes = models.CharField(max_length=200, null=True, blank=True,
+                                   help_text="Catatan tambahan dari checker")
 
     class Meta:
         managed = False
@@ -83,7 +96,7 @@ class TabelPengajuan(models.Model):
         """Display status pengajuan"""
         status_map = {
             '0': 'Pending',
-            '1': 'Approved',
+            'A': 'Approved',  # FIXED: A untuk Approved
             '2': 'Rejected',
             '3': 'In Progress',
             '4': 'Completed'
@@ -103,9 +116,50 @@ class TabelPengajuan(models.Model):
     @property
     def needs_review(self):
         """Cek apakah pengajuan perlu di-review"""
-        return (self.status == '1' and self.approve == '1' and 
+        return (self.status == 'A' and self.approve == 'Y' and 
                 (self.review_status is None or self.review_status == '0'))
+    
+    @property
+    def has_checker(self):
+        """Cek apakah sudah ada checker"""
+        return bool(self.checker_name and self.checker_name.strip())
+    
+    @property
+    def checker_display(self):
+        """Display info checker"""
+        if self.has_checker:
+            return f"Dicek oleh: {self.checker_name}"
+        return "Belum dicek"
 
+    @property
+    def checker_time_display(self):
+        """Display waktu checker"""
+        if self.checker_time:
+            return self.checker_time.strftime('%d/%m/%Y %H:%M')
+        return "-"
+
+    def save_checker_info(self, checker_name, device_id=None, notes=None):
+        """
+        Save checker info ke database (helper method)
+        """
+        try:
+            from django.utils import timezone
+            
+            with connections['DB_Maintenance'].cursor() as cursor:
+                cursor.execute("""
+                    UPDATE tabel_pengajuan 
+                    SET checker_name = %s,
+                        checker_time = GETDATE(),
+                        checker_device_id = %s,
+                        checker_status = '1',
+                        checker_notes = %s
+                    WHERE history_id = %s
+                """, [checker_name, device_id, notes, self.history_id])
+                
+                return cursor.rowcount > 0
+        except Exception as e:
+            logger.error(f"Error saving checker info for pengajuan {self.history_id}: {e}")
+            return False
 
 class TabelMesin(models.Model):
     """Model untuk tabel_mesin di DB_Maintenance"""
@@ -490,6 +544,20 @@ class TabelMain(models.Model):
     SpvProd = models.CharField(max_length=10, null=True, blank=True)
     SpvMain = models.CharField(max_length=10, null=True, blank=True)
 
+    # NEW: Checker fields untuk monitoring system (status diproses)
+    checker_name = models.CharField(max_length=100, null=True, blank=True,
+                                  help_text="Nama pengecek untuk monitoring sistem (status diproses)")
+    checker_time = models.DateTimeField(null=True, blank=True,
+                                      help_text="Waktu pengecekan untuk monitoring sistem")
+    checker_device_id = models.CharField(max_length=50, null=True, blank=True,
+                                       help_text="Device ID yang melakukan pengecekan")
+    checker_status = models.CharField(max_length=1, null=True, blank=True, default='0',
+                                    help_text="Status checker: 0=Belum dicek, 1=Sudah dicek")
+    checker_transferred_from = models.CharField(max_length=15, null=True, blank=True,
+                                              help_text="History ID asal checker saat transfer dari pengajuan")
+    checker_notes = models.CharField(max_length=200, null=True, blank=True,
+                                   help_text="Catatan tambahan dari checker")
+
     class Meta:
         managed = False
         db_table = 'tabel_main'
@@ -498,6 +566,7 @@ class TabelMain(models.Model):
 
     def __str__(self):
         return f"History {self.history_id} - {self.oleh}"
+        
 
     # @property
     # def status_display(self):
@@ -580,6 +649,55 @@ class TabelMain(models.Model):
     def is_pekerjaan_closed(self):
         """Check if status pekerjaan is closed - support O/C dan backward compatibility"""
         return self.status_pekerjaan in ['C', '1']
+    
+    # NEW: Checker properties
+    @property
+    def has_checker(self):
+        """Cek apakah sudah ada checker"""
+        return bool(self.checker_status == '1' and self.checker_name and self.checker_name.strip())
+    
+    @property
+    def checker_display(self):
+        """Display info checker"""
+        if self.is_checked:
+            return f"Dicek oleh: {self.checker_name}"
+        return "Belum dicek"
+    
+    @property
+    def checker_time_display(self):
+        """Display waktu checker"""
+        if self.checker_time:
+            return self.checker_time.strftime('%d/%m/%Y %H:%M')
+        return "-"
+    
+    @property
+    def is_transferred_checker(self):
+        """Cek apakah checker di-transfer dari pengajuan"""
+        return bool(self.checker_transferred_from and self.checker_transferred_from.strip())
+
+    def save_checker_info(self, checker_name, device_id=None, notes=None, transferred_from=None):
+        """
+        Save checker info ke database (helper method)
+        """
+        try:
+            from django.utils import timezone
+            
+            with connections['DB_Maintenance'].cursor() as cursor:
+                cursor.execute("""
+                    UPDATE tabel_main 
+                    SET checker_name = %s,
+                        checker_time = GETDATE(),
+                        checker_device_id = %s,
+                        checker_status = '1',
+                        checker_transferred_from = %s,
+                        checker_notes = %s
+                    WHERE history_id = %s
+                """, [checker_name, device_id, transferred_from, notes, self.history_id])
+                
+                return cursor.rowcount > 0
+        except Exception as e:
+            logger.error(f"Error saving checker info for main {self.history_id}: {e}")
+            return False
 
     @property
     def mesin_info(self):
@@ -625,6 +743,546 @@ class TabelMain(models.Model):
                 return result[0] if result else 'Unknown'
         except:
             return 'Unknown'
+
+# ===== HELPER FUNCTIONS untuk Checker Management =====
+
+def save_checker_to_pengajuan(history_id, checker_name, checker_notes=None):
+    """
+    Simpan checker ke tabel_pengajuan untuk status pengajuan
+    
+    Args:
+        history_id: ID pengajuan
+        checker_name: Nama pengecek  
+        checker_notes: Catatan opsional
+    
+    Returns:
+        dict: Result dengan success status dan message
+    """
+    try:
+        from django.db import connections
+        from django.utils import timezone
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Cek apakah pengajuan ada dan status nya masih pengajuan
+            cursor.execute("""
+                SELECT status, approve, checker_name
+                FROM tabel_pengajuan 
+                WHERE history_id = %s
+            """, [history_id])
+            
+            result = cursor.fetchone()
+            if not result:
+                return {'success': False, 'message': 'Pengajuan tidak ditemukan'}
+            
+            status, approve, existing_checker = result
+            
+            # Cek apakah status masih pengajuan (belum approved)
+            if status == 'A' and approve == 'Y':
+                return {'success': False, 'message': 'Pengajuan sudah diproses, tidak bisa dicek lagi'}
+            
+            # Cek apakah sudah ada checker
+            if existing_checker and existing_checker.strip():
+                return {'success': False, 'message': f'Sudah dicek oleh: {existing_checker}'}
+            
+            # Update checker info
+            cursor.execute("""
+                UPDATE tabel_pengajuan 
+                SET checker_name = %s, 
+                    checker_time = GETDATE(),
+                    checker_notes = %s
+                WHERE history_id = %s
+            """, [checker_name.strip(), checker_notes, history_id])
+            
+            if cursor.rowcount > 0:
+                return {
+                    'success': True, 
+                    'message': f'Berhasil dicek oleh: {checker_name}',
+                    'checker_name': checker_name,
+                    'table': 'tabel_pengajuan'
+                }
+            else:
+                return {'success': False, 'message': 'Gagal menyimpan data checker'}
+                
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error save checker to pengajuan {history_id}: {e}")
+        return {'success': False, 'message': f'Error: {str(e)}'}
+
+def save_checker_to_main(history_id, checker_name, checker_notes=None):
+    """
+    Simpan checker ke tabel_main untuk status diproses
+    
+    Args:
+        history_id: ID history (truncated ke 11 karakter)
+        checker_name: Nama pengecek
+        checker_notes: Catatan opsional
+    
+    Returns:
+        dict: Result dengan success status dan message
+    """
+    try:
+        from django.db import connections
+        from django.utils import timezone
+        
+        # Truncate history_id untuk tabel_main
+        truncated_id = history_id[:11]
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Cek apakah data ada dan belum ada checker
+            cursor.execute("""
+                SELECT status_pekerjaan, checker_name
+                FROM tabel_main 
+                WHERE history_id = %s
+            """, [truncated_id])
+            
+            result = cursor.fetchone()
+            if not result:
+                return {'success': False, 'message': 'Data history tidak ditemukan'}
+            
+            status_pekerjaan, existing_checker = result
+            
+            # Cek apakah sudah selesai (C = Close)
+            if status_pekerjaan == 'C':
+                return {'success': False, 'message': 'Pekerjaan sudah selesai, tidak bisa dicek lagi'}
+            
+            # Cek apakah sudah ada checker
+            if existing_checker and existing_checker.strip():
+                return {'success': False, 'message': f'Sudah dicek oleh: {existing_checker}'}
+            
+            # Update checker info
+            cursor.execute("""
+                UPDATE tabel_main 
+                SET checker_name = %s, 
+                    checker_time = GETDATE(),
+                    checker_notes = %s
+                WHERE history_id = %s
+            """, [checker_name.strip(), checker_notes, truncated_id])
+            
+            if cursor.rowcount > 0:
+                return {
+                    'success': True, 
+                    'message': f'Berhasil dicek oleh: {checker_name}',
+                    'checker_name': checker_name,
+                    'table': 'tabel_main'
+                }
+            else:
+                return {'success': False, 'message': 'Gagal menyimpan data checker'}
+                
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error save checker to main {history_id}: {e}")
+        return {'success': False, 'message': f'Error: {str(e)}'}
+
+
+def transfer_checker_on_review(history_id, reviewed_by):
+    """
+    Transfer checker dari tabel_pengajuan ke tabel_main saat review process
+    
+    Args:
+        history_id: ID pengajuan
+        reviewed_by: Employee number reviewer
+    
+    Returns:
+        dict: Result dengan transfer info
+    """
+    try:
+        from django.db import connections
+        from django.utils import timezone
+        
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Ambil checker info dari tabel_pengajuan
+            cursor.execute("""
+                SELECT checker_name, checker_time, checker_notes
+                FROM tabel_pengajuan 
+                WHERE history_id = %s AND checker_name IS NOT NULL
+            """, [history_id])
+            
+            checker_result = cursor.fetchone()
+            
+            if checker_result:
+                checker_name, checker_time, checker_notes = checker_result
+                truncated_id = history_id[:11]
+                
+                # Transfer ke tabel_main
+                cursor.execute("""
+                    UPDATE tabel_main 
+                    SET checker_name = %s, 
+                        checker_time = %s,
+                        checker_notes = %s
+                    WHERE history_id = %s
+                """, [checker_name, checker_time, checker_notes, truncated_id])
+                
+                if cursor.rowcount > 0:
+                    return {
+                        'success': True,
+                        'message': f'Checker {checker_name} berhasil di-transfer ke tabel_main',
+                        'transferred_checker': checker_name
+                    }
+                else:
+                    return {
+                        'success': False,
+                        'message': 'Gagal transfer checker ke tabel_main'
+                    }
+            else:
+                return {
+                    'success': True,
+                    'message': 'Tidak ada checker untuk di-transfer'
+                }
+                
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error transfer checker {history_id}: {e}")
+        return {'success': False, 'message': f'Transfer error: {str(e)}'}
+
+
+def get_checker_info(history_id, status_type='auto'):
+    """
+    Get info checker berdasarkan history_id dan status
+    
+    Args:
+        history_id: ID pengajuan/history
+        status_type: 'pengajuan', 'diproses', atau 'auto' (detect otomatis)
+    
+    Returns:
+        dict: Checker info atau None
+    """
+    try:
+        from django.db import connections
+        
+        if status_type == 'auto':
+            # Auto detect: cek tabel_main dulu, kalau gak ada cek tabel_pengajuan
+            truncated_id = history_id[:11]
+            
+            with connections['DB_Maintenance'].cursor() as cursor:
+                # Cek di tabel_main
+                cursor.execute("""
+                    SELECT checker_name, checker_time, checker_notes, 'tabel_main' as source
+                    FROM tabel_main 
+                    WHERE history_id = %s AND checker_name IS NOT NULL
+                """, [truncated_id])
+                
+                result = cursor.fetchone()
+                if result:
+                    return {
+                        'checker_name': result[0],
+                        'checker_time': result[1], 
+                        'checker_notes': result[2],
+                        'source_table': result[3]
+                    }
+                
+                # Kalau gak ada, cek di tabel_pengajuan
+                cursor.execute("""
+                    SELECT checker_name, checker_time, checker_notes, 'tabel_pengajuan' as source
+                    FROM tabel_pengajuan 
+                    WHERE history_id = %s AND checker_name IS NOT NULL
+                """, [history_id])
+                
+                result = cursor.fetchone()
+                if result:
+                    return {
+                        'checker_name': result[0],
+                        'checker_time': result[1],
+                        'checker_notes': result[2], 
+                        'source_table': result[3]
+                    }
+                
+        elif status_type == 'pengajuan':
+            with connections['DB_Maintenance'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT checker_name, checker_time, checker_notes
+                    FROM tabel_pengajuan 
+                    WHERE history_id = %s AND checker_name IS NOT NULL
+                """, [history_id])
+                
+                result = cursor.fetchone()
+                if result:
+                    return {
+                        'checker_name': result[0],
+                        'checker_time': result[1],
+                        'checker_notes': result[2],
+                        'source_table': 'tabel_pengajuan'
+                    }
+                    
+        elif status_type == 'diproses':
+            truncated_id = history_id[:11]
+            with connections['DB_Maintenance'].cursor() as cursor:
+                cursor.execute("""
+                    SELECT checker_name, checker_time, checker_notes
+                    FROM tabel_main 
+                    WHERE history_id = %s AND checker_name IS NOT NULL
+                """, [truncated_id])
+                
+                result = cursor.fetchone()
+                if result:
+                    return {
+                        'checker_name': result[0],
+                        'checker_time': result[1],
+                        'checker_notes': result[2],
+                        'source_table': 'tabel_main'
+                    }
+        
+        return None
+        
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error get checker info {history_id}: {e}")
+        return None
+
+
+# Export functions
+__all__ = [
+    'TabelPengajuan',
+    'TabelMain', 
+    'save_checker_to_pengajuan',
+    'save_checker_to_main',
+    'transfer_checker_on_review',
+    'get_checker_info'
+]
+
+# ===== CHECKER UTILITY FUNCTIONS =====
+
+def save_checker_to_database(history_id, checker_name, device_id=None, status_type='pengajuan'):
+    """
+    Simpan data checker ke tabel yang sesuai berdasarkan status
+    
+    Args:
+        history_id: ID pengajuan/history
+        checker_name: Nama yang mengecek
+        device_id: ID device (optional)
+        status_type: 'pengajuan' atau 'diproses'
+    
+    Returns:
+        dict: Result dengan success status dan message
+    """
+    from django.db import connections
+    from datetime import datetime
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            if status_type == 'pengajuan':
+                # Update tabel_pengajuan
+                cursor.execute("""
+                    UPDATE tabel_pengajuan 
+                    SET checker_name = %s,
+                        checker_time = GETDATE(),
+                        checker_device_id = %s,
+                        checker_status = '1'
+                    WHERE history_id = %s
+                """, [checker_name, device_id, history_id])
+                
+                table_name = 'tabel_pengajuan'
+                
+            elif status_type == 'diproses':
+                # Update tabel_main (history_id dipotong jadi 11 karakter)
+                short_history_id = history_id[:11] if len(history_id) > 11 else history_id
+                
+                cursor.execute("""
+                    UPDATE tabel_main 
+                    SET checker_name = %s,
+                        checker_time = GETDATE(),
+                        checker_device_id = %s,
+                        checker_status = '1'
+                    WHERE history_id = %s
+                """, [checker_name, device_id, short_history_id])
+                
+                table_name = 'tabel_main'
+                
+            else:
+                return {
+                    'success': False,
+                    'message': f'Status type tidak valid: {status_type}'
+                }
+            
+            rows_affected = cursor.rowcount
+            
+            if rows_affected > 0:
+                logger.info(f"Checker saved to {table_name}: {history_id} by {checker_name}")
+                return {
+                    'success': True,
+                    'message': f'Checker berhasil disimpan ke {table_name}',
+                    'rows_affected': rows_affected
+                }
+            else:
+                logger.warning(f"No rows affected for history_id: {history_id} in {table_name}")
+                return {
+                    'success': False,
+                    'message': f'Data dengan history_id {history_id} tidak ditemukan di {table_name}'
+                }
+                
+    except Exception as e:
+        logger.error(f"Error saving checker to database: {e}")
+        return {
+            'success': False,
+            'message': f'Error database: {str(e)}'
+        }
+
+def get_checker_data_from_database():
+    """
+    Ambil semua data checker dari database
+    
+    Returns:
+        dict: Dictionary berisi checker data dari kedua tabel
+    """
+    from django.db import connections
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    checker_data = {}
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Get checker data dari tabel_pengajuan
+            cursor.execute("""
+                SELECT history_id, checker_name, checker_time, checker_device_id, checker_status
+                FROM tabel_pengajuan 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+            """)
+            
+            pengajuan_data = cursor.fetchall()
+            logger.info(f"Found {len(pengajuan_data)} checked items in tabel_pengajuan")
+            
+            for row in pengajuan_data:
+                history_id, checker_name, checker_time, device_id, status = row
+                if history_id:
+                    checker_data[f"row-{history_id}"] = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'source_table': 'tabel_pengajuan',
+                        'last_updated': checker_time.isoformat() if checker_time else None,
+                        'input_source': 'database_pengajuan'
+                    }
+            
+            # Get checker data dari tabel_main
+            cursor.execute("""
+                SELECT history_id, checker_name, checker_time, checker_device_id, checker_status, checker_transferred_from
+                FROM tabel_main 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+            """)
+            
+            main_data = cursor.fetchall()
+            logger.info(f"Found {len(main_data)} checked items in tabel_main")
+            
+            for row in main_data:
+                history_id, checker_name, checker_time, device_id, status, transferred_from = row
+                if history_id:
+                    # Generate full history_id untuk mapping
+                    # Jika ada transferred_from, gunakan itu, atau buat based on pattern
+                    full_history_id = transferred_from if transferred_from else history_id
+                    
+                    checker_data[f"row-{full_history_id}"] = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'source_table': 'tabel_main',
+                        'short_history_id': history_id,
+                        'transferred_from': transferred_from,
+                        'last_updated': checker_time.isoformat() if checker_time else None,
+                        'input_source': 'database_main'
+                    }
+            
+            logger.info(f"Total checker data loaded: {len(checker_data)}")
+            return checker_data
+            
+    except Exception as e:
+        logger.error(f"Error loading checker data from database: {e}")
+        return {}
+
+def transfer_checker_pengajuan_to_main(original_history_id, new_history_id=None):
+    """
+    Transfer checker data dari tabel_pengajuan ke tabel_main saat review
+    
+    Args:
+        original_history_id: History ID di tabel_pengajuan
+        new_history_id: History ID di tabel_main (opsional, default = original[:11])
+    
+    Returns:
+        dict: Result dengan success status
+    """
+    from django.db import connections
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Get checker data dari tabel_pengajuan
+            cursor.execute("""
+                SELECT checker_name, checker_time, checker_device_id
+                FROM tabel_pengajuan 
+                WHERE history_id = %s 
+                  AND checker_status = '1'
+                  AND checker_name IS NOT NULL
+            """, [original_history_id])
+            
+            checker_data = cursor.fetchone()
+            
+            if not checker_data:
+                logger.info(f"No checker data found for {original_history_id}")
+                return {'success': True, 'message': 'No checker data to transfer'}
+            
+            checker_name, checker_time, device_id = checker_data
+            
+            # Tentukan target history_id untuk tabel_main
+            target_history_id = new_history_id or original_history_id[:11]
+            
+            # Update tabel_main dengan checker data
+            cursor.execute("""
+                UPDATE tabel_main 
+                SET checker_name = %s,
+                    checker_time = %s,
+                    checker_device_id = %s,
+                    checker_status = '1',
+                    checker_transferred_from = %s
+                WHERE history_id = %s
+            """, [checker_name, checker_time, device_id, original_history_id, target_history_id])
+            
+            rows_affected = cursor.rowcount
+            
+            if rows_affected > 0:
+                logger.info(f"Checker transferred: {original_history_id} -> {target_history_id} ({checker_name})")
+                return {
+                    'success': True,
+                    'message': f'Checker data transferred successfully',
+                    'checker_name': checker_name,
+                    'rows_affected': rows_affected
+                }
+            else:
+                logger.warning(f"Failed to transfer checker to {target_history_id}")
+                return {
+                    'success': False,
+                    'message': f'Failed to update tabel_main for {target_history_id}'
+                }
+                
+    except Exception as e:
+        logger.error(f"Error transferring checker data: {e}")
+        return {
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }
+
+
+# Export untuk digunakan di views
+__all__ = [
+    'TabelPengajuan',
+    'TabelMain',
+    'save_checker_to_database',
+    'get_checker_data_from_database',
+    'transfer_checker_pengajuan_to_main'
+]
 
 # Custom Manager untuk TabelMain
 class ActiveHistoryManager(models.Manager):
