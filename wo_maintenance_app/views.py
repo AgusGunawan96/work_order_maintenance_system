@@ -8996,535 +8996,397 @@ __all__ = [
     'get_opposite_status'
 ]
 
-# @login_required  
-# def monitoring_informasi_system(request):
-#     """
-#     View untuk MONITORING INFORMASI SYSTEM
-#     FIXED: Prioritas dari PriMa field, Status logic yang benar
-#     """
+def load_checkers_from_database_enhanced():
+    """
+    Enhanced version: Load checker data dengan include langsung di monitoring query
+    Biar nama checker langsung kepanggil pas query monitoring data
+    """
+    checker_data = {}
     
-#     # Ambil data employee dari session
-#     employee_data = request.session.get('employee_data', {})
-    
-#     monitoring_data = []
-    
-#     try:
-#         with connections['DB_Maintenance'].cursor() as cursor:
-#             # Logic waktu sesuai PHP
-#             today = timezone.now().date()
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            logger.info("Loading enhanced checker data from tabel_pengajuan...")
             
-#             # Try using View_Monitor first, fallback to manual UNION if not exists
-#             try:
-#                 # Test if View_Monitor exists
-#                 cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
-#                 use_view_monitor = True
-#             except:
-#                 use_view_monitor = False
-#                 logger.warning("View_Monitor not found, using manual UNION query")
+            # Load checker data dari tabel_pengajuan dengan status '1' (sudah dicek)
+            cursor.execute("""
+                SELECT 
+                    history_id, 
+                    checker_name, 
+                    checker_time, 
+                    checker_device_id, 
+                    checker_status,
+                    checker_notes
+                FROM tabel_pengajuan 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+                  AND history_id IS NOT NULL
+                  AND history_id != ''
+                ORDER BY checker_time DESC
+            """)
             
-#             if use_view_monitor:
-#                 # Query menggunakan View_Monitor (jika ada)
-#                 cursor.execute(f"""
-#                     SELECT 
-#                         a.history_id,
-#                         MAX(a.tgl_his) as tgl_his,
-#                         MAX(a.jam_his) as jam_his,
-#                         a.id_line,
-#                         a.id_mesin,
-#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
-#                         MAX(a.number_wo) as number_wo,
-#                         MAX(b.line) as line,
-#                         MAX(c.mesin) as mesin,
-#                         MAX(a.status_pekerjaan) as status_pekerjaan,
-#                         MAX(a.status) as status,
-#                         MAX(a.user_insert) as user_insert,
-#                         MAX(a.tgl_insert) as tgl_insert,
-#                         MAX(a.oleh) as oleh,
-#                         MAX(c.nomer) as nomer,
-#                         MAX(d.seksi) as seksi,
-#                         MAX(a.prima) as prima,
-#                         MAX(a.approve) as approve
-#                     FROM View_Monitor a 
-#                     JOIN tabel_line b ON b.id_line = a.id_line
-#                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
-#                     JOIN tabel_msection d ON d.id_section = a.id_section
-#                     WHERE a.status_pekerjaan != 'C' 
-#                       AND a.history_id IS NOT NULL 
-#                       AND a.history_id != ''
-#                       AND convert(datetime,a.tgl_his,120) BETWEEN 
-#                           dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
-#                           dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
-#                     GROUP BY a.history_id, a.id_line, a.id_mesin
-#                     ORDER BY
-#                         CASE
-#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
-#                             ELSE 1
-#                         END, 
-#                         MAX(a.tgl_his) DESC
-#                 """)
-#             else:
-#                 # FIXED: Manual UNION query dengan data yang benar
-#                 cursor.execute(f"""
-#                     SELECT 
-#                         a.history_id,
-#                         MAX(a.tgl_his) as tgl_his,
-#                         MAX(a.jam_his) as jam_his,
-#                         a.id_line,
-#                         a.id_mesin,
-#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
-#                         MAX(a.number_wo) as number_wo,
-#                         MAX(b.line) as line,
-#                         MAX(c.mesin) as mesin,
-#                         MAX(a.status_pekerjaan) as status_pekerjaan,
-#                         MAX(a.status) as status,
-#                         MAX(a.user_insert) as user_insert,
-#                         MAX(a.tgl_insert) as tgl_insert,
-#                         MAX(a.oleh) as oleh,
-#                         MAX(c.nomer) as nomer,
-#                         MAX(d.seksi) as seksi,
-#                         MAX(a.prima) as prima,
-#                         MAX(a.approve) as approve
-#                     FROM (
-#                         SELECT 
-#                             tp.history_id,
-#                             tp.tgl_his,
-#                             tp.jam_his,
-#                             tp.id_line,
-#                             tp.id_mesin,
-#                             tp.deskripsi_perbaikan,
-#                             tp.number_wo,
-#                             tp.status_pekerjaan,
-#                             tp.status,
-#                             tp.id_section,
-#                             NULL as prima,
-#                             tp.tgl_insert,
-#                             tp.user_insert,
-#                             tp.oleh,
-                            
-#                             tp.approve
-#                         FROM tabel_pengajuan tp
-#                         WHERE tp.status_pekerjaan != 'C'
-#                           AND tp.history_id IS NOT NULL 
-#                           AND tp.history_id != ''
-                        
-#                         UNION ALL
-                        
-#                         SELECT 
-#                             tm.history_id,
-#                             tm.tgl_his,
-#                             tm.jam_his,
-#                             tm.id_line,
-#                             tm.id_mesin,
-#                             tm.deskripsi_perbaikan,
-#                             tm.number_wo,
-#                             tm.status_pekerjaan,
-#                             tm.status,
-#                             tm.id_section,
-#                             tm.PriMa as prima,
-#                             tm.tgl_insert,
-#                             NULL as user_insert,
-#                             tm.oleh,
-                           
-#                             NULL as approve
-#                         FROM tabel_main tm
-#                         WHERE tm.status_pekerjaan != 'C'
-#                           AND tm.history_id IS NOT NULL 
-#                           AND tm.history_id != ''
-#                     ) a
-#                     LEFT JOIN tabel_line b ON b.id_line = a.id_line
-#                     LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
-#                     LEFT JOIN tabel_msection d ON d.id_section = a.id_section
-#                     WHERE convert(datetime,a.tgl_his,120) BETWEEN 
-#                         dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
-#                         dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
-#                     GROUP BY a.history_id, a.id_line, a.id_mesin
-#                     ORDER BY
-#                         CASE
-#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
-#                             ELSE 1
-#                         END, 
-#                         MAX(a.tgl_his) DESC
-#                 """)
+            pengajuan_rows = cursor.fetchall()
+            logger.info(f"Found {len(pengajuan_rows)} checked pengajuan items")
             
-#             results = cursor.fetchall()
+            for row in pengajuan_rows:
+                history_id, checker_name, checker_time, device_id, status, notes = row
+                if history_id:
+                    checker_data[f"row-{history_id}"] = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'notes': notes,
+                        'status_type': 'pengajuan',
+                        'source_table': 'tabel_pengajuan',
+                        'last_updated': checker_time.isoformat() if checker_time else None,
+                        'display_time': checker_time.strftime('%d/%m %H:%M') if checker_time else None
+                    }
+                    logger.debug(f"Loaded checker: {history_id} -> {checker_name}")
             
-#             # FIXED: Processing data dengan logic status yang benar
-#             for row in results:
-#                 # FIXED: Map data dengan index yang benar
-#                 history_id = row[0]
-#                 tgl_his = row[1]
-#                 jam_his = row[2]
-#                 id_line = row[3] 
-#                 id_mesin = row[4]
-#                 deskripsi_perbaikan = row[5]
-#                 number_wo = row[6] if row[6] else ''
-#                 line_name = row[7]
-#                 mesin_name = row[8]
-#                 status_pekerjaan = row[9] if row[9] else ''
-#                 status = row[10] if row[10] else ''
-#                 user_insert = row[11]
-#                 tgl_insert = row[12]
-#                 oleh = row[13]
-#                 nomer = row[14]
-#                 seksi = row[15]  # Section name
-#                 prima = row[16]  # FIXED: PriMa field untuk prioritas
-                
-#                 approve = row[18] if len(row) > 18 else None
-                
-#                 # FIXED: Logic status yang benar sesuai requirement
-#                 status_display = ''
-#                 status_color = ''
-                
-#                 # Skip jika status_pekerjaan = 'C' (completed, tidak ditampilkan)
-#                 if status_pekerjaan == 'C':
-#                     continue
-                
-#                 # Logic status berdasarkan flow proses:
-#                 # 1. PENGAJUAN: Belum ada number_wo yang valid atau belum di-review
-#                 # 2. DIPROSES: Sudah di-review oleh 007522 (SITI FATIMAH)
-                
-#                 if (not number_wo or 
-#                     number_wo.strip() == '' or 
-#                     number_wo.startswith('TEMP-') or
-#                     (status != 'A' and approve != 'Y')):
-#                     # Masih dalam tahap pengajuan
-#                     status_display = 'pengajuan'
-#                     status_color = '#DC143C'  # Merah
-#                 elif (status == 'A' and 
-#                       approve == 'Y' and 
-                     
-#                       status_pekerjaan == 'O'):
-#                     # Sudah di-review oleh SITI FATIMAH dan sedang diproses
-#                     status_display = 'diproses'
-#                     status_color = '#7FFF00'  # Hijau
-#                 else:
-#                     # Default: diproses (untuk data di tabel_main yang aktif)
-#                     status_display = 'diproses'
-#                     status_color = '#7FFF00'  # Hijau
-                
-#                 # Format waktu sesuai PHP (d/m/Y - H:i:s WIB)
-#                 waktu_display = ''
-#                 if tgl_his:
-#                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
-                
-#                 # FIXED: Gabung mesin + nomer seperti di PHP
-#                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
-                
-#                 monitoring_data.append({
-#                     'history_id': history_id or '-',
-#                     'prioritas': prima or '-',  # FIXED: Gunakan prima (PriMa field)
-#                     'waktu_pengajuan': waktu_display,
-#                     'no_pengajuan': history_id or '-',
-#                     'nomor_wo': number_wo or '-',
-#                     'line_name': line_name or '-',
-#                     'mesin_name': mesin_display,
-#                     'deskripsi': deskripsi_perbaikan or '-',
-#                     'section_name': seksi or '-',  # FIXED: Gunakan seksi untuk section
-#                     'status': status_display,
-#                     'status_color': status_color,
-#                     'tgl_insert': tgl_insert,
-#                 })
-                
-#     except Exception as e:
-#         logger.error(f"Error loading monitoring data: {e}")
-#         monitoring_data = []
-#         # Don't show error to user, just log it
-    
-#     # Statistik untuk dashboard monitoring
-#     stats = {
-#         'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
-#         'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
-#         'total_all': len(monitoring_data),
-#         'use_marquee': len(monitoring_data) > 30
-#     }
-    
-#     context = {
-#         'monitoring_data': monitoring_data,
-#         'stats': stats,
-#         'employee_data': employee_data,
-#         'page_title': 'MONITORING INFORMASI SYSTEM',
-#         'current_time': timezone.now(),
-#     }
-    
-#     return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
+            # Load checker dari tabel_main juga (untuk diproses)
+            cursor.execute("""
+                SELECT 
+                    history_id, 
+                    checker_name, 
+                    checker_time, 
+                    checker_device_id, 
+                    checker_status,
+                    checker_transferred_from,
+                    checker_notes
+                FROM tabel_main 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+                  AND history_id IS NOT NULL
+                  AND history_id != ''
+                ORDER BY checker_time DESC
+            """)
+            
+            main_rows = cursor.fetchall()
+            logger.info(f"Found {len(main_rows)} checked main items")
+            
+            for row in main_rows:
+                history_id, checker_name, checker_time, device_id, status, transferred_from, notes = row
+                if history_id:
+                    # Use transferred_from untuk mapping kalo ada
+                    mapping_id = transferred_from if transferred_from else history_id
+                    
+                    checker_data[f"row-{mapping_id}"] = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'notes': notes,
+                        'status_type': 'diproses',
+                        'source_table': 'tabel_main',
+                        'short_history_id': history_id,
+                        'transferred_from': transferred_from,
+                        'last_updated': checker_time.isoformat() if checker_time else None,
+                        'display_time': checker_time.strftime('%d/%m %H:%M') if checker_time else None
+                    }
+                    logger.debug(f"Loaded main checker: {mapping_id} -> {checker_name}")
+            
+            logger.info(f"Total enhanced checker data loaded: {len(checker_data)}")
+            return checker_data
+            
+    except Exception as e:
+        logger.error(f"Error loading enhanced checkers: {e}")
+        return {}
 
-
-# @login_required  
-# def ajax_monitoring_refresh(request):
-#     """
-#     AJAX endpoint untuk refresh data monitoring - FIXED untuk prioritas dan status logic
-#     """
-#     if request.method != 'POST':
-#         return JsonResponse({'success': False, 'error': 'Method not allowed'})
+def load_checkers_from_database_mapping_fix():
+    """
+    MAPPING FIX: Load checker data dengan multiple mapping keys
+    """
+    checker_data = {}
     
-#     monitoring_data = []
+    try:
+        with connections['DB_Maintenance'].cursor() as cursor:
+            # Get checker data dari tabel_pengajuan
+            cursor.execute("""
+                SELECT 
+                    history_id, checker_name, checker_time, checker_device_id, 
+                    checker_status, checker_notes
+                FROM tabel_pengajuan 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+                  AND history_id IS NOT NULL
+                  AND history_id != ''
+            """)
+            
+            pengajuan_rows = cursor.fetchall()
+            logger.info(f"MAPPING FIX: Found {len(pengajuan_rows)} checked items in tabel_pengajuan")
+            
+            for row in pengajuan_rows:
+                history_id, checker_name, checker_time, device_id, status, notes = row
+                if history_id:
+                    checker_info = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'notes': notes,
+                        'status_type': 'pengajuan',
+                        'source_table': 'tabel_pengajuan',
+                        'last_updated': checker_time.isoformat() if checker_time else None
+                    }
+                    
+                    # MAPPING FIX: Buat multiple keys untuk handle berbagai format
+                    # Key 1: Format asli
+                    checker_data[f"row-{history_id}"] = checker_info
+                    
+                    # Key 2: Format dengan pattern "XXXXX -- YYYY" jika ada yang match
+                    # Coba detect apakah ada format gabungan di monitoring data
+                    logger.info(f"MAPPING FIX: Adding checker key for pengajuan: row-{history_id}")
+            
+            # Get checker data dari tabel_main
+            cursor.execute("""
+                SELECT 
+                    history_id, checker_name, checker_time, checker_device_id, 
+                    checker_status, checker_transferred_from, checker_notes
+                FROM tabel_main 
+                WHERE checker_status = '1' 
+                  AND checker_name IS NOT NULL 
+                  AND checker_name != ''
+                  AND history_id IS NOT NULL
+                  AND history_id != ''
+            """)
+            
+            main_rows = cursor.fetchall()
+            logger.info(f"MAPPING FIX: Found {len(main_rows)} checked items in tabel_main")
+            
+            for row in main_rows:
+                history_id, checker_name, checker_time, device_id, status, transferred_from, notes = row
+                if history_id:
+                    checker_info = {
+                        'user': checker_name,
+                        'time': checker_time.isoformat() if checker_time else None,
+                        'device_id': device_id,
+                        'status': status,
+                        'notes': notes,
+                        'status_type': 'diproses',
+                        'source_table': 'tabel_main',
+                        'short_history_id': history_id,
+                        'transferred_from': transferred_from,
+                        'last_updated': checker_time.isoformat() if checker_time else None
+                    }
+                    
+                    # Use transferred_from for mapping if available
+                    mapping_id = transferred_from if transferred_from else history_id
+                    checker_data[f"row-{mapping_id}"] = checker_info
+                    
+                    logger.info(f"MAPPING FIX: Adding checker key for main: row-{mapping_id}")
+            
+            logger.info(f"MAPPING FIX: Total checker data loaded: {len(checker_data)}")
+            logger.info(f"MAPPING FIX: Checker keys: {list(checker_data.keys())[:5]}")
+            
+            return checker_data
+            
+    except Exception as e:
+        logger.error(f"MAPPING FIX: Error loading checkers from database: {e}")
+        return {}
+# Enhanced AJAX refresh juga
+@login_required
+def ajax_monitoring_refresh_enhanced(request):
+    """
+    Enhanced AJAX refresh dengan direct checker query
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'})
     
-#     try:
-#         with connections['DB_Maintenance'].cursor() as cursor:
-#             today = timezone.now().date()
-            
-#             # Try using View_Monitor first, fallback to manual UNION if not exists
-#             try:
-#                 cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
-#                 use_view_monitor = True
-#             except:
-#                 use_view_monitor = False
-            
-#             if use_view_monitor:
-#                 # Query menggunakan View_Monitor
-#                 cursor.execute(f"""
-#                     SELECT 
-#                         a.history_id,
-#                         MAX(a.tgl_his) as tgl_his,
-#                         MAX(a.jam_his) as jam_his,
-#                         a.id_line,
-#                         a.id_mesin,
-#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
-#                         MAX(a.number_wo) as number_wo,
-#                         MAX(b.line) as line,
-#                         MAX(c.mesin) as mesin,
-#                         MAX(a.status_pekerjaan) as status_pekerjaan,
-#                         MAX(a.status) as status,
-#                         MAX(a.user_insert) as user_insert,
-#                         MAX(a.tgl_insert) as tgl_insert,
-#                         MAX(a.oleh) as oleh,
-#                         MAX(c.nomer) as nomer,
-#                         MAX(d.seksi) as seksi,
-#                         MAX(a.prima) as prima,
-                       
-#                         MAX(a.approve) as approve
-#                     FROM View_Monitor a 
-#                     JOIN tabel_line b ON b.id_line = a.id_line
-#                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
-#                     JOIN tabel_msection d ON d.id_section = a.id_section
-#                     WHERE a.status_pekerjaan != 'C' 
-#                       AND a.history_id IS NOT NULL 
-#                       AND a.history_id != ''
-#                       AND convert(datetime,a.tgl_his,120) BETWEEN 
-#                           dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
-#                           dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
-#                     GROUP BY a.history_id, a.id_line, a.id_mesin
-#                     ORDER BY
-#                         CASE
-#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
-#                             ELSE 1
-#                         END, 
-#                         MAX(a.tgl_his) DESC
-#                 """)
-#             else:
-#                 # FIXED: Manual UNION query dengan data lengkap
-#                 cursor.execute(f"""
-#                     SELECT 
-#                         a.history_id,
-#                         MAX(a.tgl_his) as tgl_his,
-#                         MAX(a.jam_his) as jam_his,
-#                         a.id_line,
-#                         a.id_mesin,
-#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
-#                         MAX(a.number_wo) as number_wo,
-#                         MAX(b.line) as line,
-#                         MAX(c.mesin) as mesin,
-#                         MAX(a.status_pekerjaan) as status_pekerjaan,
-#                         MAX(a.status) as status,
-#                         MAX(a.user_insert) as user_insert,
-#                         MAX(a.tgl_insert) as tgl_insert,
-#                         MAX(a.oleh) as oleh,
-#                         MAX(c.nomer) as nomer,
-#                         MAX(d.seksi) as seksi,
-#                         MAX(a.prima) as prima,
-                       
-#                         MAX(a.approve) as approve
-#                     FROM (
-#                         SELECT 
-#                             tp.history_id,
-#                             tp.tgl_his,
-#                             tp.jam_his,
-#                             tp.id_line,
-#                             tp.id_mesin,
-#                             tp.deskripsi_perbaikan,
-#                             tp.number_wo,
-#                             tp.status_pekerjaan,
-#                             tp.status,
-#                             tp.id_section,
-#                             NULL as prima,
-#                             tp.tgl_insert,
-#                             tp.user_insert,
-#                             tp.oleh,
-                            
-#                             tp.approve
-#                         FROM tabel_pengajuan tp
-#                         WHERE tp.status_pekerjaan != 'C'
-#                           AND tp.history_id IS NOT NULL 
-#                           AND tp.history_id != ''
-                        
-#                         UNION ALL
-                        
-#                         SELECT 
-#                             tm.history_id,
-#                             tm.tgl_his,
-#                             tm.jam_his,
-#                             tm.id_line,
-#                             tm.id_mesin,
-#                             tm.deskripsi_perbaikan,
-#                             tm.number_wo,
-#                             tm.status_pekerjaan,
-#                             tm.status,
-#                             tm.id_section,
-#                             tm.PriMa as prima,
-#                             tm.tgl_insert,
-#                             NULL as user_insert,
-#                             tm.oleh,
-                           
-#                             NULL as approve
-#                         FROM tabel_main tm
-#                         WHERE tm.status_pekerjaan != 'C'
-#                           AND tm.history_id IS NOT NULL 
-#                           AND tm.history_id != ''
-#                     ) a
-#                     LEFT JOIN tabel_line b ON b.id_line = a.id_line
-#                     LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
-#                     LEFT JOIN tabel_msection d ON d.id_section = a.id_section
-#                     WHERE convert(datetime,a.tgl_his,120) BETWEEN 
-#                         dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
-#                         dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
-#                     GROUP BY a.history_id, a.id_line, a.id_mesin
-#                     ORDER BY
-#                         CASE
-#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
-#                             ELSE 1
-#                         END, 
-#                         MAX(a.tgl_his) DESC
-#                 """)
-            
-#             results = cursor.fetchall()
-            
-#             # FIXED: Process data dengan logic yang sama
-#             for row in results:
-#                 # Map data dengan index yang benar
-#                 history_id = row[0]
-#                 tgl_his = row[1]
-#                 number_wo = row[6] if row[6] else ''
-#                 line_name = row[7]
-#                 mesin_name = row[8]
-#                 status_pekerjaan = row[9] if row[9] else ''
-#                 status = row[10] if row[10] else ''
-#                 nomer = row[14]
-#                 seksi = row[15]  # Section name
-#                 prima = row[16]  # FIXED: PriMa field
-               
-#                 approve = row[18] if len(row) > 18 else None
-#                 deskripsi_perbaikan = row[5]
-                
-#                 # Skip jika completed
-#                 if status_pekerjaan == 'C':
-#                     continue
-                
-#                 # FIXED: Logic status yang sama dengan main function
-#                 if (not number_wo or 
-#                     number_wo.strip() == '' or 
-#                     number_wo.startswith('TEMP-') or
-#                     (status != 'A' and approve != 'Y')):
-#                     status_display = 'pengajuan'
-#                 elif (status == 'A' and 
-#                       approve == 'Y' and 
-                     
-#                       status_pekerjaan == 'O'):
-#                     status_display = 'diproses'
-#                 else:
-#                     status_display = 'diproses'
-                
-#                 # Format waktu sesuai PHP
-#                 waktu_display = ''
-#                 if tgl_his:
-#                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
-                
-#                 # Gabung mesin + nomer
-#                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
-                
-#                 monitoring_data.append({
-#                     'prioritas': prima or '-',  # FIXED: Gunakan prima (PriMa field)
-#                     'waktu_pengajuan': waktu_display,
-#                     'no_pengajuan': history_id or '-',
-#                     'nomor_wo': number_wo or '-',
-#                     'line_name': line_name or '-',
-#                     'mesin_name': mesin_display,
-#                     'deskripsi': (deskripsi_perbaikan[:50] + '...') if deskripsi_perbaikan and len(deskripsi_perbaikan) > 50 else (deskripsi_perbaikan or '-'),
-#                     'section_name': seksi or '-',  # FIXED: Gunakan seksi untuk section
-#                     'status': status_display,
-#                 })
+    monitoring_data = []
+    
+    try:
+        # Load enhanced checker data
+        existing_checkers = load_checkers_from_database_enhanced()
         
-#         stats = {
-#             'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
-#             'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
-#             'total_all': len(monitoring_data),
-#             'use_marquee': len(monitoring_data) > 30,
-#             'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
-#         }
+        with connections['DB_Maintenance'].cursor() as cursor:
+            today = timezone.now().date()
+            
+            # SAME ENHANCED QUERY as monitoring view
+            cursor.execute(f"""
+                SELECT 
+                    a.history_id,
+                    MAX(a.tgl_his) as tgl_his,
+                    MAX(a.jam_his) as jam_his,
+                    a.id_line,
+                    a.id_mesin,
+                    MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
+                    MAX(a.number_wo) as number_wo,
+                    MAX(b.line) as line,
+                    MAX(c.mesin) as mesin,
+                    MAX(a.status_pekerjaan) as status_pekerjaan,
+                    MAX(a.status) as status,
+                    MAX(c.nomer) as nomer,
+                    MAX(d.seksi) as seksi,
+                    MAX(a.prima) as prima,
+                    MAX(a.approve) as approve,
+                    MAX(a.oleh) as oleh,
+                    -- ENHANCED: Include checker data
+                    MAX(a.checker_name) as checker_name,
+                    MAX(a.checker_time) as checker_time,
+                    MAX(a.checker_status) as checker_status
+                FROM (
+                    SELECT 
+                        tp.history_id, tp.tgl_his, tp.jam_his, tp.id_line, tp.id_mesin,
+                        tp.deskripsi_perbaikan, tp.number_wo, tp.status_pekerjaan,
+                        tp.status, tp.id_section, NULL as prima, tp.approve, tp.oleh,
+                        tp.checker_name, tp.checker_time, tp.checker_status
+                    FROM tabel_pengajuan tp
+                    WHERE tp.status_pekerjaan != 'C'
+                      AND tp.history_id IS NOT NULL 
+                      AND tp.history_id != ''
+                    
+                    UNION ALL
+                    
+                    SELECT 
+                        tm.history_id, tm.tgl_his, tm.jam_his, tm.id_line, tm.id_mesin,
+                        tm.deskripsi_perbaikan, tm.number_wo, tm.status_pekerjaan,
+                        tm.status, tm.id_section, tm.PriMa as prima, NULL as approve, tm.oleh,
+                        tm.checker_name, tm.checker_time, tm.checker_status
+                    FROM tabel_main tm
+                    WHERE tm.status_pekerjaan != 'C'
+                      AND tm.history_id IS NOT NULL 
+                      AND tm.history_id != ''
+                ) a
+                LEFT JOIN tabel_line b ON b.id_line = a.id_line
+                LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
+                LEFT JOIN tabel_msection d ON d.id_section = a.id_section
+                WHERE convert(datetime,a.tgl_his,120) BETWEEN 
+                    dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
+                    dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
+                GROUP BY a.history_id, a.id_line, a.id_mesin
+                ORDER BY MAX(a.tgl_his) DESC
+            """)
+            
+            results = cursor.fetchall()
+            
+            # Process sama seperti view utama
+            for row in results:
+                history_id = row[0]
+                tgl_his = row[1]
+                jam_his = row[2]
+                id_line = row[3] 
+                id_mesin = row[4]
+                deskripsi_perbaikan = row[5]
+                number_wo = row[6] if row[6] else ''
+                line_name = row[7]
+                mesin_name = row[8]
+                status_pekerjaan = row[9] if row[9] else ''
+                status = row[10] if row[10] else ''
+                nomer = row[11]
+                seksi = row[12]
+                prima = row[13]
+                approve = row[14] if len(row) > 14 else None
+                oleh = row[15] if len(row) > 15 else ''
+                db_checker_name = row[16] if len(row) > 16 else None
+                db_checker_time = row[17] if len(row) > 17 else None
+                db_checker_status = row[18] if len(row) > 18 else None
+                
+                if status_pekerjaan == 'C':
+                    continue
+                
+                # Status determination
+                if (not number_wo or number_wo.strip() == '' or number_wo.startswith('TEMP-') or (status != 'A' and approve != 'Y')):
+                    status_display = 'pengajuan'
+                elif (status == 'A' and approve == 'Y' and status_pekerjaan == 'O'):
+                    status_display = 'diproses'
+                else:
+                    status_display = 'diproses'
+                
+                # Enhanced checker mapping
+                checker_key = f"row-{history_id}"
+                checker_info = existing_checkers.get(checker_key, {})
+                
+                final_checker_name = db_checker_name if db_checker_name else checker_info.get('user', '')
+                final_checker_time = db_checker_time if db_checker_time else None
+                final_checker_status = db_checker_status if db_checker_status else checker_info.get('status', '0')
+                has_checker = (final_checker_status == '1' and final_checker_name and final_checker_name.strip() != '')
+                
+                waktu_display = ''
+                if tgl_his:
+                    waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
+                
+                mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
+                
+                monitoring_data.append({
+                    'prioritas': prima or '-',
+                    'waktu_pengajuan': waktu_display,
+                    'no_pengajuan': history_id,
+                    'nomor_wo': number_wo or '-',
+                    'line_name': line_name or '-',
+                    'mesin_name': mesin_display,
+                    'deskripsi': deskripsi_perbaikan or '-',
+                    'section_name': seksi or '-',
+                    'status': status_display,
+                    'oleh': oleh or '-',
+                    
+                    # Enhanced checker integration
+                    'has_checker': has_checker,
+                    'checker_name': final_checker_name,
+                    'checker_time': final_checker_time.isoformat() if final_checker_time else '',
+                    'checker_display_time': final_checker_time.strftime('%d/%m %H:%M') if final_checker_time else '',
+                    'checker_source_table': checker_info.get('source_table', 'tabel_pengajuan'),
+                    'checker_status_type': status_display
+                })
         
-#         return JsonResponse({
-#             'success': True,
-#             'data': monitoring_data,
-#             'stats': stats
-#         })
+        stats = {
+            'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
+            'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
+            'total_all': len(monitoring_data),
+            'total_checked': len([x for x in monitoring_data if x['has_checker']]),
+            'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+        }
         
-#     except Exception as e:
-#         logger.error(f"Error refreshing monitoring data: {e}")
-#         # Return success with empty data instead of error to prevent logout
-#         return JsonResponse({
-#             'success': True,
-#             'data': [],
-#             'stats': {
-#                 'total_pengajuan': 0,
-#                 'total_diproses': 0,
-#                 'total_all': 0,
-#                 'use_marquee': False,
-#                 'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
-#             },
-#             'message': 'No data available'
-#         })
-
-
-# # Tambahkan view untuk keep session alive
-# @login_required
-# def keep_session_alive(request):
-#     """
-#     Endpoint untuk menjaga session tetap aktif
-#     """
-#     return JsonResponse({
-#         'success': True,
-#         'message': 'Session refreshed',
-#         'time': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
-#     })
-
-# # Export functions
-# __all__ = [
-#     'monitoring_informasi_system',
-#     'ajax_monitoring_refresh'
-# ]
-
-logger = logging.getLogger(__name__)
-
+        # Debug logging
+        checked_items = [item for item in monitoring_data if item['has_checker']]
+        logger.info(f"Enhanced Ajax: Found {len(checked_items)} items with checkers")
+        
+        return JsonResponse({
+            'success': True,
+            'data': monitoring_data,
+            'stats': stats,
+            'checker_data': existing_checkers,
+            'enhanced_mode': True,
+            'sync_timestamp': timezone.now().timestamp()
+        })
+        
+    except Exception as e:
+        logger.error(f"Enhanced Ajax error: {e}")
+        return JsonResponse({
+            'success': True,
+            'data': [],
+            'stats': {
+                'total_pengajuan': 0, 'total_diproses': 0,
+                'total_all': 0, 'total_checked': 0,
+                'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
+            },
+            'checker_data': {},
+            'message': 'No data available',
+            'enhanced_mode': True
+        })
+    
 @login_required   
 def monitoring_informasi_system(request):
     """
-    View untuk halaman monitoring standalone (fullscreen) 
-    Tanpa sidebar, header, dll - khusus untuk tab baru
+    MAPPING FIX: View monitoring dengan consistent checker mapping
     """
     
     employee_data = request.session.get('employee_data', {})
     monitoring_data = []
     
     try:
-        # Load checker data dari database
-        existing_checkers = load_checkers_from_database()
-        logger.info(f"Standalone monitoring: Loaded {len(existing_checkers)} existing checkers")
+        # Load checker data dengan mapping fix
+        existing_checkers = load_checkers_from_database_mapping_fix()
+        logger.info(f"MAPPING FIX Monitoring: Loaded {len(existing_checkers)} existing checkers")
         
         with connections['DB_Maintenance'].cursor() as cursor:
             today = timezone.now().date()
             
             # Query monitoring data (sama dengan view utama)
             try:
-                cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
+                cursor.execute("SELECT COUNT(*) FROM View_Monitor2 WHERE 1=0")
                 use_view_monitor = True
             except:
                 use_view_monitor = False
@@ -9550,8 +9412,10 @@ def monitoring_informasi_system(request):
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
                         MAX(a.prima) as prima,
-                        MAX(a.approve) as approve
-                    FROM View_Monitor a 
+                        MAX(a.approve) as approve,
+                        MAX(a.checker_name) as checker_name,   -- ✅ tambahkan
+                        MAX(a.checker_time) as checker_time    -- ✅ tambahkan
+                    FROM View_Monitor2 a 
                     JOIN tabel_line b ON b.id_line = a.id_line
                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
                     JOIN tabel_msection d ON d.id_section = a.id_section
@@ -9590,7 +9454,9 @@ def monitoring_informasi_system(request):
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
                         MAX(a.prima) as prima,
-                        MAX(a.approve) as approve
+                        MAX(a.approve) as approve,
+                        MAX(a.checker_name) as checker_name,
+                        MAX(a.checker_time) as checker_time
                     FROM (
                         SELECT 
                             tp.history_id,
@@ -9607,7 +9473,9 @@ def monitoring_informasi_system(request):
                             tp.tgl_insert,
                             tp.user_insert,
                             tp.oleh,
-                            tp.approve
+                            tp.approve,
+                            tp.checker_name,
+                            tp.checker_time
                         FROM tabel_pengajuan tp
                         WHERE tp.status_pekerjaan != 'C'
                           AND tp.history_id IS NOT NULL 
@@ -9630,7 +9498,9 @@ def monitoring_informasi_system(request):
                             tm.tgl_insert,
                             NULL as user_insert,
                             tm.oleh,
-                            NULL as approve
+                            NULL as approve,
+                               tm.checker_name,
+                            tm.checker_time
                         FROM tabel_main tm
                         WHERE tm.status_pekerjaan != 'C'
                           AND tm.history_id IS NOT NULL 
@@ -9653,9 +9523,9 @@ def monitoring_informasi_system(request):
             
             results = cursor.fetchall()
             
-            # Process data dengan database checker integration
+            # MAPPING FIX: Process data dengan improved checker mapping
             for row in results:
-                history_id = row[0]
+                history_id = row[0]  # history_id asli dari database
                 tgl_his = row[1]
                 jam_his = row[2]
                 id_line = row[3] 
@@ -9673,15 +9543,16 @@ def monitoring_informasi_system(request):
                 seksi = row[15]
                 prima = row[16]
                 approve = row[17] if len(row) > 17 else None
+                checker_name = row[18] if len(row) > 18 else ''
+                checker_time = row[19] if len(row) > 19 else None
+
+
                 
                 # Skip jika completed
                 if status_pekerjaan == 'C':
                     continue
                 
                 # Determine status display
-                status_display = ''
-                status_color = ''
-                
                 if (not number_wo or 
                     number_wo.strip() == '' or 
                     number_wo.startswith('TEMP-') or
@@ -9697,10 +9568,26 @@ def monitoring_informasi_system(request):
                     status_display = 'diproses'
                     status_color = '#7FFF00'
                 
-                # FIXED: Check database checker dengan history_id asli tanpa format tambahan
+                # MAPPING FIX: Check database checker dengan exact history_id
                 checker_key = f"row-{history_id}"
-                has_checker = checker_key in existing_checkers
+                # has_checker = checker_key in existing_checkers
                 checker_info = existing_checkers.get(checker_key, {})
+
+                final_checker_name = checker_name or checker_info.get('user', '')
+                final_checker_time = checker_time or checker_info.get('time', '')
+                has_checker = bool(final_checker_name and str(final_checker_name).strip() != '')
+
+                logger.debug(
+                f"Row {history_id} -> checker_name={checker_name}, "
+                f"checker_time={checker_time}, "
+                f"final_name={final_checker_name}, "
+                f"has_checker={has_checker}"
+    )
+
+                
+                # logger.debug(f"MAPPING FIX: Checking history_id '{history_id}' -> key '{checker_key}' -> found: {has_checker}")
+                # if has_checker:
+                #     logger.info(f"MAPPING FIX: Found checker for {history_id}: {checker_info.get('user', 'Unknown')}")
                 
                 # Format waktu
                 waktu_display = ''
@@ -9710,11 +9597,12 @@ def monitoring_informasi_system(request):
                 # Gabung mesin + nomer
                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
                 
+                # MAPPING FIX: Use clean history_id for both no_pengajuan and row mapping  
                 monitoring_data.append({
-                    'history_id': history_id or '-',
+                    'history_id': history_id,  # history_id asli
                     'prioritas': prima or '-',
                     'waktu_pengajuan': waktu_display,
-                    'no_pengajuan': history_id or '-',  # PENTING: Pake history_id asli
+                    'no_pengajuan': history_id,  # MAPPING FIX: Use clean history_id
                     'nomor_wo': number_wo or '-',
                     'line_name': line_name or '-',
                     'mesin_name': mesin_display,
@@ -9726,15 +9614,24 @@ def monitoring_informasi_system(request):
                     
                     # Database checker info
                     'has_checker': has_checker,
-                    'checker_name': checker_info.get('user', ''),
-                    'checker_time': checker_info.get('time', ''),
-                    'checker_source_table': checker_info.get('source_table', ''),
+                    'checker_name': final_checker_name,
+                    'checker_time': (
+                        final_checker_time.strftime('%Y-%m-%d %H:%M:%S') 
+                        if isinstance(final_checker_time, datetime) else final_checker_time
+                    ),
+                    'checker_source_table': checker_info.get('source_table', 'View_Monitor2' if checker_name else ''),
                     'checker_status_type': checker_info.get('status_type', status_display)
                 })
                 
     except Exception as e:
-        logger.error(f"Error loading standalone monitoring data: {e}")
+        logger.error(f"MAPPING FIX: Error loading standalone monitoring data: {e}")
         monitoring_data = []
+    
+    # Debug logging untuk checker mapping
+    checked_items = [item for item in monitoring_data if item['has_checker']]
+    logger.info(f"MAPPING FIX: Found {len(checked_items)} items with checkers")
+    for item in checked_items:
+        logger.info(f"MAPPING FIX: Item {item['no_pengajuan']} checked by {item['checker_name']}")
     
     # Statistik
     stats = {
@@ -9751,17 +9648,17 @@ def monitoring_informasi_system(request):
         'employee_data': employee_data,
         'page_title': 'MONITORING INFORMASI SYSTEM - Fullscreen Mode',
         'current_time': timezone.now(),
-        'standalone_mode': True,  # Flag untuk template standalone
+        'standalone_mode': True,
         'database_mode': True
     }
     
     return render(request, 'wo_maintenance_app/monitoring_informasi_system.html', context)
 
-# FIXED: Ajax refresh dengan URL yang benar
+
 @login_required
 def ajax_monitoring_refresh_database(request):
     """
-    FIXED: AJAX endpoint untuk refresh monitoring - URL sesuai dengan yang dipanggil JavaScript
+    MAPPING FIX: Ajax refresh dengan consistent mapping
     """
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Method not allowed'})
@@ -9769,15 +9666,15 @@ def ajax_monitoring_refresh_database(request):
     monitoring_data = []
     
     try:
-        # Load checker data dari database
-        existing_checkers = load_checkers_from_database()
+        # Load checker data dengan mapping fix
+        existing_checkers = load_checkers_from_database_mapping_fix()
         
         with connections['DB_Maintenance'].cursor() as cursor:
             today = timezone.now().date()
             
-            # SAME QUERY as monitoring_informasi_system
+            # SAME QUERY as monitoring view
             try:
-                cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
+                cursor.execute("SELECT COUNT(*) FROM View_Monitor2 WHERE 1=0")
                 use_view_monitor = True
             except:
                 use_view_monitor = False
@@ -9796,14 +9693,14 @@ def ajax_monitoring_refresh_database(request):
                         MAX(c.mesin) as mesin,
                         MAX(a.status_pekerjaan) as status_pekerjaan,
                         MAX(a.status) as status,
-                        MAX(a.user_insert) as user_insert,
-                        MAX(a.tgl_insert) as tgl_insert,
-                        MAX(a.oleh) as oleh,
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
                         MAX(a.prima) as prima,
-                        MAX(a.approve) as approve
-                    FROM View_Monitor a 
+                        MAX(a.approve) as approve,
+                        MAX(a.oleh) as oleh,
+                               MAX(a.checker_name) as checker_name,   -- ✅ tambahkan
+                        MAX(a.checker_time) as checker_time    -- ✅ tambahkan
+                    FROM View_Monitor2 a 
                     JOIN tabel_line b ON b.id_line = a.id_line
                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
                     JOIN tabel_msection d ON d.id_section = a.id_section
@@ -9830,19 +9727,18 @@ def ajax_monitoring_refresh_database(request):
                         MAX(c.mesin) as mesin,
                         MAX(a.status_pekerjaan) as status_pekerjaan,
                         MAX(a.status) as status,
-                        MAX(a.user_insert) as user_insert,
-                        MAX(a.tgl_insert) as tgl_insert,
-                        MAX(a.oleh) as oleh,
                         MAX(c.nomer) as nomer,
                         MAX(d.seksi) as seksi,
                         MAX(a.prima) as prima,
-                        MAX(a.approve) as approve
+                        MAX(a.approve) as approve,
+                        MAX(a.oleh) as oleh,
+                               MAX(a.checker_name) as checker_name,   -- ✅ tambahkan
+                        MAX(a.checker_time) as checker_time    -- ✅ tambahkan
                     FROM (
                         SELECT 
                             tp.history_id, tp.tgl_his, tp.jam_his, tp.id_line, tp.id_mesin,
                             tp.deskripsi_perbaikan, tp.number_wo, tp.status_pekerjaan,
-                            tp.status, tp.id_section, NULL as prima, tp.tgl_insert,
-                            tp.user_insert, tp.oleh, tp.approve
+                            tp.status, tp.id_section, NULL as prima, tp.approve, tp.oleh
                         FROM tabel_pengajuan tp
                         WHERE tp.status_pekerjaan != 'C'
                           AND tp.history_id IS NOT NULL 
@@ -9853,8 +9749,7 @@ def ajax_monitoring_refresh_database(request):
                         SELECT 
                             tm.history_id, tm.tgl_his, tm.jam_his, tm.id_line, tm.id_mesin,
                             tm.deskripsi_perbaikan, tm.number_wo, tm.status_pekerjaan,
-                            tm.status, tm.id_section, tm.PriMa as prima, tm.tgl_insert,
-                            NULL as user_insert, tm.oleh, NULL as approve
+                            tm.status, tm.id_section, tm.PriMa as prima, NULL as approve, tm.oleh
                         FROM tabel_main tm
                         WHERE tm.status_pekerjaan != 'C'
                           AND tm.history_id IS NOT NULL 
@@ -9872,9 +9767,9 @@ def ajax_monitoring_refresh_database(request):
             
             results = cursor.fetchall()
             
-            # Process sama seperti main view
+            # Process dengan clean history_id
             for row in results:
-                history_id = row[0]
+                history_id = row[0]  # history_id asli
                 tgl_his = row[1]
                 jam_his = row[2]
                 id_line = row[3] 
@@ -9885,13 +9780,13 @@ def ajax_monitoring_refresh_database(request):
                 mesin_name = row[8]
                 status_pekerjaan = row[9] if row[9] else ''
                 status = row[10] if row[10] else ''
-                user_insert = row[11]
-                tgl_insert = row[12]
-                oleh = row[13]
-                nomer = row[14]
-                seksi = row[15]
-                prima = row[16]
-                approve = row[17] if len(row) > 17 else None
+                nomer = row[11]
+                seksi = row[12]
+                prima = row[13]
+                approve = row[14] if len(row) > 14 else None
+                oleh = row[15] if len(row) > 15 else ''
+                checker_name = row[16] if len(row) > 16 else ''
+                checker_time = row[17] if len(row) > 17 else None
                 
                 if status_pekerjaan == 'C':
                     continue
@@ -9904,21 +9799,34 @@ def ajax_monitoring_refresh_database(request):
                 else:
                     status_display = 'diproses'
                 
-                # Checker mapping
+                # MAPPING FIX: Checker mapping dengan exact history_id
                 checker_key = f"row-{history_id}"
-                has_checker = checker_key in existing_checkers
+                # has_checker = checker_key in existing_checkers
                 checker_info = existing_checkers.get(checker_key, {})
+
+                final_checker_name = checker_name or checker_info.get('user', '')
+                final_checker_time = checker_time or checker_info.get('time', '')
+                has_checker = bool(final_checker_name and str(final_checker_name).strip() != '')
+
+                logger.debug(
+                    f"Row {history_id} -> checker_name={checker_name}, "
+                    f"checker_time={checker_time}, "
+                    f"final_name={final_checker_name}, "
+                    f"has_checker={has_checker}"
+                )
                 
                 waktu_display = ''
                 if tgl_his:
                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
+
                 
                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
                 
+                # MAPPING FIX: Clean no_pengajuan = history_id asli
                 monitoring_data.append({
                     'prioritas': prima or '-',
                     'waktu_pengajuan': waktu_display,
-                    'no_pengajuan': history_id,  # PENTING: history_id asli
+                    'no_pengajuan': history_id,  # MAPPING FIX: Clean history_id
                     'nomor_wo': number_wo or '-',
                     'line_name': line_name or '-',
                     'mesin_name': mesin_display,
@@ -9929,11 +9837,14 @@ def ajax_monitoring_refresh_database(request):
                     
                     # Database checker integration
                     'has_checker': has_checker,
-                    'checker_name': checker_info.get('user', ''),
-                    'checker_time': checker_info.get('time', ''),
-                    'checker_source_table': checker_info.get('source_table', ''),
+                    'checker_name': final_checker_name,
+                    'checker_time': (
+                        final_checker_time.strftime('%Y-%m-%d %H:%M:%S') 
+                        if isinstance(final_checker_time, datetime) else final_checker_time
+                    ),
+                    'checker_source_table': checker_info.get('source_table', 'View_Monitor2' if checker_name else ''),
                     'checker_status_type': checker_info.get('status_type', status_display)
-                })
+                            })
         
         stats = {
             'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
@@ -9942,6 +9853,10 @@ def ajax_monitoring_refresh_database(request):
             'total_checked': len([x for x in monitoring_data if x['has_checker']]),
             'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
         }
+        
+        # Debug logging
+        checked_items = [item for item in monitoring_data if item['has_checker']]
+        logger.info(f"MAPPING FIX Ajax: Found {len(checked_items)} items with checkers")
         
         return JsonResponse({
             'success': True,
@@ -9953,7 +9868,7 @@ def ajax_monitoring_refresh_database(request):
         })
         
     except Exception as e:
-        logger.error(f"Error refreshing monitoring data: {e}")
+        logger.error(f"MAPPING FIX Ajax: Error refreshing monitoring data: {e}")
         return JsonResponse({
             'success': True,
             'data': [],
@@ -9966,6 +9881,9 @@ def ajax_monitoring_refresh_database(request):
             'message': 'No data available',
             'standalone_mode': True
         })
+
+logger = logging.getLogger(__name__)
+
     
 # Export functions
 __all__ = [
@@ -10104,392 +10022,6 @@ def get_checker_data_api(request):
             'checker_data': {}
         })
 
-
-# @login_required  
-# def ajax_monitoring_refresh(request):
-#     """
-#     AJAX endpoint untuk refresh data monitoring dengan real-time checker support - FIXED
-#     """
-#     if request.method != 'POST':
-#         return JsonResponse({'success': False, 'error': 'Method not allowed'})
-    
-#     # Handle real-time checker data dengan debugging
-#     try:
-#         if hasattr(request, 'body') and request.body:
-#             data = json.loads(request.body)
-#             action = data.get('action', '')
-            
-#             logger.info(f"AJAX Action received: {action}")
-            
-#             # Real-time save checker data ke session
-#             if action == 'save_checker':
-#                 row_id = data.get('row_id', '').strip()
-#                 checker_name = data.get('checker_name', '').strip()
-#                 checker_data = data.get('checker_data', {})
-#                 timestamp = data.get('timestamp', timezone.now().timestamp())
-#                 device_id = data.get('device_id', '')
-                
-#                 logger.info(f"Save checker: {row_id} - {checker_name} from {device_id}")
-                
-#                 if row_id and checker_name:
-#                     # Initialize session checker data jika belum ada
-#                     if 'monitoring_checker_data' not in request.session:
-#                         request.session['monitoring_checker_data'] = {}
-#                         logger.info("Initialized new session checker data")
-                    
-#                     # Simpan data checker dengan timestamp untuk real-time sync
-#                     checker_entry = {
-#                         'user': checker_name,
-#                         'time': timezone.now().isoformat(),
-#                         'data': checker_data,
-#                         'last_updated': timezone.now().isoformat(),
-#                         'timestamp': timestamp,
-#                         'device_id': device_id,
-#                         'input_source': 'real_time_input',
-#                         'row_id': row_id
-#                     }
-                    
-#                     request.session['monitoring_checker_data'][row_id] = checker_entry
-                    
-#                     # Update session sync timestamp
-#                     request.session['monitoring_last_sync'] = timezone.now().timestamp()
-#                     request.session.modified = True
-                    
-#                     logger.info(f"✅ Checker saved to session: {row_id} - {checker_name}")
-#                     logger.info(f"Total checkers in session: {len(request.session['monitoring_checker_data'])}")
-                    
-#                     return JsonResponse({
-#                         'success': True,
-#                         'message': f'Real-time checker saved: {checker_name}',
-#                         'sync_timestamp': request.session['monitoring_last_sync'],
-#                         'total_saved': len(request.session['monitoring_checker_data']),
-#                         'saved_data': checker_entry
-#                     })
-#                 else:
-#                     logger.warning(f"Invalid save data: row_id={row_id}, checker_name={checker_name}")
-#                     return JsonResponse({
-#                         'success': False,
-#                         'error': 'Invalid row_id or checker_name'
-#                     })
-            
-#             # Real-time get checker data dari session dengan change detection
-#             elif action == 'get_checkers':
-#                 last_sync_hash = data.get('last_sync_hash', '')
-#                 device_id = data.get('device_id', '')
-                
-#                 # Ambil checker data dari session
-#                 checker_data = request.session.get('monitoring_checker_data', {})
-                
-#                 logger.info(f"Get checkers request from device: {device_id}")
-#                 logger.info(f"Session checker data count: {len(checker_data)}")
-#                 logger.info(f"Last sync hash received: {last_sync_hash}")
-                
-#                 # Clean up old data (lebih dari 24 jam) untuk performance
-#                 current_time = timezone.now()
-#                 cleaned_data = {}
-                
-#                 for row_id, checker_info in checker_data.items():
-#                     try:
-#                         # Pastikan format time yang benar
-#                         time_str = checker_info.get('time', '')
-#                         if time_str:
-#                             if 'T' in time_str:  # ISO format
-#                                 data_time = datetime.fromisoformat(time_str.replace('Z', '+00:00'))
-#                             else:
-#                                 data_time = datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')
-                            
-#                             # Keep data dalam 24 jam
-#                             time_diff = (current_time - data_time.replace(tzinfo=timezone.get_current_timezone())).total_seconds()
-#                             if time_diff < 86400:  # 24 hours
-#                                 cleaned_data[row_id] = checker_info
-#                             else:
-#                                 logger.info(f"Removed old checker data: {row_id} (age: {time_diff/3600:.1f} hours)")
-#                         else:
-#                             # Keep data tanpa timestamp valid
-#                             cleaned_data[row_id] = checker_info
-#                     except (ValueError, TypeError) as e:
-#                         logger.warning(f"Error parsing time for {row_id}: {e}")
-#                         # Keep data dengan error timestamp
-#                         cleaned_data[row_id] = checker_info
-#                         continue
-                
-#                 # Update session jika ada cleanup
-#                 if len(cleaned_data) != len(checker_data):
-#                     request.session['monitoring_checker_data'] = cleaned_data
-#                     request.session.modified = True
-#                     checker_data = cleaned_data
-#                     logger.info(f"Cleaned up session data. New count: {len(cleaned_data)}")
-                
-#                 # Generate current data hash untuk change detection
-#                 data_string = json.dumps(checker_data, sort_keys=True)
-#                 current_hash = str(hash(data_string))
-                
-#                 # Debug output
-#                 logger.info(f"Current data hash: {current_hash}")
-#                 logger.info(f"Has changes: {current_hash != last_sync_hash}")
-                
-#                 # Debug: log all checker data
-#                 for row_id, checker_info in checker_data.items():
-#                     logger.info(f"Session data: {row_id} -> {checker_info.get('user', 'NO_USER')}")
-                
-#                 return JsonResponse({
-#                     'success': True,
-#                     'checker_data': checker_data,
-#                     'data_hash': current_hash,
-#                     'has_changes': current_hash != last_sync_hash,
-#                     'total_checkers': len(checker_data),
-#                     'sync_timestamp': request.session.get('monitoring_last_sync', timezone.now().timestamp()),
-#                     'device_id': device_id,
-#                     'debug_info': {
-#                         'session_keys': list(request.session.keys()),
-#                         'checker_data_exists': 'monitoring_checker_data' in request.session,
-#                         'session_modified': request.session.modified,
-#                         'raw_data_count': len(request.session.get('monitoring_checker_data', {}))
-#                     }
-#                 })
-    
-#     except json.JSONDecodeError as e:
-#         logger.error(f"JSON decode error: {e}")
-#         pass  # Continue dengan refresh normal
-#     except Exception as e:
-#         logger.error(f"Error handling real-time checker data: {e}")
-#         import traceback
-#         logger.error(f"Traceback: {traceback.format_exc()}")
-    
-#     # Normal refresh monitoring data (existing code remains the same)
-#     monitoring_data = []
-    
-#     try:
-#         with connections['DB_Maintenance'].cursor() as cursor:
-#             today = timezone.now().date()
-            
-#             # Try using View_Monitor first, fallback to manual UNION if not exists
-#             try:
-#                 cursor.execute("SELECT COUNT(*) FROM View_Monitor WHERE 1=0")
-#                 use_view_monitor = True
-#             except:
-#                 use_view_monitor = False
-            
-#             if use_view_monitor:
-#                 # Query menggunakan View_Monitor
-#                 cursor.execute(f"""
-#                     SELECT 
-#                         a.history_id,
-#                         MAX(a.tgl_his) as tgl_his,
-#                         MAX(a.jam_his) as jam_his,
-#                         a.id_line,
-#                         a.id_mesin,
-#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
-#                         MAX(a.number_wo) as number_wo,
-#                         MAX(b.line) as line,
-#                         MAX(c.mesin) as mesin,
-#                         MAX(a.status_pekerjaan) as status_pekerjaan,
-#                         MAX(a.status) as status,
-#                         MAX(a.user_insert) as user_insert,
-#                         MAX(a.tgl_insert) as tgl_insert,
-#                         MAX(a.oleh) as oleh,
-#                         MAX(c.nomer) as nomer,
-#                         MAX(d.seksi) as seksi,
-#                         MAX(a.prima) as prima,
-#                         MAX(a.approve) as approve
-#                     FROM View_Monitor a 
-#                     JOIN tabel_line b ON b.id_line = a.id_line
-#                     JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
-#                     JOIN tabel_msection d ON d.id_section = a.id_section
-#                     WHERE a.status_pekerjaan != 'C' 
-#                       AND a.history_id IS NOT NULL 
-#                       AND a.history_id != ''
-#                       AND convert(datetime,a.tgl_his,120) BETWEEN 
-#                           dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
-#                           dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
-#                     GROUP BY a.history_id, a.id_line, a.id_mesin
-#                     ORDER BY
-#                         CASE
-#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
-#                             ELSE 1
-#                         END, 
-#                         MAX(a.tgl_his) DESC
-#                 """)
-#             else:
-#                 # Manual UNION query dengan data lengkap
-#                 cursor.execute(f"""
-#                     SELECT 
-#                         a.history_id,
-#                         MAX(a.tgl_his) as tgl_his,
-#                         MAX(a.jam_his) as jam_his,
-#                         a.id_line,
-#                         a.id_mesin,
-#                         MAX(a.deskripsi_perbaikan) as deskripsi_perbaikan,
-#                         MAX(a.number_wo) as number_wo,
-#                         MAX(b.line) as line,
-#                         MAX(c.mesin) as mesin,
-#                         MAX(a.status_pekerjaan) as status_pekerjaan,
-#                         MAX(a.status) as status,
-#                         MAX(a.user_insert) as user_insert,
-#                         MAX(a.tgl_insert) as tgl_insert,
-#                         MAX(a.oleh) as oleh,
-#                         MAX(c.nomer) as nomer,
-#                         MAX(d.seksi) as seksi,
-#                         MAX(a.prima) as prima,
-#                         MAX(a.approve) as approve
-#                     FROM (
-#                         SELECT 
-#                             tp.history_id,
-#                             tp.tgl_his,
-#                             tp.jam_his,
-#                             tp.id_line,
-#                             tp.id_mesin,
-#                             tp.deskripsi_perbaikan,
-#                             tp.number_wo,
-#                             tp.status_pekerjaan,
-#                             tp.status,
-#                             tp.id_section,
-#                             NULL as prima,
-#                             tp.tgl_insert,
-#                             tp.user_insert,
-#                             tp.oleh,
-#                             tp.approve
-#                         FROM tabel_pengajuan tp
-#                         WHERE tp.status_pekerjaan != 'C'
-#                           AND tp.history_id IS NOT NULL 
-#                           AND tp.history_id != ''
-                        
-#                         UNION ALL
-                        
-#                         SELECT 
-#                             tm.history_id,
-#                             tm.tgl_his,
-#                             tm.jam_his,
-#                             tm.id_line,
-#                             tm.id_mesin,
-#                             tm.deskripsi_perbaikan,
-#                             tm.number_wo,
-#                             tm.status_pekerjaan,
-#                             tm.status,
-#                             tm.id_section,
-#                             tm.PriMa as prima,
-#                             tm.tgl_insert,
-#                             NULL as user_insert,
-#                             tm.oleh,
-#                             NULL as approve
-#                         FROM tabel_main tm
-#                         WHERE tm.status_pekerjaan != 'C'
-#                           AND tm.history_id IS NOT NULL 
-#                           AND tm.history_id != ''
-#                     ) a
-#                     LEFT JOIN tabel_line b ON b.id_line = a.id_line
-#                     LEFT JOIN tabel_mesin c ON c.id_mesin = a.id_mesin
-#                     LEFT JOIN tabel_msection d ON d.id_section = a.id_section
-#                     WHERE convert(datetime,a.tgl_his,120) BETWEEN 
-#                         dateadd(day, -1, convert(datetime,'{today}' + ' 19:30:00.000',120)) AND 
-#                         dateadd(day, 1, convert(datetime,'{today}' + ' 06:59:59.000',120))
-#                     GROUP BY a.history_id, a.id_line, a.id_mesin
-#                     ORDER BY
-#                         CASE
-#                             WHEN MAX(a.number_wo) = '' OR MAX(a.number_wo) IS NULL THEN 0
-#                             ELSE 1
-#                         END, 
-#                         MAX(a.tgl_his) DESC
-#                 """)
-            
-#             results = cursor.fetchall()
-            
-#             # Process data dengan logic yang sama
-#             for row in results:
-#                 # Map data dengan index yang benar
-#                 history_id = row[0]
-#                 tgl_his = row[1]
-#                 number_wo = row[6] if row[6] else ''
-#                 line_name = row[7]
-#                 mesin_name = row[8]
-#                 status_pekerjaan = row[9] if row[9] else ''
-#                 status = row[10] if row[10] else ''
-#                 nomer = row[14]
-#                 seksi = row[15]  # Section name
-#                 prima = row[16]  # PriMa field
-#                 approve = row[17] if len(row) > 17 else None
-#                 deskripsi_perbaikan = row[5]
-                
-#                 # Skip jika completed
-#                 if status_pekerjaan == 'C':
-#                     continue
-                
-#                 # Logic status yang sama dengan main function
-#                 if (not number_wo or 
-#                     number_wo.strip() == '' or 
-#                     number_wo.startswith('TEMP-') or
-#                     (status != 'A' and approve != 'Y')):
-#                     status_display = 'pengajuan'
-#                 elif (status == 'A' and 
-#                       approve == 'Y' and 
-#                       status_pekerjaan == 'O'):
-#                     status_display = 'diproses'
-#                 else:
-#                     status_display = 'diproses'
-                
-#                 # Format waktu sesuai PHP
-#                 waktu_display = ''
-#                 if tgl_his:
-#                     waktu_display = tgl_his.strftime('%d/%m/%Y') + ' - ' + tgl_his.strftime('%H:%M:%S') + ' WIB'
-                
-#                 # Gabung mesin + nomer
-#                 mesin_display = f"{mesin_name or ''} {nomer or ''}".strip() or '-'
-                
-#                 monitoring_data.append({
-#                     'prioritas': prima or '-',
-#                     'waktu_pengajuan': waktu_display,
-#                     'no_pengajuan': history_id or '-',
-#                     'nomor_wo': number_wo or '-',
-#                     'line_name': line_name or '-',
-#                     'mesin_name': mesin_display,
-#                     'deskripsi': (deskripsi_perbaikan[:50] + '...') if deskripsi_perbaikan and len(deskripsi_perbaikan) > 50 else (deskripsi_perbaikan or '-'),
-#                     'section_name': seksi or '-',
-#                     'status': status_display,
-#                 })
-        
-#         stats = {
-#             'total_pengajuan': len([x for x in monitoring_data if x['status'] == 'pengajuan']),
-#             'total_diproses': len([x for x in monitoring_data if x['status'] == 'diproses']),
-#             'total_all': len(monitoring_data),
-#             'use_marquee': len(monitoring_data) > 30,
-#             'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
-#         }
-        
-#         # Include real-time checker data untuk multi-device sync
-#         checker_data = request.session.get('monitoring_checker_data', {})
-        
-#         return JsonResponse({
-#             'success': True,
-#             'data': monitoring_data,
-#             'stats': stats,
-#             'checker_data': checker_data,  # Real-time checker sync
-#             'data_hash': str(hash(json.dumps(checker_data, sort_keys=True))),
-#             'sync_timestamp': request.session.get('monitoring_last_sync', timezone.now().timestamp()),
-#             'debug_session_info': {
-#                 'session_id': request.session.session_key,
-#                 'session_data_keys': list(request.session.keys()),
-#                 'checker_count': len(checker_data)
-#             }
-#         })
-        
-#     except Exception as e:
-#         logger.error(f"Error refreshing monitoring data: {e}")
-#         # Return success with empty data instead of error to prevent logout
-#         return JsonResponse({
-#             'success': True,
-#             'data': [],
-#             'stats': {
-#                 'total_pengajuan': 0,
-#                 'total_diproses': 0,
-#                 'total_all': 0,
-#                 'use_marquee': False,
-#                 'last_update': timezone.now().strftime('%d/%m/%Y %H:%M:%S')
-#             },
-#             'checker_data': request.session.get('monitoring_checker_data', {}),
-#             'data_hash': '',
-#             'sync_timestamp': timezone.now().timestamp(),
-#             'message': 'No data available'
-#         })
 
 def load_checkers_from_database_fixed():
     """
@@ -10928,7 +10460,7 @@ __all__ = [
 @require_http_methods(["POST"])
 def save_checker_to_database_api(request):
     """
-    FIXED: API untuk save checker dengan improved history_id handling
+    FINAL FIX: API untuk save checker dengan improved error handling
     """
     try:
         data = json.loads(request.body)
@@ -10938,7 +10470,7 @@ def save_checker_to_database_api(request):
         device_id = data.get('device_id', request.META.get('HTTP_USER_AGENT', '')[:50])
         checker_notes = data.get('checker_notes', '')
         
-        logger.info(f"FIXED: Save checker API - ID: '{history_id}', Name: '{checker_name}', Type: '{status_type}'")
+        logger.info(f"FINAL FIX: Save checker API - ID: '{history_id}', Name: '{checker_name}', Type: '{status_type}'")
         
         # Validasi input
         if not all([history_id, checker_name]):
@@ -10959,14 +10491,14 @@ def save_checker_to_database_api(request):
                 'error': 'Status type harus "pengajuan" atau "diproses"!'
             })
         
-        # Save based on status type
+        # Save based on status type with final fix
         if status_type == 'pengajuan':
-            result = save_checker_to_pengajuan_table_fixed(history_id, checker_name, device_id, checker_notes)
+            result = save_checker_to_pengajuan_table_final_fix(history_id, checker_name, device_id, checker_notes)
         else:
             result = save_checker_to_main_table_fixed(history_id, checker_name, device_id, checker_notes)
         
         if result['success']:
-            logger.info(f"FIXED: Checker saved: {history_id} by {checker_name} to {result['table']}")
+            logger.info(f"FINAL FIX: Checker saved: {history_id} by {checker_name} to {result['table']}")
             return JsonResponse({
                 'success': True,
                 'message': result['message'],
@@ -10977,7 +10509,7 @@ def save_checker_to_database_api(request):
                 'rows_affected': result.get('rows_affected', 0)
             })
         else:
-            logger.error(f"FIXED: Failed to save checker: {result['message']}")
+            logger.error(f"FINAL FIX: Failed to save checker: {result['message']}")
             return JsonResponse({
                 'success': False,
                 'error': result['message']
@@ -10989,77 +10521,82 @@ def save_checker_to_database_api(request):
             'error': 'Format data tidak valid!'
         })
     except Exception as e:
-        logger.error(f"FIXED: Error in save_checker_to_database_api: {e}")
+        logger.error(f"FINAL FIX: Error in save_checker_to_database_api: {e}")
         return JsonResponse({
             'success': False,
             'error': f'Terjadi kesalahan server: {str(e)}'
         })
 
-# FIXED: Checker save functions untuk handle history_id yang benar
-def save_checker_to_pengajuan_table_fixed(history_id, checker_name, device_id=None, checker_notes=None):
+# FINAL FIX: Improved checker save function dengan better parsing
+def save_checker_to_pengajuan_table_final_fix(history_id, checker_name, device_id=None, checker_notes=None):
     """
-    FIXED: Save checker ke tabel_pengajuan dengan exact history_id match
+    FINAL FIX: Save checker ke tabel_pengajuan dengan improved history_id parsing
     """
     try:
         with connections['DB_Maintenance'].cursor() as cursor:
-            logger.info(f"FIXED: Searching pengajuan exact match for history_id: '{history_id}'")
+            logger.info(f"FINAL FIX: Saving checker for history_id: '{history_id}'")
             
-            # STEP 1: Coba exact match dulu dengan history_id asli
-            cursor.execute("""
-                SELECT history_id, status, approve, checker_name, checker_status,
-                       tgl_his, oleh, deskripsi_perbaikan
-                FROM tabel_pengajuan 
-                WHERE history_id = %s
-            """, [history_id])
+            # STEP 1: Parse history_id dengan prioritas yang benar
+            search_ids = []
             
-            result = cursor.fetchone()
+            if ' -- ' in history_id:
+                # Format "20864 -- 25-08-0435" -> ambil bagian kedua "25-08-0435"
+                parts = history_id.split(' -- ')
+                if len(parts) == 2:
+                    search_ids.append(parts[1].strip())  # "25-08-0435" 
+                    search_ids.append(parts[0].strip())  # "20864" sebagai fallback
+                search_ids.append(history_id)  # Original sebagai fallback
+            else:
+                search_ids.append(history_id)  # Direct search
+            
+            logger.info(f"FINAL FIX: Search IDs to try: {search_ids}")
+            
+            # STEP 2: Coba setiap search ID sampai ketemu
+            result = None
+            found_history_id = None
+            
+            for search_id in search_ids:
+                logger.info(f"FINAL FIX: Trying search with: '{search_id}'")
+                
+                cursor.execute("""
+                    SELECT history_id, status, approve, checker_name, checker_status,
+                           tgl_his, oleh, deskripsi_perbaikan
+                    FROM tabel_pengajuan 
+                    WHERE history_id = %s
+                """, [search_id])
+                
+                result = cursor.fetchone()
+                if result:
+                    found_history_id = search_id
+                    logger.info(f"FINAL FIX: Found match with: '{found_history_id}'")
+                    break
             
             if not result:
-                logger.warning(f"FIXED: Exact match failed for '{history_id}', trying without format")
+                # STEP 3: Show debug info
+                cursor.execute("""
+                    SELECT TOP 10 history_id, tgl_his, oleh 
+                    FROM tabel_pengajuan 
+                    WHERE tgl_his >= DATEADD(day, -2, GETDATE())
+                    ORDER BY tgl_his DESC
+                """)
                 
-                # STEP 2: Parse history_id jika ada format "20856 -- 25-08-0429"
-                clean_history_id = history_id
-                if ' -- ' in history_id:
-                    # Split dan coba berbagai kombinasi
-                    parts = history_id.split(' -- ')
-                    clean_history_id = parts[0]  # "20856"
-                    
-                    logger.info(f"FIXED: Trying clean history_id: '{clean_history_id}'")
-                    
-                    cursor.execute("""
-                        SELECT history_id, status, approve, checker_name, checker_status,
-                               tgl_his, oleh, deskripsi_perbaikan
-                        FROM tabel_pengajuan 
-                        WHERE history_id = %s OR history_id LIKE %s
-                    """, [clean_history_id, f'{clean_history_id}%'])
-                    
-                    result = cursor.fetchone()
+                recent_data = cursor.fetchall()
+                available_ids = [row[0] for row in recent_data if row[0]]
                 
-                if not result:
-                    # STEP 3: Debug - show available data
-                    cursor.execute("""
-                        SELECT TOP 10 history_id, tgl_his, oleh 
-                        FROM tabel_pengajuan 
-                        WHERE tgl_his >= DATEADD(day, -2, GETDATE())
-                        ORDER BY tgl_his DESC
-                    """)
-                    
-                    recent_data = cursor.fetchall()
-                    available_ids = [row[0] for row in recent_data if row[0]]
-                    
-                    logger.error(f"FIXED: No match found for '{history_id}' or '{clean_history_id}'")
-                    logger.error(f"FIXED: Available recent IDs: {available_ids}")
-                    
-                    return {
-                        'success': False,
-                        'message': f'Pengajuan dengan history_id "{history_id}" tidak ditemukan. Available: {available_ids[:3]}',
-                        'table': 'tabel_pengajuan'
-                    }
+                logger.error(f"FINAL FIX: No match found for any of: {search_ids}")
+                logger.error(f"FINAL FIX: Available recent IDs: {available_ids}")
+                
+                return {
+                    'success': False,
+                    'message': f'Pengajuan dengan history_id "{history_id}" tidak ditemukan. Available: {available_ids[:3]}',
+                    'table': 'tabel_pengajuan'
+                }
             
+            # STEP 4: Process found data
             history_id_found, status, approve, existing_checker, checker_status, tgl_his, oleh, deskripsi = result
-            logger.info(f"FIXED: Found pengajuan: {history_id_found}")
+            logger.info(f"FINAL FIX: Processing pengajuan: {history_id_found}")
             
-            # STEP 4: Cek apakah sudah ada checker
+            # Cek apakah sudah ada checker
             if checker_status == '1' and existing_checker and existing_checker.strip():
                 return {
                     'success': False,
@@ -11067,7 +10604,7 @@ def save_checker_to_pengajuan_table_fixed(history_id, checker_name, device_id=No
                     'table': 'tabel_pengajuan'
                 }
             
-            # STEP 5: Update checker info - IZINKAN semua status pengajuan
+            # STEP 5: Save checker - ALLOW ALL STATUS PENGAJUAN
             cursor.execute("""
                 UPDATE tabel_pengajuan 
                 SET checker_name = %s, 
@@ -11081,7 +10618,7 @@ def save_checker_to_pengajuan_table_fixed(history_id, checker_name, device_id=No
             rows_affected = cursor.rowcount
             
             if rows_affected > 0:
-                logger.info(f"FIXED: Checker saved to tabel_pengajuan: {history_id_found}")
+                logger.info(f"FINAL FIX: Checker saved successfully: {history_id_found} by {checker_name}")
                 return {
                     'success': True,
                     'message': f'Berhasil dicek oleh: {checker_name}',
@@ -11097,7 +10634,7 @@ def save_checker_to_pengajuan_table_fixed(history_id, checker_name, device_id=No
                 }
                 
     except Exception as e:
-        logger.error(f"FIXED: Error save_checker_to_pengajuan_table: {e}")
+        logger.error(f"FINAL FIX: Error save_checker_to_pengajuan_table: {e}")
         return {
             'success': False,
             'message': f'Error database: {str(e)}',
@@ -11107,7 +10644,7 @@ def save_checker_to_pengajuan_table_fixed(history_id, checker_name, device_id=No
     
 def save_checker_to_main_table_fixed(history_id, checker_name, device_id=None, checker_notes=None):
     """
-    FIXED: Save checker ke tabel_main
+    Save checker ke tabel_main (keep existing - sudah benar)
     """
     try:
         truncated_history_id = history_id[:11]
@@ -11170,7 +10707,7 @@ def save_checker_to_main_table_fixed(history_id, checker_name, device_id=None, c
                 }
                 
     except Exception as e:
-        logger.error(f"FIXED: Error save_checker_to_main_table: {e}")
+        logger.error(f"Error save_checker_to_main_table: {e}")
         return {
             'success': False,
             'message': f'Error database: {str(e)}',
@@ -11201,83 +10738,6 @@ def get_all_checkers_from_database_api(request):
             'error': f'Gagal mengambil data checker: {str(e)}',
             'checker_data': {}
         })
-
-
-def load_checkers_from_database():
-    """
-    Load checker data dari database
-    """
-    checker_data = {}
-    
-    try:
-        with connections['DB_Maintenance'].cursor() as cursor:
-            # Get checker data dari tabel_pengajuan
-            cursor.execute("""
-                SELECT 
-                    history_id, checker_name, checker_time, checker_device_id, 
-                    checker_status, checker_notes
-                FROM tabel_pengajuan 
-                WHERE checker_status = '1' 
-                  AND checker_name IS NOT NULL 
-                  AND checker_name != ''
-                  AND history_id IS NOT NULL
-                  AND history_id != ''
-            """)
-            
-            pengajuan_rows = cursor.fetchall()
-            
-            for row in pengajuan_rows:
-                history_id, checker_name, checker_time, device_id, status, notes = row
-                if history_id:
-                    checker_data[f"row-{history_id}"] = {
-                        'user': checker_name,
-                        'time': checker_time.isoformat() if checker_time else None,
-                        'device_id': device_id,
-                        'status': status,
-                        'notes': notes,
-                        'status_type': 'pengajuan',
-                        'source_table': 'tabel_pengajuan',
-                        'last_updated': checker_time.isoformat() if checker_time else None
-                    }
-            
-            # Get checker data dari tabel_main
-            cursor.execute("""
-                SELECT 
-                    history_id, checker_name, checker_time, checker_device_id, 
-                    checker_status, checker_transferred_from, checker_notes
-                FROM tabel_main 
-                WHERE checker_status = '1' 
-                  AND checker_name IS NOT NULL 
-                  AND checker_name != ''
-                  AND history_id IS NOT NULL
-                  AND history_id != ''
-            """)
-            
-            main_rows = cursor.fetchall()
-            
-            for row in main_rows:
-                history_id, checker_name, checker_time, device_id, status, transferred_from, notes = row
-                if history_id:
-                    mapping_id = transferred_from if transferred_from else history_id
-                    
-                    checker_data[f"row-{mapping_id}"] = {
-                        'user': checker_name,
-                        'time': checker_time.isoformat() if checker_time else None,
-                        'device_id': device_id,
-                        'status': status,
-                        'notes': notes,
-                        'status_type': 'diproses',
-                        'source_table': 'tabel_main',
-                        'short_history_id': history_id,
-                        'transferred_from': transferred_from,
-                        'last_updated': checker_time.isoformat() if checker_time else None
-                    }
-            
-            return checker_data
-            
-    except Exception as e:
-        logger.error(f"Error loading checkers from database: {e}")
-        return {}
 
 
 def transfer_checker_on_review_process(original_history_id, reviewed_by):

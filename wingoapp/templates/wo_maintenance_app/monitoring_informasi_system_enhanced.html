@@ -1,0 +1,996 @@
+<!-- wo_maintenance_app/templates/wo_maintenance_app/monitoring_informasi_system_enhanced.html -->
+<!-- ENHANCED VERSION: Prominent checker display untuk status pengajuan -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title|default:"MONITORING INFORMASI SYSTEM - Enhanced" }}</title>
+    
+    <!-- jQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <style>
+        /* Reset dan Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .fullscreen-container {
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Header Style */
+        .monitoring-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .stats-panel {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .last-update {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* ENHANCED: Enhanced Database Indicator */
+        .database-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            animation: enhancedPulse 2s infinite;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        @keyframes enhancedPulse {
+            0% { transform: scale(1); opacity: 0.9; box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4); }
+            50% { transform: scale(1.05); opacity: 1; box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6); }
+            100% { transform: scale(1); opacity: 0.9; box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4); }
+        }
+        
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+        }
+        
+        /* Table Styles */
+        .monitoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        .monitoring-table th {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            font-weight: 700;
+            padding: 18px 15px;
+            text-align: center;
+            font-size: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 3px solid #2c3e50;
+        }
+        
+        .monitoring-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #ecf0f1;
+            text-align: center;
+            font-size: 13px;
+            vertical-align: middle;
+            transition: all 0.3s ease;
+        }
+        
+        .monitoring-table tr:hover {
+            background: rgba(52, 152, 219, 0.08);
+            transform: scale(1.002);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Priority Badge */
+        .prioritas-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .prioritas-high { background: #ff6b6b; color: white; }
+        .prioritas-medium { background: #feca57; color: white; }
+        .prioritas-low { background: #48dbfb; color: white; }
+        
+        .deskripsi-cell {
+            text-align: left;
+            padding: 15px 18px;
+            word-wrap: break-word;
+            white-space: normal;
+            line-height: 1.5;
+            max-width: 250px;
+        }
+        
+        /* ENHANCED: Enhanced Checker Button */
+        .btn-cek {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 13px;
+            margin: 3px;
+            cursor: pointer;
+            border-radius: 25px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+            min-width: 80px;
+        }
+        
+        .btn-cek:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+            background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+        }
+        
+        .btn-cek:active {
+            transform: translateY(-1px) scale(1.05);
+        }
+        
+        .btn-cek:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* ENHANCED: Enhanced Checker Display dengan differentiation */
+        .checker-display {
+            color: white;
+            padding: 12px 18px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 3px;
+            display: inline-block;
+            animation: checkerAppear 0.6s ease;
+            position: relative;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        /* ENHANCED: Checker untuk PENGAJUAN - More prominent */
+        .checker-display.pengajuan-checked {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: 3px solid #ff4757;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+            font-size: 13px;
+            padding: 15px 20px;
+            animation: checkerPengajuanAppear 0.8s ease;
+        }
+        
+        .checker-display.pengajuan-checked::before {
+            content: "📋";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            background: #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        /* ENHANCED: Checker untuk DIPROSES - Standard display */
+        .checker-display.diproses-checked {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: 2px solid #28a745;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);
+        }
+        
+        .checker-display.diproses-checked::before {
+            content: "⚙️";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            background: #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes checkerAppear {
+            from { opacity: 0; transform: scale(0.8) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        @keyframes checkerPengajuanAppear {
+            0% { opacity: 0; transform: scale(0.5) rotate(-10deg) translateY(30px); }
+            50% { opacity: 0.8; transform: scale(1.1) rotate(5deg) translateY(-5px); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg) translateY(0); }
+        }
+        
+        .checker-time {
+            font-size: 10px;
+            opacity: 0.9;
+            display: block;
+            margin-top: 5px;
+            font-weight: 500;
+            font-style: italic;
+        }
+        
+        /* ENHANCED: Row States dengan lebih prominent untuk pengajuan */
+        .row-checked-pengajuan {
+            background: linear-gradient(90deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+            border-left: 6px solid #ff6b6b;
+            box-shadow: inset 0 0 20px rgba(255, 107, 107, 0.1);
+        }
+        
+        .row-checked-diproses {
+            background: linear-gradient(90deg, rgba(40, 167, 69, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+            border-left: 4px solid #28a745;
+        }
+        
+        /* ENHANCED: Status Colors dengan enhancement untuk pengajuan */
+        .status-pengajuan {
+            background: linear-gradient(135deg, #DC143C 0%, #B91828 100%) !important;
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .status-diproses {
+            background: linear-gradient(135deg, #7FFF00 0%, #32CD32 100%) !important;
+            color: #2c3e50 !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .status-cell-enhanced {
+            min-height: 80px;
+            vertical-align: middle;
+            padding: 15px 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+        }
+        
+        /* ENHANCED: Pengajuan yang sudah dicek dapat highlight khusus */
+        .status-cell-enhanced.pengajuan-with-checker {
+            background: linear-gradient(135deg, #ff6b6b 0%, #B91828 100%) !important;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .loading-subtext {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* ENHANCED: Notifications dengan style yang lebih menonjol */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 18px 30px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            z-index: 10000;
+            animation: slideIn 0.5s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            max-width: 350px;
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .notification.pengajuan {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state h4 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #5a6c7d;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .fullscreen-container { padding: 10px; }
+            .header-title { font-size: 22px; }
+            .stats-panel { grid-template-columns: 1fr 1fr; }
+            .monitoring-table th, .monitoring-table td { padding: 8px 4px; font-size: 11px; }
+            .database-indicator { position: relative; top: auto; right: auto; margin-bottom: 20px; }
+            .checker-display { font-size: 10px; padding: 8px 12px; }
+            .btn-cek { font-size: 11px; padding: 8px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="fullscreen-container">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Menyimpan ke Database...</div>
+                <div class="loading-subtext">Tunggu sebentar ya bro!</div>
+            </div>
+        </div>
+
+        <!-- ENHANCED: Database indicator dengan info lebih detail -->
+        <div class="database-indicator" id="databaseIndicator">
+            Enhanced Database System: AKTIF (Loading...)
+        </div>
+
+        <!-- Header -->
+        <div class="monitoring-header">
+            <div class="header-title">
+                <div class="header-icon">💻</div>
+                <span>MONITORING INFORMASI SYSTEM - Enhanced Checker</span>
+            </div>
+            
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalPengajuan">{{ stats.total_pengajuan|default:0 }}</div>
+                    <div class="stat-label">Pengajuan</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalDiproses">{{ stats.total_diproses|default:0 }}</div>
+                    <div class="stat-label">Diproses</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalAll">{{ stats.total_all|default:0 }}</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalChecked">{{ stats.total_checked|default:0 }}</div>
+                    <div class="stat-label">Dicek</div>
+                </div>
+                <!-- ENHANCED: Tambah stat untuk checked pengajuan -->
+                <div class="stat-item">
+                    <div class="stat-number" id="checkedPengajuan">{{ stats.checked_pengajuan|default:0 }}</div>
+                    <div class="stat-label">Pengajuan Dicek</div>
+                </div>
+            </div>
+            <div class="last-update" id="lastUpdate">
+                Enhanced auto-refresh setiap 30 detik | Last update: {{ current_time|date:"d/m/Y H:i:s" }}
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="monitoring-table" id="monitoringTable">
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">PRIORITAS</th>
+                        <th style="width: 12%;">WAKTU PENGAJUAN</th>
+                        <th style="width: 12%;">NO PENGAJUAN</th>
+                        <th style="width: 10%;">NOMOR WO</th>
+                        <th style="width: 8%;">LINE</th>
+                        <th style="width: 12%;">MESIN</th>
+                        <th style="width: 25%;">DESKRIPSI</th>
+                        <th style="width: 8%;">SECTION</th>
+                        <th style="width: 5%;">STATUS & CHECKER</th>
+                    </tr>
+                </thead>
+                <tbody id="monitoringTableBody">
+                    {% if monitoring_data %}
+                        {% for item in monitoring_data %}
+                        <tr id="row-{{ item.no_pengajuan }}" data-enhanced-row="true" 
+                            {% if item.has_checker %}class="{% if item.is_pengajuan_checked %}row-checked-pengajuan{% else %}row-checked-diproses{% endif %}"{% endif %}>
+                            <td>
+                                {% if item.prioritas != '-' %}
+                                    <span class="prioritas-badge {% if item.prioritas == 'H' %}prioritas-high{% elif item.prioritas == 'M' %}prioritas-medium{% else %}prioritas-low{% endif %}">
+                                        {{ item.prioritas }}
+                                    </span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ item.waktu_pengajuan|default:"-" }}</td>
+                            <td><strong>{{ item.no_pengajuan }}</strong></td>
+                            <td>{{ item.nomor_wo }}</td>
+                            <td>{{ item.line_name }}</td>
+                            <td>{{ item.mesin_name }}</td>
+                            <td class="deskripsi-cell">{{ item.deskripsi }}</td>
+                            <td>{{ item.section_name }}</td>
+                            <td class="status-cell-enhanced {% if item.status == 'pengajuan' %}status-pengajuan{% if item.is_pengajuan_checked %} pengajuan-with-checker{% endif %}{% else %}status-diproses{% endif %}">
+                                <div style="margin-bottom: 8px;">{{ item.status|upper }}</div>
+                                
+                                <!-- ENHANCED: Checker System dengan prominent display untuk pengajuan -->
+                                <div class="enhanced-checker-container" 
+                                     data-row-id="row-{{ item.no_pengajuan }}" 
+                                     data-history-id="{{ item.no_pengajuan }}" 
+                                     data-status-type="{{ item.status }}">
+                                    {% if item.has_checker %}
+                                        <!-- ENHANCED: Different display untuk pengajuan vs diproses -->
+                                        {% if item.is_pengajuan_checked %}
+                                            <div class="checker-display pengajuan-checked">
+                                                ✅ {{ item.checker_name }}
+                                                {% if item.checker_time %}
+                                                    <span class="checker-time">{{ item.checker_time|date:"d/m H:i" }}</span>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <div class="checker-display diproses-checked">
+                                                ✅ {{ item.checker_name }}
+                                                {% if item.checker_time %}
+                                                    <span class="checker-time">{{ item.checker_time|date:"d/m H:i" }}</span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <button class="btn-cek" 
+                                                data-id="{{ item.no_pengajuan }}" 
+                                                data-history-id="{{ item.no_pengajuan }}" 
+                                                data-status="{{ item.status }}"
+                                                title="Klik untuk cek item ini">
+                                            {% if item.status == 'pengajuan' %}📋 CEK{% else %}⚙️ CEK{% endif %}
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <h4>Tidak Ada Data</h4>
+                                <p>Belum ada data monitoring untuk ditampilkan saat ini.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        console.log("=== ENHANCED MONITORING SYSTEM LOADED ===");
+
+        var isUpdating = false;
+        var isProcessingClick = false;
+        var autoRefreshInterval;
+        var keepAliveInterval;
+
+        // =============== ENHANCED BUTTON CLICK HANDLER ===============
+        
+        $(document).on('click', '.btn-cek', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isProcessingClick) {
+                console.log("Already processing, ignoring click");
+                return;
+            }
+            isProcessingClick = true;
+            
+            var $button = $(this);
+            var $row = $button.closest('tr');
+            var rowId = $row.attr('id');
+            var historyId = $button.attr('data-history-id');
+            var statusType = $button.attr('data-status') || 'pengajuan';
+            var $container = $button.closest('.enhanced-checker-container');
+            
+            console.log("=== ENHANCED BUTTON CLICK ===");
+            console.log("Row ID:", rowId);
+            console.log("History ID:", historyId);
+            console.log("Status Type:", statusType);
+            
+            // ENHANCED: Input nama dengan validasi yang lebih ketat
+            var userName = prompt(
+                statusType === 'pengajuan' ? 
+                "📋 PENGAJUAN - Siapa yang ngecek?\nMasukkan nama asli (minimal 3 karakter):" :
+                "⚙️ DIPROSES - Siapa yang ngecek?\nMasukkan nama asli (minimal 3 karakter):"
+            );
+            
+            if (!userName || userName.trim() === '') {
+                isProcessingClick = false;
+                return;
+            }
+            
+            userName = userName.trim();
+            
+            // ENHANCED: Validasi nama yang lebih strict
+            if (userName.length < 3) {
+                showEnhancedNotification('Nama minimal 3 karakter ya bro!', 'error');
+                isProcessingClick = false;
+                return;
+            }
+            
+            var bannedWords = ['test', 'testing', 'tes', 'coba', 'demo'];
+            if (bannedWords.some(word => userName.toLowerCase().includes(word))) {
+                showEnhancedNotification('Jangan pake nama testing dong, pake nama asli lo!', 'error');
+                isProcessingClick = false;
+                return;
+            }
+            
+            console.log("Enhanced input valid - History:", historyId, "User:", userName, "Status:", statusType);
+            
+            // ENHANCED: Save dengan enhanced notification
+            saveCheckerToEnhancedDatabase(historyId, userName, statusType, function(success, response) {
+                if (success) {
+                    console.log("Enhanced save success:", response);
+                    
+                    // ENHANCED: Update UI dengan animation yang berbeda untuk pengajuan
+                    updateRowUIEnhanced($row, userName, statusType, new Date());
+                    updateEnhancedStats();
+                    
+                    var notifyType = statusType === 'pengajuan' ? 'pengajuan' : 'success';
+                    var message = statusType === 'pengajuan' ? 
+                        `📋 PENGAJUAN berhasil dicek oleh: ${userName}` :
+                        `⚙️ DIPROSES berhasil dicek oleh: ${userName}`;
+                    
+                    showEnhancedNotification(message, notifyType);
+                    
+                    // Refresh dengan delay
+                    setTimeout(function() {
+                        if (!isUpdating) {
+                            refreshEnhancedData();
+                        }
+                    }, 1500);
+                    
+                } else {
+                    console.log("Enhanced save failed:", response);
+                    showEnhancedNotification(response.error || 'Gagal menyimpan ke database bro!', 'error');
+                }
+                
+                isProcessingClick = false;
+            });
+        });
+
+        // =============== ENHANCED DATABASE FUNCTIONS ===============
+        
+        function saveCheckerToEnhancedDatabase(historyId, checkerName, statusType, callback) {
+            console.log("Enhanced save:", historyId, checkerName, statusType);
+            
+            showLoadingOverlay(true, statusType);
+            
+            var requestData = {
+                history_id: historyId,
+                checker_name: checkerName,
+                status_type: statusType,
+                device_id: navigator.userAgent.substring(0, 50),
+                checker_notes: `Enhanced checker untuk ${statusType} - ${new Date().toLocaleString('id-ID')}`
+            };
+            
+            $.ajax({
+                url: '/wo-maintenance/database/save-checker-enhanced/',
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify(requestData),
+                timeout: 30000,
+                success: function(data) {
+                    showLoadingOverlay(false);
+                    console.log("Enhanced save response:", data);
+                    callback(data.success, data);
+                },
+                error: function(xhr, status, error) {
+                    showLoadingOverlay(false);
+                    console.error("Enhanced save error:", error);
+                    var errorMsg = 'Network error: ' + error;
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMsg = xhr.responseJSON.error;
+                    }
+                    callback(false, { error: errorMsg });
+                }
+            });
+        }
+
+        function refreshEnhancedData() {
+            if (isUpdating) return;
+            isUpdating = true;
+            
+            console.log("Starting enhanced refresh...");
+            
+            $.ajax({
+                url: '/wo-maintenance/ajax/monitoring/refresh-enhanced/',
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify({ enhanced: true }),
+                timeout: 25000,
+                success: function(data) {
+                    if (data.success) {
+                        console.log("Enhanced refresh success");
+                        updateTableEnhanced(data.data);
+                        updateEnhancedStatsFromData(data.stats);
+                        updateLastUpdateTime(data.stats.last_update);
+                    } else {
+                        console.warn("Enhanced refresh failed:", data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.warn('Enhanced refresh error:', error);
+                },
+                complete: function() {
+                    isUpdating = false;
+                }
+            });
+        }
+
+        function updateTableEnhanced(data) {
+            var $tbody = $('#monitoringTableBody');
+            $tbody.empty();
+            
+            console.log("Updating enhanced table with", data.length, "rows");
+            
+            if (data.length === 0) {
+                $tbody.append('<tr><td colspan="9" class="empty-state"><h4>Tidak Ada Data</h4></td></tr>');
+                return;
+            }
+            
+            $.each(data, function(index, item) {
+                var rowId = `row-${item.no_pengajuan}`;
+                var statusColor = item.status === 'pengajuan' ? 'status-pengajuan' : 'status-diproses';
+                
+                var rowClass = '';
+                if (item.has_checker) {
+                    rowClass = item.is_pengajuan_checked ? 'row-checked-pengajuan' : 'row-checked-diproses';
+                }
+                
+                var checkerContent = '';
+                if (item.has_checker && item.checker_name) {
+                    var checkerClass = item.is_pengajuan_checked ? 'pengajuan-checked' : 'diproses-checked';
+                    var checkerTime = '';
+                    if (item.checker_time) {
+                        var timeObj = new Date(item.checker_time);
+                        checkerTime = `<span class="checker-time">${timeObj.toLocaleDateString('id-ID', {day: '2-digit', month: '2-digit'})} ${timeObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'})}</span>`;
+                    }
+                    checkerContent = `<div class="checker-display ${checkerClass}">✅ ${item.checker_name}${checkerTime}</div>`;
+                } else {
+                    var buttonText = item.status === 'pengajuan' ? '📋 CEK' : '⚙️ CEK';
+                    checkerContent = `<button class="btn-cek" data-id="${item.no_pengajuan}" data-history-id="${item.no_pengajuan}" data-status="${item.status}" title="Klik untuk cek">${buttonText}</button>`;
+                }
+                
+                var priorityHtml = item.prioritas !== '-' ? 
+                    `<span class="prioritas-badge ${getPriorityClass(item.prioritas)}">${item.prioritas}</span>` : '-';
+                
+                var statusCellClass = statusColor;
+                if (item.is_pengajuan_checked) {
+                    statusCellClass += ' pengajuan-with-checker';
+                }
+                
+                var rowHtml = `
+                    <tr id="${rowId}" data-enhanced-row="true" ${rowClass ? `class="${rowClass}"` : ''}>
+                        <td>${priorityHtml}</td>
+                        <td>${item.waktu_pengajuan}</td>
+                        <td><strong>${item.no_pengajuan}</strong></td>
+                        <td>${item.nomor_wo}</td>
+                        <td>${item.line_name}</td>
+                        <td>${item.mesin_name}</td>
+                        <td class="deskripsi-cell">${item.deskripsi}</td>
+                        <td>${item.section_name}</td>
+                        <td class="status-cell-enhanced ${statusCellClass}">
+                            <div style="margin-bottom: 8px;">${item.status.toUpperCase()}</div>
+                            <div class="enhanced-checker-container" data-row-id="${rowId}" data-history-id="${item.no_pengajuan}" data-status-type="${item.status}">
+                                ${checkerContent}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                $tbody.append(rowHtml);
+            });
+        }
+
+        function updateRowUIEnhanced($row, checkerName, statusType, checkerTime) {
+            var $container = $row.find('.enhanced-checker-container');
+            if (!$container.length) return;
+            
+            $container.find('.btn-cek').remove();
+            $container.find('.checker-display').remove();
+            
+            var cssClass = statusType === 'pengajuan' ? 'pengajuan-checked' : 'diproses-checked';
+            var timeStr = '';
+            if (checkerTime) {
+                var timeObj = new Date(checkerTime);
+                timeStr = `<span class="checker-time">${timeObj.toLocaleDateString('id-ID', {day: '2-digit', month: '2-digit'})} ${timeObj.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'})}</span>`;
+            }
+            
+            var checkerHtml = `<div class="checker-display ${cssClass}">✅ ${checkerName}${timeStr}</div>`;
+            $container.append(checkerHtml);
+            
+            $row.removeClass('row-checked-pengajuan row-checked-diproses');
+            var rowClass = statusType === 'pengajuan' ? 'row-checked-pengajuan' : 'row-checked-diproses';
+            $row.addClass(rowClass);
+            
+            // ENHANCED: Update status cell untuk pengajuan
+            if (statusType === 'pengajuan') {
+                var $statusCell = $row.find('.status-cell-enhanced');
+                $statusCell.addClass('pengajuan-with-checker');
+            }
+        }
+
+        // =============== ENHANCED UTILITY FUNCTIONS ===============
+        
+        function updateEnhancedStats() {
+            var totalPengajuan = $('tr[data-enhanced-row="true"]').filter(function() {
+                return $(this).find('.status-pengajuan').length > 0;
+            }).length;
+            
+            var totalDiproses = $('tr[data-enhanced-row="true"]').filter(function() {
+                return $(this).find('.status-diproses').length > 0;
+            }).length;
+            
+            var totalChecked = $('.checker-display').length;
+            var checkedPengajuan = $('.checker-display.pengajuan-checked').length;
+            
+            $('#totalPengajuan').text(totalPengajuan);
+            $('#totalDiproses').text(totalDiproses);
+            $('#totalAll').text(totalPengajuan + totalDiproses);
+            $('#totalChecked').text(totalChecked);
+            $('#checkedPengajuan').text(checkedPengajuan);
+        }
+
+        function updateEnhancedStatsFromData(stats) {
+            $('#totalPengajuan').text(stats.total_pengajuan || 0);
+            $('#totalDiproses').text(stats.total_diproses || 0);
+            $('#totalAll').text(stats.total_all || 0);
+            $('#totalChecked').text(stats.total_checked || 0);
+            $('#checkedPengajuan').text(stats.checked_pengajuan || 0);
+        }
+
+        function updateLastUpdateTime(lastUpdate) {
+            $('#lastUpdate').text(`Enhanced auto-refresh setiap 30 detik | Last update: ${lastUpdate}`);
+        }
+        
+        function keepSessionAlive() {
+            $.ajax({
+                url: '/wo-maintenance/ajax/keep-session-alive/',
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify({ enhanced: true })
+            }).fail(function() {
+                console.warn('Enhanced keep alive warning');
+            });
+        }
+        
+        function getPriorityClass(priority) {
+            if (priority === 'H') return 'prioritas-high';
+            if (priority === 'M') return 'prioritas-medium';
+            return 'prioritas-low';
+        }
+        
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function showLoadingOverlay(show, statusType) {
+            var $overlay = $('#loadingOverlay');
+            if (show) {
+                var message = statusType === 'pengajuan' ? 
+                    'Menyimpan checker pengajuan...' : 
+                    'Menyimpan checker diproses...';
+                $overlay.find('.loading-text').text(message);
+            }
+            $overlay.css('display', show ? 'flex' : 'none');
+        }
+
+        function showEnhancedNotification(message, type) {
+            var typeClass = type === 'pengajuan' ? 'pengajuan' : type;
+            var $notification = $(`<div class="notification ${typeClass}">${message}</div>`);
+            $('body').append($notification);
+            
+            setTimeout(function() {
+                $notification.css('animation', 'slideIn 0.5s ease reverse');
+                setTimeout(function() {
+                    $notification.remove();
+                }, 500);
+            }, 5000);
+        }
+
+        // =============== ENHANCED INITIALIZATION ===============
+        
+        setTimeout(function() {
+            updateEnhancedStats();
+            console.log("Enhanced initialization completed");
+        }, 500);
+        
+        // Enhanced auto refresh setiap 30 detik
+        autoRefreshInterval = setInterval(refreshEnhancedData, 30000);
+        
+        // Keep alive setiap 5 menit
+        keepAliveInterval = setInterval(keepSessionAlive, 300000);
+        
+        // Enhanced indicator update
+        setInterval(function() {
+            var checkedCount = $('.checker-display').length;
+            var pengajuanCheckedCount = $('.checker-display.pengajuan-checked').length;
+            $('#databaseIndicator').html(`Enhanced System: AKTIF (${checkedCount} tersimpan, ${pengajuanCheckedCount} pengajuan)`);
+        }, 3000);
+        
+        console.log("ENHANCED MONITORING SYSTEM READY");
+        console.log("Enhanced auto-refresh: 30 detik");
+        console.log("Enhanced database: Real-time sync");
+        console.log("Prominent display: Pengajuan checker");
+        
+        // Cleanup
+        $(window).on('beforeunload', function() {
+            if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+            if (keepAliveInterval) clearInterval(keepAliveInterval);
+        });
+    });
+    </script>
+</body>
+</html>

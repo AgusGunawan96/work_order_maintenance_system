@@ -53,6 +53,7 @@ urlpatterns = [
     path('review/history/', views.review_history, name='review_history'),
     path('review-list/', views.review_pengajuan_list, name='review_list'),
     
+    
     # ===== ENHANCED REVIEW dengan Auto Transfer ke Tabel Main =====
     path('review/pengajuan/<str:nomor_pengajuan>/enhanced/', views.review_pengajuan_detail_enhanced, name='review_pengajuan_detail_enhanced'),
     path('review/pengajuan/<str:nomor_pengajuan>/with-transfer/', views.enhanced_review_pengajuan_detail_with_transfer, name='enhanced_review_with_transfer'),
